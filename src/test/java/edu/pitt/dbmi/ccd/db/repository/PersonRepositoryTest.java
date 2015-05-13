@@ -54,19 +54,19 @@ public class PersonRepositoryTest {
 
         // create
         Person person = new Person(firstName, lastName, email);
-        personRepository.save(person);
+        person = personRepository.save(person);
         Assert.assertNotNull(person.getId());
         TestUtility.printPerson(person, "Create New Person");
 
         // update
         firstName = "Joe";
         person.setFirstName(firstName);
-        personRepository.save(person);
-        Assert.assertEquals("Joe", person.getFirstName());
+        person = personRepository.save(person);
+        Assert.assertEquals(firstName, person.getFirstName());
         TestUtility.printPerson(person, "Update Person");
 
         // read
-        Long id = 1L;
+        Long id = person.getId();
         person = personRepository.findOne(id);
         Assert.assertNotNull(person);
         TestUtility.printPerson(person, "Find By ID");
