@@ -19,6 +19,7 @@
 package edu.pitt.dbmi.ccd.db;
 
 import edu.pitt.dbmi.ccd.db.entity.Person;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.List;
 
 /**
@@ -36,9 +37,58 @@ public class TestUtility {
     public TestUtility() {
     }
 
-    public static void printPersonList(List<Person> persons) {
+    public static void printUserAccountList(List<UserAccount> userAccounts, String title) {
         System.out.println(DOUBLE_LINE);
-        System.out.println("Print List of Person");
+        System.out.println(title);
+        System.out.println(SINGLE_LINE);
+        if (userAccounts == null) {
+            System.out.println(userAccounts);
+        } else if (userAccounts.isEmpty()) {
+            System.out.println("UserAccount list is empty.");
+        } else {
+            for (UserAccount userAccount : userAccounts) {
+                System.out.printf("ID: %d\n", userAccount.getId());
+                System.out.printf("Username: %s\n", userAccount.getUsername());
+                System.out.printf("Password: %s\n", userAccount.getPassword());
+                System.out.printf("Active: %s\n", userAccount.isActive());
+                System.out.printf("Creation Date: %s\n", userAccount.getCreatedDate());
+
+                Person person = userAccount.getPerson();
+                System.out.printf("\tID: %d\n", person.getId());
+                System.out.printf("\tFirst Name: %s\n", person.getFirstName());
+                System.out.printf("\tLast Name: %s\n", person.getLastName());
+                System.out.printf("\tEmail: %s\n", person.getEmail());
+                System.out.println();
+            }
+        }
+        System.out.println(DOUBLE_LINE);
+    }
+
+    public static void printUserAccount(UserAccount userAccount, String title) {
+        System.out.println(DOUBLE_LINE);
+        System.out.println(title);
+        System.out.println(SINGLE_LINE);
+        if (userAccount == null) {
+            System.out.println(userAccount);
+        } else {
+            System.out.printf("ID: %d\n", userAccount.getId());
+            System.out.printf("Username: %s\n", userAccount.getUsername());
+            System.out.printf("Password: %s\n", userAccount.getPassword());
+            System.out.printf("Active: %s\n", userAccount.isActive());
+            System.out.printf("Creation Date: %s\n", userAccount.getCreatedDate());
+
+            Person person = userAccount.getPerson();
+            System.out.printf("\tID: %d\n", person.getId());
+            System.out.printf("\tFirst Name: %s\n", person.getFirstName());
+            System.out.printf("\tLast Name: %s\n", person.getLastName());
+            System.out.printf("\tEmail: %s\n", person.getEmail());
+        }
+        System.out.println(DOUBLE_LINE);
+    }
+
+    public static void printPersonList(List<Person> persons, String title) {
+        System.out.println(DOUBLE_LINE);
+        System.out.println(title);
         System.out.println(SINGLE_LINE);
         if (persons == null) {
             System.out.println(persons);
