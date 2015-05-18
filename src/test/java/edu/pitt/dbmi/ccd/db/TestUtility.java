@@ -58,6 +58,7 @@ public class TestUtility {
                 System.out.printf("\tFirst Name: %s\n", person.getFirstName());
                 System.out.printf("\tLast Name: %s\n", person.getLastName());
                 System.out.printf("\tEmail: %s\n", person.getEmail());
+                System.out.printf("\tWorkspace: %s\n", person.getWorkspaceDirectory());
                 System.out.println();
             }
         }
@@ -82,6 +83,7 @@ public class TestUtility {
             System.out.printf("\tFirst Name: %s\n", person.getFirstName());
             System.out.printf("\tLast Name: %s\n", person.getLastName());
             System.out.printf("\tEmail: %s\n", person.getEmail());
+            System.out.printf("\tWorkspace: %s\n", person.getWorkspaceDirectory());
         }
         System.out.println(DOUBLE_LINE);
     }
@@ -100,6 +102,7 @@ public class TestUtility {
                 System.out.printf("First Name: %s\n", person.getFirstName());
                 System.out.printf("Last Name: %s\n", person.getLastName());
                 System.out.printf("Email: %s\n", person.getEmail());
+                System.out.printf("Workspace: %s\n", person.getWorkspaceDirectory());
                 System.out.println();
             }
         }
@@ -117,6 +120,7 @@ public class TestUtility {
             System.out.printf("First Name: %s\n", person.getFirstName());
             System.out.printf("Last Name: %s\n", person.getLastName());
             System.out.printf("Email: %s\n", person.getEmail());
+            System.out.printf("Workspace: %s\n", person.getWorkspaceDirectory());
         }
         System.out.println(DOUBLE_LINE);
     }

@@ -50,13 +50,17 @@ public class Person implements Serializable {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name = "workspaceDirectory", nullable = false)
+    private String workspaceDirectory;
+
     public Person() {
     }
 
-    public Person(String firstName, String lastName, String email) {
+    public Person(String firstName, String lastName, String email, String workspaceDirectory) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.workspaceDirectory = workspaceDirectory;
     }
 
     public Long getId() {
@@ -89,6 +93,14 @@ public class Person implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getWorkspaceDirectory() {
+        return workspaceDirectory;
+    }
+
+    public void setWorkspaceDirectory(String workspaceDirectory) {
+        this.workspaceDirectory = workspaceDirectory;
     }
 
 }

@@ -51,9 +51,10 @@ public class PersonRepositoryTest {
         String firstName = "John";
         String lastName = "Doe";
         String email = "jdoe@localhost";
+        String workspaceDirectory = "/swally";
 
         // create
-        Person person = new Person(firstName, lastName, email);
+        Person person = new Person(firstName, lastName, email, workspaceDirectory);
         person = personRepository.save(person);
         Assert.assertNotNull(person.getId());
         TestUtility.printPerson(person, "Create New Person");
@@ -89,9 +90,10 @@ public class PersonRepositoryTest {
         String firstName = "Sally";
         String lastName = "Wally";
         String email = "swally@localhost";
+        String workspaceDirectory = "/swally";
 
         // create
-        Person person = new Person(firstName, lastName, email);
+        Person person = new Person(firstName, lastName, email, workspaceDirectory);
         personRepository.save(person);
 
         person = personRepository.findByEmail(email);

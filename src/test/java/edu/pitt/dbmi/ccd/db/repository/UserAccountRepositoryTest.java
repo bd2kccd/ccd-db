@@ -54,7 +54,7 @@ public class UserAccountRepositoryTest {
         System.out.println("CRUD Operations");
 
         // create person first
-        Person person = new Person("Jill", "Hill", "jhill@localhost");
+        Person person = new Person("Jill", "Hill", "jhill@localhost", "/jill");
         personRepository.save(person);
         Assert.assertNotNull(person.getId());
 
@@ -96,7 +96,7 @@ public class UserAccountRepositoryTest {
         System.out.println("findByUsername");
 
         // create person first
-        Person person = new Person("Jack", "O'Larry", "jacklarry@localhost");
+        Person person = new Person("Jack", "O'Larry", "jacklarry@localhost", "/jacklarry");
         personRepository.save(person);
         Assert.assertNotNull(person.getId());
 
