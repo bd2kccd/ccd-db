@@ -29,7 +29,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.TestFileInfoUtility;
-import edu.pitt.dbmi.ccd.db.TestUtility;
 import edu.pitt.dbmi.ccd.db.entity.FileInfo;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
@@ -87,6 +86,13 @@ public class FileInfoRepositoryTest {
         Assert.assertNotNull(fileInfo.getId());
         TestFileInfoUtility.printFileInfo(fileInfo, "Create New FileInfo");
         
+        fileName = "ccd-graphviz1.dot";
+        fileInfo = new FileInfo(fileName, filePath, creationTime, 
+        		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum, userAccount);        
+        fileInfo = fileInfoRepository.save(fileInfo);
+        Assert.assertNotNull(fileInfo.getId());
+        TestFileInfoUtility.printFileInfo(fileInfo, "Create Yet Another New FileInfo");
+        
         // update
         filePath = "/john.doe/ccd/workspace/new-data/";
         fileInfo.setFilePath(filePath);
@@ -107,5 +113,48 @@ public class FileInfoRepositoryTest {
         Assert.assertNull(fileInfo);
         TestFileInfoUtility.printFileInfo(fileInfo, "Delete FileInfo");
 	}
+	
+    /**
+     * Test of findByUsername method, of class UserAccountRepository.
+     */
+    /*@Test
+    public void testFindByFileName(){
+        System.out.println("findByUsername");
+
+        // create person first
+        Person person = new Person("John", "Doe", "john.doe@localhost", "/john.doe");
+        personRepository.save(person);
+        Assert.assertNotNull(person.getId());
+
+        // create new user account
+        String username = "jdoe";
+        String password = "johnd";
+        boolean active = true;
+        Date createdDate = new Date(System.currentTimeMillis());
+        UserAccount userAccount = new UserAccount(username, password, active, createdDate, person);
+        userAccountRepository.save(userAccount);
+        Assert.assertNotNull(userAccount.getId());
+
+        Long userAccountId = userAccount.getId();
+        
+        String fileName = "ccd-graphviz.dot";
+        String filePath = "/john.doe/ccd/workspace/data/";
+        Date creationTime = new Date(System.currentTimeMillis());
+        Date lastAccessTime = new Date(System.currentTimeMillis());
+        Date lastModifiedTime = new Date(System.currentTimeMillis());
+        Long fileSize = new Long(999999L);
+        String md5CheckSum = "e10adc3949ba59abbe56e057f20f883e";
+        
+        // create
+        FileInfo fileInfo = new FileInfo(fileName, filePath, creationTime, 
+        		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum, userAccount);        
+        fileInfo = fileInfoRepository.save(fileInfo);
+        Assert.assertNotNull(fileInfo.getId());
+        
+        fileInfo = fileInfoRepository.findByFileName(fileName, userAccountId);
+        Assert.assertNotNull(fileInfo);
+        TestFileInfoUtility.printFileInfo(fileInfo, "Find by FileName");
+    	
+    }*/
 	
 }
