@@ -29,7 +29,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.TestFileInfoUtility;
+import edu.pitt.dbmi.ccd.db.TestUtility;
 import edu.pitt.dbmi.ccd.db.entity.FileInfo;
+import edu.pitt.dbmi.ccd.db.entity.Person;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  *
@@ -42,6 +45,12 @@ import edu.pitt.dbmi.ccd.db.entity.FileInfo;
 @SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
 public class FileInfoRepositoryTest {
 
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
+
 	@Autowired
 	private FileInfoRepository fileInfoRepository;
 	
@@ -49,8 +58,22 @@ public class FileInfoRepositoryTest {
     public void crudOperations() {
         System.out.println("CRUD Operations");
         
+        // create person first
+        Person person = new Person("John", "Doe", "john.doe@localhost", "/john.doe");
+        personRepository.save(person);
+        Assert.assertNotNull(person.getId());
+
+        // create new user account
+        String username = "jdoe";
+        String password = "johnd";
+        boolean active = true;
+        Date createdDate = new Date(System.currentTimeMillis());
+        UserAccount userAccount = new UserAccount(username, password, active, createdDate, person);
+        userAccountRepository.save(userAccount);
+        Assert.assertNotNull(userAccount.getId());
+
         String fileName = "ccd-graphviz.dot";
-        String filePath = "/Users/kong/ccd/workspace/data/";
+        String filePath = "/john.doe/ccd/workspace/data/";
         Date creationTime = new Date(System.currentTimeMillis());
         Date lastAccessTime = new Date(System.currentTimeMillis());
         Date lastModifiedTime = new Date(System.currentTimeMillis());
@@ -59,13 +82,13 @@ public class FileInfoRepositoryTest {
         
         // create
         FileInfo fileInfo = new FileInfo(fileName, filePath, creationTime, 
-        		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum);        
+        		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum, userAccount);        
         fileInfo = fileInfoRepository.save(fileInfo);
         Assert.assertNotNull(fileInfo.getId());
         TestFileInfoUtility.printFileInfo(fileInfo, "Create New FileInfo");
         
         // update
-        filePath = "/Users/kong/ccd/workspace/new-data/";
+        filePath = "/john.doe/ccd/workspace/new-data/";
         fileInfo.setFilePath(filePath);
         fileInfo = fileInfoRepository.save(fileInfo);
         Assert.assertEquals(fileInfo.getFilePath(), filePath);
@@ -85,28 +108,4 @@ public class FileInfoRepositoryTest {
         TestFileInfoUtility.printFileInfo(fileInfo, "Delete FileInfo");
 	}
 	
-    /**
-     * Test of findByFileName method, of class FileInfoRepository.
-     */
-	@Test
-	public void testFindByFileName(){
-        System.out.println("findByFileName");
-
-        String fileName = "ccd-graphviz.dot";
-        String filePath = "/Users/kong/ccd/workspace/data/";
-        Date creationTime = new Date(System.currentTimeMillis());
-        Date lastAccessTime = new Date(System.currentTimeMillis());
-        Date lastModifiedTime = new Date(System.currentTimeMillis());
-        Long fileSize = new Long(999999L);
-        String md5CheckSum = "e10adc3949ba59abbe56e057f20f883e";
-        
-        FileInfo fileInfo = new FileInfo(fileName, filePath, creationTime, 
-        		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum);
-        fileInfoRepository.save(fileInfo);
-        
-        fileInfo = fileInfoRepository.findByFileName(fileName);
-        Assert.assertNotNull(fileInfo);
-        TestFileInfoUtility.printFileInfo(fileInfo, "Find by FileName");
-		
-	}
 }

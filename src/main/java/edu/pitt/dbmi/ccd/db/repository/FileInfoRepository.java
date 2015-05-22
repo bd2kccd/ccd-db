@@ -30,5 +30,5 @@ import edu.pitt.dbmi.ccd.db.entity.FileInfo;
  * 
  */
 public interface FileInfoRepository extends JpaRepository<FileInfo, Long> {
-	public FileInfo findByFileName(String fileName);
+
 }

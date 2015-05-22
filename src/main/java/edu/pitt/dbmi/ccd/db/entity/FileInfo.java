@@ -23,9 +23,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -70,6 +73,10 @@ public class FileInfo implements Serializable {
     @Column(name = "md5CheckSum", nullable = false)
 	private String md5CheckSum;
 	
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "userAccountId", nullable = false)
+    private UserAccount userAccount;
+    
 	public FileInfo() {
 	}
 
@@ -81,10 +88,11 @@ public class FileInfo implements Serializable {
 	 * @param lastModifiedTime
 	 * @param fileSize
 	 * @param md5CheckSum
+	 * @param userAccount
 	 */
 	public FileInfo(String fileName, String absolutePath, Date creationTime,
 			Date lastAccessTime, Date lastModifiedTime, Long fileSize,
-			String md5CheckSum) {
+			String md5CheckSum, UserAccount userAccount) {
 		this.fileName = fileName;
 		this.filePath = absolutePath;
 		this.creationTime = creationTime;
@@ -92,6 +100,7 @@ public class FileInfo implements Serializable {
 		this.lastModifiedTime = lastModifiedTime;
 		this.fileSize = fileSize;
 		this.md5CheckSum = md5CheckSum;
+		this.userAccount = userAccount;
 	}
 
 	public Long getId() {
@@ -156,6 +165,14 @@ public class FileInfo implements Serializable {
 
 	public void setMd5CheckSum(String md5CheckSum) {
 		this.md5CheckSum = md5CheckSum;
+	}
+
+	public UserAccount getUserAccount() {
+		return userAccount;
+	}
+
+	public void setUserAccount(UserAccount userAccount) {
+		this.userAccount = userAccount;
 	}
 
 }
