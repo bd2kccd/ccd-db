@@ -107,8 +107,8 @@ public class FileInfoRepositoryTest {
     public void testFindByFileName(){
         System.out.println("findByFileName");
 
-        String fileName = "ccd-graphviz1.dot";
-        String fileAbsolutePath = "/john.doe/ccd/workspace/data/ccd-graphviz1.dot";
+        String fileName = "ccd-graphviz.dot";
+        String fileAbsolutePath = "/john.doe/ccd/workspace/new-data/ccd-graphviz.dot";
         Date creationTime = new Date(System.currentTimeMillis());
         Date lastAccessTime = new Date(System.currentTimeMillis());
         Date lastModifiedTime = new Date(System.currentTimeMillis());
