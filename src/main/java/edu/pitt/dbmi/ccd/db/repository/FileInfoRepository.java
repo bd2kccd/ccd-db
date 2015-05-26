@@ -18,6 +18,8 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import edu.pitt.dbmi.ccd.db.entity.FileInfoDB;
@@ -31,6 +33,7 @@ import edu.pitt.dbmi.ccd.db.entity.FileInfoDB;
  */
 public interface FileInfoRepository extends JpaRepository<FileInfoDB, Long> {
 
-    //public FileInfo findByFileName(String fileName, Long userAccountId);
+    public List<FileInfoDB> findByFileName(String fileName);
+    public FileInfoDB findByFileAbsolutePath(String fileAbsolutePath);
 
 }

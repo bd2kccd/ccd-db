@@ -48,7 +48,7 @@ public class TestFileInfoUtility {
         	for(FileInfoDB fileInfo : fileInfos){
         		System.out.printf("ID: %d\n", fileInfo.getId());
                 System.out.printf("File Name: %s\n", fileInfo.getFileName());
-                System.out.printf("File Path: %s\n", fileInfo.getFilePath());
+                System.out.printf("File Absolute Path: %s\n", fileInfo.getFileAbsolutePath());
                 System.out.printf("Creation Time: %s\n", fileInfo.getCreationTime());
                 System.out.printf("Last Access Time: %s\n", fileInfo.getLastAccessTime());
                 System.out.printf("Last Modified Time: %s\n", fileInfo.getLastModifiedTime());
@@ -71,7 +71,7 @@ public class TestFileInfoUtility {
         }else{
     		System.out.printf("ID: %d\n", fileInfo.getId());
             System.out.printf("File Name: %s\n", fileInfo.getFileName());
-            System.out.printf("File Path: %s\n", fileInfo.getFilePath());
+            System.out.printf("File Absolute Path: %s\n", fileInfo.getFileAbsolutePath());
             System.out.printf("Creation Time: %s\n", fileInfo.getCreationTime());
             System.out.printf("Last Access Time: %s\n", fileInfo.getLastAccessTime());
             System.out.printf("Last Modified Time: %s\n", fileInfo.getLastModifiedTime());

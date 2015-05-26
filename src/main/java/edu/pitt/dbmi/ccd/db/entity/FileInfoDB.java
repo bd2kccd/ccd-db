@@ -23,12 +23,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -52,8 +49,8 @@ public class FileInfoDB implements Serializable {
     @Column(name = "fileName", nullable = false)
 	private String fileName;
 	
-	@Column(name = "filePath", nullable = false)
-	private String filePath;
+	@Column(name = "fileAbsolutePath", unique = true, nullable = false)
+	private String fileAbsolutePath;
 	
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "creationTime", nullable = false, length = 19)
@@ -73,34 +70,29 @@ public class FileInfoDB implements Serializable {
     @Column(name = "md5CheckSum", nullable = false)
 	private String md5CheckSum;
 	
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userAccountId", nullable = false)
-    private UserAccount userAccount;
-    
 	public FileInfoDB() {
 	}
 
     /**
 	 * @param fileName
-	 * @param absolutePath
+	 * @param fileAbsolutePath
 	 * @param creationTime
 	 * @param lastAccessTime
 	 * @param lastModifiedTime
 	 * @param fileSize
 	 * @param md5CheckSum
-	 * @param userAccount
+
 	 */
-	public FileInfoDB(String fileName, String absolutePath, Date creationTime,
+	public FileInfoDB(String fileName, String fileAbsolutePath, Date creationTime,
 			Date lastAccessTime, Date lastModifiedTime, Long fileSize,
-			String md5CheckSum, UserAccount userAccount) {
+			String md5CheckSum) {
 		this.fileName = fileName;
-		this.filePath = absolutePath;
+		this.fileAbsolutePath = fileAbsolutePath;
 		this.creationTime = creationTime;
 		this.lastAccessTime = lastAccessTime;
 		this.lastModifiedTime = lastModifiedTime;
 		this.fileSize = fileSize;
 		this.md5CheckSum = md5CheckSum;
-		this.userAccount = userAccount;
 	}
 
 	public Long getId() {
@@ -119,12 +111,12 @@ public class FileInfoDB implements Serializable {
 		this.fileName = fileName;
 	}
 
-	public String getFilePath() {
-		return filePath;
+	public String getFileAbsolutePath() {
+		return fileAbsolutePath;
 	}
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+	public void setFileAbsolutePath(String fileAbsolutePath) {
+		this.fileAbsolutePath = fileAbsolutePath;
 	}
 
 	public Date getCreationTime() {
@@ -165,14 +157,6 @@ public class FileInfoDB implements Serializable {
 
 	public void setMd5CheckSum(String md5CheckSum) {
 		this.md5CheckSum = md5CheckSum;
-	}
-
-	public UserAccount getUserAccount() {
-		return userAccount;
-	}
-
-	public void setUserAccount(UserAccount userAccount) {
-		this.userAccount = userAccount;
 	}
 
 }

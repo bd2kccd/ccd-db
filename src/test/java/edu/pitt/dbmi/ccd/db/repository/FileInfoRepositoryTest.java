@@ -19,6 +19,7 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,8 +31,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.TestFileInfoUtility;
 import edu.pitt.dbmi.ccd.db.entity.FileInfoDB;
-import edu.pitt.dbmi.ccd.db.entity.Person;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  *
@@ -57,22 +56,8 @@ public class FileInfoRepositoryTest {
     public void crudOperations() {
         System.out.println("CRUD Operations");
         
-        // create person first
-        Person person = new Person("John", "Doe", "john.doe@localhost", "/john.doe");
-        personRepository.save(person);
-        Assert.assertNotNull(person.getId());
-
-        // create new user account
-        String username = "jdoe";
-        String password = "johnd";
-        boolean active = true;
-        Date createdDate = new Date(System.currentTimeMillis());
-        UserAccount userAccount = new UserAccount(username, password, active, createdDate, person);
-        userAccountRepository.save(userAccount);
-        Assert.assertNotNull(userAccount.getId());
-
         String fileName = "ccd-graphviz.dot";
-        String filePath = "/john.doe/ccd/workspace/data/";
+        String fileAbsolutePath = "/john.doe/ccd/workspace/data/ccd-graphviz.dot";
         Date creationTime = new Date(System.currentTimeMillis());
         Date lastAccessTime = new Date(System.currentTimeMillis());
         Date lastModifiedTime = new Date(System.currentTimeMillis());
@@ -80,24 +65,25 @@ public class FileInfoRepositoryTest {
         String md5CheckSum = "e10adc3949ba59abbe56e057f20f883e";
         
         // create
-        FileInfoDB fileInfo = new FileInfoDB(fileName, filePath, creationTime, 
-        		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum, userAccount);        
+        FileInfoDB fileInfo = new FileInfoDB(fileName, fileAbsolutePath, creationTime, 
+        		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum);        
         fileInfo = fileInfoRepository.save(fileInfo);
         Assert.assertNotNull(fileInfo.getId());
         TestFileInfoUtility.printFileInfo(fileInfo, "Create New FileInfo");
         
         fileName = "ccd-graphviz1.dot";
-        fileInfo = new FileInfoDB(fileName, filePath, creationTime, 
-        		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum, userAccount);        
+        fileAbsolutePath = "/john.doe/ccd/workspace/data/ccd-graphviz1.dot";
+        fileInfo = new FileInfoDB(fileName, fileAbsolutePath, creationTime, 
+        		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum);        
         fileInfo = fileInfoRepository.save(fileInfo);
         Assert.assertNotNull(fileInfo.getId());
         TestFileInfoUtility.printFileInfo(fileInfo, "Create Yet Another New FileInfo");
         
         // update
-        filePath = "/john.doe/ccd/workspace/new-data/";
-        fileInfo.setFilePath(filePath);
+        fileAbsolutePath = "/john.doe/ccd/workspace/new-data/";
+        fileInfo.setFileAbsolutePath(fileAbsolutePath);
         fileInfo = fileInfoRepository.save(fileInfo);
-        Assert.assertEquals(fileInfo.getFilePath(), filePath);
+        Assert.assertEquals(fileInfo.getFileAbsolutePath(), fileAbsolutePath);
         TestFileInfoUtility.printFileInfo(fileInfo, "Update FileInfo");
         
         // read
@@ -115,30 +101,14 @@ public class FileInfoRepositoryTest {
 	}
 	
     /**
-     * Test of findByUsername method, of class UserAccountRepository.
+     * Test of findByFileName method, of class UserAccountRepository.
      */
-    /*@Test
+    @Test
     public void testFindByFileName(){
-        System.out.println("findByUsername");
+        System.out.println("findByFileName");
 
-        // create person first
-        Person person = new Person("John", "Doe", "john.doe@localhost", "/john.doe");
-        personRepository.save(person);
-        Assert.assertNotNull(person.getId());
-
-        // create new user account
-        String username = "jdoe";
-        String password = "johnd";
-        boolean active = true;
-        Date createdDate = new Date(System.currentTimeMillis());
-        UserAccount userAccount = new UserAccount(username, password, active, createdDate, person);
-        userAccountRepository.save(userAccount);
-        Assert.assertNotNull(userAccount.getId());
-
-        Long userAccountId = userAccount.getId();
-        
-        String fileName = "ccd-graphviz.dot";
-        String filePath = "/john.doe/ccd/workspace/data/";
+        String fileName = "ccd-graphviz1.dot";
+        String fileAbsolutePath = "/john.doe/ccd/workspace/data/ccd-graphviz1.dot";
         Date creationTime = new Date(System.currentTimeMillis());
         Date lastAccessTime = new Date(System.currentTimeMillis());
         Date lastModifiedTime = new Date(System.currentTimeMillis());
@@ -146,15 +116,32 @@ public class FileInfoRepositoryTest {
         String md5CheckSum = "e10adc3949ba59abbe56e057f20f883e";
         
         // create
-        FileInfo fileInfo = new FileInfo(fileName, filePath, creationTime, 
-        		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum, userAccount);        
+        FileInfoDB fileInfo = new FileInfoDB(fileName, fileAbsolutePath, creationTime, 
+        		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum);        
         fileInfo = fileInfoRepository.save(fileInfo);
         Assert.assertNotNull(fileInfo.getId());
         
-        fileInfo = fileInfoRepository.findByFileName(fileName, userAccountId);
-        Assert.assertNotNull(fileInfo);
-        TestFileInfoUtility.printFileInfo(fileInfo, "Find by FileName");
+        List<FileInfoDB> list = fileInfoRepository.findByFileName(fileName);
+        for(FileInfoDB fInfo : list){
+            Assert.assertNotNull(fInfo);
+            TestFileInfoUtility.printFileInfo(fInfo, "Find by FileName");
+        }
     	
-    }*/
+    }
+	
+    /**
+     * Test of findByFileAbsolutePath method, of class UserAccountRepository.
+     */
+    @Test
+    public void testFindByFileAbsolutePath(){
+        System.out.println("findByFileAbsolutePath");
+
+        String fileAbsolutePath = "/john.doe/ccd/workspace/data/ccd-graphviz.dot";
+        
+        FileInfoDB fileInfo = fileInfoRepository.findByFileAbsolutePath(fileAbsolutePath);
+        Assert.assertNotNull(fileInfo);
+        TestFileInfoUtility.printFileInfo(fileInfo, "Find by File Absolute Path");
+    	
+    }
 	
 }
