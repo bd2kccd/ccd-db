@@ -80,7 +80,7 @@ public class FileInfoRepositoryTest {
         TestFileInfoUtility.printFileInfo(fileInfo, "Create Yet Another New FileInfo");
         
         // update
-        fileAbsolutePath = "/john.doe/ccd/workspace/new-data/";
+        fileAbsolutePath = "/john.doe/ccd/workspace/new-data/ccd-graphviz1.dot";
         fileInfo.setFileAbsolutePath(fileAbsolutePath);
         fileInfo = fileInfoRepository.save(fileInfo);
         Assert.assertEquals(fileInfo.getFileAbsolutePath(), fileAbsolutePath);
