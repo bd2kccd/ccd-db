@@ -29,7 +29,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.TestFileInfoUtility;
-import edu.pitt.dbmi.ccd.db.entity.FileInfo;
+import edu.pitt.dbmi.ccd.db.entity.FileInfoDB;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
@@ -80,14 +80,14 @@ public class FileInfoRepositoryTest {
         String md5CheckSum = "e10adc3949ba59abbe56e057f20f883e";
         
         // create
-        FileInfo fileInfo = new FileInfo(fileName, filePath, creationTime, 
+        FileInfoDB fileInfo = new FileInfoDB(fileName, filePath, creationTime, 
         		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum, userAccount);        
         fileInfo = fileInfoRepository.save(fileInfo);
         Assert.assertNotNull(fileInfo.getId());
         TestFileInfoUtility.printFileInfo(fileInfo, "Create New FileInfo");
         
         fileName = "ccd-graphviz1.dot";
-        fileInfo = new FileInfo(fileName, filePath, creationTime, 
+        fileInfo = new FileInfoDB(fileName, filePath, creationTime, 
         		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum, userAccount);        
         fileInfo = fileInfoRepository.save(fileInfo);
         Assert.assertNotNull(fileInfo.getId());

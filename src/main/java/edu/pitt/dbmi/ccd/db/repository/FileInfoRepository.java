@@ -20,7 +20,7 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import edu.pitt.dbmi.ccd.db.entity.FileInfo;
+import edu.pitt.dbmi.ccd.db.entity.FileInfoDB;
 
 /**
  *
@@ -29,7 +29,7 @@ import edu.pitt.dbmi.ccd.db.entity.FileInfo;
  * @author Chirayu (Kong) Wongchokprasitti (chw20@pitt.edu)
  * 
  */
-public interface FileInfoRepository extends JpaRepository<FileInfo, Long> {
+public interface FileInfoRepository extends JpaRepository<FileInfoDB, Long> {
 
     //public FileInfo findByFileName(String fileName, Long userAccountId);
 

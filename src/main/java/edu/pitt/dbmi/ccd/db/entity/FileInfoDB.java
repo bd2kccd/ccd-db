@@ -40,7 +40,7 @@ import javax.persistence.TemporalType;
  * 
  */
 @Entity
-public class FileInfo implements Serializable {
+public class FileInfoDB implements Serializable {
 	
 	private static final long serialVersionUID = -7162073551033209140L;
 
@@ -77,7 +77,7 @@ public class FileInfo implements Serializable {
     @JoinColumn(name = "userAccountId", nullable = false)
     private UserAccount userAccount;
     
-	public FileInfo() {
+	public FileInfoDB() {
 	}
 
     /**
@@ -90,7 +90,7 @@ public class FileInfo implements Serializable {
 	 * @param md5CheckSum
 	 * @param userAccount
 	 */
-	public FileInfo(String fileName, String absolutePath, Date creationTime,
+	public FileInfoDB(String fileName, String absolutePath, Date creationTime,
 			Date lastAccessTime, Date lastModifiedTime, Long fileSize,
 			String md5CheckSum, UserAccount userAccount) {
 		this.fileName = fileName;
