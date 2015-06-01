@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import edu.pitt.dbmi.ccd.db.entity.FileInfoDB;
+import edu.pitt.dbmi.ccd.db.entity.DataFile;
 
 /**
  *
@@ -31,9 +31,9 @@ import edu.pitt.dbmi.ccd.db.entity.FileInfoDB;
  * @author Chirayu (Kong) Wongchokprasitti (chw20@pitt.edu)
  * 
  */
-public interface FileInfoRepository extends JpaRepository<FileInfoDB, Long> {
+public interface FileInfoRepository extends JpaRepository<DataFile, Long> {
 
-    public List<FileInfoDB> findByFileName(String fileName);
-    public FileInfoDB findByFileAbsolutePath(String fileAbsolutePath);
+    public List<DataFile> findByFileName(String fileName);
+    public DataFile findByFileAbsolutePath(String fileAbsolutePath);
 
 }

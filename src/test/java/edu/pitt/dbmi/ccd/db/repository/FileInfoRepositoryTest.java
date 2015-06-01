@@ -30,7 +30,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.TestFileInfoUtility;
-import edu.pitt.dbmi.ccd.db.entity.FileInfoDB;
+import edu.pitt.dbmi.ccd.db.entity.DataFile;
 
 /**
  *
@@ -65,7 +65,7 @@ public class FileInfoRepositoryTest {
         String md5CheckSum = "e10adc3949ba59abbe56e057f20f883e";
         
         // create
-        FileInfoDB fileInfo = new FileInfoDB(fileName, fileAbsolutePath, creationTime, 
+        DataFile fileInfo = new DataFile(fileName, fileAbsolutePath, creationTime, 
         		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum);        
         fileInfo = fileInfoRepository.save(fileInfo);
         Assert.assertNotNull(fileInfo.getId());
@@ -73,7 +73,7 @@ public class FileInfoRepositoryTest {
         
         fileName = "ccd-graphviz1.dot";
         fileAbsolutePath = "/john.doe/ccd/workspace/data/ccd-graphviz1.dot";
-        fileInfo = new FileInfoDB(fileName, fileAbsolutePath, creationTime, 
+        fileInfo = new DataFile(fileName, fileAbsolutePath, creationTime, 
         		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum);        
         fileInfo = fileInfoRepository.save(fileInfo);
         Assert.assertNotNull(fileInfo.getId());
@@ -116,13 +116,13 @@ public class FileInfoRepositoryTest {
         String md5CheckSum = "e10adc3949ba59abbe56e057f20f883e";
         
         // create
-        FileInfoDB fileInfo = new FileInfoDB(fileName, fileAbsolutePath, creationTime, 
+        DataFile fileInfo = new DataFile(fileName, fileAbsolutePath, creationTime, 
         		lastAccessTime, lastModifiedTime, fileSize, md5CheckSum);        
         fileInfo = fileInfoRepository.save(fileInfo);
         Assert.assertNotNull(fileInfo.getId());
         
-        List<FileInfoDB> list = fileInfoRepository.findByFileName(fileName);
-        for(FileInfoDB fInfo : list){
+        List<DataFile> list = fileInfoRepository.findByFileName(fileName);
+        for(DataFile fInfo : list){
             Assert.assertNotNull(fInfo);
             TestFileInfoUtility.printFileInfo(fInfo, "Find by FileName");
         }
@@ -138,7 +138,7 @@ public class FileInfoRepositoryTest {
 
         String fileAbsolutePath = "/john.doe/ccd/workspace/data/ccd-graphviz.dot";
         
-        FileInfoDB fileInfo = fileInfoRepository.findByFileAbsolutePath(fileAbsolutePath);
+        DataFile fileInfo = fileInfoRepository.findByFileAbsolutePath(fileAbsolutePath);
         Assert.assertNotNull(fileInfo);
         TestFileInfoUtility.printFileInfo(fileInfo, "Find by File Absolute Path");
     	
