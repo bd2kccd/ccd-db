@@ -34,6 +34,7 @@ import edu.pitt.dbmi.ccd.db.entity.DataFile;
 public interface FileInfoRepository extends JpaRepository<DataFile, Long> {
 
     public List<DataFile> findByFileName(String fileName);
+
     public DataFile findByFileAbsolutePath(String fileAbsolutePath);
 
 }

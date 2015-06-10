@@ -38,125 +38,124 @@ import javax.persistence.TemporalType;
  */
 @Entity
 public class DataFile implements Serializable {
-	
-	private static final long serialVersionUID = -7162073551033209140L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private Long id;
-	
+    private static final long serialVersionUID = -7162073551033209140L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
+    private Long id;
+
     @Column(name = "fileName", nullable = false)
-	private String fileName;
-	
-	@Column(name = "fileAbsolutePath", unique = true, nullable = false)
-	private String fileAbsolutePath;
-	
+    private String fileName;
+
+    @Column(name = "fileAbsolutePath", unique = true, nullable = false)
+    private String fileAbsolutePath;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "creationTime", nullable = false, length = 19)
-	private Date creationTime; 
-	
+    private Date creationTime;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "lastAccessTime", nullable = false, length = 19)
-	private Date lastAccessTime; 
-	
+    private Date lastAccessTime;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "lastModifiedTime", nullable = false, length = 19)
-	private Date lastModifiedTime; 
-	
-	@Column(name = "fileSize", nullable = false)
-	private Long fileSize;
-	
+    private Date lastModifiedTime;
+
+    @Column(name = "fileSize", nullable = false)
+    private Long fileSize;
+
     @Column(name = "md5CheckSum", nullable = false)
-	private String md5CheckSum;
-	
-	public DataFile() {
-	}
+    private String md5CheckSum;
+
+    public DataFile() {
+    }
 
     /**
-	 * @param fileName
-	 * @param fileAbsolutePath
-	 * @param creationTime
-	 * @param lastAccessTime
-	 * @param lastModifiedTime
-	 * @param fileSize
-	 * @param md5CheckSum
+     * @param fileName
+     * @param fileAbsolutePath
+     * @param creationTime
+     * @param lastAccessTime
+     * @param lastModifiedTime
+     * @param fileSize
+     * @param md5CheckSum
+     */
+    public DataFile(String fileName, String fileAbsolutePath,
+	    Date creationTime, Date lastAccessTime, Date lastModifiedTime,
+	    Long fileSize, String md5CheckSum) {
+	this.fileName = fileName;
+	this.fileAbsolutePath = fileAbsolutePath;
+	this.creationTime = creationTime;
+	this.lastAccessTime = lastAccessTime;
+	this.lastModifiedTime = lastModifiedTime;
+	this.fileSize = fileSize;
+	this.md5CheckSum = md5CheckSum;
+    }
 
-	 */
-	public DataFile(String fileName, String fileAbsolutePath, Date creationTime,
-			Date lastAccessTime, Date lastModifiedTime, Long fileSize,
-			String md5CheckSum) {
-		this.fileName = fileName;
-		this.fileAbsolutePath = fileAbsolutePath;
-		this.creationTime = creationTime;
-		this.lastAccessTime = lastAccessTime;
-		this.lastModifiedTime = lastModifiedTime;
-		this.fileSize = fileSize;
-		this.md5CheckSum = md5CheckSum;
-	}
+    public Long getId() {
+	return id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public void setId(Long id) {
+	this.id = id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public String getFileName() {
+	return fileName;
+    }
 
-	public String getFileName() {
-		return fileName;
-	}
+    public void setFileName(String fileName) {
+	this.fileName = fileName;
+    }
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
+    public String getFileAbsolutePath() {
+	return fileAbsolutePath;
+    }
 
-	public String getFileAbsolutePath() {
-		return fileAbsolutePath;
-	}
+    public void setFileAbsolutePath(String fileAbsolutePath) {
+	this.fileAbsolutePath = fileAbsolutePath;
+    }
 
-	public void setFileAbsolutePath(String fileAbsolutePath) {
-		this.fileAbsolutePath = fileAbsolutePath;
-	}
+    public Date getCreationTime() {
+	return creationTime;
+    }
 
-	public Date getCreationTime() {
-		return creationTime;
-	}
+    public void setCreationTime(Date creationTime) {
+	this.creationTime = creationTime;
+    }
 
-	public void setCreationTime(Date creationTime) {
-		this.creationTime = creationTime;
-	}
+    public Date getLastAccessTime() {
+	return lastAccessTime;
+    }
 
-	public Date getLastAccessTime() {
-		return lastAccessTime;
-	}
+    public void setLastAccessTime(Date lastAccessTime) {
+	this.lastAccessTime = lastAccessTime;
+    }
 
-	public void setLastAccessTime(Date lastAccessTime) {
-		this.lastAccessTime = lastAccessTime;
-	}
+    public Date getLastModifiedTime() {
+	return lastModifiedTime;
+    }
 
-	public Date getLastModifiedTime() {
-		return lastModifiedTime;
-	}
+    public void setLastModifiedTime(Date lastModifiedTime) {
+	this.lastModifiedTime = lastModifiedTime;
+    }
 
-	public void setLastModifiedTime(Date lastModifiedTime) {
-		this.lastModifiedTime = lastModifiedTime;
-	}
+    public Long getFileSize() {
+	return fileSize;
+    }
 
-	public Long getFileSize() {
-		return fileSize;
-	}
+    public void setFileSize(Long fileSize) {
+	this.fileSize = fileSize;
+    }
 
-	public void setFileSize(Long fileSize) {
-		this.fileSize = fileSize;
-	}
+    public String getMd5CheckSum() {
+	return md5CheckSum;
+    }
 
-	public String getMd5CheckSum() {
-		return md5CheckSum;
-	}
-
-	public void setMd5CheckSum(String md5CheckSum) {
-		this.md5CheckSum = md5CheckSum;
-	}
+    public void setMd5CheckSum(String md5CheckSum) {
+	this.md5CheckSum = md5CheckSum;
+    }
 
 }
