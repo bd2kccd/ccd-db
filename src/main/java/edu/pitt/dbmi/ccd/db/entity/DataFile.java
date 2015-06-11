@@ -20,7 +20,6 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,7 +33,7 @@ import javax.persistence.TemporalType;
  * May 18, 2015 12:12:43 PM
  *
  * @author Chirayu (Kong) Wongchokprasitti (chw20@pitt.edu)
- * 
+ *
  */
 @Entity
 public class DataFile implements Serializable {
@@ -83,79 +82,79 @@ public class DataFile implements Serializable {
      * @param md5CheckSum
      */
     public DataFile(String fileName, String fileAbsolutePath,
-	    Date creationTime, Date lastAccessTime, Date lastModifiedTime,
-	    Long fileSize, String md5CheckSum) {
-	this.fileName = fileName;
-	this.fileAbsolutePath = fileAbsolutePath;
-	this.creationTime = creationTime;
-	this.lastAccessTime = lastAccessTime;
-	this.lastModifiedTime = lastModifiedTime;
-	this.fileSize = fileSize;
-	this.md5CheckSum = md5CheckSum;
+            Date creationTime, Date lastAccessTime, Date lastModifiedTime,
+            Long fileSize, String md5CheckSum) {
+        this.fileName = fileName;
+        this.fileAbsolutePath = fileAbsolutePath;
+        this.creationTime = creationTime;
+        this.lastAccessTime = lastAccessTime;
+        this.lastModifiedTime = lastModifiedTime;
+        this.fileSize = fileSize;
+        this.md5CheckSum = md5CheckSum;
     }
 
     public Long getId() {
-	return id;
+        return id;
     }
 
     public void setId(Long id) {
-	this.id = id;
+        this.id = id;
     }
 
     public String getFileName() {
-	return fileName;
+        return fileName;
     }
 
     public void setFileName(String fileName) {
-	this.fileName = fileName;
+        this.fileName = fileName;
     }
 
     public String getFileAbsolutePath() {
-	return fileAbsolutePath;
+        return fileAbsolutePath;
     }
 
     public void setFileAbsolutePath(String fileAbsolutePath) {
-	this.fileAbsolutePath = fileAbsolutePath;
+        this.fileAbsolutePath = fileAbsolutePath;
     }
 
     public Date getCreationTime() {
-	return creationTime;
+        return creationTime;
     }
 
     public void setCreationTime(Date creationTime) {
-	this.creationTime = creationTime;
+        this.creationTime = creationTime;
     }
 
     public Date getLastAccessTime() {
-	return lastAccessTime;
+        return lastAccessTime;
     }
 
     public void setLastAccessTime(Date lastAccessTime) {
-	this.lastAccessTime = lastAccessTime;
+        this.lastAccessTime = lastAccessTime;
     }
 
     public Date getLastModifiedTime() {
-	return lastModifiedTime;
+        return lastModifiedTime;
     }
 
     public void setLastModifiedTime(Date lastModifiedTime) {
-	this.lastModifiedTime = lastModifiedTime;
+        this.lastModifiedTime = lastModifiedTime;
     }
 
     public Long getFileSize() {
-	return fileSize;
+        return fileSize;
     }
 
     public void setFileSize(Long fileSize) {
-	this.fileSize = fileSize;
+        this.fileSize = fileSize;
     }
 
     public String getMd5CheckSum() {
-	return md5CheckSum;
+        return md5CheckSum;
     }
 
     public void setMd5CheckSum(String md5CheckSum) {
-	this.md5CheckSum = md5CheckSum;
+        this.md5CheckSum = md5CheckSum;
     }
 
 }

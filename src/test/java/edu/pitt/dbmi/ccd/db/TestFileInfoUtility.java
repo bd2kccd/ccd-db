@@ -18,16 +18,15 @@
  */
 package edu.pitt.dbmi.ccd.db;
 
-import java.util.List;
-
 import edu.pitt.dbmi.ccd.db.entity.DataFile;
+import java.util.List;
 
 /**
  *
  * May 18, 2015 1:54:38 PM
  *
  * @author Chirayu (Kong) Wongchokprasitti (chw20@pitt.edu)
- * 
+ *
  */
 public class TestFileInfoUtility {
 
@@ -35,18 +34,18 @@ public class TestFileInfoUtility {
 
     public static String SINGLE_LINE = "--------------------------------------------------------------------------------";
 
-    public static void printFileInfoList(List<DataFile> fileInfos, String title){
+    public static void printFileInfoList(List<DataFile> fileInfos, String title) {
         System.out.println(DOUBLE_LINE);
         System.out.println(title);
         System.out.println(SINGLE_LINE);
 
-        if(fileInfos == null){
-        	System.out.println(fileInfos);
-        }else if(fileInfos.isEmpty()){
-        	System.out.println("FileInfo list is empty.");
-        }else{
-        	for(DataFile fileInfo : fileInfos){
-        		System.out.printf("ID: %d\n", fileInfo.getId());
+        if (fileInfos == null) {
+            System.out.println(fileInfos);
+        } else if (fileInfos.isEmpty()) {
+            System.out.println("FileInfo list is empty.");
+        } else {
+            for (DataFile fileInfo : fileInfos) {
+                System.out.printf("ID: %d\n", fileInfo.getId());
                 System.out.printf("File Name: %s\n", fileInfo.getFileName());
                 System.out.printf("File Absolute Path: %s\n", fileInfo.getFileAbsolutePath());
                 System.out.printf("Creation Time: %s\n", fileInfo.getCreationTime());
@@ -55,21 +54,21 @@ public class TestFileInfoUtility {
                 System.out.printf("File Size: %d\n", fileInfo.getFileSize());
                 System.out.printf("MD5 Checksum: %s\n", fileInfo.getMd5CheckSum());
                 System.out.println();
-        	}
+            }
         }
-        
+
         System.out.println(DOUBLE_LINE);
     }
-    
-    public static void printFileInfo(DataFile fileInfo, String title){
+
+    public static void printFileInfo(DataFile fileInfo, String title) {
         System.out.println(DOUBLE_LINE);
         System.out.println(title);
         System.out.println(SINGLE_LINE);
 
-        if(fileInfo == null){
-        	System.out.println(fileInfo);
-        }else{
-    		System.out.printf("ID: %d\n", fileInfo.getId());
+        if (fileInfo == null) {
+            System.out.println(fileInfo);
+        } else {
+            System.out.printf("ID: %d\n", fileInfo.getId());
             System.out.printf("File Name: %s\n", fileInfo.getFileName());
             System.out.printf("File Absolute Path: %s\n", fileInfo.getFileAbsolutePath());
             System.out.printf("Creation Time: %s\n", fileInfo.getCreationTime());
@@ -79,7 +78,7 @@ public class TestFileInfoUtility {
             System.out.printf("MD5 Checksum: %s\n", fileInfo.getMd5CheckSum());
             System.out.println();
         }
-        
+
         System.out.println(DOUBLE_LINE);
     }
 

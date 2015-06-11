@@ -18,18 +18,16 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import edu.pitt.dbmi.ccd.db.entity.DataFile;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * May 18, 2015 1:11:19 PM
  *
  * @author Chirayu (Kong) Wongchokprasitti (chw20@pitt.edu)
- * 
+ *
  */
 public interface FileInfoRepository extends JpaRepository<DataFile, Long> {
 
