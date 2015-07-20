@@ -23,7 +23,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -38,59 +38,39 @@ import javax.persistence.TemporalType;
 @Entity
 public class DataFile implements Serializable {
 
-    private static final long serialVersionUID = -7162073551033209140L;
+    private static final long serialVersionUID = 2009426805915818939L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "fileName", nullable = false)
-    private String fileName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "fileAbsolutePath", unique = true, nullable = false)
-    private String fileAbsolutePath;
+    @Column(name = "absolutePath", nullable = false)
+    private String absolutePath;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "creationTime", nullable = false, length = 19)
     private Date creationTime;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "lastAccessTime", nullable = false, length = 19)
-    private Date lastAccessTime;
-
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "lastModifiedTime", nullable = false, length = 19)
     private Date lastModifiedTime;
 
     @Column(name = "fileSize", nullable = false)
-    private Long fileSize;
-
-    @Column(name = "md5CheckSum", nullable = false)
-    private String md5CheckSum;
+    private long fileSize;
 
     public DataFile() {
     }
 
-    /**
-     * @param fileName
-     * @param fileAbsolutePath
-     * @param creationTime
-     * @param lastAccessTime
-     * @param lastModifiedTime
-     * @param fileSize
-     * @param md5CheckSum
-     */
-    public DataFile(String fileName, String fileAbsolutePath,
-            Date creationTime, Date lastAccessTime, Date lastModifiedTime,
-            Long fileSize, String md5CheckSum) {
-        this.fileName = fileName;
-        this.fileAbsolutePath = fileAbsolutePath;
+    public DataFile(String name, String absolutePath, Date creationTime, Date lastModifiedTime, long fileSize) {
+        this.name = name;
+        this.absolutePath = absolutePath;
         this.creationTime = creationTime;
-        this.lastAccessTime = lastAccessTime;
         this.lastModifiedTime = lastModifiedTime;
         this.fileSize = fileSize;
-        this.md5CheckSum = md5CheckSum;
     }
 
     public Long getId() {
@@ -101,20 +81,20 @@ public class DataFile implements Serializable {
         this.id = id;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getName() {
+        return name;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getFileAbsolutePath() {
-        return fileAbsolutePath;
+    public String getAbsolutePath() {
+        return absolutePath;
     }
 
-    public void setFileAbsolutePath(String fileAbsolutePath) {
-        this.fileAbsolutePath = fileAbsolutePath;
+    public void setAbsolutePath(String absolutePath) {
+        this.absolutePath = absolutePath;
     }
 
     public Date getCreationTime() {
@@ -125,14 +105,6 @@ public class DataFile implements Serializable {
         this.creationTime = creationTime;
     }
 
-    public Date getLastAccessTime() {
-        return lastAccessTime;
-    }
-
-    public void setLastAccessTime(Date lastAccessTime) {
-        this.lastAccessTime = lastAccessTime;
-    }
-
     public Date getLastModifiedTime() {
         return lastModifiedTime;
     }
@@ -141,20 +113,12 @@ public class DataFile implements Serializable {
         this.lastModifiedTime = lastModifiedTime;
     }
 
-    public Long getFileSize() {
+    public long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(Long fileSize) {
+    public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
-    }
-
-    public String getMd5CheckSum() {
-        return md5CheckSum;
-    }
-
-    public void setMd5CheckSum(String md5CheckSum) {
-        this.md5CheckSum = md5CheckSum;
     }
 
 }
