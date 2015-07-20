@@ -19,9 +19,10 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.TestUtility;
 import edu.pitt.dbmi.ccd.db.entity.Person;
+import java.util.List;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,60 +46,44 @@ public class PersonRepositoryTest {
     }
 
     @Test
-    public void crudOperations() {
-        System.out.println("CRUD Operations");
-
-        String firstName = "John";
-        String lastName = "Doe";
-        String email = "jdoe@localhost";
-        String workspaceDirectory = "/swally";
+    public void testCrudOperations() {
+        System.out.println("PersonRepository CRUD Operations");
 
         // create
+        String firstName = "Alan";
+        String lastName = "Turing";
+        String email = "aturing@cs.pitt.edu";
+        String workspaceDirectory = "/home/aturing/workspace";
         Person person = new Person(firstName, lastName, email, workspaceDirectory);
         person = personRepository.save(person);
         Assert.assertNotNull(person.getId());
-        TestUtility.printPerson(person, "Create New Person");
-
-        // update
-        firstName = "Joe";
-        person.setFirstName(firstName);
-        person = personRepository.save(person);
-        Assert.assertEquals(firstName, person.getFirstName());
-        TestUtility.printPerson(person, "Update Person");
 
         // read
         Long id = person.getId();
         person = personRepository.findOne(id);
         Assert.assertNotNull(person);
-        TestUtility.printPerson(person, "Find By ID");
+
+        // update
+        email = "alenturing@cs.pitt.edu";
+        person.setEmail(email);
+        person = personRepository.save(person);
+        Assert.assertEquals(email, person.getEmail());
 
         // delete
         id = person.getId();
         personRepository.delete(person);
         person = personRepository.findOne(id);
         Assert.assertNull(person);
-        TestUtility.printPerson(person, "Delete Person");
     }
 
-    /**
-     * Test of findByEmail method, of class PersonRepository.
-     */
+    @Ignore
     @Test
-    public void testFindByEmail() {
-        System.out.println("findByEmail");
+    public void testFindAll() {
+        System.out.println("PersonRepository Find All");
 
-        String firstName = "Sally";
-        String lastName = "Wally";
-        String email = "swally@localhost";
-        String workspaceDirectory = "/swally";
+        List<Person> persons = personRepository.findAll();
 
-        // create
-        Person person = new Person(firstName, lastName, email, workspaceDirectory);
-        personRepository.save(person);
-
-        person = personRepository.findByEmail(email);
-        Assert.assertNotNull(person);
-        TestUtility.printPerson(person, "Find By Email");
+//        Assert.assertTrue(persons.isEmpty());
     }
 
 }

@@ -18,21 +18,17 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.DataFile;
-import java.util.List;
+import edu.pitt.dbmi.ccd.db.entity.FileDelimiter;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
- * May 18, 2015 1:11:19 PM
+ * Jul 20, 2015 3:45:03 PM
  *
- * @author Chirayu (Kong) Wongchokprasitti (chw20@pitt.edu)
- *
+ * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public interface FileInfoRepository extends JpaRepository<DataFile, Long> {
-
-    public List<DataFile> findByFileName(String fileName);
-
-    public DataFile findByFileAbsolutePath(String fileAbsolutePath);
+@Repository
+public interface FileDelimiterRepository extends JpaRepository<FileDelimiter, Long> {
 
 }

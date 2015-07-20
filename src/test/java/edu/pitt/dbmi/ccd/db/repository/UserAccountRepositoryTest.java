@@ -19,11 +19,14 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.TestUtility;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import java.time.Instant;
 import java.util.Date;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +35,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  *
- * May 13, 2015 1:09:47 PM
+ * Jul 20, 2015 12:36:52 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -46,71 +49,59 @@ public class UserAccountRepositoryTest {
     @Autowired
     private PersonRepository personRepository;
 
+    private Person person;
+
     public UserAccountRepositoryTest() {
     }
 
+    @Before
+    public void setUp() {
+        person = new Person("Ada", "Lovelace", "alovelace@cs.pitt.edu", "");
+        person = personRepository.save(person);
+    }
+
+    @After
+    public void tearDown() {
+        personRepository.delete(person.getId());
+    }
+
     @Test
-    public void crudOperations() {
-        System.out.println("CRUD Operations");
+    public void testCrudOperations() {
+        System.out.println("UserAccountRepository CRUD Operations");
 
-        // create person first
-        Person person = new Person("Jill", "Hill", "jhill@localhost", "/jill");
-        personRepository.save(person);
-        Assert.assertNotNull(person.getId());
-
-        // create new user account
-        String username = "jhill";
+        // create
+        String username = "alovelace";
         String password = "hello";
         boolean active = true;
-        Date createdDate = new Date(System.currentTimeMillis());
+        Date createdDate = Date.from(Instant.now());
         UserAccount userAccount = new UserAccount(username, password, active, createdDate, person);
         userAccountRepository.save(userAccount);
         Assert.assertNotNull(userAccount.getId());
-        TestUtility.printUserAccount(userAccount, "Create New UserAccount");
 
-        // update user account
-        username = "j2hill";
-        userAccount.setUsername(username);
-        userAccount = userAccountRepository.save(userAccount);
-        Assert.assertEquals(username, userAccount.getUsername());
-        TestUtility.printUserAccount(userAccount, "Update UserAccount");
-
-        // read user account by id
+        // read
         Long id = userAccount.getId();
         userAccount = userAccountRepository.findOne(id);
         Assert.assertNotNull(userAccount);
-        TestUtility.printUserAccount(userAccount, "Read By Id");
 
-        // delete user account
+        // update
+        username = "allace";
+        userAccount.setUsername(username);
+        userAccount = userAccountRepository.save(userAccount);
+        Assert.assertEquals(username, userAccount.getUsername());
+
+        // delete
+        id = userAccount.getId();
         userAccountRepository.delete(userAccount);
         userAccount = userAccountRepository.findOne(id);
         Assert.assertNull(userAccount);
-        TestUtility.printUserAccount(userAccount, "Delete UserAccount");
     }
 
     /**
      * Test of findByUsername method, of class UserAccountRepository.
      */
+    @Ignore
     @Test
     public void testFindByUsername() {
-        System.out.println("findByUsername");
-
-        // create person first
-        Person person = new Person("Jack", "O'Larry", "jacklarry@localhost", "/jacklarry");
-        personRepository.save(person);
-        Assert.assertNotNull(person.getId());
-
-        String username = "jacklarry";
-        String password = "hello";
-        boolean active = true;
-        Date createdDate = new Date(System.currentTimeMillis());
-        UserAccount userAccount = new UserAccount(username, password, active, createdDate, person);
-        userAccountRepository.save(userAccount);
-        Assert.assertNotNull(userAccount.getId());
-
-        userAccount = userAccountRepository.findByUsername(username);
-        Assert.assertNotNull(userAccount);
-        TestUtility.printUserAccount(userAccount, "Find By Username");
     }
 
 }
