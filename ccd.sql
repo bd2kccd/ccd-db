@@ -29,7 +29,8 @@ CREATE TABLE `DataFile` (
   `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `lastModifiedTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `size` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -51,7 +52,7 @@ DROP TABLE IF EXISTS `DataFileInfo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `DataFileInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `md5CheckSum` varchar(128) DEFAULT NULL,
+  `md5CheckSum` varchar(32) DEFAULT NULL,
   `numOfRows` int(11) DEFAULT NULL,
   `numOfColumns` int(11) DEFAULT NULL,
   `missingValue` tinyint(1) DEFAULT NULL,
@@ -88,7 +89,8 @@ CREATE TABLE `FileDelimiter` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -114,7 +116,8 @@ CREATE TABLE `Person` (
   `lastName` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `workspaceDirectory` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -143,6 +146,7 @@ CREATE TABLE `UserAccount` (
   `lastLoginDate` timestamp NULL DEFAULT NULL,
   `personId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
   KEY `personId` (`personId`),
   CONSTRAINT `UserAccount_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `Person` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -168,7 +172,8 @@ CREATE TABLE `VariableType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -190,4 +195,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-20 10:19:09
+-- Dump completed on 2015-07-21  7:40:00

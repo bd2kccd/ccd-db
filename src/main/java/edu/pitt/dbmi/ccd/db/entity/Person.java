@@ -47,7 +47,7 @@ public class Person implements Serializable {
     @Column(name = "lastName", nullable = false)
     private String lastName;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "workspaceDirectory", nullable = false)

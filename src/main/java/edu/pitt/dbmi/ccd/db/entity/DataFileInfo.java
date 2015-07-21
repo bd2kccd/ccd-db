@@ -56,7 +56,7 @@ public class DataFileInfo implements Serializable {
     @JoinColumn(name = "variableTypeId")
     private VariableType variableType;
 
-    @Column(name = "md5CheckSum", length = 128)
+    @Column(name = "md5CheckSum", length = 32)
     private String md5checkSum;
 
     @Column(name = "numOfRows")
