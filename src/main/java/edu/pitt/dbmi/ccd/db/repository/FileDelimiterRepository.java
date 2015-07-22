@@ -31,4 +31,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FileDelimiterRepository extends JpaRepository<FileDelimiter, Long> {
 
+    public FileDelimiter findByName(String name);
+
 }
