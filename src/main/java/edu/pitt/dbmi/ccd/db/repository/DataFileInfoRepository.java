@@ -18,8 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.DataFileInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,5 +32,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface DataFileInfoRepository extends JpaRepository<DataFileInfo, Long> {
+
+    public DataFileInfo findByDataFile(DataFile dataFile);
+
+    @Query("SELECT dfi FROM DataFileInfo dfi WHERE dfi.dataFile.name = ?1")
+    public DataFileInfo findByDataFileName(String name);
 
 }

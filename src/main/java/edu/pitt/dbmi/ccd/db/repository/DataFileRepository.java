@@ -31,4 +31,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DataFileRepository extends JpaRepository<DataFile, Long> {
 
+    public DataFile findByName(String name);
+
 }
