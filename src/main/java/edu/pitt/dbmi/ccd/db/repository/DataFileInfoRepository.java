@@ -38,4 +38,6 @@ public interface DataFileInfoRepository extends JpaRepository<DataFileInfo, Long
     @Query("SELECT dfi FROM DataFileInfo dfi WHERE dfi.dataFile.name = ?1")
     public DataFileInfo findByDataFileName(String name);
 
+    public void deleteByDataFile(DataFile dataFile);
+
 }
