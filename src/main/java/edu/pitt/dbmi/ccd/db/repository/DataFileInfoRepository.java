@@ -20,6 +20,7 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.DataFileInfo;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -37,6 +38,12 @@ public interface DataFileInfoRepository extends JpaRepository<DataFileInfo, Long
 
     @Query("SELECT dfi FROM DataFileInfo dfi WHERE dfi.dataFile.name = ?1")
     public DataFileInfo findByDataFileName(String name);
+
+    @Query("SELECT dfi FROM DataFileInfo dfi WHERE dfi.dataFile.absolutePath = ?1")
+    public List<DataFileInfo> findByDataFileAbsolutePath(String absolutePath);
+
+    @Query("SELECT dfi FROM DataFileInfo dfi WHERE dfi.dataFile.name = ?1 AND dfi.dataFile.absolutePath = ?2")
+    public DataFileInfo findByDataFileNameAndAbsolutePath(String name, String absolutePath);
 
     public void deleteByDataFile(DataFile dataFile);
 
