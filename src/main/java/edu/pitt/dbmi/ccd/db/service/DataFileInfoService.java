@@ -16,19 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
+package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.DataFileInfo;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import edu.pitt.dbmi.ccd.db.repository.DataFileInfoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * Jul 23, 2015 5:33:07 PM
+ * Jul 24, 2015 1:30:36 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
-public interface DataFileInfoRepository extends JpaRepository<DataFileInfo, Long> {
+@Service
+@Transactional
+public class DataFileInfoService {
+
+    private final DataFileInfoRepository dataFileInfoRepository;
+
+    @Autowired(required = true)
+    public DataFileInfoService(DataFileInfoRepository dataFileInfoRepository) {
+        this.dataFileInfoRepository = dataFileInfoRepository;
+    }
 
 }

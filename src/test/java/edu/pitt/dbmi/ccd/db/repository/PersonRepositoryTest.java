@@ -20,9 +20,7 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.entity.Person;
-import java.util.List;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  *
- * May 13, 2015 11:30:04 AM
+ * Jul 23, 2015 1:45:36 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -47,7 +45,7 @@ public class PersonRepositoryTest {
 
     @Test
     public void testCrudOperations() {
-        System.out.println("PersonRepository CRUD Operations");
+        System.out.println("Person Repository CRUD Operations");
 
         // create
         String firstName = "Alan";
@@ -74,16 +72,6 @@ public class PersonRepositoryTest {
         personRepository.delete(person);
         person = personRepository.findOne(id);
         Assert.assertNull(person);
-    }
-
-    @Ignore
-    @Test
-    public void testFindAll() {
-        System.out.println("PersonRepository Find All");
-
-        List<Person> persons = personRepository.findAll();
-
-//        Assert.assertTrue(persons.isEmpty());
     }
 
 }

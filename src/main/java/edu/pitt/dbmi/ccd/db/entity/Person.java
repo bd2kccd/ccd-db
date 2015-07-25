@@ -27,14 +27,14 @@ import javax.persistence.Id;
 
 /**
  *
- * May 13, 2015 11:19:52 AM
+ * Jul 23, 2015 1:37:42 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
 public class Person implements Serializable {
 
-    private static final long serialVersionUID = 2637566308247922812L;
+    private static final long serialVersionUID = 5707342040828691260L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,17 +50,17 @@ public class Person implements Serializable {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "workspaceDirectory", nullable = false)
-    private String workspaceDirectory;
+    @Column(name = "workspace", nullable = false)
+    private String workspace;
 
     public Person() {
     }
 
-    public Person(String firstName, String lastName, String email, String workspaceDirectory) {
+    public Person(String firstName, String lastName, String email, String workspace) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.workspaceDirectory = workspaceDirectory;
+        this.workspace = workspace;
     }
 
     public Long getId() {
@@ -95,12 +95,12 @@ public class Person implements Serializable {
         this.email = email;
     }
 
-    public String getWorkspaceDirectory() {
-        return workspaceDirectory;
+    public String getWorkspace() {
+        return workspace;
     }
 
-    public void setWorkspaceDirectory(String workspaceDirectory) {
-        this.workspaceDirectory = workspaceDirectory;
+    public void setWorkspace(String workspace) {
+        this.workspace = workspace;
     }
 
 }

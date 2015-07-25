@@ -27,22 +27,25 @@ import javax.persistence.Id;
 
 /**
  *
- * Jul 20, 2015 10:04:18 AM
+ * Jul 23, 2015 3:21:35 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
 public class FileDelimiter implements Serializable {
 
-    private static final long serialVersionUID = -460363062551467483L;
+    private static final long serialVersionUID = 3557946732110729506L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false, length = 16)
     private String name;
+
+    @Column(name = "value", nullable = false, length = 8)
+    private String value;
 
     @Column(name = "description")
     private String description;
@@ -50,13 +53,9 @@ public class FileDelimiter implements Serializable {
     public FileDelimiter() {
     }
 
-    public FileDelimiter(String name) {
+    public FileDelimiter(String name, String value) {
         this.name = name;
-    }
-
-    public FileDelimiter(String name, String description) {
-        this.name = name;
-        this.description = description;
+        this.value = value;
     }
 
     public Long getId() {
@@ -73,6 +72,14 @@ public class FileDelimiter implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public String getDescription() {

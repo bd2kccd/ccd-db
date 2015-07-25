@@ -16,21 +16,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
+package edu.pitt.dbmi.ccd.db.util;
 
 import edu.pitt.dbmi.ccd.db.entity.Person;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.io.PrintStream;
 
 /**
  *
- * Jul 23, 2015 1:44:13 PM
+ * Jul 23, 2015 2:51:58 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
-public interface PersonRepository extends JpaRepository<Person, Long> {
+public class PersonPrint implements PrintPretty {
 
-    public Person findByEmail(String email);
+    private PersonPrint() {
+    }
+
+    public static void print(Person person, String title, PrintStream out) {
+        out.println(DOUBLE_LINE);
+        if (title != null && title.trim().length() > 0) {
+            out.println(title);
+            out.println(SINGLE_LINE);
+        }
+        if (person == null) {
+            out.println(person);
+        } else {
+            out.printf("ID: %d\n", person.getId());
+            out.printf("First Name: %s\n", person.getFirstName());
+            out.printf("Last Name: %s\n", person.getLastName());
+            out.printf("Email: %s\n", person.getEmail());
+            out.printf("Workspace: %s\n", person.getWorkspace());
+        }
+        out.println(DOUBLE_LINE);
+    }
 
 }

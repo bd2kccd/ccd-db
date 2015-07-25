@@ -28,9 +28,11 @@ CREATE TABLE `DataFile` (
   `absolutePath` varchar(255) NOT NULL,
   `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `lastModifiedTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `size` bigint(20) NOT NULL,
+  `fileSize` bigint(20) NOT NULL,
+  `dataFileInfoId` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  KEY `dataFileInfoId` (`dataFileInfoId`),
+  CONSTRAINT `DataFile_ibfk_1` FOREIGN KEY (`dataFileInfoId`) REFERENCES `DataFileInfo` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -58,14 +60,11 @@ CREATE TABLE `DataFileInfo` (
   `missingValue` tinyint(1) DEFAULT NULL,
   `variableTypeId` bigint(20) DEFAULT NULL,
   `fileDelimiterId` bigint(20) DEFAULT NULL,
-  `dataFileId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `variableTypeId` (`variableTypeId`),
   KEY `fileDelimiterId` (`fileDelimiterId`),
-  KEY `dataFileId` (`dataFileId`),
   CONSTRAINT `DataFileInfo_ibfk_1` FOREIGN KEY (`variableTypeId`) REFERENCES `VariableType` (`id`),
-  CONSTRAINT `DataFileInfo_ibfk_2` FOREIGN KEY (`fileDelimiterId`) REFERENCES `FileDelimiter` (`id`),
-  CONSTRAINT `DataFileInfo_ibfk_3` FOREIGN KEY (`dataFileId`) REFERENCES `DataFile` (`id`)
+  CONSTRAINT `DataFileInfo_ibfk_2` FOREIGN KEY (`fileDelimiterId`) REFERENCES `FileDelimiter` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -87,10 +86,10 @@ DROP TABLE IF EXISTS `FileDelimiter`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `FileDelimiter` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(16) NOT NULL,
+  `value` varchar(8) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -115,7 +114,7 @@ CREATE TABLE `Person` (
   `firstName` varchar(255) NOT NULL,
   `lastName` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `workspaceDirectory` varchar(255) NOT NULL,
+  `workspace` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -162,6 +161,33 @@ LOCK TABLES `UserAccount` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `UserAccountDataFileRel`
+--
+
+DROP TABLE IF EXISTS `UserAccountDataFileRel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserAccountDataFileRel` (
+  `userAccountId` bigint(20) NOT NULL,
+  `dataFileId` bigint(20) NOT NULL,
+  PRIMARY KEY (`userAccountId`,`dataFileId`),
+  KEY `userAccountId` (`userAccountId`),
+  KEY `dataFileId` (`dataFileId`),
+  CONSTRAINT `UserAccountDataFileRel_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`),
+  CONSTRAINT `UserAccountDataFileRel_ibfk_2` FOREIGN KEY (`dataFileId`) REFERENCES `DataFile` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserAccountDataFileRel`
+--
+
+LOCK TABLES `UserAccountDataFileRel` WRITE;
+/*!40000 ALTER TABLE `UserAccountDataFileRel` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserAccountDataFileRel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `VariableType`
 --
 
@@ -170,10 +196,9 @@ DROP TABLE IF EXISTS `VariableType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `VariableType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(16) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -195,4 +220,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-21  7:40:00
+-- Dump completed on 2015-07-24  9:43:53

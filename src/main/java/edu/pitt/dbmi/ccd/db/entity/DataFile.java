@@ -20,30 +20,40 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
  *
- * May 18, 2015 12:12:43 PM
+ * Jul 23, 2015 3:21:54 PM
  *
- * @author Chirayu (Kong) Wongchokprasitti (chw20@pitt.edu)
- *
+ * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
 public class DataFile implements Serializable {
 
-    private static final long serialVersionUID = 2009426805915818939L;
+    private static final long serialVersionUID = -5489927539588927078L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "dataFileInfoId")
+    private DataFileInfo dataFileInfo;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -62,6 +72,12 @@ public class DataFile implements Serializable {
     @Column(name = "fileSize", nullable = false)
     private long fileSize;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "UserAccountDataFileRel", catalog = "ccd", joinColumns = {
+        @JoinColumn(name = "dataFileId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
+    private Set<UserAccount> userAccounts = new HashSet<>(0);
+
     public DataFile() {
     }
 
@@ -79,6 +95,14 @@ public class DataFile implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public DataFileInfo getDataFileInfo() {
+        return dataFileInfo;
+    }
+
+    public void setDataFileInfo(DataFileInfo dataFileInfo) {
+        this.dataFileInfo = dataFileInfo;
     }
 
     public String getName() {
@@ -119,6 +143,14 @@ public class DataFile implements Serializable {
 
     public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public Set<UserAccount> getUserAccounts() {
+        return userAccounts;
+    }
+
+    public void setUserAccounts(Set<UserAccount> userAccounts) {
+        this.userAccounts = userAccounts;
     }
 
 }

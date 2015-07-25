@@ -27,21 +27,21 @@ import javax.persistence.Id;
 
 /**
  *
- * Jul 20, 2015 10:07:09 AM
+ * Jul 23, 2015 3:21:44 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
 public class VariableType implements Serializable {
 
-    private static final long serialVersionUID = 4505866932306526791L;
+    private static final long serialVersionUID = 4497385491404329401L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false, length = 16)
     private String name;
 
     @Column(name = "description")
@@ -52,11 +52,6 @@ public class VariableType implements Serializable {
 
     public VariableType(String name) {
         this.name = name;
-    }
-
-    public VariableType(String name, String description) {
-        this.name = name;
-        this.description = description;
     }
 
     public Long getId() {

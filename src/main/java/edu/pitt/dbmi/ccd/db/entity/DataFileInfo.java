@@ -30,29 +30,25 @@ import javax.persistence.ManyToOne;
 
 /**
  *
- * Jul 20, 2015 10:12:45 AM
+ * Jul 23, 2015 3:19:30 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
 public class DataFileInfo implements Serializable {
 
-    private static final long serialVersionUID = -5136383168139014898L;
+    private static final long serialVersionUID = -1520396576756934346L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dataFileId", nullable = false)
-    private DataFile dataFile;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fileDelimiterId")
     private FileDelimiter fileDelimiter;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "variableTypeId")
     private VariableType variableType;
 
@@ -71,34 +67,12 @@ public class DataFileInfo implements Serializable {
     public DataFileInfo() {
     }
 
-    public DataFileInfo(DataFile dataFile) {
-        this.dataFile = dataFile;
-    }
-
-    public DataFileInfo(DataFile dataFile, FileDelimiter fileDelimiter, VariableType variableType, String md5checkSum, Integer numOfRows, Integer numOfColumns, Boolean missingValue) {
-        this.dataFile = dataFile;
-        this.fileDelimiter = fileDelimiter;
-        this.variableType = variableType;
-        this.md5checkSum = md5checkSum;
-        this.numOfRows = numOfRows;
-        this.numOfColumns = numOfColumns;
-        this.missingValue = missingValue;
-    }
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public DataFile getDataFile() {
-        return dataFile;
-    }
-
-    public void setDataFile(DataFile dataFile) {
-        this.dataFile = dataFile;
     }
 
     public FileDelimiter getFileDelimiter() {

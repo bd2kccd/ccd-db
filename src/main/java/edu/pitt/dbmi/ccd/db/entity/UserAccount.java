@@ -20,6 +20,8 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,25 +29,31 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
  *
- * May 13, 2015 1:08:01 PM
+ * Jul 23, 2015 3:00:57 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
 public class UserAccount implements Serializable {
 
-    private static final long serialVersionUID = 3966919835182570915L;
+    private static final long serialVersionUID = 7491138787468687010L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "personId", nullable = false)
+    private Person person;
 
     @Column(name = "username", unique = true, nullable = false)
     private String username;
@@ -54,7 +62,7 @@ public class UserAccount implements Serializable {
     private String password;
 
     @Column(name = "active", nullable = false)
-    private boolean active;
+    private Boolean active;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdDate", nullable = false, length = 19)
@@ -64,19 +72,21 @@ public class UserAccount implements Serializable {
     @Column(name = "lastLoginDate", length = 19)
     private Date lastLoginDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "personId", nullable = false)
-    private Person person;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "UserAccountDataFileRel", catalog = "ccd", joinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "dataFileId", nullable = false, updatable = false)})
+    private Set<DataFile> dataFiles = new HashSet<>(0);
 
     public UserAccount() {
     }
 
-    public UserAccount(String username, String password, boolean active, Date createdDate, Person person) {
+    public UserAccount(Person person, String username, String password, Boolean active, Date createdDate) {
+        this.person = person;
         this.username = username;
         this.password = password;
         this.active = active;
         this.createdDate = createdDate;
-        this.person = person;
     }
 
     public Long getId() {
@@ -85,6 +95,14 @@ public class UserAccount implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public String getUsername() {
@@ -103,11 +121,11 @@ public class UserAccount implements Serializable {
         this.password = password;
     }
 
-    public boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
@@ -127,12 +145,12 @@ public class UserAccount implements Serializable {
         this.lastLoginDate = lastLoginDate;
     }
 
-    public Person getPerson() {
-        return person;
+    public Set<DataFile> getDataFiles() {
+        return dataFiles;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public void setDataFiles(Set<DataFile> dataFiles) {
+        this.dataFiles = dataFiles;
     }
 
 }
