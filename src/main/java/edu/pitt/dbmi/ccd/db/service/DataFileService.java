@@ -20,10 +20,12 @@ package edu.pitt.dbmi.ccd.db.service;
 
 import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.DataFileInfo;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.DataFileInfoRepository;
 import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +62,10 @@ public class DataFileService {
 
     public List<DataFile> findByAbsolutePath(String absolutePath) {
         return dataFileRepository.findByAbsolutePath(absolutePath);
+    }
+
+    public List<DataFile> findByUserAccounts(Set<UserAccount> userAccounts) {
+        return dataFileRepository.findByUserAccounts(userAccounts);
     }
 
     public DataFile findByAbsolutePathAndName(String absolutePath, String name) {

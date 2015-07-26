@@ -19,7 +19,9 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.DataFile;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.List;
+import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -41,5 +43,7 @@ public interface DataFileRepository extends JpaRepository<DataFile, Long> {
 
     @Query("SELECT df FROM DataFile df WHERE df.absolutePath.name = ?1 AND df.dataFileInfo.fileDelimiter.name = ?2")
     public List<DataFile> findByAbsolutePathAndFileDelimiterName(String absolutePath, String name);
+
+    public List<DataFile> findByUserAccounts(Set<UserAccount> userAccounts);
 
 }
