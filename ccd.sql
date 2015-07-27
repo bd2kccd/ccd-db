@@ -130,6 +130,55 @@ LOCK TABLES `Person` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `SecurityAnswer`
+--
+
+DROP TABLE IF EXISTS `SecurityAnswer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SecurityAnswer` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `answer` varchar(255) NOT NULL,
+  `securityQuestionId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `securityQuestionId` (`securityQuestionId`),
+  CONSTRAINT `SecurityAnswer_ibfk_1` FOREIGN KEY (`securityQuestionId`) REFERENCES `SecurityQuestion` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SecurityAnswer`
+--
+
+LOCK TABLES `SecurityAnswer` WRITE;
+/*!40000 ALTER TABLE `SecurityAnswer` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SecurityAnswer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SecurityQuestion`
+--
+
+DROP TABLE IF EXISTS `SecurityQuestion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SecurityQuestion` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `question` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SecurityQuestion`
+--
+
+LOCK TABLES `SecurityQuestion` WRITE;
+/*!40000 ALTER TABLE `SecurityQuestion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SecurityQuestion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `UserAccount`
 --
 
@@ -188,6 +237,33 @@ LOCK TABLES `UserAccountDataFileRel` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `UserAccountSecurityAnswerRel`
+--
+
+DROP TABLE IF EXISTS `UserAccountSecurityAnswerRel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserAccountSecurityAnswerRel` (
+  `userAccountId` bigint(20) NOT NULL,
+  `securityAnswerId` bigint(20) NOT NULL,
+  PRIMARY KEY (`userAccountId`,`securityAnswerId`),
+  KEY `userAccountId` (`userAccountId`),
+  KEY `securityAnswerId` (`securityAnswerId`),
+  CONSTRAINT `UserAccountSecurityAnswerRel_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`),
+  CONSTRAINT `UserAccountSecurityAnswerRel_ibfk_2` FOREIGN KEY (`securityAnswerId`) REFERENCES `SecurityAnswer` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserAccountSecurityAnswerRel`
+--
+
+LOCK TABLES `UserAccountSecurityAnswerRel` WRITE;
+/*!40000 ALTER TABLE `UserAccountSecurityAnswerRel` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserAccountSecurityAnswerRel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `VariableType`
 --
 
@@ -220,4 +296,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-24  9:43:53
+-- Dump completed on 2015-07-27 15:06:37

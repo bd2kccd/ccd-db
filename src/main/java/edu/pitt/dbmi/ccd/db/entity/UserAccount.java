@@ -73,20 +73,37 @@ public class UserAccount implements Serializable {
     private Date lastLoginDate;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserAccountDataFileRel", catalog = "ccd", joinColumns = {
+    @JoinTable(name = "UserAccountDataFileRel", joinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "dataFileId", nullable = false, updatable = false)})
     private Set<DataFile> dataFiles = new HashSet<>(0);
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "UserAccountSecurityAnswerRel", joinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)})
+    private Set<SecurityAnswer> securityAnswers = new HashSet<>(0);
+
     public UserAccount() {
     }
 
-    public UserAccount(Person person, String username, String password, Boolean active, Date createdDate) {
+    public UserAccount(Person person, String username, String password, boolean active, Date createdDate) {
         this.person = person;
         this.username = username;
         this.password = password;
         this.active = active;
         this.createdDate = createdDate;
+    }
+
+    public UserAccount(Person person, String username, String password, boolean active, Date createdDate, Date lastLoginDate, Set<DataFile> dataFiles, Set<SecurityAnswer> securityAnswers) {
+        this.person = person;
+        this.username = username;
+        this.password = password;
+        this.active = active;
+        this.createdDate = createdDate;
+        this.lastLoginDate = lastLoginDate;
+        this.dataFiles = dataFiles;
+        this.securityAnswers = securityAnswers;
     }
 
     public Long getId() {
@@ -151,6 +168,14 @@ public class UserAccount implements Serializable {
 
     public void setDataFiles(Set<DataFile> dataFiles) {
         this.dataFiles = dataFiles;
+    }
+
+    public Set<SecurityAnswer> getSecurityAnswers() {
+        return securityAnswers;
+    }
+
+    public void setSecurityAnswers(Set<SecurityAnswer> securityAnswers) {
+        this.securityAnswers = securityAnswers;
     }
 
 }

@@ -73,7 +73,7 @@ public class DataFile implements Serializable {
     private long fileSize;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserAccountDataFileRel", catalog = "ccd", joinColumns = {
+    @JoinTable(name = "UserAccountDataFileRel", joinColumns = {
         @JoinColumn(name = "dataFileId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     private Set<UserAccount> userAccounts = new HashSet<>(0);
