@@ -18,45 +18,42 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.Person;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
-import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
+import edu.pitt.dbmi.ccd.db.entity.SecurityQuestion;
+import edu.pitt.dbmi.ccd.db.repository.SecurityQuestionRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * Jul 24, 2015 1:29:56 PM
+ * Jul 29, 2015 9:37:00 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
 @Transactional
-public class UserAccountService {
+public class SecurityQuestionService {
 
-    private final UserAccountRepository userAccountRepository;
-
-    private final PersonRepository personRepository;
+    private final SecurityQuestionRepository securityQuestionRepository;
 
     @Autowired(required = true)
-    public UserAccountService(
-            UserAccountRepository userAccountRepository,
-            PersonRepository personRepository) {
-        this.userAccountRepository = userAccountRepository;
-        this.personRepository = personRepository;
+    public SecurityQuestionService(SecurityQuestionRepository securityQuestionRepository) {
+        this.securityQuestionRepository = securityQuestionRepository;
+
+        List<SecurityQuestion> list = securityQuestionRepository.findAll();
+        if (list.isEmpty()) {
+            list.add(new SecurityQuestion("What is your favorite causal discovery algorithm?"));
+            list.add(new SecurityQuestion("What is your favorite dataset?"));
+            list.add(new SecurityQuestion("What is your mother's maiden name?"));
+            list.add(new SecurityQuestion("Where did you meet your spouse?"));
+
+            securityQuestionRepository.save(list);
+        }
     }
 
-    public UserAccount findByUsername(String username) {
-        return userAccountRepository.findByUsername(username);
-    }
-
-    public UserAccount saveUserAccount(UserAccount userAccount) {
-        Person person = personRepository.save(userAccount.getPerson());
-        userAccount.setPerson(person);
-
-        return userAccountRepository.save(userAccount);
+    public List<SecurityQuestion> findAllSecurityQuestion() {
+        return securityQuestionRepository.findAll();
     }
 
 }
