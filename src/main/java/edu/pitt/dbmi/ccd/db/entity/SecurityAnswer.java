@@ -48,7 +48,7 @@ public class SecurityAnswer implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "securityQuestionId", nullable = false)
     private SecurityQuestion securityQuestion;
 
