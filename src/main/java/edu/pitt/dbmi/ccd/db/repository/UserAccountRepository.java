@@ -33,4 +33,6 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     public UserAccount findByUsername(String username);
 
+    public UserAccount findByUsernameAndActivationKey(String username, String activationKey);
+
 }

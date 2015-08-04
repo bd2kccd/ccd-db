@@ -190,6 +190,7 @@ CREATE TABLE `UserAccount` (
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `active` tinyint(1) NOT NULL,
+  `activationKey` varchar(255) DEFAULT NULL,
   `createdDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastLoginDate` timestamp NULL DEFAULT NULL,
   `personId` bigint(20) NOT NULL,
@@ -296,4 +297,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-27 15:06:37
+-- Dump completed on 2015-08-04  9:09:02

@@ -51,7 +51,7 @@ public class UserAccount implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
 
@@ -63,6 +63,9 @@ public class UserAccount implements Serializable {
 
     @Column(name = "active", nullable = false)
     private Boolean active;
+
+    @Column(name = "activationKey")
+    private String activationKey;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdDate", nullable = false, length = 19)
@@ -95,11 +98,12 @@ public class UserAccount implements Serializable {
         this.createdDate = createdDate;
     }
 
-    public UserAccount(Person person, String username, String password, boolean active, Date createdDate, Date lastLoginDate, Set<DataFile> dataFiles, Set<SecurityAnswer> securityAnswers) {
+    public UserAccount(Person person, String username, String password, boolean active, String activationKey, Date createdDate, Date lastLoginDate, Set<DataFile> dataFiles, Set<SecurityAnswer> securityAnswers) {
         this.person = person;
         this.username = username;
         this.password = password;
         this.active = active;
+        this.activationKey = activationKey;
         this.createdDate = createdDate;
         this.lastLoginDate = lastLoginDate;
         this.dataFiles = dataFiles;
@@ -144,6 +148,14 @@ public class UserAccount implements Serializable {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public String getActivationKey() {
+        return activationKey;
+    }
+
+    public void setActivationKey(String activationKey) {
+        this.activationKey = activationKey;
     }
 
     public Date getCreatedDate() {
