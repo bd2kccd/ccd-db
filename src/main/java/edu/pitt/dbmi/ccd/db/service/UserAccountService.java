@@ -52,6 +52,10 @@ public class UserAccountService {
         return userAccountRepository.findByUsername(username);
     }
 
+    public UserAccount findByUsernameAndActivationKey(String username, String activationKey) {
+        return userAccountRepository.findByUsernameAndActivationKey(username, activationKey);
+    }
+
     public UserAccount saveUserAccount(UserAccount userAccount) {
         Person person = personRepository.save(userAccount.getPerson());
         userAccount.setPerson(person);
