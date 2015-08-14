@@ -31,6 +31,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,7 @@ public class UserAccountServiceTest {
     public UserAccountServiceTest() {
     }
 
+    @Ignore
     @Test
     public void testMigration() throws ParseException {
         System.out.println("testMigration");
