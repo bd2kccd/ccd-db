@@ -66,13 +66,13 @@ public class UserAccountServiceTest {
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 line = line.trim();
                 String[] fields = line.split("\\|");
-                Date createdDate = df.parse(fields[1]);
-                String password = fields[2];
-                String username = fields[3];
-                String email = fields[4];
-                String firstName = fields[5];
-                String lastName = fields[6];
-                String workspace = fields[7];
+                Date createdDate = df.parse(fields[1].trim());
+                String password = fields[2].trim();
+                String username = fields[3].trim();
+                String email = fields[4].trim();
+                String firstName = fields[5].trim();
+                String lastName = fields[6].trim();
+                String workspace = fields[7].trim();
 
                 Person person = new Person(firstName, lastName, email, workspace);
                 UserAccount userAccount = new UserAccount(person, username, password, true, createdDate);
