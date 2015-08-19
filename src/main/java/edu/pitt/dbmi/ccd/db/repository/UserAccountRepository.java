@@ -20,6 +20,7 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -34,5 +35,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
     public UserAccount findByUsername(String username);
 
     public UserAccount findByUsernameAndActivationKey(String username, String activationKey);
+
+    @Query("SELECT ua FROM UserAccount ua WHERE ua.person.email = ?1")
+    public UserAccount findByEmail(String email);
 
 }

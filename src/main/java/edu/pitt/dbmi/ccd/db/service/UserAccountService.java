@@ -52,6 +52,10 @@ public class UserAccountService {
         return userAccountRepository.findByUsername(username);
     }
 
+    public UserAccount findUserAccountByEmail(String email) {
+        return userAccountRepository.findByEmail(email);
+    }
+
     public UserAccount findByUsernameAndActivationKey(String username, String activationKey) {
         return userAccountRepository.findByUsernameAndActivationKey(username, activationKey);
     }
