@@ -103,6 +103,36 @@ LOCK TABLES `FileDelimiter` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `JobQueueInfo`
+--
+
+DROP TABLE IF EXISTS `JobQueueInfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobQueueInfo` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `pid` bigint(20) DEFAULT NULL,
+  `algorName` varchar(255) NOT NULL,
+  `commands` text NOT NULL,
+  `fileName` varchar(255) NOT NULL,
+  `tmpDirectory` varchar(255) NOT NULL,
+  `outputDirectory` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL,
+  `addedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `JobQueueInfo`
+--
+
+LOCK TABLES `JobQueueInfo` WRITE;
+/*!40000 ALTER TABLE `JobQueueInfo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `JobQueueInfo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Person`
 --
 
@@ -238,6 +268,33 @@ LOCK TABLES `UserAccountDataFileRel` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `UserAccountJobQueueInfoRel`
+--
+
+DROP TABLE IF EXISTS `UserAccountJobQueueInfoRel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserAccountJobQueueInfoRel` (
+  `userAccountId` bigint(20) NOT NULL,
+  `jobQueueInfoId` bigint(20) NOT NULL,
+  PRIMARY KEY (`userAccountId`,`jobQueueInfoId`),
+  KEY `userAccountId` (`userAccountId`),
+  KEY `jobQueueInfoId` (`jobQueueInfoId`),
+  CONSTRAINT `UserAccountJobQueueInfoRel_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`),
+  CONSTRAINT `UserAccountJobQueueInfoRel_ibfk_2` FOREIGN KEY (`jobQueueInfoId`) REFERENCES `JobQueueInfo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserAccountJobQueueInfoRel`
+--
+
+LOCK TABLES `UserAccountJobQueueInfoRel` WRITE;
+/*!40000 ALTER TABLE `UserAccountJobQueueInfoRel` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserAccountJobQueueInfoRel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `UserAccountSecurityAnswerRel`
 --
 
@@ -297,4 +354,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-08-04  9:09:02
+-- Dump completed on 2015-08-21 14:33:15
