@@ -5,10 +5,10 @@
 
     <groupId>edu.pitt.dbmi</groupId>
     <artifactId>ccd-db</artifactId>
-    <version>0.4.2</version>
+    <version>0.5.0</version>
     <packaging>jar</packaging>
 
-    <name>CCD-Database</name>
+    <name>ccd-db</name>
     <description>CCD Database</description>
 
     <parent>
