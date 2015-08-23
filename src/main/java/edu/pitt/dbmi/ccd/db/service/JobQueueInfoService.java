@@ -26,13 +26,18 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * Aug 3, 2015 10:59:47 AM
  *
  * @author Chirayu (Kong) Wongchokprasitti
+ *
  */
+@Service
+@Transactional
 public class JobQueueInfoService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobQueueInfoService.class);
