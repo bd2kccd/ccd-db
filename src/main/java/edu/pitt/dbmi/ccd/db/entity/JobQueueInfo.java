@@ -76,7 +76,7 @@ public class JobQueueInfo implements Serializable {
     private Date addedTime;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserAccountJobQueueInfoRel", catalog = "ccd", joinColumns = {
+    @JoinTable(name = "UserAccountJobQueueInfoRel", joinColumns = {
         @JoinColumn(name = "jobQueueInfoId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     private Set<UserAccount> userAccounts = new HashSet<>(0);

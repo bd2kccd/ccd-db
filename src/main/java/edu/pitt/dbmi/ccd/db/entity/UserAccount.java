@@ -82,7 +82,7 @@ public class UserAccount implements Serializable {
     private Set<DataFile> dataFiles = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserAccountJobQueueInfoRel", catalog = "ccd", joinColumns = {
+    @JoinTable(name = "UserAccountJobQueueInfoRel", joinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "jobQueueInfoId", nullable = false, updatable = false)})
     private Set<JobQueueInfo> jobQueueInfos = new HashSet<>(0);
