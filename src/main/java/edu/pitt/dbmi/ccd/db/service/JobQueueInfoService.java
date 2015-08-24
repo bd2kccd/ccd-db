@@ -56,6 +56,10 @@ public class JobQueueInfoService {
         return jobQueueInfoRepository.save(jobQueueInfo);
     }
 
+    public List<JobQueueInfo> saveAll(List<JobQueueInfo> jobQueueInfos) {
+        return jobQueueInfoRepository.save(jobQueueInfos);
+    }
+
     public int getNumRunningJobs() {
         return jobQueueInfoRepository.findByStatus(1).size();
     }
@@ -64,12 +68,12 @@ public class JobQueueInfoService {
         return jobQueueInfoRepository.findByPid(pid);
     }
 
-    public List<JobQueueInfo> findByStatus(Integer status) {
+    public List<JobQueueInfo> findByStatus(int status) {
         return jobQueueInfoRepository.findByStatus(status);
     }
 
     public JobQueueInfo findFirstJobInQueue() {
-        return jobQueueInfoRepository.findByStatus(new Integer(0)).get(0);
+        return jobQueueInfoRepository.findByStatus(0).get(0);
     }
 
     public List<JobQueueInfo> findAll() {
