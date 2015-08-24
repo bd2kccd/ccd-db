@@ -82,6 +82,12 @@ public class UserAccount implements Serializable {
     private Set<DataFile> dataFiles = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "UserAccountJobQueueInfoRel", catalog = "ccd", joinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "jobQueueInfoId", nullable = false, updatable = false)})
+    private Set<JobQueueInfo> jobQueueInfos = new HashSet<>(0);
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountSecurityAnswerRel", joinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)})
@@ -98,7 +104,8 @@ public class UserAccount implements Serializable {
         this.createdDate = createdDate;
     }
 
-    public UserAccount(Person person, String username, String password, boolean active, String activationKey, Date createdDate, Date lastLoginDate, Set<DataFile> dataFiles, Set<SecurityAnswer> securityAnswers) {
+    public UserAccount(Long id, Person person, String username, String password, Boolean active, String activationKey, Date createdDate, Date lastLoginDate) {
+        this.id = id;
         this.person = person;
         this.username = username;
         this.password = password;
@@ -106,8 +113,6 @@ public class UserAccount implements Serializable {
         this.activationKey = activationKey;
         this.createdDate = createdDate;
         this.lastLoginDate = lastLoginDate;
-        this.dataFiles = dataFiles;
-        this.securityAnswers = securityAnswers;
     }
 
     public Long getId() {
@@ -180,6 +185,14 @@ public class UserAccount implements Serializable {
 
     public void setDataFiles(Set<DataFile> dataFiles) {
         this.dataFiles = dataFiles;
+    }
+
+    public Set<JobQueueInfo> getJobQueueInfos() {
+        return jobQueueInfos;
+    }
+
+    public void setJobQueueInfos(Set<JobQueueInfo> jobQueueInfos) {
+        this.jobQueueInfos = jobQueueInfos;
     }
 
     public Set<SecurityAnswer> getSecurityAnswers() {
