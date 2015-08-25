@@ -63,10 +63,12 @@ public class UserAccountServiceTest {
 
         Path dataFile = Paths.get("data", "data.txt");
         try (BufferedReader reader = Files.newBufferedReader(dataFile, Charset.defaultCharset())) {
+            reader.readLine();
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 line = line.trim();
-                String[] fields = line.split("\\|");
-                Date createdDate = df.parse(fields[1].trim());
+                String[] fields = line.split(";");
+                Date createdDate = df.parse(fields[0].trim());
+                Date lastLoginDate = df.parse(fields[1].trim());
                 String password = fields[2].trim();
                 String username = fields[3].trim();
                 String email = fields[4].trim();
@@ -76,7 +78,7 @@ public class UserAccountServiceTest {
 
                 Person person = new Person(firstName, lastName, email, workspace);
                 UserAccount userAccount = new UserAccount(person, username, password, true, createdDate);
-                userAccount.setLastLoginDate(createdDate);
+                userAccount.setLastLoginDate(lastLoginDate);
                 userAccountService.saveUserAccount(userAccount);
             }
         } catch (IOException exception) {
