@@ -1,8 +1,8 @@
--- MySQL dump 10.15  Distrib 10.0.20-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.15  Distrib 10.0.21-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: ccd
 -- ------------------------------------------------------
--- Server version	10.0.20-MariaDB
+-- Server version	10.0.21-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -142,6 +142,7 @@ DROP TABLE IF EXISTS `Person`;
 CREATE TABLE `Person` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `firstName` varchar(255) NOT NULL,
+  `middleName` varchar(255) DEFAULT NULL,
   `lastName` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `workspace` varchar(255) NOT NULL,
@@ -157,6 +158,30 @@ CREATE TABLE `Person` (
 LOCK TABLES `Person` WRITE;
 /*!40000 ALTER TABLE `Person` DISABLE KEYS */;
 /*!40000 ALTER TABLE `Person` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `RolePermission`
+--
+
+DROP TABLE IF EXISTS `RolePermission`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `RolePermission` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `RolePermission`
+--
+
+LOCK TABLES `RolePermission` WRITE;
+/*!40000 ALTER TABLE `RolePermission` DISABLE KEYS */;
+/*!40000 ALTER TABLE `RolePermission` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -219,10 +244,12 @@ CREATE TABLE `UserAccount` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `publicKey` varchar(592) DEFAULT NULL,
+  `privateKey` varchar(448) DEFAULT NULL,
   `active` tinyint(1) NOT NULL,
-  `activationKey` varchar(255) DEFAULT NULL,
+  `accountId` varchar(255) DEFAULT NULL,
   `createdDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `lastLoginDate` timestamp NULL DEFAULT NULL,
+  `lastLoginDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `personId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
@@ -322,6 +349,84 @@ LOCK TABLES `UserAccountSecurityAnswerRel` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `UserAccountUserRoleRel`
+--
+
+DROP TABLE IF EXISTS `UserAccountUserRoleRel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserAccountUserRoleRel` (
+  `userAccountId` bigint(20) NOT NULL,
+  `userRoleId` bigint(20) NOT NULL,
+  PRIMARY KEY (`userAccountId`,`userRoleId`),
+  KEY `userAccountId` (`userAccountId`),
+  KEY `userRoleId` (`userRoleId`),
+  CONSTRAINT `UserAccountUserRoleRel_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`),
+  CONSTRAINT `UserAccountUserRoleRel_ibfk_2` FOREIGN KEY (`userRoleId`) REFERENCES `UserRole` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserAccountUserRoleRel`
+--
+
+LOCK TABLES `UserAccountUserRoleRel` WRITE;
+/*!40000 ALTER TABLE `UserAccountUserRoleRel` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserAccountUserRoleRel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `UserRole`
+--
+
+DROP TABLE IF EXISTS `UserRole`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserRole` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserRole`
+--
+
+LOCK TABLES `UserRole` WRITE;
+/*!40000 ALTER TABLE `UserRole` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserRole` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `UserRoleRolePermissionRel`
+--
+
+DROP TABLE IF EXISTS `UserRoleRolePermissionRel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserRoleRolePermissionRel` (
+  `userRoleId` bigint(20) NOT NULL,
+  `rolePermissionId` bigint(20) NOT NULL,
+  PRIMARY KEY (`userRoleId`,`rolePermissionId`),
+  KEY `userRoleId` (`userRoleId`),
+  KEY `rolePermissionId` (`rolePermissionId`),
+  CONSTRAINT `UserRoleRolePermissionRel_ibfk_1` FOREIGN KEY (`userRoleId`) REFERENCES `UserRole` (`id`),
+  CONSTRAINT `UserRoleRolePermissionRel_ibfk_2` FOREIGN KEY (`rolePermissionId`) REFERENCES `RolePermission` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserRoleRolePermissionRel`
+--
+
+LOCK TABLES `UserRoleRolePermissionRel` WRITE;
+/*!40000 ALTER TABLE `UserRoleRolePermissionRel` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserRoleRolePermissionRel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `VariableType`
 --
 
@@ -354,4 +459,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-08-21 14:33:15
+-- Dump completed on 2015-10-06 11:42:54

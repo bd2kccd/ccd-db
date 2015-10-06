@@ -44,7 +44,7 @@ import javax.persistence.TemporalType;
 @Entity
 public class UserAccount implements Serializable {
 
-    private static final long serialVersionUID = 7491138787468687010L;
+    private static final long serialVersionUID = 4024214155038709306L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,11 +61,17 @@ public class UserAccount implements Serializable {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "publicKey", length = 592)
+    private String publicKey;
+
+    @Column(name = "privateKey", length = 448)
+    private String privateKey;
+
     @Column(name = "active", nullable = false)
     private Boolean active;
 
-    @Column(name = "activationKey")
-    private String activationKey;
+    @Column(name = "accountId")
+    private String accountId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdDate", nullable = false, length = 19)
@@ -80,6 +86,12 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "dataFileId", nullable = false, updatable = false)})
     private Set<DataFile> dataFiles = new HashSet<>(0);
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "UserAccountUserRoleRel", catalog = "ccd", joinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
+    private Set<UserRole> userRoles = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountJobQueueInfoRel", joinColumns = {
@@ -96,23 +108,30 @@ public class UserAccount implements Serializable {
     public UserAccount() {
     }
 
-    public UserAccount(Person person, String username, String password, boolean active, Date createdDate) {
+    public UserAccount(Person person, String username, String password, boolean active, String accountId, Date createdDate, Date lastLoginDate) {
         this.person = person;
         this.username = username;
         this.password = password;
         this.active = active;
-        this.createdDate = createdDate;
-    }
-
-    public UserAccount(Long id, Person person, String username, String password, Boolean active, String activationKey, Date createdDate, Date lastLoginDate) {
-        this.id = id;
-        this.person = person;
-        this.username = username;
-        this.password = password;
-        this.active = active;
-        this.activationKey = activationKey;
+        this.accountId = accountId;
         this.createdDate = createdDate;
         this.lastLoginDate = lastLoginDate;
+    }
+
+    public UserAccount(Person person, String username, String password, String publicKey, String privateKey, boolean active, String accountId, Date createdDate, Date lastLoginDate, Set<DataFile> dataFiles, Set<UserRole> userRoles, Set<JobQueueInfo> jobQueueInfos, Set<SecurityAnswer> securityAnswers) {
+        this.person = person;
+        this.username = username;
+        this.password = password;
+        this.publicKey = publicKey;
+        this.privateKey = privateKey;
+        this.active = active;
+        this.accountId = accountId;
+        this.createdDate = createdDate;
+        this.lastLoginDate = lastLoginDate;
+        this.dataFiles = dataFiles;
+        this.userRoles = userRoles;
+        this.jobQueueInfos = jobQueueInfos;
+        this.securityAnswers = securityAnswers;
     }
 
     public Long getId() {
@@ -147,6 +166,22 @@ public class UserAccount implements Serializable {
         this.password = password;
     }
 
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
+
     public Boolean getActive() {
         return active;
     }
@@ -155,12 +190,12 @@ public class UserAccount implements Serializable {
         this.active = active;
     }
 
-    public String getActivationKey() {
-        return activationKey;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setActivationKey(String activationKey) {
-        this.activationKey = activationKey;
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public Date getCreatedDate() {
@@ -185,6 +220,14 @@ public class UserAccount implements Serializable {
 
     public void setDataFiles(Set<DataFile> dataFiles) {
         this.dataFiles = dataFiles;
+    }
+
+    public Set<UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(Set<UserRole> userRoles) {
+        this.userRoles = userRoles;
     }
 
     public Set<JobQueueInfo> getJobQueueInfos() {
