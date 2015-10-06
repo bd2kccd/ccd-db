@@ -1,0 +1,51 @@
+buildscript {
+    ext {
+        springBootVersion='1.2.6.RELEASE'
+    }
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'spring-boot'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+jar {
+    baseName = 'ccd-db'
+    version = '0.6.0'
+}
+
+def compatibilityVersion = 1.8
+sourceCompatibility = compatibilityVersion
+targetCompatibility = compatibilityVersion
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // compile time
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
+    // compile("org.springframework.boot:spring-boot-starter-jdbc")
+    compile("com.fasterxml.jackson.core:jackson-databind")
+    compile("com.jayway.jsonpath:json-path")
+
+    // run time
+    runtime("org.hsqldb:hsqldb")
+    runtime("mysql:mysql-connector-java")
+
+    // testing
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    // testCompile('junit:junit')
+}
+
+// gradle wrapper (./gradlew)
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.7'
+}
