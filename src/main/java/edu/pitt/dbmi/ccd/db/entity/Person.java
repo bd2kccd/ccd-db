@@ -34,7 +34,7 @@ import javax.persistence.Id;
 @Entity
 public class Person implements Serializable {
 
-    private static final long serialVersionUID = 5707342040828691260L;
+    private static final long serialVersionUID = -3930588006064801674L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +43,9 @@ public class Person implements Serializable {
 
     @Column(name = "firstName", nullable = false)
     private String firstName;
+
+    @Column(name = "middleName")
+    private String middleName;
 
     @Column(name = "lastName", nullable = false)
     private String lastName;
@@ -77,6 +80,14 @@ public class Person implements Serializable {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
     }
 
     public String getLastName() {
