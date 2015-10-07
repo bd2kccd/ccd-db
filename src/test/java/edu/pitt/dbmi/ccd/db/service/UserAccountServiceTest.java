@@ -77,10 +77,9 @@ public class UserAccountServiceTest {
                 String workspace = fields[7].trim();
 
                 boolean active = true;
-                String accountId = null;
 
                 Person person = new Person(firstName, lastName, email, workspace);
-                UserAccount userAccount = new UserAccount(person, username, password, active, accountId, createdDate, lastLoginDate);
+                UserAccount userAccount = new UserAccount(person, username, password, active, createdDate, lastLoginDate);
                 userAccountService.saveUserAccount(userAccount);
             }
         } catch (IOException exception) {
