@@ -88,7 +88,7 @@ public class UserAccount implements Serializable {
     private Set<DataFile> dataFiles = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "UserAccountUserRoleRel", catalog = "ccd", joinColumns = {
+    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
     private Set<UserRole> userRoles = new HashSet<>(0);

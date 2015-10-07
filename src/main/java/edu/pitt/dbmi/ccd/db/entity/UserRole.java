@@ -54,13 +54,13 @@ public class UserRole implements Serializable {
     private String description;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserAccountUserRoleRel", catalog = "ccd", joinColumns = {
+    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
         @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "UserRoleRolePermissionRel", catalog = "ccd", joinColumns = {
+    @JoinTable(name = "UserRoleRolePermissionRel", joinColumns = {
         @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "rolePermissionId", nullable = false, updatable = false)})
     private Set<RolePermission> rolePermissions = new HashSet<>(0);
