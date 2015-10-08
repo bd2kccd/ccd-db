@@ -34,12 +34,17 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 /**
  *
- * Jul 23, 2015 3:00:57 PM
+ * Oct 08, 2015 6:25:18 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Entity
 public class UserAccount implements Serializable {
@@ -51,13 +56,19 @@ public class UserAccount implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    //private Role role;        // will make Role its own entity and add ManyToMany mapping
+
+    @ManyToOne(fetch = FetchType.EAGER)      // why not OneToOne?
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
 
+    @NotNull
+    @Size(max=255)
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
+    @JsonIgnore
+    @NotNull
     @Column(name = "password", nullable = false)
     private String password;
 

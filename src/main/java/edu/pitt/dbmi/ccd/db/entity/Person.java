@@ -30,6 +30,7 @@ import javax.persistence.Id;
  * Jul 23, 2015 1:37:42 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Entity
 public class Person implements Serializable {
@@ -43,6 +44,9 @@ public class Person implements Serializable {
 
     @Column(name = "firstName", nullable = false)
     private String firstName;
+
+    @Column(nullable=true)
+    private String middleName;
 
     @Column(name = "lastName", nullable = false)
     private String lastName;
