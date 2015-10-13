@@ -18,10 +18,12 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import java.util.Optional;
+import java.io.Serializable;
+import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
@@ -37,9 +39,13 @@ import org.hibernate.annotations.NaturalId;
 @Entity
 @Table(uniqueConstraints=
             @UniqueConstraint(columnNames={"vocabId", "level", "name"}))
-public class Attribute extends Identified {
+public class Attribute implements Serializable {
 
     private static final long serialVersionUID = 4437966176000119860L;
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     @NotNull
     @ManyToOne(optional=false, fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
@@ -75,6 +81,14 @@ public class Attribute extends Identified {
         this.parentAttribute = parentAttribute;
     }
     
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getLevel() {
         return level;
     }
@@ -99,12 +113,12 @@ public class Attribute extends Identified {
         this.requirementLevel = requirementLevel;
     }
 
-    public Optional<Attribute> getParentAttribute() {
-        return Optional.ofNullable(parentAttribute);
+    public Attribute getParentAttribute() {
+        return parentAttribute;
     }
 
-    public void setParentAttribute(Optional<Attribute> parentAttribute) {
-        this.parentAttribute = parentAttribute.orElse(null);
+    public void setParentAttribute(Attribute parentAttribute) {
+        this.parentAttribute = parentAttribute;
     }
 
     public Vocabulary getVocab() {

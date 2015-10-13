@@ -18,13 +18,51 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Column;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * Annotation access control
  *
  * @author Mark Silvis  (marksilvis@pitt.edu)
  */
-enum Access {
-    PRIVATE,
-    GROUP,
-    PUBLIC
+@Entity
+public class Access implements Serializable {
+    private static final Long serialVersionUID = 7788384757549817895L;
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @NotBlank
+    @Size(min=1, max=10)
+    @Column(length=10, unique=true, nullable=false)
+    private String access;
+
+    public Access() { }
+
+    public Access(String access) {
+        this.access = access;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getAccess() {
+        return access;
+    }
+
+    public void setAccess(String access) {
+        this.access = access;
+    }
 }

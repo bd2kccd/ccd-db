@@ -18,10 +18,16 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Optional;
+import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
@@ -29,17 +35,34 @@ import javax.persistence.ManyToOne;
 import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Entity
-public class Upload extends Versioned {
+public class Upload implements Serializable {
    
     private static final long serialVersionUID = 1143695321911902433L;
     
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified;
+
+    @JsonIgnore
+    @Version
+    private Integer version;
+
     @NotNull
     @ManyToOne(optional=false)
     @JoinColumn(name="profileId", nullable=false)
@@ -60,6 +83,16 @@ public class Upload extends Versioned {
 
     // @OneToMany(mappedBy="upload", fetch=FetchType.LAZY)
     // private Set<Annotation> annotations;
+
+    @PrePersist
+    protected void onCreate() {
+        created = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        modified = new Date();
+    }
 
     public Upload() {
         // annotations = new HashSet<>();
@@ -82,6 +115,14 @@ public class Upload extends Versioned {
         this.url = url;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Person getUploader() {
         return uploader;
     }
@@ -98,16 +139,16 @@ public class Upload extends Versioned {
         this.title = title;
     }
 
-    public Optional<DataFile> getFile() {
-        return Optional.ofNullable(file);
+    public DataFile getFile() {
+        return file;
     }
 
     public void setFile(DataFile file) {
         this.file = file;
     }
 
-    public Optional<Url> getUrl() {
-        return Optional.ofNullable(url);
+    public Url getUrl() {
+        return url;
     }
 
     public void setUrl(Url url) {

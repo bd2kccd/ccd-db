@@ -18,27 +18,50 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.NaturalId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * @author Mark Silvis  (marksilvis@pitt.edu)
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
-public class Vocabulary extends Versioned {
+public class Vocabulary implements Serializable {
 
     private static final long serialVersionUID = 7981019296719637838L;
 
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified;
+
+    @JsonIgnore
+    @Version
+    private Integer version;
     @NotNull
     @Size(min=4, max=255)
     @Column(length=255, unique=true, nullable=false)
@@ -46,12 +69,22 @@ public class Vocabulary extends Versioned {
     private String name;
 
     @NotNull
-    @Column(unique=false, nullable=false,
+    @Column(nullable=false,
             columnDefinition="TEXT")
     private String description;
 
     @OneToMany(mappedBy="vocab", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     private Set<Attribute> attributes;
+
+    @PrePersist
+    protected void onCreate() {
+        created = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        modified = new Date();
+    }
 
     public Vocabulary() { 
         attributes = new HashSet<>();
@@ -61,6 +94,14 @@ public class Vocabulary extends Versioned {
         this();
         this.name = name;
         this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -18,12 +18,18 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import java.util.Optional;
+import java.io.Serializable;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Date;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
@@ -31,36 +37,52 @@ import javax.persistence.Column;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 import javax.persistence.FetchType;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * @author Mark Silvis  (marksilvis@pitt.edu)
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
-public class Annotation extends Versioned {
+public class Annotation implements Serializable {
 
     private static final long serialVersionUID = 3156490985879126383L;
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified;
+
+    @JsonIgnore
+    @Version
+    private Integer version;
+
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="uploadId", nullable=true)
     private Upload target;
 
     @NotNull
     @ManyToOne(optional=false, fetch=FetchType.LAZY)
-    @JoinColumn(name="profileId", nullable=false)
-    private Person user;
+    @JoinColumn(name="userId", nullable=false)
+    private UserAccount user;
 
     @NotNull
-    @Column(unique=false, nullable=false,
+    @Column(nullable=false,
             columnDefinition="TINYINT(1) DEFAULT 0")
     private Boolean redacted = false;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(nullable=false,
-            columnDefinition = "ENUM('PRIVATE', 'GROUP', 'PUBLIC') DEFAULT 'PUBLIC'")
-    private Access accessControl=Access.PUBLIC;
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="accessControl", nullable=false)
+    private Access accessControl;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="groupId", nullable=true)
@@ -71,35 +93,69 @@ public class Annotation extends Versioned {
     private Vocabulary vocab;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(unique=false, nullable=true)
+    @JoinColumn(nullable=true)
     private Annotation parent;
 
     @OneToMany(mappedBy="annotation", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     private Set<AnnotationData> data;
 
+    @PrePersist
+    protected void onCreate() {
+        created = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        modified = new Date();
+    }
+
     public Annotation() { 
         data = new HashSet<>();
     }
 
-    public Annotation(Person user, Set<AnnotationData> data, Vocabulary vocab) {
+    public Annotation(UserAccount user, Set<AnnotationData> data, Vocabulary vocab) {
         this.user = user;
         this.data = data;
         this.vocab = vocab;
     }
 
-    public Optional<Upload> getTarget() {
-        return Optional.ofNullable(target);
+    public Long getId() {
+        return id;
     }
 
-    public void setTarget(Optional<Upload> target) {
-        this.target = target.orElse(null);
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Person getUser() {
+    public Date getCreated() {
+        return created;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    protected void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public Upload getTarget() {
+        return target;
+    }
+
+    public void setTarget(Upload target) {
+        this.target = target;
+    }
+
+    public UserAccount getUser() {
         return user;
     }
 
-    public void setUser(Person user) {
+    public void setUser(UserAccount user) {
         this.user = user;
     }
 
@@ -119,19 +175,19 @@ public class Annotation extends Versioned {
         this.accessControl = accessControl;
     }
 
-    public Optional<Group> getGroup() {
-        return Optional.ofNullable(group);
+    public Group getGroup() {
+        return group;
     }
 
-    public void setGroup(Optional<Group> group) {
-        this.group = group.orElse(null);
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
-    public Optional<Vocabulary> getVocabulary() {
-        return Optional.ofNullable(vocab);
+    public Vocabulary getVocabulary() {
+        return vocab;
     }
 
-    public void setVocabulary(Optional<Vocabulary> vocab) {
-        this.vocab = vocab.orElse(null);
+    public void setVocabulary(Vocabulary vocab) {
+        this.vocab = vocab;
     }
 }

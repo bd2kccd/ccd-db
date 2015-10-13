@@ -18,26 +18,35 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import java.util.Optional;
+import java.io.Serializable;
 import java.util.Set;
 import java.util.HashSet;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * @author Mark Silvis  (marksilvis@pitt.edu)
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
-public class AnnotationData extends Identified {
+public class AnnotationData implements Serializable {
 
     private static final long serialVersionUID = 6905712225800779882L;
 
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(nullable=false)
     private Annotation annotation;
 
     @ManyToOne(fetch=FetchType.EAGER)
@@ -88,6 +97,14 @@ public class AnnotationData extends Identified {
         this.parent = parent;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Annotation getAnnotation() {
         return annotation;
     }
@@ -96,28 +113,28 @@ public class AnnotationData extends Identified {
         this.annotation = annotation;
     }
 
-    public Optional<Attribute> getAttribute() {
-        return Optional.ofNullable(attribute);
+    public Attribute getAttribute() {
+        return attribute;
     }
 
-    public void setAttribute(Optional<Attribute> attribute) {
-        this.attribute = attribute.orElse(null);
+    public void setAttribute(Attribute attribute) {
+        this.attribute = attribute;
     }
 
-    public Optional<String> getValue() {
-        return Optional.ofNullable(value);
+    public String getValue() {
+        return value;
     }
 
-    public void setValue(Optional<String> value) {
-        this.value = value.orElse(null);
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public Optional<AnnotationData> getParent() {
-        return Optional.ofNullable(parent);
+    public AnnotationData getParent() {
+        return parent;
     }
 
-    public void setParent(Optional<AnnotationData> parent) {
-        this.parent = parent.orElse(null);
+    public void setParent(AnnotationData parent) {
+        this.parent = parent;
     }
 
     public Set<AnnotationData> getChildren() {

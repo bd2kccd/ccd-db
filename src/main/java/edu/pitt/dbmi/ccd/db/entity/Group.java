@@ -18,12 +18,14 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collection;
-import java.util.Optional;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
@@ -40,9 +42,13 @@ import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Table(name="Groups")
-public class Group extends Identified {
+public class Group implements Serializable {
     
     private static final long serialVersionUID = 8879813170966961889L;
+
+    @Id
+    @GeneratedValue
+    public Long id;
 
     @NotNull
     @Size(min=4, max=128)
@@ -60,16 +66,26 @@ public class Group extends Identified {
                inverseJoinColumns = { @JoinColumn(name="profileId")})
     private Set<Person> members;
 
-    public Group() {}
-
-    public Group(String name) {
-        this.name = name;
+    public Group() {
         members = new HashSet<>();
     }
 
-    public Group(String name, Optional<String> description) {
+    public Group(String name) {
+        this();
+        this.name = name;
+    }
+
+    public Group(String name, String description) {
         this(name);
-        this.description = description.orElse(null);
+        this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -80,12 +96,12 @@ public class Group extends Identified {
         this.name = name;
     }
 
-    public Optional<String> getDescription() {
-        return Optional.ofNullable(description);
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescription(Optional<String> description) {
-        this.description = description.orElse(null);
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Set<Person> getMembers() {

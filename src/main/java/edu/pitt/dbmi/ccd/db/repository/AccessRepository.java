@@ -16,24 +16,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.entity;
+package edu.pitt.dbmi.ccd.db.repository;
 
-import java.io.Serializable;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import edu.pitt.dbmi.ccd.db.entity.Access;
 
-@MappedSuperclass
-public abstract class Identified implements Serializable {
-    @Id
-    @GeneratedValue
-    private Long id;
+/**
+ * @author Mark Silvis (marksilvis@pitt.edu)
+ */
+@Repository
+public interface AccessRepository extends JpaRepository<Access, Long> {
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

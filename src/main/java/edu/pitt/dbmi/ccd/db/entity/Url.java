@@ -18,19 +18,28 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.URL;
 
 /**
  * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Entity
-public class Url extends Identified {
+public class Url implements Serializable {
    
     private static final long serialVersionUID = 5113618225135785452L;
     
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @URL
     @NotNull
     @Size(min=2, max=2083)
     @Column(length=2083, unique=true, nullable=false)
@@ -40,6 +49,14 @@ public class Url extends Identified {
 
     public Url(String address) {
         this.address = address;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAddress() {

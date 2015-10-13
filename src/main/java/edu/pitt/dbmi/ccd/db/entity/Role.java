@@ -18,14 +18,51 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-// will become its own entity
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Column;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * User roles
+ * User account role
  *
  * @author Mark Silvis  (marksilvis@pitt.edu)
  */
-public enum Role {
-    USER,
-    ADMIN
+@Entity
+public class Role implements Serializable {
+    private static final Long serialVersionUID = 6202269915883769553L;
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @NotBlank
+    @Size(max=10)
+    @Column(length=10, unique=true, nullable=false)
+    private String role;
+
+    public Role() { }
+
+    public Role(String role) {
+        this.role = role;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

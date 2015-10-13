@@ -31,7 +31,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -58,7 +58,7 @@ public class UserAccount implements Serializable {
 
     //private Role role;        // will make Role its own entity and add ManyToMany mapping
 
-    @ManyToOne(fetch = FetchType.EAGER)      // why not OneToOne?
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
 

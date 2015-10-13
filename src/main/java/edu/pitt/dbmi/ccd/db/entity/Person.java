@@ -24,6 +24,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.URL;
 
 /**
  *
@@ -42,20 +47,36 @@ public class Person implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
+    @NotBlank
     @Column(name = "firstName", nullable = false)
     private String firstName;
 
     @Column(nullable=true)
     private String middleName;
 
+    @NotBlank
     @Column(name = "lastName", nullable = false)
     private String lastName;
 
+    @Email
+    @NotNull
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "workspace", nullable = false)
     private String workspace;
+
+    @Column(nullable=true,
+            columnDefinition="TEXT")
+    private String description;
+
+    @URL
+    @Size(min=2, max=2083)
+    @Column(length=2083, nullable=true)
+    private String webPage;
+
+    @Column(nullable=true)
+    private String picturePath;
 
     public Person() {
     }
@@ -65,6 +86,26 @@ public class Person implements Serializable {
         this.lastName = lastName;
         this.email = email;
         this.workspace = workspace;
+    }
+
+    public Person(String firstName, String middleName, String lastName, String email, String workspace) {
+        this(firstName, lastName, email, workspace);
+        this.middleName = middleName;
+    }
+
+    public Person(String firstName, String middleName, String lastName, String email, String workspace, String description) {
+        this(firstName, middleName, lastName, email, workspace);
+        this.description = description;
+    }
+
+    public Person(String firstName, String middleName, String lastName, String email, String workspace, String description, String webPage) {
+        this(firstName, middleName, lastName, email, workspace, description);
+        this.webPage = webPage;
+    }
+
+    public Person(String firstName, String middleName, String lastName, String email, String workspace, String description, String webPage, String picturePath) {
+        this(firstName, middleName, lastName, email, workspace, description, webPage);
+        this.picturePath = picturePath;
     }
 
     public Long getId() {
@@ -81,6 +122,14 @@ public class Person implements Serializable {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
     }
 
     public String getLastName() {
@@ -107,4 +156,27 @@ public class Person implements Serializable {
         this.workspace = workspace;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getWebPage() {
+        return webPage;
+    }
+
+    public void setWebPage(String webPage) {
+        this.webPage = webPage;
+    }
+
+    public String getPicturePath() {
+        return picturePath;
+    }
+
+    public void setPicturePath(String picturePath) {
+        this.picturePath = picturePath;
+    }
 }
