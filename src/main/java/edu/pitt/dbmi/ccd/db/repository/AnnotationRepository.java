@@ -20,13 +20,12 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import edu.pitt.dbmi.ccd.db.entity.Access;
+import edu.pitt.dbmi.ccd.db.entity.Annotation;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
-public interface AccessRepository extends JpaRepository<Access, Long> {
+public interface AnnotationRepository extends JpaRepository<Annotation, Long> {
 
-    public Access findByAccess(String access);
 }

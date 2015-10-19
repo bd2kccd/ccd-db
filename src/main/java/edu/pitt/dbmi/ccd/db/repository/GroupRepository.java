@@ -20,13 +20,17 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import edu.pitt.dbmi.ccd.db.entity.Access;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import edu.pitt.dbmi.ccd.db.entity.Group;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
-public interface AccessRepository extends JpaRepository<Access, Long> {
+public interface GroupRepository extends JpaRepository<Group, Long> {
 
-    public Access findByAccess(String access);
+    public Group findByName(String name);
+
+    public Page<Group> findByDescriptionContains(String terms, Pageable pageable);
 }

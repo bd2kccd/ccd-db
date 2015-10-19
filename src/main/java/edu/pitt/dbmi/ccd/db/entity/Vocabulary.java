@@ -38,6 +38,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.annotations.NaturalId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -62,19 +63,20 @@ public class Vocabulary implements Serializable {
     @JsonIgnore
     @Version
     private Integer version;
-    @NotNull
+
+    @NotBlank
     @Size(min=4, max=255)
     @Column(length=255, unique=true, nullable=false)
     @NaturalId(mutable=true)
     private String name;
 
-    @NotNull
-    @Column(nullable=false,
-            columnDefinition="TEXT")
+    @NotBlank
+    @Size(max=500)
+    @Column(length=500, nullable=false)
     private String description;
 
-    @OneToMany(mappedBy="vocab", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    private Set<Attribute> attributes;
+    @OneToMany(mappedBy="vocab", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    private Set<Attribute> attributes = new HashSet<>(0);
 
     @PrePersist
     protected void onCreate() {
@@ -86,12 +88,9 @@ public class Vocabulary implements Serializable {
         modified = new Date();
     }
 
-    public Vocabulary() { 
-        attributes = new HashSet<>();
-    }
+    public Vocabulary() { }
 
     public Vocabulary(String name, String description) {
-        this();
         this.name = name;
         this.description = description;
     }

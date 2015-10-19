@@ -29,10 +29,11 @@ import org.hibernate.validator.constraints.NotBlank;
 /**
  * Annotation access control
  *
- * @author Mark Silvis  (marksilvis@pitt.edu)
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
 public class Access implements Serializable {
+    
     private static final Long serialVersionUID = 7788384757549817895L;
 
     @Id
@@ -40,8 +41,8 @@ public class Access implements Serializable {
     private Long id;
 
     @NotBlank
-    @Size(min=1, max=10)
-    @Column(length=10, unique=true, nullable=false)
+    @Size(max=20)
+    @Column(length=20, unique=true, nullable=false)
     private String access;
 
     public Access() { }

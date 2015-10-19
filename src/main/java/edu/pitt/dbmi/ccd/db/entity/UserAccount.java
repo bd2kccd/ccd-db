@@ -32,6 +32,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -104,8 +105,16 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)})
     private Set<SecurityAnswer> securityAnswers = new HashSet<>(0);
 
-    public UserAccount() {
-    }
+    @ManyToMany(mappedBy="members", fetch=FetchType.LAZY)
+    private Set<Group> groups = new HashSet<>(0);
+
+    @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    private Set<Upload> uploads = new HashSet<>(0);
+
+    @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    private Set<Annotation> annotations = new HashSet<>(0);
+
+    public UserAccount() { }
 
     public UserAccount(Person person, String username, String password, boolean active, Date createdDate) {
         this.person = person;

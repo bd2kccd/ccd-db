@@ -39,6 +39,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -64,11 +65,11 @@ public class Upload implements Serializable {
     private Integer version;
 
     @NotNull
-    @ManyToOne(optional=false)
-    @JoinColumn(name="profileId", nullable=false)
-    private Person uploader;
+    @ManyToOne(optional=false, fetch=FetchType.LAZY)
+    @JoinColumn(name="userAccountId", nullable=false)
+    private UserAccount user;
 
-    @NotNull
+    @NotBlank
     @Size(max=255)
     @Column(length=255, unique=false, nullable=false)
     private String title;
@@ -81,8 +82,8 @@ public class Upload implements Serializable {
     @JoinColumn(name="urlId", insertable=true, updatable=true, nullable=true)
     private Url url;
 
-    // @OneToMany(mappedBy="upload", fetch=FetchType.LAZY)
-    // private Set<Annotation> annotations;
+    @OneToMany(mappedBy="target", fetch=FetchType.LAZY)
+    private Set<Annotation> annotations = new HashSet<>(0);
 
     @PrePersist
     protected void onCreate() {
@@ -94,23 +95,21 @@ public class Upload implements Serializable {
         modified = new Date();
     }
 
-    public Upload() {
-        // annotations = new HashSet<>();
-    }
+    public Upload() { }
 
-    private Upload(Person uploader) {
+    private Upload(UserAccount user) {
         this();
-        this.uploader = uploader;
+        this.user = user;
     }
 
-    public Upload(Person uploader, String title, DataFile file) {
-        this(uploader);
+    public Upload(UserAccount user, String title, DataFile file) {
+        this(user);
         this.title = title;
         this.file = file;
     }
 
-    public Upload(Person uploader, String title, Url url) {
-        this(uploader);
+    public Upload(UserAccount user, String title, Url url) {
+        this(user);
         this.title = title;
         this.url = url;
     }
@@ -123,12 +122,12 @@ public class Upload implements Serializable {
         this.id = id;
     }
 
-    public Person getUploader() {
-        return uploader;
+    public UserAccount getUploader() {
+        return user;
     }
 
-    public void setUploader(Person uploader) {
-        this.uploader = uploader;
+    public void setUploader(UserAccount user) {
+        this.user = user;
     }
 
     public String getTitle() {

@@ -40,9 +40,9 @@ public class AccessService {
 
         List<Access> accessControls = accessRepository.findAll();
         if (accessControls.isEmpty()) {
-            accessControls.add(new Access("private"));
-            accessControls.add(new Access("public"));
-            accessControls.add(new Access("group"));
+            accessControls.add(new Access("PRIVATE"));
+            accessControls.add(new Access("PUBLIC"));
+            accessControls.add(new Access("GROUP"));
 
             accessRepository.save(accessControls);
         }

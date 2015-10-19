@@ -31,7 +31,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @author Mark Silvis  (marksilvis@pitt.edu)
@@ -48,21 +48,21 @@ public class Attribute implements Serializable {
     private Long id;
 
     @NotNull
-    @ManyToOne(optional=false, fetch=FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="vocabId", nullable=false)
     private Vocabulary vocab;
 
-    @NotNull
+    @NotBlank
     @Column(unique=false, nullable=false)
     private String level;
 
-    @NotNull
+    @NotBlank
     @Column(unique=false, nullable=false)
     private String name;
 
-    @NotNull
+    @NotBlank
     @Column(unique=false, nullable=false)
-    private String requirementLevel = "REQUIRED";
+    private String requirementLevel;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(nullable=true)
@@ -70,14 +70,21 @@ public class Attribute implements Serializable {
 
     public Attribute() { }
 
-    public Attribute(String level, String name, Vocabulary vocab) {
+    public Attribute(String level, String name, String requirementLevel) {
         this.level = level;
         this.name = name;
-        this.vocab = vocab;
+        this.requirementLevel = requirementLevel;        
     }
 
-    public Attribute(String level, String name, Vocabulary vocab, Attribute parentAttribute) {
-        this(level, name, vocab);
+    public Attribute(Vocabulary vocab, String level, String name, String requirementLevel) {
+        this.vocab = vocab;
+        this.level = level;
+        this.name = name;
+        this.requirementLevel = requirementLevel;
+    }
+
+    public Attribute(Vocabulary vocab, String level, String name, String requirementLevel, Attribute parentAttribute) {
+        this(vocab, level, name, requirementLevel);
         this.parentAttribute = parentAttribute;
     }
     
@@ -87,6 +94,14 @@ public class Attribute implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Vocabulary getVocab() {
+        return vocab;
+    }
+
+    public void setVocab(Vocabulary vocab) {
+        this.vocab = vocab;
     }
 
     public String getLevel() {
@@ -119,13 +134,5 @@ public class Attribute implements Serializable {
 
     public void setParentAttribute(Attribute parentAttribute) {
         this.parentAttribute = parentAttribute;
-    }
-
-    public Vocabulary getVocab() {
-        return vocab;
-    }
-
-    public void setVocab(Vocabulary vocab) {
-        this.vocab = vocab;
     }
 }

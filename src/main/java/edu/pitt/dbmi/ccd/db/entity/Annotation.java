@@ -39,6 +39,7 @@ import javax.persistence.EnumType;
 import javax.persistence.FetchType;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import org.hibernate.annotations.Type;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -65,22 +66,18 @@ public class Annotation implements Serializable {
     @Version
     private Integer version;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="uploadId", nullable=true)
-    private Upload target;
-
     @NotNull
-    @ManyToOne(optional=false, fetch=FetchType.LAZY)
-    @JoinColumn(name="userId", nullable=false)
-    private UserAccount user;
-
-    @NotNull
-    @Column(nullable=false,
-            columnDefinition="TINYINT(1) DEFAULT 0")
+    @Column(nullable=false)
+    @Type(type = "org.hibernate.type.NumericBooleanType")
     private Boolean redacted = false;
 
     @NotNull
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(optional=false, fetch=FetchType.LAZY)
+    @JoinColumn(name="userAccountId", nullable=false)
+    private UserAccount user;
+
+    @NotNull
+    @ManyToOne(optional=false, fetch=FetchType.EAGER)
     @JoinColumn(name="accessControl", nullable=false)
     private Access accessControl;
 
@@ -92,12 +89,16 @@ public class Annotation implements Serializable {
     @JoinColumn(nullable=true)
     private Vocabulary vocab;
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="uploadId", nullable=true)
+    private Upload target;
+
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(nullable=true)
     private Annotation parent;
 
     @OneToMany(mappedBy="annotation", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    private Set<AnnotationData> data;
+    private Set<AnnotationData> data = new HashSet<>(0);
 
     @PrePersist
     protected void onCreate() {
@@ -109,15 +110,13 @@ public class Annotation implements Serializable {
         modified = new Date();
     }
 
-    public Annotation() { 
-        data = new HashSet<>();
-    }
+    public Annotation() { }
 
-    public Annotation(UserAccount user, Set<AnnotationData> data, Vocabulary vocab) {
-        this.user = user;
-        this.data = data;
-        this.vocab = vocab;
-    }
+    // public Annotation(UserAccount user, Set<AnnotationData> data, Vocabulary vocab) {
+    //     this.user = user;
+    //     this.data = data;
+    //     this.vocab = vocab;
+    // }
 
     public Long getId() {
         return id;

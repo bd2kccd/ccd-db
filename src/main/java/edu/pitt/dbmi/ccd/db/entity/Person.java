@@ -58,16 +58,17 @@ public class Person implements Serializable {
     @Column(name = "lastName", nullable = false)
     private String lastName;
 
-    @Email
     @NotNull
+    @Email
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @NotNull
     @Column(name = "workspace", nullable = false)
     private String workspace;
 
-    @Column(nullable=true,
-            columnDefinition="TEXT")
+    @Size(max=500)
+    @Column(length=500, nullable=true)
     private String description;
 
     @URL

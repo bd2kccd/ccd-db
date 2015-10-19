@@ -20,13 +20,18 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import edu.pitt.dbmi.ccd.db.entity.Access;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import edu.pitt.dbmi.ccd.db.entity.Upload;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
-public interface AccessRepository extends JpaRepository<Access, Long> {
+public interface UploadRepository extends JpaRepository<Upload, Long> {
 
-    public Access findByAccess(String access);
+    public Page<Upload> findByTitleContains(String terms, Pageable pageable);
+
+    public Page<Upload> findByUser(UserAccount user, Pageable pageable);
 }

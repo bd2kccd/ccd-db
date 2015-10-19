@@ -34,6 +34,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.annotations.NaturalId;
 
 /** 
@@ -50,28 +51,25 @@ public class Group implements Serializable {
     @GeneratedValue
     public Long id;
 
-    @NotNull
+    @NotBlank
     @Size(min=4, max=128)
     @Column(length=128, unique=true, nullable=false)
     @NaturalId(mutable=true)
     private String name;
 
-    @Column(nullable=true,
-            columnDefinition="TEXT")
+    @Size(max=500)
+    @Column(length=500, nullable=true)
     private String description;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "group_membership", 
                joinColumns = { @JoinColumn(name="groupId") },
-               inverseJoinColumns = { @JoinColumn(name="profileId")})
-    private Set<Person> members;
+               inverseJoinColumns = { @JoinColumn(name="userAccountId")})
+    private Set<UserAccount> members = new HashSet<>(0);
 
-    public Group() {
-        members = new HashSet<>();
-    }
+    public Group() { }
 
     public Group(String name) {
-        this();
         this.name = name;
     }
 
@@ -104,43 +102,43 @@ public class Group implements Serializable {
         this.description = description;
     }
 
-    public Set<Person> getMembers() {
+    public Set<UserAccount> getMembers() {
         return members;
     }
 
-    public boolean hasMember(Person member) {
+    public boolean hasMember(UserAccount member) {
         return members.contains(member);
     }
 
-    public boolean hasMembers(Collection<Person> members) {
+    public boolean hasMembers(Collection<UserAccount> members) {
         return this.members.containsAll(members);
     }
 
-    public void addMember(Person member) {
+    public void addMember(UserAccount member) {
         this.members.add(member);
     }
 
-    public void addMembers(Person... members) {
-        for (Person m: members) {
+    public void addMembers(UserAccount... members) {
+        for (UserAccount m: members) {
             this.members.add(m);
         }
     }
 
-    public void addMembers(Collection<Person> members) {
+    public void addMembers(Collection<UserAccount> members) {
         this.members.addAll(members);
     }
 
-    public void removeMember(Person member) {
+    public void removeMember(UserAccount member) {
         members.remove(member);
     }
 
-    public void removeMembers(Person... members) {
-        for (Person m: members) {
+    public void removeMembers(UserAccount... members) {
+        for (UserAccount m: members) {
             this.members.remove(m);
         }
     }
 
-    public void removeMembers(Collection<Person> members) {
+    public void removeMembers(Collection<UserAccount> members) {
         this.members.removeAll(members);
     }
 }

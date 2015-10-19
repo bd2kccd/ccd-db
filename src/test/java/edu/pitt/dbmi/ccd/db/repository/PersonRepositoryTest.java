@@ -62,7 +62,7 @@ public class PersonRepositoryTest {
         Assert.assertNotNull(person);
 
         // update
-        email = "alenturing@cs.pitt.edu";
+        email = "alanturing@cs.pitt.edu";
         person.setEmail(email);
         person = personRepository.save(person);
         Assert.assertEquals(email, person.getEmail());
