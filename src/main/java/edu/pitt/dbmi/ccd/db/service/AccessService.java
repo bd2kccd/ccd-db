@@ -47,4 +47,16 @@ public class AccessService {
             accessRepository.save(accessControls);
         }
     }
+
+    public Access save(Access access) {
+        return accessRepository.save(access);
+    }
+
+    public Access findAccess(Long id) {
+        return accessRepository.findOne(id);
+    }
+
+    public Access findAccessByName(String name) {
+        return accessRepository.findByName(name);
+    }
 }

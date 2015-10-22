@@ -32,5 +32,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     public Group findByName(String name);
 
+    public Page<Group> findByNameContains(String terms, Pageable pageable);
+
     public Page<Group> findByDescriptionContains(String terms, Pageable pageable);
 }

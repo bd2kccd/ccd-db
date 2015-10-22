@@ -32,5 +32,7 @@ public interface VocabularyRepository extends JpaRepository<Vocabulary, Long> {
     
     public Vocabulary findByName(String name);
 
+    public Page<Vocabulary> findByNameContains(String terms, Pageable pageable);
+
     public Page<Vocabulary> findByDescriptionContains(String terms, Pageable pageable);
 }

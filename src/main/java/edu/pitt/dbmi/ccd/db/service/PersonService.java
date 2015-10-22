@@ -23,6 +23,8 @@ import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
@@ -51,6 +53,10 @@ public class PersonService {
 
     public Person findPersonByEmail(String email) {
         return personRepository.findByEmail(email);
+    }
+
+    public Page<Person> findPersonByDescription(String terms, Pageable pageable) {
+        return personRepository.findByDescriptionContains(terms, pageable);
     }
 
 }

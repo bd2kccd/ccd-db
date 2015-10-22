@@ -24,6 +24,8 @@ import java.util.HashSet;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
 import edu.pitt.dbmi.ccd.db.repository.VocabularyRepository;
@@ -65,5 +67,29 @@ public class VocabularyService {
 
             vocabRepository.save(vocabs);
         }
+    }
+
+    public Vocabulary save(Vocabulary vocab) {
+        return vocabRepository.save(vocab);
+    }
+
+    public Vocabulary findOne(Long id) {
+        return vocabRepository.findOne(id);
+    }
+
+    public Page<Vocabulary> findAll(Pageable pageable) {
+        return vocabRepository.findAll(pageable);
+    }
+
+    public Vocabulary findByName(String name) {
+        return vocabRepository.findByName(name);
+    }
+
+    public Page<Vocabulary> searchNames(String terms, Pageable pageable) {
+        return vocabRepository.findByNameContains(terms, pageable);
+    }
+
+    public Page<Vocabulary> searchDescriptions(String terms, Pageable pageable) {
+        return vocabRepository.findByDescriptionContains(terms, pageable);
     }
 }

@@ -28,5 +28,5 @@ import edu.pitt.dbmi.ccd.db.entity.Access;
 @Repository
 public interface AccessRepository extends JpaRepository<Access, Long> {
 
-    public Access findByAccess(String access);
+    public Access findByName(String name);
 }
