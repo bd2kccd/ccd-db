@@ -23,6 +23,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
+import org.hibernate.annotations.NaturalId;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -40,15 +41,16 @@ public class Access implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @NaturalId(mutable=false)
     @NotBlank
     @Size(max=20)
     @Column(length=20, unique=true, nullable=false)
-    private String access;
+    private String name;
 
     public Access() { }
 
-    public Access(String access) {
-        this.access = access;
+    public Access(String name) {
+        this.name = name;
     }
 
     public Long getId() {
@@ -59,11 +61,11 @@ public class Access implements Serializable {
         this.id = id;
     }
 
-    public String getAccess() {
-        return access;
+    public String getName() {
+        return name;
     }
 
-    public void setAccess(String access) {
-        this.access = access;
+    public void setName(String name) {
+        this.name = name;
     }
 }

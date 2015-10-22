@@ -19,6 +19,7 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -223,4 +224,51 @@ public class UserAccount implements Serializable {
         this.securityAnswers = securityAnswers;
     }
 
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public boolean isMember(Group group) {
+        return groups.contains(group);
+    }
+
+    public boolean isMember(Collection<Group> groups) {
+        return this.groups.containsAll(groups);
+    }
+
+    public void addGroup(Group group) {
+        groups.add(group);
+    }
+
+    public void addGroups(Collection<Group> groups) {
+        this.groups.addAll(groups);
+    }
+
+    public void addGroups(Group... groups) {
+        for (Group g: groups) {
+            this.groups.add(g);
+        }
+    }
+
+    public void removeGroup(Group group) {
+        groups.remove(group);
+    }
+
+    public void removeGroups(Collection<Group> groups) {
+        this.groups.removeAll(groups);
+    }
+
+    public void removeGroups(Group... groups) {
+        for (Group g: groups) {
+            this.groups.remove(g);
+        }
+    }
+
+    public Set<Upload> getUploads() {
+        return uploads;
+    }
+
+    public Set<Annotation> getAnnotations() {
+        return annotations;
+    }
 }

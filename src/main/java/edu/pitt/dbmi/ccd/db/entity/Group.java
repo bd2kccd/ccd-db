@@ -40,7 +40,6 @@ import org.hibernate.annotations.NaturalId;
 /** 
 * @author Mark Silvis  (marksilvis@pitt.edu)
 */
-
 @Entity
 @Table(name="Groups")
 public class Group implements Serializable {
@@ -57,8 +56,9 @@ public class Group implements Serializable {
     @NaturalId(mutable=true)
     private String name;
 
+    @NotBlank
     @Size(max=500)
-    @Column(length=500, nullable=true)
+    @Column(length=500, nullable=false)
     private String description;
 
     @ManyToMany(fetch = FetchType.EAGER)
