@@ -41,6 +41,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.annotations.NaturalId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -76,6 +77,7 @@ public class Vocabulary implements Serializable {
     private String description;
 
     @OneToMany(mappedBy="vocab", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @JsonManagedReference
     private Set<Attribute> attributes = new HashSet<>(0);
 
     @PrePersist
