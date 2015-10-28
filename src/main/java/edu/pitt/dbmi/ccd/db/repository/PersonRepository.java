@@ -32,7 +32,7 @@ import edu.pitt.dbmi.ccd.db.entity.Person;
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
+// @Repository
 @RepositoryRestResource(exported=false)
 public interface PersonRepository extends JpaRepository<Person, Long> {
 

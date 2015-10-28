@@ -19,6 +19,7 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ import edu.pitt.dbmi.ccd.db.entity.Group;
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
+// @RepositoryRestResource(exported=false)
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
     public Group findByName(String name);
