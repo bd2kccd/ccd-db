@@ -189,4 +189,8 @@ public class Annotation implements Serializable {
     public void setVocabulary(Vocabulary vocab) {
         this.vocab = vocab;
     }
+
+    public Annotation getParent() {
+        return parent;
+    }
 }
