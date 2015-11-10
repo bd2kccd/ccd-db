@@ -76,6 +76,7 @@ public class Vocabulary implements Serializable {
     @Column(length=500, nullable=false)
     private String description;
 
+    @JsonIgnore
     @OneToMany(mappedBy="vocab", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     @JsonManagedReference
     private Set<Attribute> attributes = new HashSet<>(0);

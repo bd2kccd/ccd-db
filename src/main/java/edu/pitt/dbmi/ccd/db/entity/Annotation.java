@@ -67,8 +67,9 @@ public class Annotation implements Serializable {
     private Integer version;
 
     @NotNull
-    @Column(nullable=false)
-    @Type(type = "org.hibernate.type.ByteType")
+    @Column(nullable=false,
+            columnDefinition="TINYINT(1)")
+    @Type(type = "org.hibernate.type.NumericBooleanType")
     private Boolean redacted = false;
 
     @NotNull

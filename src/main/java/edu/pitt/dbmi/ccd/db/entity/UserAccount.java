@@ -54,7 +54,7 @@ public class UserAccount implements Serializable {
     private static final long serialVersionUID = 7491138787468687010L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue() //strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
@@ -126,13 +126,9 @@ public class UserAccount implements Serializable {
     }
 
     public UserAccount(Long id, Person person, String username, String password, Boolean active, String activationKey, Date createdDate, Date lastLoginDate) {
+        this(person, username, password, active, createdDate);
         this.id = id;
-        this.person = person;
-        this.username = username;
-        this.password = password;
-        this.active = active;
         this.activationKey = activationKey;
-        this.createdDate = createdDate;
         this.lastLoginDate = lastLoginDate;
     }
 

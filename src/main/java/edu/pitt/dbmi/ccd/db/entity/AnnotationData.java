@@ -31,6 +31,7 @@ import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -44,6 +45,7 @@ public class AnnotationData implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @JsonIgnore
     @NotNull
     @ManyToOne(optional=false, fetch=FetchType.EAGER)
     @JoinColumn(nullable=false)
@@ -60,6 +62,7 @@ public class AnnotationData implements Serializable {
     @JoinColumn(nullable=true)
     private AnnotationData parent;
 
+    @JsonIgnore
     @OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
     private Set<AnnotationData> children = new HashSet<>(0);
 
