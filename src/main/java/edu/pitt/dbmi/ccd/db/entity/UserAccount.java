@@ -58,8 +58,6 @@ public class UserAccount implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    //private Role role;        // will make Role its own entity and add ManyToMany mapping
-
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
@@ -87,6 +85,12 @@ public class UserAccount implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "lastLoginDate", length = 19)
     private Date lastLoginDate;
+
+    @ManyToMany(fetch=FetchType.EAGER)
+    @JoinTable(name="UserAccountUserRoleRel", joinColumns = {
+        @JoinColumn(name="userAccountId", nullable=false)}, inverseJoinColumns = {
+        @JoinColumn(name="userRoleId", nullable=false)})
+    Set<UserRole> userRoles = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountDataFileRel", joinColumns = {

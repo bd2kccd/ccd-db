@@ -64,9 +64,9 @@ public class Group implements Serializable {
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "group_membership", 
-               joinColumns = { @JoinColumn(name="groupId") },
-               inverseJoinColumns = { @JoinColumn(name="userAccountId")})
+    @JoinTable(name = "group_membership", joinColumns = {
+        @JoinColumn(name="groupId")}, inverseJoinColumns = {
+        @JoinColumn(name="userAccountId")})
     private Set<UserAccount> members = new HashSet<>(0);
 
     public Group() { }
