@@ -34,8 +34,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.CascadeType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -54,11 +56,11 @@ public class UserAccount implements Serializable {
     private static final long serialVersionUID = 7491138787468687010L;
 
     @Id
-    @GeneratedValue() //strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
 
@@ -69,7 +71,8 @@ public class UserAccount implements Serializable {
 
     @JsonIgnore
     @NotNull
-    @Column(name = "password", nullable = false)
+    @Size(max=60)
+    @Column(name = "password", length=60, nullable = false, columnDefinition="CHAR(60)")
     private String password;
 
     @Column(name = "active", nullable = false)
@@ -79,18 +82,22 @@ public class UserAccount implements Serializable {
     private String activationKey;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "createdDate", nullable = false, length = 19)
+    @Column(name = "createdDate", nullable = false)//, length = 19)
     private Date createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "lastLoginDate", length = 19)
+    @Column(name = "lastLoginDate")//, length = 19)
     private Date lastLoginDate;
 
-    @ManyToMany(fetch=FetchType.EAGER)
-    @JoinTable(name="UserAccountUserRoleRel", joinColumns = {
-        @JoinColumn(name="userAccountId", nullable=false)}, inverseJoinColumns = {
-        @JoinColumn(name="userRoleId", nullable=false)})
-    Set<UserRole> userRoles = new HashSet<>(0);
+    // @ManyToMany(fetch=FetchType.EAGER)
+    // @JoinTable(name="UserAccountUserRoleRel", joinColumns = {
+    //     @JoinColumn(name="userAccountId", nullable=false)}, inverseJoinColumns = {
+    //     @JoinColumn(name="userRoleId", nullable=false)})
+    // Set<UserRole> userRoles = new HashSet<>(0);
+
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="role", nullable=false)
+    private UserRole role;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountDataFileRel", joinColumns = {
@@ -134,6 +141,25 @@ public class UserAccount implements Serializable {
         this.id = id;
         this.activationKey = activationKey;
         this.lastLoginDate = lastLoginDate;
+    }
+
+    public UserAccount(UserAccount account) {
+        this.id = account.getId();
+        this.person = account.getPerson();
+        this.username = account.getUsername();
+        this.password = account.getPassword();
+        this.active = account.getActive();
+        this.activationKey = account.getActivationKey();
+        this.createdDate = account.getCreatedDate();
+        this.lastLoginDate = account.getLastLoginDate();
+        // this.userRoles = account.getUserRoles();
+        this.role = account.getRole();
+        this.dataFiles = account.getDataFiles();
+        this.jobQueueInfos = account.getJobQueueInfos();
+        this.securityAnswers = account.getSecurityAnswers();
+        this.groups = account.getGroups();
+        this.uploads = account.getUploads();
+        this.annotations = account.getAnnotations();
     }
 
     public Long getId() {
@@ -199,6 +225,46 @@ public class UserAccount implements Serializable {
     public void setLastLoginDate(Date lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
     }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    // public Set<UserRole> getUserRoles() {
+    //     return userRoles;
+    // }
+
+    // public void setUserRoles(Set<UserRole> userRoles) {
+    //     this.userRoles = userRoles;
+    // }
+
+    // public boolean hasUserRole(UserRole role) {
+    //     return userRoles.contains(role);
+    // }
+
+    // public boolean hasUserRoles(Collection<UserRole> roles) {
+    //     return userRoles.containsAll(roles);
+    // }
+
+    // public void addUserRole(UserRole role) {
+    //     this.userRoles.add(role);
+    // }
+
+    // public void addUserRoles(Collection<UserRole> roles) {
+    //     this.userRoles.addAll(roles);
+    // }
+
+    // public void removeUserRole(UserRole role) {
+    //     userRoles.remove(role);
+    // }
+
+    // public void removeUserRoles(Collection<UserRole> roles) {
+    //     userRoles.removeAll(roles);
+    // }
 
     public Set<DataFile> getDataFiles() {
         return dataFiles;

@@ -30,6 +30,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -53,10 +54,13 @@ public class UserRole implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
-        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
+    // @ManyToMany(fetch = FetchType.LAZY)
+    // @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
+    //     @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
+    //     @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
+    // private Set<UserAccount> userAccounts = new HashSet<>(0);
+
+    @OneToMany(mappedBy="role", fetch=FetchType.LAZY)
     private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -72,9 +76,13 @@ public class UserRole implements Serializable {
         this.name = name;
     }
 
-    public UserRole(String name, String description, Set<UserAccount> userAccounts, Set<RolePermission> rolePermissions) {
-        this.name = name;
+    public UserRole(String name, String description) {
+        this(name);
         this.description = description;
+    }
+
+    public UserRole(String name, String description, Set<UserAccount> userAccounts, Set<RolePermission> rolePermissions) {
+        this(name, description);
         this.userAccounts = userAccounts;
         this.rolePermissions = rolePermissions;
     }
