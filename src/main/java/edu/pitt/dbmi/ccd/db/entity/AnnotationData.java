@@ -19,8 +19,10 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Arrays;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
@@ -139,5 +141,37 @@ public class AnnotationData implements Serializable {
 
     public Set<AnnotationData> getChildren() {
         return children;
+    }
+
+    public boolean hasChild(AnnotationData child) {
+        return children.contains(child);
+    }
+
+    public boolean hasChildren(Collection<AnnotationData> children) {
+        return this.children.containsAll(children);
+    }
+
+    public void addChild(AnnotationData child) {
+        children.add(child);
+    }
+
+    public void addChildren(AnnotationData... children) {
+        addChildren(Arrays.asList(children));
+    }
+
+    public void addChildren(Collection<AnnotationData> children) {
+        this.children.addAll(children);
+    }
+
+    public void removeChild(AnnotationData child) {
+        children.remove(child);
+    }
+
+    public void removeChildren(AnnotationData... children) {
+        removeChildren(Arrays.asList(children));
+    }
+
+    public void removeChildren(Collection<AnnotationData> children) {
+        this.children.removeAll(children);
     }
 }

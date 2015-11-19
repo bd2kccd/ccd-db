@@ -19,8 +19,10 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Arrays;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -85,10 +87,8 @@ public class Attribute implements Serializable {
     }
 
     public Attribute(Vocabulary vocab, String level, String name, String requirementLevel) {
+        this(level, name, requirementLevel);
         this.vocab = vocab;
-        this.level = level;
-        this.name = name;
-        this.requirementLevel = requirementLevel;
     }
 
     public Attribute(Vocabulary vocab, String level, String name, String requirementLevel, Attribute parent) {
@@ -146,5 +146,37 @@ public class Attribute implements Serializable {
 
     public Set<Attribute> getChildren() {
         return children;
+    }
+
+    public boolean hasChild(Attribute child) {
+        return children.contains(child);
+    }
+
+    public boolean hasChildren(Collection<Attribute> children) {
+        return this.children.containsAll(children);
+    }
+
+    public void addChild(Attribute child) {
+        children.add(child);
+    }
+
+    public void addChildren(Attribute... children) {
+        addChildren(Arrays.asList(children));
+    }
+
+    public void addChildren(Collection<Attribute> children) {
+        this.children.addAll(children);
+    }
+
+    public void removeChild(Attribute child) {
+        children.remove(child);
+    }
+
+    public void removeChildren(Attribute... children) {
+        removeChildren(Arrays.asList(children));
+    }
+
+    public void removeChildren(Collection<Attribute> children) {
+        this.children.removeAll(children);
     }
 }

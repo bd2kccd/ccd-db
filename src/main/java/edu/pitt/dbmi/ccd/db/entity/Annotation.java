@@ -19,8 +19,10 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Arrays;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -31,15 +33,16 @@ import javax.persistence.Version;
 import javax.persistence.OneToOne;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Column;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 import javax.persistence.FetchType;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import org.hibernate.annotations.Type;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -67,9 +70,7 @@ public class Annotation implements Serializable {
     private Integer version;
 
     @NotNull
-    @Column(nullable=false,
-            columnDefinition="TINYINT(1)")
-    @Type(type = "org.hibernate.type.NumericBooleanType")
+    @Column(nullable=false)
     private Boolean redacted = false;
 
     @NotNull
@@ -91,12 +92,18 @@ public class Annotation implements Serializable {
     private Vocabulary vocab;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="uploadId", nullable=true)
+    @JoinColumn(name="uploadId", nullable=false)
     private Upload target;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(nullable=true)
     private Annotation parent;
+
+    @ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name="AnnotationUploadReferences", joinColumns = {
+        @JoinColumn(name="annotationId", nullable=false)}, inverseJoinColumns = {
+        @JoinColumn(name="uploadId", nullable=false)})
+    Set<Upload> references = new HashSet<>(0);
 
     @OneToMany(mappedBy="annotation", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     private Set<AnnotationData> data = new HashSet<>(0);
@@ -113,11 +120,10 @@ public class Annotation implements Serializable {
 
     public Annotation() { }
 
-    // public Annotation(UserAccount user, Set<AnnotationData> data, Vocabulary vocab) {
-    //     this.user = user;
-    //     this.data = data;
-    //     this.vocab = vocab;
-    // }
+    public Annotation(UserAccount user, Access accessControl) {
+        this.user = user;
+        this.accessControl = accessControl;
+    }
 
     public Long getId() {
         return id;
@@ -159,7 +165,7 @@ public class Annotation implements Serializable {
         this.user = user;
     }
 
-    public boolean isRedacted() {
+    public Boolean isRedacted() {
         return redacted;
     }
 
@@ -193,5 +199,77 @@ public class Annotation implements Serializable {
 
     public Annotation getParent() {
         return parent;
+    }
+
+    public Set<Upload> getReferences() {
+        return references;
+    }
+
+    public boolean hasReference(Upload ref) {
+        return references.contains(ref);
+    }
+
+    public boolean hasReferences(Collection<Upload> ref) {
+        return references.containsAll(ref);
+    }
+
+    public void addReference(Upload ref) {
+        references.add(ref);
+    }
+
+    public void addReferences(Upload... refs) {
+        addReferences(Arrays.asList(refs));
+    }
+
+    public void addReferences(Collection<Upload> refs) {
+        references.addAll(refs);
+    }
+
+    public void removeReference(Upload ref) {
+        references.remove(ref);
+    }
+
+    public void removeReferences(Upload... refs) {
+        removeReferences(Arrays.asList(refs));
+    }
+
+    public void removeReferences(Collection<Upload> refs) {
+        references.removeAll(refs);
+    }
+
+    public Set<AnnotationData> getData() {
+        return data;
+    }
+
+    public boolean hasData(AnnotationData data) {
+        return this.data.contains(data);
+    }
+
+    public boolean hasData(Collection<AnnotationData> data) {
+        return this.data.containsAll(data);
+    }
+
+    public void addData(AnnotationData data) {
+        this.data.add(data);
+    }
+
+    public void addData(AnnotationData... data) {
+        addData(Arrays.asList(data));
+    }
+
+    public void addData(Collection<AnnotationData> data) {
+        this.data.addAll(data);
+    }
+
+    public void removeData(AnnotationData data) {
+        this.data.remove(data);
+    }
+
+    public void removeData(AnnotationData... data) {
+        removeData(Arrays.asList(data));
+    }
+
+    public void removeData(Collection<AnnotationData> data) {
+        this.data.removeAll(data);
     }
 }
