@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Arrays;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -139,9 +140,7 @@ public class Vocabulary implements Serializable {
     }
 
     public void addAttributes(Attribute... attributes) {
-        for (Attribute a: attributes) {
-            this.attributes.add(a);
-        }
+        addAttributes(Arrays.asList(attributes));
     }
 
     public void addAttributes(Collection<Attribute> attributes) {
@@ -153,9 +152,7 @@ public class Vocabulary implements Serializable {
     }
 
     public void removeAttributes(Attribute... attributes) {
-        for (Attribute a: attributes) {
-            this.attributes.remove(a);
-        }
+        removeAttributes(Arrays.asList(attributes));
     }
 
     public void removeAttributes(Collection<Attribute> attributes) {
