@@ -26,6 +26,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.URL;
@@ -63,6 +64,7 @@ public class Person implements Serializable {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @JsonIgnore
     @NotNull
     @Column(name = "workspace", nullable = false)
     private String workspace;
