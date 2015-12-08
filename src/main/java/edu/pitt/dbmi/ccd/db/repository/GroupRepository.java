@@ -35,11 +35,11 @@ import edu.pitt.dbmi.ccd.db.entity.Group;
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
     @RestResource(path="byName")
-    public Group findByName(@Param("name") String name);
+    public Group findByName(String name);
 
     @RestResource(path="nameContains")
-    public Page<Group> findByNameContains(@Param("terms") String terms, Pageable pageable);
+    public Page<Group> findByNameContains(String terms, Pageable pageable);
 
     @RestResource(path="descriptionContains")
-    public Page<Group> findByDescriptionContains(@Param("terms") String terms, Pageable pageable);
+    public Page<Group> findByDescriptionContains(String terms, Pageable pageable);
 }
