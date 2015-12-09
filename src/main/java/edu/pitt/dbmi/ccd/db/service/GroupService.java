@@ -56,6 +56,10 @@ public class GroupService {
         return groupRepository.findOne(id);
     }
 
+    public List<Group> findAll() {
+        return groupRepository.findAll();
+    }
+
     public Page<Group> findAll(Pageable pageable) {
         return groupRepository.findAll(pageable);
     }
