@@ -16,21 +16,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
+package edu.pitt.dbmi.ccd.db.service;
 
-import org.springframework.stereotype.Repository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
+import edu.pitt.dbmi.ccd.db.repository.AttributeRepository;
 
 /**
- *
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-@Repository
-@RepositoryRestResource(exported=false)
-public interface AttributeRepository extends JpaRepository<Attribute, Long> {
+@Service
+@Transactional
+public class AttributeService {
 
+    private final AttributeRepository attribRepository;
+
+    @Autowired(required=true)
+    public AttributeService(AttributeRepository attribRepository) {
+        this.attribRepository = attribRepository;
+    }
+
+    public Attribute save(Attribute attrib) {
+        return attribRepository.save(attrib);
+    }
+
+    public Attribute findOne(Long id) {
+        return attribRepository.findOne(id);
+    }
+
+    public List<Attribute> findAll() {
+        return attribRepository.findAll();
+    }
+
+    public Page<Attribute> findAll(Pageable pageable) {
+        return attribRepository.findAll(pageable);
+    }
 }
