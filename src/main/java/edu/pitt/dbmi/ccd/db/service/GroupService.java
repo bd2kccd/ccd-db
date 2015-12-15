@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.repository.GroupRepository;
 
@@ -60,9 +61,13 @@ public class GroupService {
         return groupRepository.findAll();
     }
 
-    public Page<Group> findAll(Pageable pageable) {
-        return groupRepository.findAll(pageable);
+    public List<Group> findAll(Pageable pageable) {
+        return groupRepository.findAll(pageable).getContent();
     }
+
+    // public Page<Group> findAll(Pageable pageable) {
+    //     return groupRepository.findAll(pageable);
+    // }
 
     public Group findByName(String name) {
         return groupRepository.findByName(name);

@@ -18,12 +18,14 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import edu.pitt.dbmi.ccd.db.repository.AttributeRepository;
 
 /**
@@ -48,11 +50,19 @@ public class AttributeService {
         return attribRepository.findOne(id);
     }
 
+    public Attribute findByInnerId(Vocabulary vocab, Long innerId) {
+        return attribRepository.findByVocabAndInnerId(vocab, innerId);
+    }
+
     public List<Attribute> findAll() {
         return attribRepository.findAll();
     }
 
     public Page<Attribute> findAll(Pageable pageable) {
         return attribRepository.findAll(pageable);
+    }
+
+    public List<Attribute> findAllParentless(Vocabulary vocab) {
+        return attribRepository.findByVocabAndParentIsNull(vocab);
     }
 }

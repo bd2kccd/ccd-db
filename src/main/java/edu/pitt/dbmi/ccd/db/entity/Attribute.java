@@ -43,8 +43,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
  * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Entity
-@Table(uniqueConstraints=
-            @UniqueConstraint(columnNames={"vocabId", "level", "name"}))
+@Table(uniqueConstraints={
+    @UniqueConstraint(columnNames={"vocabId", "level", "name"}),
+    @UniqueConstraint(columnNames={"vocabId", "innerId"})
+})
 public class Attribute implements Serializable {
 
     private static final long serialVersionUID = 4437966176000119860L;
@@ -52,6 +54,9 @@ public class Attribute implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Column(unique=false, nullable=false)
+    private Long innerId;
 
     @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
@@ -80,22 +85,23 @@ public class Attribute implements Serializable {
 
     public Attribute() { }
 
-    public Attribute(String level, String name, String requirementLevel) {
+    protected Attribute(String level, String name, String requirementLevel) {
         this.level = level;
         this.name = name;
         this.requirementLevel = requirementLevel;        
     }
 
-    public Attribute(Vocabulary vocab, String level, String name, String requirementLevel) {
+    public Attribute(Vocabulary vocab, Long innerId, String level, String name, String requirementLevel) {
         this(level, name, requirementLevel);
+        this.innerId = innerId;
         this.vocab = vocab;
     }
 
-    public Attribute(Vocabulary vocab, String level, String name, String requirementLevel, Attribute parent) {
-        this(vocab, level, name, requirementLevel);
+    public Attribute(Vocabulary vocab, Long innerId, String level, String name, String requirementLevel, Attribute parent) {
+        this(vocab, innerId, level, name, requirementLevel);
         this.parent = parent;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -104,11 +110,19 @@ public class Attribute implements Serializable {
         this.id = id;
     }
 
-    public Vocabulary getVocab() {
+    public Long getInnerId() {
+        return innerId;
+    }
+
+    public void setInnerId(Long innerId) {
+        this.innerId = innerId;
+    }
+
+    public Vocabulary getVocabulary() {
         return vocab;
     }
 
-    public void setVocab(Vocabulary vocab) {
+    public void setVocabulary(Vocabulary vocab) {
         this.vocab = vocab;
     }
 

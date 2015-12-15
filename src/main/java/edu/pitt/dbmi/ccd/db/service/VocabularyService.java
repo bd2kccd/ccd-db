@@ -47,22 +47,22 @@ public class VocabularyService {
         if (vocabs.isEmpty()) {
             Vocabulary hcls = new Vocabulary("HCLS", "http://www.w3.org/2001/sw/hcls/notes/hcls-dataset/");
             vocabs.add(hcls);
-
+            long innerId = 1L;
             hcls.addAttributes(
-                new Attribute(hcls, "Summary", "Type", "Required"),
-                new Attribute(hcls, "Summary", "Title", "Required"),
-                new Attribute(hcls, "Summary", "Description", "Required"),
-                new Attribute(hcls, "Summary", "Created By", "Required"),
-                new Attribute(hcls, "Summary", "Created On", "Required"),
-                new Attribute(hcls, "Summary", "Last Access Time", "Required"),
-                new Attribute(hcls, "Summary", "Publisher", "Required"),
-                new Attribute(hcls, "Summary", "License", "Optional"),
-                new Attribute(hcls, "Version", "Identifier", "Optional"),
-                new Attribute(hcls, "Version", "Link", "Required"),
-                new Attribute(hcls, "Version", "Data Source Provenance", "Optional"),
-                new Attribute(hcls, "Version", "Distribution", "Optional"),
-                new Attribute(hcls, "Version", "Issued", "Required"),
-                new Attribute(hcls, "Version", "Download URI", "Required"));
+                new Attribute(hcls, innerId++, "Summary", "Type", "Required"),
+                new Attribute(hcls, innerId++, "Summary", "Title", "Required"),
+                new Attribute(hcls, innerId++, "Summary", "Description", "Required"),
+                new Attribute(hcls, innerId++, "Summary", "Created By", "Required"),
+                new Attribute(hcls, innerId++, "Summary", "Created On", "Required"),
+                new Attribute(hcls, innerId++, "Summary", "Last Access Time", "Required"),
+                new Attribute(hcls, innerId++, "Summary", "Publisher", "Required"),
+                new Attribute(hcls, innerId++, "Summary", "License", "Optional"),
+                new Attribute(hcls, innerId++, "Version", "Identifier", "Optional"),
+                new Attribute(hcls, innerId++, "Version", "Link", "Required"),
+                new Attribute(hcls, innerId++, "Version", "Data Source Provenance", "Optional"),
+                new Attribute(hcls, innerId++, "Version", "Distribution", "Optional"),
+                new Attribute(hcls, innerId++, "Version", "Issued", "Required"),
+                new Attribute(hcls, innerId, "Version", "Download URI", "Required"));
 
             vocabRepository.save(vocabs);
         }
