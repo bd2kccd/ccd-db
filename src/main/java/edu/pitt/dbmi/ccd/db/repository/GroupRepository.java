@@ -18,12 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import java.util.Collection;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Group;
@@ -35,18 +33,11 @@ import edu.pitt.dbmi.ccd.db.entity.Group;
 // @RepositoryRestResource(exported=false)
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
-    @RestResource(path="byName")
     public Group findByName(String name);
 
-    @RestResource(path="nameContains")
-    public Collection<Group> findByNameContains(String terms);
+    public Page<Group> findAll(Pageable pageable);
 
-    @RestResource(path="nameContainsPaged")
-    public Page<Group> findByNameContains(String terms, Pageable pageable);
+    public Page<Group> findByNameContains(@Param("terms") String terms, Pageable pageable);
 
-    @RestResource(path="descriptionContains")
-    public Collection<Group> findByDescriptionContains(String terms);
-
-    @RestResource(path="descriptionContainsPaged")
     public Page<Group> findByDescriptionContains(String terms, Pageable pageable);
 }
