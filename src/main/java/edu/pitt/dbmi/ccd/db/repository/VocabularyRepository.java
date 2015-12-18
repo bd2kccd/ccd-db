@@ -16,9 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.repository;
 
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,9 +33,13 @@ import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 @Repository
 public interface VocabularyRepository extends JpaRepository<Vocabulary, Long> {
     
-    public Vocabulary findByName(String name);
+    public Optional<Vocabulary> findById(Long id);
+
+    public Optional<Vocabulary> findByName(String name);
 
     public Page<Vocabulary> findByNameContains(String terms, Pageable pageable);
 
     public Page<Vocabulary> findByDescriptionContains(String terms, Pageable pageable);
+
+    public Page<Vocabulary> findAll(Pageable pageable);
 }

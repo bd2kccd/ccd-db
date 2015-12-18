@@ -16,11 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.Arrays;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,8 @@ public class VocabularyService {
                 new Attribute(hcls, innerId++, "Version", "Data Source Provenance", "Optional"),
                 new Attribute(hcls, innerId++, "Version", "Distribution", "Optional"),
                 new Attribute(hcls, innerId++, "Version", "Issued", "Required"),
-                new Attribute(hcls, innerId, "Version", "Download URI", "Required"));
+                new Attribute(hcls, innerId, "Version", "Download URI", "Required")
+            );
 
             vocabRepository.save(vocabs);
         }
@@ -72,15 +73,11 @@ public class VocabularyService {
         return vocabRepository.save(vocab);
     }
 
-    public Vocabulary findOne(Long id) {
-        return vocabRepository.findOne(id);
+    public Optional<Vocabulary> findOne(Long id) {
+        return vocabRepository.findById(id);
     }
 
-    public Page<Vocabulary> findAll(Pageable pageable) {
-        return vocabRepository.findAll(pageable);
-    }
-
-    public Vocabulary findByName(String name) {
+    public Optional<Vocabulary> findByName(String name) {
         return vocabRepository.findByName(name);
     }
 
@@ -90,5 +87,9 @@ public class VocabularyService {
 
     public Page<Vocabulary> searchDescriptions(String terms, Pageable pageable) {
         return vocabRepository.findByDescriptionContains(terms, pageable);
+    }
+
+    public Page<Vocabulary> findAll(Pageable pageable) {
+        return vocabRepository.findAll(pageable);
     }
 }

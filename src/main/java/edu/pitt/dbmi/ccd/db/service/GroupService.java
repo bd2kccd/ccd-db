@@ -16,9 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +44,9 @@ public class GroupService {
 
         List<Group> groups = groupRepository.findAll();
         if (groups.isEmpty()) {
-            groups.add(new Group("global", "Group of all users"));
-
+            groups.add(
+                new Group("global", "Group of all users")
+            );
             groupRepository.save(groups);
         }
     }
@@ -52,15 +55,11 @@ public class GroupService {
         return groupRepository.save(group);
     }
 
-    public Group findOne(Long id) {
-        return groupRepository.findOne(id);
+    public Optional<Group> findOne(Long id) {
+        return groupRepository.findById(id);
     }
 
-    public Page<Group> findAll(Pageable pageable) {
-        return groupRepository.findAll(pageable);
-    }
-
-    public Group findByName(String name) {
+    public Optional<Group> findByName(String name) {
         return groupRepository.findByName(name);
     }
 
@@ -70,5 +69,9 @@ public class GroupService {
 
     public Page<Group> searchDescriptions(String terms, Pageable pageable) {
         return groupRepository.findByDescriptionContains(terms, pageable);
+    }
+
+    public Page<Group> findAll(Pageable pageable) {
+        return groupRepository.findAll(pageable);
     }
 }

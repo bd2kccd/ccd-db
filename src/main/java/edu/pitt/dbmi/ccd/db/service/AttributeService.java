@@ -16,9 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.service;
 
-import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,34 +37,58 @@ import edu.pitt.dbmi.ccd.db.repository.AttributeRepository;
 @Transactional
 public class AttributeService {
 
-    private final AttributeRepository attribRepository;
+    private final AttributeRepository attributeRepository;
 
     @Autowired(required=true)
-    public AttributeService(AttributeRepository attribRepository) {
-        this.attribRepository = attribRepository;
+    public AttributeService(AttributeRepository attributeRepository) {
+        this.attributeRepository = attributeRepository;
     }
 
     public Attribute save(Attribute attrib) {
-        return attribRepository.save(attrib);
+        return attributeRepository.save(attrib);
     }
 
-    public Attribute findOne(Long id) {
-        return attribRepository.findOne(id);
+    public Optional<Attribute> findOne(Long id) {
+        return attributeRepository.findById(id);
     }
 
-    public Attribute findByInnerId(Vocabulary vocab, Long innerId) {
-        return attribRepository.findByVocabAndInnerId(vocab, innerId);
+    public Optional<Attribute> findByVocabAndInnerId(Vocabulary vocab, Long innerId) {
+        return attributeRepository.findByVocabAndInnerId(vocab, innerId);
     }
 
-    public List<Attribute> findAll() {
-        return attribRepository.findAll();
+    public Optional<Attribute> findByVocabAndLevelAndName(Vocabulary vocab, String level, String name) {
+        return attributeRepository.findByVocabAndLevelAndName(vocab, level, name);
+    }
+
+    public Page<Attribute> findByVocabAndName(Vocabulary vocab, String name, Pageable pageable) {
+        return attributeRepository.findByVocabAndName(vocab, name, pageable);
+    }
+
+    public Page<Attribute> findByVocabAndLevel(Vocabulary vocab, String level, Pageable pageable) {
+        return attributeRepository.findByVocabAndLevel(vocab, level, pageable);
+    }
+
+    public Page<Attribute> findByVocabAndRequirementLevel(Vocabulary vocab, String requirementLevel, Pageable pageable) {
+        return attributeRepository.findByVocabAndRequirementLevel(vocab, requirementLevel, pageable);
+    }
+
+    public Page<Attribute> findAllOrphans(Vocabulary vocab, Pageable pageable) {
+        return attributeRepository.findByVocabAndParentIsNull(vocab, pageable);
+    }
+
+    public Page<Attribute> findByParent(Attribute parent, Pageable pageable) {
+        return attributeRepository.findByParent(parent, pageable);
+    }
+
+    public Page<Attribute> findByChildrenIn(Set<Attribute> children, Pageable pageable) {
+        return attributeRepository.findByChildrenIn(children, pageable);
+    }
+
+    public Page<Attribute> findAllParentless(Vocabulary vocab, Pageable pageable) {
+        return attributeRepository.findByVocabAndParentIsNull(vocab, pageable);
     }
 
     public Page<Attribute> findAll(Pageable pageable) {
-        return attribRepository.findAll(pageable);
-    }
-
-    public List<Attribute> findAllParentless(Vocabulary vocab) {
-        return attribRepository.findByVocabAndParentIsNull(vocab);
+        return attributeRepository.findAll(pageable);
     }
 }

@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.repository;
 
-import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
@@ -37,7 +37,25 @@ import edu.pitt.dbmi.ccd.db.entity.Attribute;
 @RepositoryRestResource(exported=false)
 public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 
-    public Attribute findByVocabAndInnerId(Vocabulary vocab, Long innerId);
+    public Optional<Attribute> findById(Long id);
 
-    public List<Attribute> findByVocabAndParentIsNull(Vocabulary vocab);
+    public Optional<Attribute> findByVocabAndInnerId(Vocabulary vocab, Long innerId);
+
+    public Optional<Attribute> findByVocabAndLevelAndName(Vocabulary vocab, String level, String name);
+
+    public Page<Attribute> findByVocabAndName(Vocabulary vocab, String name, Pageable pageable);
+
+    public Page<Attribute> findByVocabAndLevel(Vocabulary vocab, String level, Pageable pageable);
+
+    public Page<Attribute> findByVocabAndRequirementLevel(Vocabulary vocab, String requirementLevel, Pageable pageable);
+
+    public Page<Attribute> findByVocabAndLevelAndRequirementLevel(Vocabulary vocab, String level, String requirementLevel, Pageable pageable);
+
+    public Page<Attribute> findByVocabAndParentIsNull(Vocabulary vocab, Pageable pageable);
+
+    public Page<Attribute> findByParent(Attribute parent, Pageable pageable);
+
+    public Page<Attribute> findByChildrenIn(Set<Attribute> children, Pageable pageable);
+
+    public Page<Attribute> findAll(Pageable pageable);
 }
