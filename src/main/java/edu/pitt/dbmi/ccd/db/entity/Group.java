@@ -16,12 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Collection;
+import java.util.Arrays;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;
@@ -54,7 +56,7 @@ public class Group implements Serializable {
     @NotBlank
     @Size(min=4, max=128)
     @Column(length=128, unique=true, nullable=false)
-    @NaturalId(mutable=true)
+    @NaturalId(mutable=false)
     private String name;
 
     @NotBlank
@@ -64,19 +66,15 @@ public class Group implements Serializable {
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "group_membership", joinColumns = {
-        @JoinColumn(name="groupId")}, inverseJoinColumns = {
-        @JoinColumn(name="userAccountId")})
+    @JoinTable(name = "group_membership",
+        joinColumns = { @JoinColumn(name="groupId") },
+        inverseJoinColumns = { @JoinColumn(name="userAccountId") })
     private Set<UserAccount> members = new HashSet<>(0);
 
     public Group() { }
 
-    public Group(String name) {
-        this.name = name;
-    }
-
     public Group(String name, String description) {
-        this(name);
+        this.name = name;
         this.description = description;
     }
 
@@ -112,17 +110,21 @@ public class Group implements Serializable {
         return members.contains(member);
     }
 
+    public boolean hasMembers(UserAccount... members) {
+        return hasMembers(Arrays.asList(members));
+    }
+
     public boolean hasMembers(Collection<UserAccount> members) {
         return this.members.containsAll(members);
     }
 
     public void addMember(UserAccount member) {
-        this.members.add(member);
+        members.add(member);
     }
 
     public void addMembers(UserAccount... members) {
-        for (UserAccount m: members) {
-            this.members.add(m);
+        for (UserAccount m : members) {
+            addMember(m);
         }
     }
 
@@ -135,8 +137,8 @@ public class Group implements Serializable {
     }
 
     public void removeMembers(UserAccount... members) {
-        for (UserAccount m: members) {
-            this.members.remove(m);
+        for (UserAccount m : members) {
+            removeMember(m);
         }
     }
 

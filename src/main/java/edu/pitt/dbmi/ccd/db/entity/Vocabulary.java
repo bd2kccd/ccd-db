@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
@@ -42,7 +43,6 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.annotations.NaturalId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -79,7 +79,6 @@ public class Vocabulary implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy="vocab", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    @JsonManagedReference
     private Set<Attribute> attributes = new HashSet<>(0);
 
     @PrePersist
@@ -131,6 +130,10 @@ public class Vocabulary implements Serializable {
         return attributes.contains(attribute);
     }
 
+    public boolean hasAttributes(Attribute... attributes) {
+        return hasAttributes(Arrays.asLilst(attributes));
+    }
+
     public boolean hasAttributes(Collection<Attribute> attributes) {
         return this.attributes.containsAll(attributes);
     }
@@ -140,7 +143,9 @@ public class Vocabulary implements Serializable {
     }
 
     public void addAttributes(Attribute... attributes) {
-        addAttributes(Arrays.asList(attributes));
+        for (Attribute a : attributes) {
+            addAttribute(a);
+        }
     }
 
     public void addAttributes(Collection<Attribute> attributes) {
@@ -152,7 +157,9 @@ public class Vocabulary implements Serializable {
     }
 
     public void removeAttributes(Attribute... attributes) {
-        removeAttributes(Arrays.asList(attributes));
+        for (Attribute a : attributes) {
+            removeAttribute(a);
+        }
     }
 
     public void removeAttributes(Collection<Attribute> attributes) {

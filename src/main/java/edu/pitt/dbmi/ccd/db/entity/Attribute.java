@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
@@ -37,7 +38,6 @@ import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * @author Mark Silvis  (marksilvis@pitt.edu)
@@ -61,7 +61,6 @@ public class Attribute implements Serializable {
     @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="vocabId", nullable=false)
-    @JsonBackReference
     private Vocabulary vocab;
 
     @NotBlank
@@ -166,6 +165,10 @@ public class Attribute implements Serializable {
         return children.contains(child);
     }
 
+    public boolean hasChildren(Attribute... children) {
+        return hasChildren(Arrays.asList(children));
+    }
+
     public boolean hasChildren(Collection<Attribute> children) {
         return this.children.containsAll(children);
     }
@@ -175,7 +178,9 @@ public class Attribute implements Serializable {
     }
 
     public void addChildren(Attribute... children) {
-        addChildren(Arrays.asList(children));
+        for (Attribute c : children) {
+            addChild(c);
+        }
     }
 
     public void addChildren(Collection<Attribute> children) {
@@ -187,7 +192,9 @@ public class Attribute implements Serializable {
     }
 
     public void removeChildren(Attribute... children) {
-        removeChildren(Arrays.asList(children));
+        for (Attribute c : children) {
+            removeChild(c);
+        }
     }
 
     public void removeChildren(Collection<Attribute> children) {

@@ -80,12 +80,16 @@ public class VocabularyService {
     public Optional<Vocabulary> findByName(String name) {
         return vocabRepository.findByName(name);
     }
+    
+    public Page<Vocabulary> findByNameStartsWith(String terms, Pageable pageable) {
+        return vocabRepository.findByNameStartsWith(terms, pageable);
+    }
 
-    public Page<Vocabulary> searchNames(String terms, Pageable pageable) {
+    public Page<Vocabulary> findByNameContains(String terms, Pageable pageable) {
         return vocabRepository.findByNameContains(terms, pageable);
     }
 
-    public Page<Vocabulary> searchDescriptions(String terms, Pageable pageable) {
+    public Page<Vocabulary> findByDescriptionContains(String terms, Pageable pageable) {
         return vocabRepository.findByDescriptionContains(terms, pageable);
     }
 

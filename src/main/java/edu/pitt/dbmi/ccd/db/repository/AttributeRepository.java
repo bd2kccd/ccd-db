@@ -45,9 +45,21 @@ public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 
     public Page<Attribute> findByVocabAndName(Vocabulary vocab, String name, Pageable pageable);
 
+    public Page<Attribute> findByVocabAndNameStartsWith(Vocabulary vocab, String terms, Pageable pageable);
+
+    public Page<Attribute> findByVocabAndNameContains(Vocabulary vocab, String terms, Pageable pageable);
+
     public Page<Attribute> findByVocabAndLevel(Vocabulary vocab, String level, Pageable pageable);
 
+    public Page<Attribute> findByVocabAndLevelStartsWith(Vocabulary vocab, String terms, Pageable pageable);
+
+    public Page<Attribute> findByVocabAndLevelContains(Vocabulary vocab, String terms, Pageable pageable);
+
     public Page<Attribute> findByVocabAndRequirementLevel(Vocabulary vocab, String requirementLevel, Pageable pageable);
+
+    public Page<Attribute> findByVocabAndRequirementLevelStartsWith(Vocabulary vocab, String terms, Pageable pageable);
+
+    public Page<Attribute> findByVocabAndRequirementLevelContains(Vocabulary vocab, String terms, Pageable pageable);
 
     public Page<Attribute> findByVocabAndLevelAndRequirementLevel(Vocabulary vocab, String level, String requirementLevel, Pageable pageable);
 

@@ -64,15 +64,39 @@ public class AttributeService {
         return attributeRepository.findByVocabAndName(vocab, name, pageable);
     }
 
+    public Page<Attribute> findByVocabAndNameStartsWith(Vocabulary vocab, String name, Pageable pageable) {
+        return attributeRepository.findByVocabAndNameStartsWith(vocab, name, pageable);
+    }
+
+    public Page<Attribute> findByVocabAndNameContains(Vocabulary vocab, String name, Pageable pageable) {
+        return attributeRepository.findByVocabAndNameContains(vocab, name, pageable);
+    }
+
     public Page<Attribute> findByVocabAndLevel(Vocabulary vocab, String level, Pageable pageable) {
         return attributeRepository.findByVocabAndLevel(vocab, level, pageable);
+    }
+
+    public Page<Attribute> findByVocabAndLevelStartsWith(Vocabulary vocab, String level, Pageable pageable) {
+        return attributeRepository.findByVocabAndLevelStartsWith(vocab, level, pageable);
+    }
+
+    public Page<Attribute> findByVocabAndLevelContains(Vocabulary vocab, String level, Pageable pageable) {
+        return attributeRepository.findByVocabAndLevelContains(vocab, level, pageable);
     }
 
     public Page<Attribute> findByVocabAndRequirementLevel(Vocabulary vocab, String requirementLevel, Pageable pageable) {
         return attributeRepository.findByVocabAndRequirementLevel(vocab, requirementLevel, pageable);
     }
 
-    public Page<Attribute> findAllOrphans(Vocabulary vocab, Pageable pageable) {
+    public Page<Attribute> findByVocabAndRequirementLevelStartsWith(Vocabulary vocab, String requirementLevel, Pageable pageable) {
+        return attributeRepository.findByVocabAndRequirementLevelStartsWith(vocab, requirementLevel, pageable);
+    }
+
+    public Page<Attribute> findByVocabAndRequirementLevelContains(Vocabulary vocab, String requirementLevel, Pageable pageable) {
+        return attributeRepository.findByVocabAndRequirementLevelContains(vocab, requirementLevel, pageable);
+    }
+
+    public Page<Attribute> findByVocabAndParentIsNull(Vocabulary vocab, Pageable pageable) {
         return attributeRepository.findByVocabAndParentIsNull(vocab, pageable);
     }
 
@@ -82,10 +106,6 @@ public class AttributeService {
 
     public Page<Attribute> findByChildrenIn(Set<Attribute> children, Pageable pageable) {
         return attributeRepository.findByChildrenIn(children, pageable);
-    }
-
-    public Page<Attribute> findAllParentless(Vocabulary vocab, Pageable pageable) {
-        return attributeRepository.findByVocabAndParentIsNull(vocab, pageable);
     }
 
     public Page<Attribute> findAll(Pageable pageable) {
