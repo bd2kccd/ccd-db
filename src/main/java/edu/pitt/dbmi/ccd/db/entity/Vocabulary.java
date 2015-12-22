@@ -131,7 +131,7 @@ public class Vocabulary implements Serializable {
     }
 
     public boolean hasAttributes(Attribute... attributes) {
-        return hasAttributes(Arrays.asLilst(attributes));
+        return hasAttributes(Arrays.asList(attributes));
     }
 
     public boolean hasAttributes(Collection<Attribute> attributes) {
