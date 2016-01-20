@@ -39,7 +39,7 @@ public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 
     public Optional<Attribute> findById(Long id);
 
-    public Optional<Attribute> findByVocabAndInnerId(Vocabulary vocab, Long innerId);
+    public Optional<Attribute> findByVocabAndId(Vocabulary vocab, Long id);
 
     public Optional<Attribute> findByVocabAndLevelAndName(Vocabulary vocab, String level, String name);
 
@@ -61,7 +61,11 @@ public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 
     public Page<Attribute> findByVocabAndRequirementLevelContains(Vocabulary vocab, String terms, Pageable pageable);
 
+    public Page<Attribute> findByVocabAndLevelAndName(Vocabulary vocab, String level, String name, Pageable pageable);
+
     public Page<Attribute> findByVocabAndLevelAndRequirementLevel(Vocabulary vocab, String level, String requirementLevel, Pageable pageable);
+
+    public Page<Attribute> findByVocabAndRequirementLevelAndName(Vocabulary vocab, String requirementLevel, String name, Pageable pageable);
 
     public Page<Attribute> findByVocabAndParentIsNull(Vocabulary vocab, Pageable pageable);
 

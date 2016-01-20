@@ -52,8 +52,8 @@ public class AttributeService {
         return attributeRepository.findById(id);
     }
 
-    public Optional<Attribute> findByVocabAndInnerId(Vocabulary vocab, Long innerId) {
-        return attributeRepository.findByVocabAndInnerId(vocab, innerId);
+    public Optional<Attribute> findByVocabAndId(Vocabulary vocab, Long id) {
+        return attributeRepository.findByVocabAndId(vocab, id);
     }
 
     public Optional<Attribute> findByVocabAndLevelAndName(Vocabulary vocab, String level, String name) {
@@ -94,6 +94,18 @@ public class AttributeService {
 
     public Page<Attribute> findByVocabAndRequirementLevelContains(Vocabulary vocab, String terms, Pageable pageable) {
         return attributeRepository.findByVocabAndRequirementLevelContains(vocab, terms, pageable);
+    }
+
+    public Page<Attribute> findByVocabAndLevelAndName(Vocabulary vocab, String level, String name, Pageable pageable) {
+        return attributeRepository.findByVocabAndLevelAndName(vocab, level, name, pageable);
+    }
+
+    public Page<Attribute> findByVocabAndLevelAndRequirementLevel(Vocabulary vocab, String level, String requirementLevel, Pageable pageable) {
+        return attributeRepository.findByVocabAndLevelAndRequirementLevel(vocab, level, requirementLevel, pageable);
+    }
+
+    public Page<Attribute> findByVocabAndRequirementLevelAndName(Vocabulary vocab, String requirementLevel, String name, Pageable pageable) {
+        return attributeRepository.findByVocabAndRequirementLevelAndName(vocab, requirementLevel, name, pageable);
     }
 
     public Page<Attribute> findByVocabAndParentIsNull(Vocabulary vocab, Pageable pageable) {

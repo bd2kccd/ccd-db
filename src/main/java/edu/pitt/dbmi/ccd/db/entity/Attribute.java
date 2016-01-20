@@ -45,7 +45,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(uniqueConstraints={
     @UniqueConstraint(columnNames={"vocabId", "level", "name"}),
-    @UniqueConstraint(columnNames={"vocabId", "innerId"})
+    @UniqueConstraint(columnNames={"vocabId", "id"})
 })
 public class Attribute implements Serializable {
 
@@ -53,10 +53,11 @@ public class Attribute implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Long attributeId;
 
+    // id relative to vocabulary
     @Column(unique=false, nullable=false)
-    private Long innerId;
+    private Long id;
 
     @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
@@ -76,7 +77,7 @@ public class Attribute implements Serializable {
     private String requirementLevel;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(nullable=true)
+    @JoinColumn(name="parent", nullable=true)
     private Attribute parent;
 
     @OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
@@ -90,15 +91,23 @@ public class Attribute implements Serializable {
         this.requirementLevel = requirementLevel;        
     }
 
-    public Attribute(Vocabulary vocab, Long innerId, String level, String name, String requirementLevel) {
+    public Attribute(Vocabulary vocab, Long id, String level, String name, String requirementLevel) {
         this(level, name, requirementLevel);
-        this.innerId = innerId;
+        this.id = id;
         this.vocab = vocab;
     }
 
-    public Attribute(Vocabulary vocab, Long innerId, String level, String name, String requirementLevel, Attribute parent) {
-        this(vocab, innerId, level, name, requirementLevel);
+    public Attribute(Vocabulary vocab, Long id, String level, String name, String requirementLevel, Attribute parent) {
+        this(vocab, id, level, name, requirementLevel);
         this.parent = parent;
+    }
+
+    public Long getAttributeId() {
+        return attributeId;
+    }
+
+    public void setAttributeId(Long attributeId) {
+        this.attributeId = attributeId;
     }
 
     public Long getId() {
@@ -107,14 +116,6 @@ public class Attribute implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getInnerId() {
-        return innerId;
-    }
-
-    public void setInnerId(Long innerId) {
-        this.innerId = innerId;
     }
 
     public Vocabulary getVocabulary() {
