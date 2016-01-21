@@ -48,10 +48,11 @@ public class AttributeService {
         return attributeRepository.save(attrib);
     }
 
-    public Optional<Attribute> findOne(Long id) {
-        return attributeRepository.findById(id);
+    public Optional<Attribute> findOne(Long attributeId) {
+        return attributeRepository.findByAttributeId(attributeId);
     }
 
+    // queries with vocab
     public Optional<Attribute> findByVocabAndId(Vocabulary vocab, Long id) {
         return attributeRepository.findByVocabAndId(vocab, id);
     }
@@ -112,12 +113,69 @@ public class AttributeService {
         return attributeRepository.findByVocabAndParentIsNull(vocab, pageable);
     }
 
+    // queries without vocab
+    public Page<Attribute> findByLevel(String level, Pageable pageable) {
+        return attributeRepository.findByLevel(level, pageable);
+    }
+
+    public Page<Attribute> findByLevelStartsWith(String terms, Pageable pageable) {
+        return attributeRepository.findByLevelStartsWith(terms, pageable);
+    }
+
+    public Page<Attribute> findByLevelContains(String terms, Pageable pageable) {
+        return attributeRepository.findByLevelContains(terms, pageable);
+    }
+
+    public Page<Attribute> findByName(String name, Pageable pageable) {
+        return attributeRepository.findByName(name, pageable);
+    }
+
+    public Page<Attribute> findByNameStartsWith(String terms, Pageable pageable) {
+        return attributeRepository.findByNameStartsWith(terms, pageable);
+    }
+
+    public Page<Attribute> findByNameContains(String terms, Pageable pageable) {
+        return attributeRepository.findByNameContains(terms, pageable);
+    }
+
+    public Page<Attribute> findByRequirementLevel(String requirementLevel, Pageable pageable) {
+        return attributeRepository.findByRequirementLevel(requirementLevel, pageable);
+    }
+
+    public Page<Attribute> findByRequirementLevelStartsWith(String terms, Pageable pageable) {
+        return attributeRepository.findByRequirementLevelStartsWith(terms, pageable);
+    }
+
+    public Page<Attribute> findByRequirementLevelContains(String terms, Pageable pageable) {
+        return attributeRepository.findByRequirementLevelContains(terms, pageable);
+    }
+
+    public Page<Attribute> findByLevelAndRequirementLevel(String level, String requirementLevel, Pageable pageable) {
+        return attributeRepository.findByLevelAndRequirementLevel(level, requirementLevel, pageable);
+    }
+
+    public Page<Attribute> findByLevelAndName(String level, String name, Pageable pageable) {
+        return attributeRepository.findByLevelAndName(level, name, pageable);
+    }
+
+    public Page<Attribute> findByRequirementLevelAndName(String requirementLevel, String name, Pageable pageable) {
+        return attributeRepository.findByRequirementLevelAndName(requirementLevel, name, pageable);
+    }
+
+    public Page<Attribute> findByLevelAndRequirementLevelAndName(String level, String requirementLevel, String name, Pageable pageable) {
+        return attributeRepository.findByLevelAndRequirementLevelAndName(level, requirementLevel, name, pageable);
+    }
+
     public Page<Attribute> findByParent(Attribute parent, Pageable pageable) {
         return attributeRepository.findByParent(parent, pageable);
     }
 
     public Page<Attribute> findByChildrenIn(Set<Attribute> children, Pageable pageable) {
         return attributeRepository.findByChildrenIn(children, pageable);
+    }
+
+    public Page<Attribute> findAllByParentIsNull(Pageable pageable) {
+        return attributeRepository.findAllByParentIsNull(pageable);
     }
 
     public Page<Attribute> findAll(Pageable pageable) {

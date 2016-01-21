@@ -37,17 +37,14 @@ import edu.pitt.dbmi.ccd.db.entity.Attribute;
 @RepositoryRestResource(exported=false)
 public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 
-    public Optional<Attribute> findById(Long id);
+    public Optional<Attribute> findByAttributeId(Long attributeId);
 
+    // queries with vocab
     public Optional<Attribute> findByVocabAndId(Vocabulary vocab, Long id);
 
     public Optional<Attribute> findByVocabAndLevelAndName(Vocabulary vocab, String level, String name);
 
     public Page<Attribute> findByVocabAndName(Vocabulary vocab, String name, Pageable pageable);
-
-    public Page<Attribute> findByVocabAndNameStartsWith(Vocabulary vocab, String terms, Pageable pageable);
-
-    public Page<Attribute> findByVocabAndNameContains(Vocabulary vocab, String terms, Pageable pageable);
 
     public Page<Attribute> findByVocabAndLevel(Vocabulary vocab, String level, Pageable pageable);
 
@@ -61,17 +58,50 @@ public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 
     public Page<Attribute> findByVocabAndRequirementLevelContains(Vocabulary vocab, String terms, Pageable pageable);
 
-    public Page<Attribute> findByVocabAndLevelAndName(Vocabulary vocab, String level, String name, Pageable pageable);
+    public Page<Attribute> findByVocabAndNameStartsWith(Vocabulary vocab, String terms, Pageable pageable);
+
+    public Page<Attribute> findByVocabAndNameContains(Vocabulary vocab, String terms, Pageable pageable);
 
     public Page<Attribute> findByVocabAndLevelAndRequirementLevel(Vocabulary vocab, String level, String requirementLevel, Pageable pageable);
+
+    public Page<Attribute> findByVocabAndLevelAndName(Vocabulary vocab, String level, String name, Pageable pageable);
 
     public Page<Attribute> findByVocabAndRequirementLevelAndName(Vocabulary vocab, String requirementLevel, String name, Pageable pageable);
 
     public Page<Attribute> findByVocabAndParentIsNull(Vocabulary vocab, Pageable pageable);
 
+    // queries without vocab
+    public Page<Attribute> findByLevel(String level, Pageable pageable);
+
+    public Page<Attribute> findByLevelStartsWith(String terms, Pageable pageable);
+
+    public Page<Attribute> findByLevelContains(String terms, Pageable pageable);
+
+    public Page<Attribute> findByRequirementLevel(String requirementLevel, Pageable pageable);
+
+    public Page<Attribute> findByRequirementLevelStartsWith(String terms, Pageable pageable);
+
+    public Page<Attribute> findByRequirementLevelContains(String terms, Pageable pageable);
+
+    public Page<Attribute> findByName(String name, Pageable pageable);
+
+    public Page<Attribute> findByNameStartsWith(String terms, Pageable pageable);
+
+    public Page<Attribute> findByNameContains(String terms, Pageable pageable);
+
+    public Page<Attribute> findByLevelAndRequirementLevel(String level, String requirementLevel, Pageable pageable);
+
+    public Page<Attribute> findByLevelAndName(String level, String name, Pageable pageable);
+
+    public Page<Attribute> findByRequirementLevelAndName(String requirementLevel, String name, Pageable pageable);
+
+    public Page<Attribute> findByLevelAndRequirementLevelAndName(String level, String requirementLevel, String name, Pageable pageable);
+
     public Page<Attribute> findByParent(Attribute parent, Pageable pageable);
 
     public Page<Attribute> findByChildrenIn(Set<Attribute> children, Pageable pageable);
+
+    public Page<Attribute> findAllByParentIsNull(Pageable pageable);
 
     public Page<Attribute> findAll(Pageable pageable);
 }
