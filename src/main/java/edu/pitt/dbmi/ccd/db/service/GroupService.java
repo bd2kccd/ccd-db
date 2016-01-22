@@ -63,16 +63,8 @@ public class GroupService {
         return groupRepository.findByName(name);
     }
 
-    public Page<Group> findByNameStartsWith(String terms, Pageable pageable) {
-        return groupRepository.findByNameStartsWith(terms, pageable);
-    }
-
-    public Page<Group> findByNameContains(String terms, Pageable pageable) {
-        return groupRepository.findByNameContains(terms, pageable);
-    }
-
-    public Page<Group> findByDescriptionContains(String terms, Pageable pageable) {
-        return groupRepository.findByDescriptionContains(terms, pageable);
+    public Page<Group> findByNameContainsAndDescriptionContains(String name, String description, Pageable pageable) {
+        return groupRepository.findByNameContainsAndDescriptionContains(name, description, pageable);
     }
 
     public Page<Group> findAll(Pageable pageable) {
