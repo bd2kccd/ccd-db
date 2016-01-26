@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import java.util.Optional;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,19 +44,23 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
-    public Person findPerson(Long id) {
-        return personRepository.findOne(id);
+    // public Person findPerson(Long id) {
+    //     return personRepository.findOne(id);
+    // }
+
+    public Optional<Person> findOne(Long id) {
+        return personRepository.findById(id);
     }
 
     public Person save(Person person) {
         return personRepository.save(person);
     }
 
-    public Person findPersonByEmail(String email) {
+    public Optional<Person> findPersonByEmail(String email) {
         return personRepository.findByEmail(email);
     }
 
-    public Page<Person> findPersonByDescription(String terms, Pageable pageable) {
+    public Page<Person> findPersonByDescriptionContains(String terms, Pageable pageable) {
         return personRepository.findByDescriptionContains(terms, pageable);
     }
 

@@ -18,13 +18,16 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -48,16 +51,28 @@ public class UserAccountService {
         this.personRepository = personRepository;
     }
 
-    public UserAccount findByUsername(String username) {
+    public Optional<UserAccount> findOne(Long id) {
+        return userAccountRepository.findById(id);
+    }
+
+    public Optional<UserAccount> findByUsername(String username) {
         return userAccountRepository.findByUsername(username);
     }
 
-    public UserAccount findUserAccountByEmail(String email) {
+    public Optional<UserAccount> findByEmail(String email) {
         return userAccountRepository.findByEmail(email);
     }
 
-    public UserAccount findByUsernameAndActivationKey(String username, String activationKey) {
-        return userAccountRepository.findByUsernameAndActivationKey(username, activationKey);
+    // public UserAccount findUserAccountByEmail(String email) {
+    //     return userAccountRepository.findByEmail(email);
+    // }
+
+    // public UserAccount findByUsernameAndActivationKey(String username, String activationKey) {
+    //     return userAccountRepository.findByUsernameAndActivationKey(username, activationKey);
+    // }
+    
+    public Page<UserAccount> findAll(Pageable pageable) {
+        return userAccountRepository.findAll(pageable);
     }
 
     public UserAccount saveUserAccount(UserAccount userAccount) {

@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,7 +37,13 @@ import edu.pitt.dbmi.ccd.db.entity.Person;
 @RepositoryRestResource(exported=false)
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    public Person findByEmail(String email);
+    public Optional<Person> findById(Long id);
+
+    public Optional<Person> findByEmail(String email);
+
+    public Optional<Person> findByFirstNameAndLastName(String first, String last);
+
+    public Optional<Person> findByFirstNameAndMiddleNameAndLastName(String first, String middle, String last);
 
     public Page<Person> findByDescriptionContains(String terms, Pageable pageable);
 

@@ -88,7 +88,7 @@ public class Annotation implements Serializable {
     private Group group;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(nullable=true)
+    @JoinColumn(nullable=false)
     private Vocabulary vocab;
 
     @ManyToOne(fetch=FetchType.LAZY)

@@ -18,10 +18,13 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import java.util.Optional;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -35,11 +38,27 @@ import org.springframework.stereotype.Repository;
 @RepositoryRestResource(path="users")
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 
-    public UserAccount findByUsername(String username);
+    public Optional<UserAccount> findById(Long id);
 
-    public UserAccount findByUsernameAndActivationKey(String username, String activationKey);
+    public Optional<UserAccount> findByUsername(String username);
+
+    // public UserAccount findByUsername(String username);
+
+    public Optional<UserAccount> findByUsernameAndActivationKey(String username, String activationKey);
+
+    // public UserAccount findByUsernameAndActivationKey(String username, String activationKey);
+
+    // @Query("SELECT ua FROM UserAccount ua WHERE ua.person.email = ?1")
+    // public UserAccount findByEmail(String email);
 
     @Query("SELECT ua FROM UserAccount ua WHERE ua.person.email = ?1")
-    public UserAccount findByEmail(String email);
+    public Optional<UserAccount> findByEmail(String email);
 
+    @Query("SELECT ua FROM UserAccount ua WHERE ua.person.firstName = ?1 AND ua.person.lastName = ?2")
+    public Optional<UserAccount> findByFirstNameAndLastName(String first, String last);
+
+    @Query("SELECT ua FROM UserAccount ua WHERE ua.person.firstName = ?1 AND ua.person.middleName = ?2 AND ua.person.lastName = ?3")
+    public Optional<UserAccount> findByFirstNameAndMiddleNameAndLastName(String first, String middle, String last);
+
+    public Page<UserAccount> findAll(Pageable pageable);
 }
