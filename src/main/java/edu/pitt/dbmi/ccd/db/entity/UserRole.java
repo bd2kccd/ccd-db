@@ -25,7 +25,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -44,7 +44,7 @@ public class UserRole implements Serializable {
     private static final long serialVersionUID = -7218841574052268044L;
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
@@ -60,7 +60,7 @@ public class UserRole implements Serializable {
     //     @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     // private Set<UserAccount> userAccounts = new HashSet<>(0);
 
-    @OneToMany(mappedBy="role", fetch=FetchType.LAZY)
+    @ManyToMany(mappedBy="roles", fetch=FetchType.LAZY)
     private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -127,4 +127,31 @@ public class UserRole implements Serializable {
         this.rolePermissions = rolePermissions;
     }
 
+    public void addRolePermission(RolePermission permission) {
+        this.rolePermissions.add(permission);
+    }
+
+    public void addRolePermissions(RolePermission... permissions) {
+        for (RolePermission p : permissions) {
+            addRolePermission(p);
+        }
+    }
+
+    public void addRolePermissions(Set<RolePermission> permissions) {
+        this.rolePermissions.addAll(permissions);
+    }
+
+        public void removeRolePermission(RolePermission permission) {
+        this.rolePermissions.remove(permission);
+    }
+
+    public void removeRolePermissions(RolePermission... permissions) {
+        for (RolePermission p : permissions) {
+            removeRolePermission(p);
+        }
+    }
+
+    public void removeRolePermissions(Set<RolePermission> permissions) {
+        this.rolePermissions.removeAll(permissions);
+    }
 }

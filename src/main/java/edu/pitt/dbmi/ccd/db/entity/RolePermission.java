@@ -25,11 +25,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
@@ -43,11 +44,12 @@ public class RolePermission implements Serializable {
     private static final long serialVersionUID = -6084711369378791479L;
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @NotBlank
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @Column(name = "description")

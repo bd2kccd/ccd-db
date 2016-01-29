@@ -47,8 +47,8 @@ public class AnnotationService {
         return annotationRepository.save(annotation);
     }
 
-    public Optional<Annotation> findOne(Long userId, Long annoId) {
-        return annotationRepository.findById(userId, annoId);
+    public Optional<Annotation> findOne(UserAccount user, Long annoId) {
+        return annotationRepository.findById(user, annoId);
     }
 
     public Page<Annotation> findAll(UserAccount user, Pageable pageable) {

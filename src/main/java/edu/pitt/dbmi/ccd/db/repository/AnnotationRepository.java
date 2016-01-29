@@ -35,27 +35,18 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 @Repository
 public interface AnnotationRepository extends JpaRepository<Annotation, Long> {
    
-    @Query(value="SELECT * " +
-                 "FROM Annotation AS a " +
-                 "LEFT JOIN group_membership g ON g.user_account_id = :userId " +
-                 "WHERE a.id = :annoId " +                                          // WHERE: annotation has specified id
-                 "AND (a.user_account_id = :userId " +                              // AND:   annotation belongs to the user
-                 "OR (a.access_control='PUBLIC') " +                                // OR:    annotation is public
-                 "OR (a.access_control='GROUP' AND a.group_id = g.group_id)) " +    // OR:    user belongs to the annotation's group
-                 "GROUP BY a.id",
-        nativeQuery=true)
-    // @Query("SELECT a from Annotation a " +
-    //        "LEFT JOIN GroupMembership g ON g.userAccountId = ?1 " +
-    //        "WHERE a.id = ?2 " +
-    //        "AND (a.user.id = ?1 " +
-    //        "OR (a.accessControl.name = 'PUBLIC') " +
-    //        "OR (a.accessControl.name = 'GROUP' AND a.group.id = g.groupId))")
-    public Optional<Annotation> findById(Long userId, Long annoId);
+    @Query(value="SELECT a FROM Annotation AS a " +
+                 "WHERE a.id = :annoId " +                                                       // WHERE  annotation has specified id
+                 "AND (a.user = :user " +                                                        // AND    annotation belongs to the user
+                 "OR (a.accessControl.name = 'PUBLIC') " +                                       // OR     annotation is public
+                 "OR (a.accessControl.name = 'GROUP' AND a.group IN :#{#user.getGroups()})) " +  // OR     user belongs to the annotation's group
+                 "GROUP BY a.id")
+    public Optional<Annotation> findById(@Param("user") UserAccount user, @Param("annoId") Long annoId);
 
     @Query(value="SELECT a FROM Annotation AS a " +
-                 "WHERE a.user = :user " +                                            // WHERE: annotation belongs to the user
-                 "OR (a.accessControl.name ='PUBLIC') " +                             // OR:    annotation is public
-                 "OR (a.accessControl.name ='GROUP' AND a.group IN user.groups) " +   // OR:    user belongs to the annotation's group 
+                 "WHERE a.user = :user " +                                                      // WHERE  annotation belongs to the user
+                 "OR (a.accessControl.name = 'PUBLIC') " +                                      // OR     annotation is public
+                 "OR (a.accessControl.name = 'GROUP' AND a.group IN :#{#user.getGroups()}) " +  // OR     user belongs to the annotation's group 
                  "GROUP BY a.id")
-    public Page<Annotation> findAll(UserAccount user, Pageable pageable);
+    public Page<Annotation> findAll(@Param("user") UserAccount user, Pageable pageable);
 }

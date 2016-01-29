@@ -89,15 +89,11 @@ public class UserAccount implements Serializable {
     @Column(name = "lastLoginDate")//, length = 19)
     private Date lastLoginDate;
 
-    // @ManyToMany(fetch=FetchType.EAGER)
-    // @JoinTable(name="UserAccountUserRoleRel", joinColumns = {
-    //     @JoinColumn(name="userAccountId", nullable=false)}, inverseJoinColumns = {
-    //     @JoinColumn(name="userRoleId", nullable=false)})
-    // Set<UserRole> userRoles = new HashSet<>(0);
-
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="role", nullable=false)
-    private UserRole role;
+    @ManyToMany(fetch=FetchType.EAGER)
+    @JoinTable(name="UserAccountUserRoleRel", joinColumns = {
+        @JoinColumn(name="userAccountId", nullable=false)}, inverseJoinColumns = {
+        @JoinColumn(name="userRoleId", nullable=false)})
+    Set<UserRole> roles = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountDataFileRel", joinColumns = {
@@ -117,7 +113,7 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)})
     private Set<SecurityAnswer> securityAnswers = new HashSet<>(0);
 
-    @ManyToMany(mappedBy="members", fetch=FetchType.LAZY)
+    @ManyToMany(mappedBy="members", fetch=FetchType.EAGER)
     private Set<Group> groups = new HashSet<>(0);
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
@@ -152,8 +148,7 @@ public class UserAccount implements Serializable {
         this.activationKey = account.getActivationKey();
         this.createdDate = account.getCreatedDate();
         this.lastLoginDate = account.getLastLoginDate();
-        // this.userRoles = account.getUserRoles();
-        this.role = account.getRole();
+        this.roles = account.getRoles();
         this.dataFiles = account.getDataFiles();
         this.jobQueueInfos = account.getJobQueueInfos();
         this.securityAnswers = account.getSecurityAnswers();
@@ -226,45 +221,45 @@ public class UserAccount implements Serializable {
         this.lastLoginDate = lastLoginDate;
     }
 
-    public UserRole getRole() {
-        return role;
+    public Set<UserRole> getRoles() {
+        return roles;
     }
 
-    public void setRole(UserRole role) {
-        this.role = role;
+    public boolean hasRole(UserRole role) {
+        return this.roles.contains(role);
     }
 
-    // public Set<UserRole> getUserRoles() {
-    //     return userRoles;
-    // }
+    public boolean hasRoles(Set<UserRole> roles) {
+        return this.roles.containsAll(roles);
+    }
 
-    // public void setUserRoles(Set<UserRole> userRoles) {
-    //     this.userRoles = userRoles;
-    // }
+    public void addRole(UserRole role) {
+        this.roles.add(role);
+    }
 
-    // public boolean hasUserRole(UserRole role) {
-    //     return userRoles.contains(role);
-    // }
+    public void addRoles(UserRole... roles) {
+        for (UserRole r : roles) {
+            addRole(r);
+        }
+    }
 
-    // public boolean hasUserRoles(Collection<UserRole> roles) {
-    //     return userRoles.containsAll(roles);
-    // }
+    public void addRoles(Set<UserRole> roles) {
+        this.roles.addAll(roles);
+    }
 
-    // public void addUserRole(UserRole role) {
-    //     this.userRoles.add(role);
-    // }
+    public void removeRole(UserRole role) {
+        this.roles.remove(role);
+    }
 
-    // public void addUserRoles(Collection<UserRole> roles) {
-    //     this.userRoles.addAll(roles);
-    // }
+    public void removeRoles(UserRole... roles) {
+        for (UserRole r : roles) {
+            removeRole(r);
+        }
+    }
 
-    // public void removeUserRole(UserRole role) {
-    //     userRoles.remove(role);
-    // }
-
-    // public void removeUserRoles(Collection<UserRole> roles) {
-    //     userRoles.removeAll(roles);
-    // }
+    public void removeRoles(Set<UserRole> roles) {
+        this.roles.removeAll(roles);
+    }
 
     public Set<DataFile> getDataFiles() {
         return dataFiles;
@@ -312,7 +307,7 @@ public class UserAccount implements Serializable {
 
     public void addGroups(Group... groups) {
         for (Group g: groups) {
-            this.groups.add(g);
+            addGroup(g);
         }
     }
 
@@ -326,7 +321,7 @@ public class UserAccount implements Serializable {
 
     public void removeGroups(Group... groups) {
         for (Group g: groups) {
-            this.groups.remove(g);
+            removeGroup(g);
         }
     }
 
