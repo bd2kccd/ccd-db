@@ -54,9 +54,4 @@ public class AnnotationDataService {
     public List<AnnotationData> findByAnnotation(Annotation annotation) {
         return annotationDataRepository.findByAnnotation(annotation);
     }
-
-    public List<AnnotationData> findByAnnotationId(Long id) {
-        Annotation annotation = annotationService.findAnnotation(id);
-        return annotationDataRepository.findByAnnotation(annotation);
-    }
 }

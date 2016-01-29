@@ -18,11 +18,15 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import java.util.Optional;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationRepository;
 
 /**
@@ -43,7 +47,11 @@ public class AnnotationService {
         return annotationRepository.save(annotation);
     }
 
-    public Annotation findAnnotation(Long id) {
-        return annotationRepository.findOne(id);
+    public Optional<Annotation> findOne(Long userId, Long annoId) {
+        return annotationRepository.findById(userId, annoId);
+    }
+
+    public Page<Annotation> findAll(UserAccount user, Pageable pageable) {
+        return annotationRepository.findAll(user, pageable);
     }
 }

@@ -22,7 +22,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Arrays;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
@@ -156,7 +155,9 @@ public class AnnotationData implements Serializable {
     }
 
     public void addChildren(AnnotationData... children) {
-        addChildren(Arrays.asList(children));
+        for (AnnotationData d : children) {
+            addChild(d);
+        }
     }
 
     public void addChildren(Collection<AnnotationData> children) {
@@ -168,7 +169,9 @@ public class AnnotationData implements Serializable {
     }
 
     public void removeChildren(AnnotationData... children) {
-        removeChildren(Arrays.asList(children));
+        for (AnnotationData d : children) {
+            removeChild(d);
+        }
     }
 
     public void removeChildren(Collection<AnnotationData> children) {
