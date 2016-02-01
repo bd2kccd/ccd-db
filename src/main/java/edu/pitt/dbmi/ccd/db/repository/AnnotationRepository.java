@@ -36,17 +36,18 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 public interface AnnotationRepository extends JpaRepository<Annotation, Long> {
    
     @Query(value="SELECT a FROM Annotation AS a " +
-                 "WHERE a.id = :annoId " +                                                       // WHERE  annotation has specified id
-                 "AND (a.user = :user " +                                                        // AND    annotation belongs to the user
-                 "OR (a.accessControl.name = 'PUBLIC') " +                                       // OR     annotation is public
-                 "OR (a.accessControl.name = 'GROUP' AND a.group IN :#{#user.getGroups()})) " +  // OR     user belongs to the annotation's group
-                 "GROUP BY a.id")
+                 "LEFT JOIN a.group g WITH g IN :#{#user.getGroups()} " +    // LEFT JOIN annotation groups with user groups
+                 "WHERE a.id = :annoId " +                                   // WHERE     annotation has specified id
+                 "AND (a.user = :user " +                                    // AND       [annotation belongs to the user
+                 "OR (a.accessControl.name = 'PUBLIC') " +                   // OR        annotation has public access
+                 "OR (a.accessControl.name = 'GROUP'))")                     // OR        annotation has group access]
     public Optional<Annotation> findById(@Param("user") UserAccount user, @Param("annoId") Long annoId);
 
     @Query(value="SELECT a FROM Annotation AS a " +
-                 "WHERE a.user = :user " +                                                      // WHERE  annotation belongs to the user
-                 "OR (a.accessControl.name = 'PUBLIC') " +                                      // OR     annotation is public
-                 "OR (a.accessControl.name = 'GROUP' AND a.group IN :#{#user.getGroups()}) " +  // OR     user belongs to the annotation's group 
+                 "LEFT JOIN a.group g WITH g IN :#{#user.getGroups()} " +    // LEFT JOIN annotation groups with user groups
+                 "WHERE a.user = :user " +                                   // WHERE     annotation belongs to the user
+                 "OR (a.accessControl.name = 'PUBLIC') " +                   // OR        annotation has public access
+                 "OR (a.accessControl.name = 'GROUP') " +                    // OR        annotation has group access
                  "GROUP BY a.id")
     public Page<Annotation> findAll(@Param("user") UserAccount user, Pageable pageable);
 }
