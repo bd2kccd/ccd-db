@@ -47,11 +47,44 @@ public class AnnotationService {
         return annotationRepository.save(annotation);
     }
 
-    public Optional<Annotation> findOne(UserAccount user, Long annoId) {
-        return annotationRepository.findById(user, annoId);
+    public Optional<Annotation> findOne(UserAccount requester, Long annoId) {
+        return annotationRepository.findById(requester, annoId);
     }
 
-    public Page<Annotation> findAll(UserAccount user, Pageable pageable) {
-        return annotationRepository.findAll(user, pageable);
+    public Page<Annotation> findByUser(UserAccount requester, String username, Pageable pageable) {
+        return (requester.getUsername() == username) ? annotationRepository.findByRequester(requester, pageable)
+                                                     : annotationRepository.findByUser(requester, username, pageable);
+    }
+
+    public Page<Annotation> findByGroup(UserAccount requester, String groupName, Pageable pageable) {
+        return annotationRepository.findByGroup(requester, groupName, pageable);
+    }
+
+    public Page<Annotation> findByUpload(UserAccount requester, Long uploadId, Pageable pageable) {
+        return annotationRepository.findByUpload(requester, uploadId, pageable);
+    }
+
+    public Page<Annotation> findByUserAndGroup(UserAccount requester, String username, String groupName, Pageable pageable) {
+        return annotationRepository.findByUserAndGroup(requester, username, groupName, pageable);
+    }
+
+    public Page<Annotation> findByUserAndUpload(UserAccount requester, String username, Long uploadId, Pageable pageable) {
+        return annotationRepository.findByUserAndUpload(requester, username, uploadId, pageable);
+    }
+
+    public Page<Annotation> findByGroupAndUpload(UserAccount requester, String groupName, Long uploadId, Pageable pageable) {
+        return annotationRepository.findByGroupAndUpload(requester, groupName, uploadId, pageable);
+    }
+
+    public Page<Annotation> findByUserAndGroupAndUpload(UserAccount requester, String username, String groupName, Long uploadId, Pageable pageable) {
+        return null;
+    }
+
+    public Page<Annotation> findAllPublic(Pageable pageable) {
+        return annotationRepository.findAllPublic(pageable);
+    }
+
+    public Page<Annotation> findAll(UserAccount requester, Pageable pageable) {
+        return annotationRepository.findAll(requester, pageable);
     }
 }
