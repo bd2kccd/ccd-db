@@ -18,11 +18,17 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -30,6 +36,8 @@ import edu.pitt.dbmi.ccd.db.entity.Annotation;
 @Repository
 public interface AnnotationDataRepository extends JpaRepository<AnnotationData, Long> {
 
-    public List<AnnotationData> findByAnnotation(Annotation annotation);
+    public Optional<AnnotationData> findById(Long id);
+
+    public Page<AnnotationData> findByAnnotation(Annotation annotation, Pageable pageable);
 
 }

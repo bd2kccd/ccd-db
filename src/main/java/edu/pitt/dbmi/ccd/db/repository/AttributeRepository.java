@@ -24,6 +24,8 @@ import java.util.Set;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
@@ -37,49 +39,31 @@ import edu.pitt.dbmi.ccd.db.entity.Attribute;
 @RepositoryRestResource(exported=false)
 public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 
-    public Optional<Attribute> findByAttributeId(Long attributeId);
+    public Optional<Attribute> findByAttributeId(Long id);
 
-    // queries with vocab
     public Optional<Attribute> findByVocabAndId(Vocabulary vocab, Long id);
 
     public Optional<Attribute> findByVocabAndLevelAndName(Vocabulary vocab, String level, String name);
 
-    public Page<Attribute> findByVocabAndLevel(Vocabulary vocab, String level, Pageable pageable);
-
-    public Page<Attribute> findByVocabAndName(Vocabulary vocab, String name, Pageable pageable);
-
-    public Page<Attribute> findByVocabAndRequirementLevel(Vocabulary vocab, String requirementLevel, Pageable pageable);
-
-    public Page<Attribute> findByVocabAndLevelAndName(Vocabulary vocab, String level, String name, Pageable pageable);
-
-    public Page<Attribute> findByVocabAndLevelAndRequirementLevel(Vocabulary vocab, String level, String requirementLevel, Pageable pageable);
-
-    public Page<Attribute> findByVocabAndNameAndRequirementLevel(Vocabulary vocab, String name, String requirementLevel, Pageable pageable);
-
-    public Page<Attribute> findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains(Vocabulary vocab, String level, String name, String requirementLevel, Pageable pageable);
+    public Page<Attribute> findByVocab(Vocabulary vocab, Pageable pageable);
 
     public Page<Attribute> findByVocabAndParent(Vocabulary vocab, Attribute parent, Pageable pageable);
 
     public Page<Attribute> findByVocabAndParentIsNull(Vocabulary vocab, Pageable pageable);
 
-    public Page<Attribute> findByVocab(Vocabulary vocab, Pageable pageable);
+    @Query(value="SELECT a FROM Attribute AS a " +
+                 "WHERE (:vocab IS NULL OR a.vocab = :vocab) " +
+                 "AND (:level IS NULL OR a.level LIKE :level) " +
+                 "AND (:name IS NULL OR a.name LIKE :name) " +
+                 "AND (:requirement IS NULL OR a.requirementLevel LIKE :requirement)")
+    public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevel(@Param("vocab") Vocabulary vocab, @Param("level") String level, @Param("name") String name, @Param("requirement") String requirementLevel, Pageable pageable);
 
-    // queries without vocab
-    public Page<Attribute> findByLevel(String level, Pageable pageable);
-
-    public Page<Attribute> findByName(String name, Pageable pageable);
-
-    public Page<Attribute> findByRequirementLevel(String requirementLevel, Pageable pageable);
-
-    public Page<Attribute> findByLevelAndName(String level, String name, Pageable pageable);
-
-    public Page<Attribute> findByLevelAndRequirementLevel(String level, String requirementLevel, Pageable pageable);
-
-    public Page<Attribute> findByNameAndRequirementLevel(String name, String requirementLevel, Pageable pageable);
-
-    public Page<Attribute> findByLevelAndNameAndRequirementLevel(String level, String name, String requirementLevel, Pageable pageable);
-
-    public Page<Attribute> findByLevelContainsAndNameContainsAndRequirementLevelContains(String level, String name, String requirementLevel, Pageable pageable);
+    @Query(value="SELECT a FROM Attribute AS a " +
+                 "WHERE (:vocab IS NULL OR a.vocab = :vocab) " +
+                 "AND (:level IS NULL OR a.level LIKE CONCAT('%', :level, '%')) " +
+                 "AND (:name IS NULL OR a.name LIKE CONCAT('%', :name, '%')) " +
+                 "AND (:requirement IS NULL OR a.requirementLevel LIKE CONCAT('%', :requirement, '%'))")
+    public Page<Attribute> findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains(@Param("vocab") Vocabulary vocab, @Param("level") String level, @Param("name") String name, @Param("requirement") String requirementLevel, Pageable pageable);
 
     public Page<Attribute> findByParent(Attribute parent, Pageable pageable);
 

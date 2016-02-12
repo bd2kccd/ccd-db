@@ -18,12 +18,15 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationDataRepository;
 import edu.pitt.dbmi.ccd.db.service.AnnotationService;
 
@@ -35,23 +38,21 @@ import edu.pitt.dbmi.ccd.db.service.AnnotationService;
 public class AnnotationDataService {
 
     private final AnnotationDataRepository annotationDataRepository;
-    private final AnnotationService annotationService;
 
     @Autowired(required=true)
-    public AnnotationDataService(AnnotationDataRepository annotationDataRepository, AnnotationService annotationService) {
+    public AnnotationDataService(AnnotationDataRepository annotationDataRepository) {
         this.annotationDataRepository = annotationDataRepository;
-        this.annotationService = annotationService;
     }
 
     public AnnotationData save(AnnotationData data) {
         return annotationDataRepository.save(data);
     }
 
-    public AnnotationData findAnnotationData(Long id) {
-        return annotationDataRepository.findOne(id);
+    public Optional<AnnotationData> findOne(Long id) {
+        return annotationDataRepository.findById(id);
     }
 
-    public List<AnnotationData> findByAnnotation(Annotation annotation) {
-        return annotationDataRepository.findByAnnotation(annotation);
+    public Page<AnnotationData> findByAnnotation(Annotation annotation, Pageable pageable) {
+        return annotationDataRepository.findByAnnotation(annotation, pageable);
     }
 }
