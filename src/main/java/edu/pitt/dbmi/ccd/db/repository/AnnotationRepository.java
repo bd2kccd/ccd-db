@@ -22,10 +22,11 @@ package edu.pitt.dbmi.ccd.db.repository;
 import java.util.Optional;
 import java.util.List;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
@@ -35,7 +36,7 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
-public interface AnnotationRepository extends JpaRepository<Annotation, Long> {
+public interface AnnotationRepository extends JpaRepository<Annotation, Long>, JpaSpecificationExecutor<Annotation> {
    
     /**
      * Find annotation by id if viewable by requester
@@ -180,6 +181,40 @@ public interface AnnotationRepository extends JpaRepository<Annotation, Long> {
         @Param("attributeName") String attributeName,
         @Param("attributeReqLevel") String attributeRequirementLevel,
         Pageable pageable);
+
+
+    // @Query(value="SELECT DISTINCT a FROM Annotation AS a " +
+    //              "LEFT JOIN a.group g ON g IN :#{#requester.getGroups()} " +              // LEFT JOIN annotation group on requester groups
+    //              "WHERE (:username IS NULL OR a.user.username = :username) " +            // WHERE     username param is null OR annotation belongs to user 
+    //              "AND (:group IS NULL OR a.group.name = :group) " +                       // AND       group param is null OR annotation belongs to group
+    //              "AND (:upload IS NULL OR a.target.id = :upload) " +                      // AND       upload param is null OR annotation targets upload
+    //              "AND (:vocab IS NULL OR a.vocab.name = :vocab) " +                       // AND       vocab param is null OR annotation belongs to vocabulary
+    //              "AND (:terms IS NULL " +                                                 // AND       terms param is null
+    //                "OR a IN (SELECT DISTINCT d.annotation FROM AnnotationData AS d " +    //           OR annotation data value contains terms
+    //                "WHERE d.value LIKE '%'+ elements(:terms) + '%')) " +
+    //              "AND (:attributeLevel IS NULL " +                                        // AND       attribute level param is null
+    //                "OR a IN (SELECT DISTINCT d.annotation FROM AnnotationData AS d " +    //           OR annotation data has attribute level
+    //                "WHERE d.attribute.level LIKE :attributeLevel)) " +
+    //              "AND (:attributeName IS NULL " +                                         // AND       attribute name param is null
+    //                "OR a IN (SELECT DISTINCT d.annotation FROM AnnotationData AS d " +    //           OR annotation data has attribute name 
+    //                "WHERE d.attribute.name LIKE :attributeName)) " +
+    //              "AND (:attributeReqLevel IS NULL " +                                     // AND       attribute requirement level param is null
+    //                "OR a IN (SELECT DISTINCT d.annotation FROM AnnotationData AS d " +    //           OR annotation data has attribute requirement level
+    //                "WHERE d.attribute.requirementLevel LIKE :attributeReqLevel)) " +
+    //              "AND ((a.user = :requester AND a.accessControl.name = 'PRIVATE') " +     // AND       annotation belongs to the requester
+    //                "OR (a.accessControl.name = 'PUBLIC') " +                              //           OR annotation has public access
+    //                "OR (a.accessControl.name = 'GROUP' AND a.group = g))" )               //           OR annotation has group access AND requester belongs to group]
+    // public Page<Annotation> searchTest(
+    //     @Param("requester") UserAccount requester,
+    //     @Param("username") String username,
+    //     @Param("group") String group,
+    //     @Param("upload") Long upload,
+    //     @Param("vocab") String vocab,
+    //     @Param("terms") List<String> terms,
+    //     @Param("attributeLevel") String attributeLevel,
+    //     @Param("attributeName") String attributeName,
+    //     @Param("attributeReqLevel") String attributeRequirementLevel,
+    //     Pageable pageable);
 
     /**
      * Find annotations belonging to requester

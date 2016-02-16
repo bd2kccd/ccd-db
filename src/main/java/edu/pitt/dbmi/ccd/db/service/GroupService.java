@@ -28,6 +28,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.repository.GroupRepository;
+import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -59,8 +60,13 @@ public class GroupService {
         return groupRepository.findById(id);
     }
 
-    public Optional<Group> findByName(String name) {
-        return groupRepository.findByName(name);
+    // public Optional<Group> findByName(String name) {
+    //     return groupRepository.findByName(name);
+    // }
+
+    public Group findByName(String name) {
+        Optional<Group> group = groupRepository.findByName(name);
+        return group.orElseThrow(() -> new NotFoundException(Group.class, name));
     }
 
     public Page<Group> findByNameContainsAndDescriptionContains(String name, String description, Pageable pageable) {

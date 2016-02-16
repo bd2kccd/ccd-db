@@ -36,9 +36,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.springframework.data.annotation.CreatedBy;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.annotations.NaturalId;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /** 
 * @author Mark Silvis  (marksilvis@pitt.edu)
@@ -64,7 +64,15 @@ public class Group implements Serializable {
     @Column(length=500, nullable=false)
     private String description;
 
-    @JsonIgnore
+    @CreatedBy
+    private UserAccount creator;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "GroupAdministration",
+        joinColumns = { @JoinColumn(name="groupId") },
+        inverseJoinColumns = { @JoinColumn(name="userAccountId") })
+    private Set<UserAccount> admins = new HashSet<>(0);
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "GroupMembership",
         joinColumns = { @JoinColumn(name="groupId") },
@@ -76,6 +84,12 @@ public class Group implements Serializable {
     public Group(String name, String description) {
         this.name = name;
         this.description = description;
+        this.creator = null;
+    }
+
+    public Group(String name, String description, UserAccount creator) {
+        this(name, description);
+        this.creator = creator;
     }
 
     public Long getId() {
@@ -100,6 +114,54 @@ public class Group implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public UserAccount getCreator() {
+        return creator;
+    }
+
+    public Set<UserAccount> getAdmins() {
+        return admins;
+    }
+
+    public boolean hasAdmin(UserAccount admin) {
+        return admins.contains(admin);
+    }
+
+    public boolean hasAdmins(UserAccount... admins) {
+        return hasAdmins(Arrays.asList(admins));
+    }
+
+    public boolean hasAdmins(Collection<UserAccount> admins) {
+        return this.admins.containsAll(admins);
+    }
+
+    public void addAdmin(UserAccount admin) {
+        admins.add(admin);
+    }
+
+    public void addAdmins(UserAccount... admins) {
+        for (UserAccount a : admins) {
+            addAdmin(a);
+        }
+    }
+
+    public void addAdmins(Collection<UserAccount> admins) {
+        this.admins.addAll(admins);
+    }
+
+    public void removeAdmin(UserAccount admin) {
+        admins.remove(admin);
+    }
+
+    public void removeAdmins(UserAccount... admins) {
+        for (UserAccount a : admins) {
+            removeAdmin(a);
+        }
+    }
+
+    public void removeAdmins(Collection<UserAccount> admins) {
+        this.admins.removeAll(admins);
     }
 
     public Set<UserAccount> getMembers() {

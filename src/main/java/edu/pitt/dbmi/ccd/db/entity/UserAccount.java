@@ -113,8 +113,11 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)})
     private Set<SecurityAnswer> securityAnswers = new HashSet<>(0);
 
-    @ManyToMany(mappedBy="members", fetch=FetchType.EAGER)
+    @ManyToMany(mappedBy="members", fetch=FetchType.LAZY)
     private Set<Group> groups = new HashSet<>(0);
+
+    @ManyToMany(mappedBy="admins", fetch=FetchType.LAZY)
+    private Set<Group> administers = new HashSet<>(0);
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
     private Set<Upload> uploads = new HashSet<>(0);
@@ -283,6 +286,46 @@ public class UserAccount implements Serializable {
 
     public void setSecurityAnswers(Set<SecurityAnswer> securityAnswers) {
         this.securityAnswers = securityAnswers;
+    }
+
+    public Set<Group> getAdmins() {
+        return administers;
+    }
+
+    public boolean isAdmin(Group group) {
+        return administers.contains(group);
+    }
+
+    public boolean isAdmin(Collection<Group> groups) {
+        return this.administers.containsAll(groups);
+    }
+
+    public void addAdmin(Group group) {
+        administers.add(group);
+    }
+
+    public void addAdmins(Collection<Group> groups) {
+        this.administers.addAll(groups);
+    }
+
+    public void addAdmins(Group... groups) {
+        for (Group g: groups) {
+            addAdmin(g);
+        }
+    }
+
+    public void removeAdmin(Group group) {
+        administers.remove(group);
+    }
+
+    public void removeAdmins(Collection<Group> groups) {
+        this.administers.removeAll(groups);
+    }
+
+    public void removeAdmins(Group... groups) {
+        for (Group g: groups) {
+            removeAdmin(g);
+        }
     }
 
     public Set<Group> getGroups() {

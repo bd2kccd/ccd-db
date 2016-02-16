@@ -112,6 +112,20 @@ public class AnnotationService {
         return annotationRepository.search(requester, username, group, upload, vocab, terms, attributeLevel, attributeName, attributeRequirementLevel, pageable);
     }
 
+    // public Page<Annotation> searchTest(
+    //         UserAccount requester,
+    //         String username,
+    //         String group,
+    //         Long upload,
+    //         String vocab,
+    //         List<String> terms,
+    //         String attributeLevel,
+    //         String attributeName,
+    //         String attributeRequirementLevel,
+    //         Pageable pageable) {
+    //     return annotationRepository.searchTest(requester, username, group, upload, vocab, terms, attributeLevel, attributeName, attributeRequirementLevel, pageable);
+    // }
+
     public Page<Annotation> findByVocab(UserAccount requester, String username, Pageable pageable) {
         return annotationRepository.findByVocab(requester, username, pageable);
     }
