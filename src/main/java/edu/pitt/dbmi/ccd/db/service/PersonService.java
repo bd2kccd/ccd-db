@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  *
@@ -48,16 +49,18 @@ public class PersonService {
     //     return personRepository.findOne(id);
     // }
 
-    public Optional<Person> findOne(Long id) {
-        return personRepository.findById(id);
+    public Person findOne(Long id) {
+        Optional<Person> person = personRepository.findById(id);
+        return person.orElseThrow(() -> new NotFoundException("User", "id", id));
     }
 
     public Person save(Person person) {
         return personRepository.save(person);
     }
 
-    public Optional<Person> findPersonByEmail(String email) {
-        return personRepository.findByEmail(email);
+    public Person findPersonByEmail(String email) {
+        Optional<Person> person = personRepository.findByEmail(email);
+        return person.orElseThrow(() -> new NotFoundException("User", "email", email));
     }
 
     public Page<Person> findPersonByDescriptionContains(String terms, Pageable pageable) {

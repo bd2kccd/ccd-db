@@ -31,6 +31,7 @@ import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
+@RepositoryRestResource(exported=false)
 public interface VocabularyRepository extends JpaRepository<Vocabulary, Long> {
     
     public Optional<Vocabulary> findById(Long id);

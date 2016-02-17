@@ -19,11 +19,13 @@
 package edu.pitt.dbmi.ccd.db.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import edu.pitt.dbmi.ccd.db.entity.Access;
 import edu.pitt.dbmi.ccd.db.repository.AccessRepository;
+import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -40,9 +42,9 @@ public class AccessService {
 
         List<Access> accessControls = accessRepository.findAll();
         if (accessControls.isEmpty()) {
-            accessControls.add(new Access("PRIVATE", "Visable only to creator"));
             accessControls.add(new Access("PUBLIC", "Visable to anyone"));
             accessControls.add(new Access("GROUP", "Visable to specified group"));
+            accessControls.add(new Access("PRIVATE", "Visable only to creator"));
 
             accessRepository.save(accessControls);
         }
@@ -52,11 +54,13 @@ public class AccessService {
         return accessRepository.save(access);
     }
 
-    public Access findAccess(Long id) {
-        return accessRepository.findOne(id);
+    public Access findOne(Long id) {
+        Optional<Access> access = accessRepository.findById(id);
+        return access.orElseThrow(() -> new NotFoundException("Access", "id", id));
     }
 
-    public Access findAccessByName(String name) {
-        return accessRepository.findByName(name);
+    public Access findByName(String name) {
+        Optional<Access> access = accessRepository.findByName(name);
+        return access.orElseThrow(() -> new NotFoundException("Access", "name", name));
     }
 }

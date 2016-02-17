@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
  *
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Repository;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
+@RepositoryRestResource(exported=false)
 public interface SecurityAnswerRepository extends JpaRepository<SecurityAnswer, Long> {
 
     public List<SecurityAnswer> findByUserAccounts(Set<UserAccount> userAccounts);

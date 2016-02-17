@@ -28,6 +28,7 @@ import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
+import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  *
@@ -51,25 +52,20 @@ public class UserAccountService {
         this.personRepository = personRepository;
     }
 
-    public Optional<UserAccount> findOne(Long id) {
-        return userAccountRepository.findById(id);
+    public UserAccount findOne(Long id) {
+        Optional<UserAccount> user = userAccountRepository.findById(id);
+        return user.orElseThrow(() -> new NotFoundException("User", "id", id));
     }
 
-    public Optional<UserAccount> findByUsername(String username) {
-        return userAccountRepository.findByUsername(username);
+    public UserAccount findByUsername(String username) {
+        Optional<UserAccount> user = userAccountRepository.findByUsername(username);
+        return user.orElseThrow(() -> new NotFoundException("User", "username", username));
     }
 
-    public Optional<UserAccount> findByEmail(String email) {
-        return userAccountRepository.findByEmail(email);
+    public UserAccount findByEmail(String email) {
+        Optional<UserAccount> user = userAccountRepository.findByEmail(email);
+        return user.orElseThrow(() -> new NotFoundException("User", "email", email));
     }
-
-    // public UserAccount findUserAccountByEmail(String email) {
-    //     return userAccountRepository.findByEmail(email);
-    // }
-
-    // public UserAccount findByUsernameAndActivationKey(String username, String activationKey) {
-    //     return userAccountRepository.findByUsernameAndActivationKey(username, activationKey);
-    // }
     
     public Page<UserAccount> findAll(Pageable pageable) {
         return userAccountRepository.findAll(pageable);

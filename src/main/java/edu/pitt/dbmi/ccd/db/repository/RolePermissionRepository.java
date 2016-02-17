@@ -18,9 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.RolePermission;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.jpa.repository.JpaRepository;
+import edu.pitt.dbmi.ccd.db.entity.RolePermission;
 
 /**
  *
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Repository;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
+@RepositoryRestResource(exported=false)
 public interface RolePermissionRepository extends JpaRepository<RolePermission, Long> {
 
     public RolePermission findByName(String name);

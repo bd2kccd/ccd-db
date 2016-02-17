@@ -42,14 +42,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     public Optional<UserAccount> findByUsername(String username);
 
-    // public UserAccount findByUsername(String username);
-
     public Optional<UserAccount> findByUsernameAndActivationKey(String username, String activationKey);
 
-    // public UserAccount findByUsernameAndActivationKey(String username, String activationKey);
-
-    // @Query("SELECT ua FROM UserAccount ua WHERE ua.person.email = ?1")
-    // public UserAccount findByEmail(String email);
 
     @Query("SELECT ua FROM UserAccount ua WHERE ua.person.email = ?1")
     public Optional<UserAccount> findByEmail(String email);
@@ -57,8 +51,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
     @Query("SELECT ua FROM UserAccount ua WHERE ua.person.firstName = ?1 AND ua.person.lastName = ?2")
     public Optional<UserAccount> findByFirstNameAndLastName(String first, String last);
 
-    @Query("SELECT ua FROM UserAccount ua WHERE ua.person.firstName = ?1 AND ua.person.middleName = ?2 AND ua.person.lastName = ?3")
-    public Optional<UserAccount> findByFirstNameAndMiddleNameAndLastName(String first, String middle, String last);
+    // @Query("SELECT ua FROM UserAccount ua WHERE ua.person.firstName = ?1 AND ua.person.middleName = ?2 AND ua.person.lastName = ?3")
+    // public Optional<UserAccount> findByFirstNameAndMiddleNameAndLastName(String first, String middle, String last);
 
     public Page<UserAccount> findAll(Pageable pageable);
 }

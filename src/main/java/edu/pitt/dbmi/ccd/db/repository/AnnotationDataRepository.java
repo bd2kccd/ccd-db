@@ -16,24 +16,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.repository;
 
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
+@RepositoryRestResource(exported=false)
 public interface AnnotationDataRepository extends JpaRepository<AnnotationData, Long> {
 
     public Optional<AnnotationData> findById(Long id);

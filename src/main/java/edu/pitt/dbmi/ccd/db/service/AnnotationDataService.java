@@ -29,6 +29,7 @@ import edu.pitt.dbmi.ccd.db.entity.Annotation;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationDataRepository;
 import edu.pitt.dbmi.ccd.db.service.AnnotationService;
+import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -48,8 +49,9 @@ public class AnnotationDataService {
         return annotationDataRepository.save(data);
     }
 
-    public Optional<AnnotationData> findOne(Long id) {
-        return annotationDataRepository.findById(id);
+    public AnnotationData findOne(Long id) {
+        Optional<AnnotationData> annotationData = annotationDataRepository.findById(id);
+        return annotationData.orElseThrow(() -> new NotFoundException("AnnotationData", "id", id));
     }
 
     public Page<AnnotationData> findByAnnotation(Annotation annotation, Pageable pageable) {

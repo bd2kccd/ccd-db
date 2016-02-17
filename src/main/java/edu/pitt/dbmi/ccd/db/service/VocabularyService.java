@@ -29,6 +29,7 @@ import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
 import edu.pitt.dbmi.ccd.db.repository.VocabularyRepository;
+import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -73,12 +74,14 @@ public class VocabularyService {
         return vocabRepository.save(vocab);
     }
 
-    public Optional<Vocabulary> findOne(Long id) {
-        return vocabRepository.findById(id);
+    public Vocabulary findOne(Long id) {
+        Optional<Vocabulary> vocab = vocabRepository.findById(id);
+        return vocab.orElseThrow(() -> new NotFoundException("Vocabulary", "id", id));
     }
 
-    public Optional<Vocabulary> findByName(String name) {
-        return vocabRepository.findByName(name);
+    public Vocabulary findByName(String name) {
+        Optional<Vocabulary> vocab = vocabRepository.findByName(name);
+        return vocab.orElseThrow(() -> new NotFoundException("Vocabulary", "name", name));
     }
     
     public Page<Vocabulary> findByNameContainsAndDescriptionContains(String name, String description, Pageable pageable) {

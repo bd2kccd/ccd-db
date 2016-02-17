@@ -56,17 +56,14 @@ public class GroupService {
         return groupRepository.save(group);
     }
 
-    public Optional<Group> findOne(Long id) {
-        return groupRepository.findById(id);
+    public Group findOne(Long id) {
+        Optional<Group> group = groupRepository.findById(id);
+        return group.orElseThrow(() -> new NotFoundException("Group", "id", id));
     }
-
-    // public Optional<Group> findByName(String name) {
-    //     return groupRepository.findByName(name);
-    // }
 
     public Group findByName(String name) {
         Optional<Group> group = groupRepository.findByName(name);
-        return group.orElseThrow(() -> new NotFoundException(Group.class, name));
+        return group.orElseThrow(() -> new NotFoundException("Group", "name", name));
     }
 
     public Page<Group> findByNameContainsAndDescriptionContains(String name, String description, Pageable pageable) {

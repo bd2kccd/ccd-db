@@ -18,9 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.VariableType;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.jpa.repository.JpaRepository;
+import edu.pitt.dbmi.ccd.db.entity.VariableType;
 
 /**
  *
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Repository;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
+@RepositoryRestResource(exported=false)
 public interface VariableTypeRepository extends JpaRepository<VariableType, Long> {
 
     public VariableType findByName(String name);

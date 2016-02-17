@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import java.util.Optional;
 import java.util.List;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import edu.pitt.dbmi.ccd.db.entity.UserRole;
 import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
+import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  *
@@ -58,8 +60,14 @@ public class UserRoleService {
         return userRoleRepository.findAll();
     }
 
+    public UserRole findOne(Long id) {
+        Optional<UserRole> role = userRoleRepository.findById(id);
+        return role.orElseThrow(() -> new NotFoundException("UserRole", "id", id));
+    }
+
     public UserRole findByName(String name) {
-        return userRoleRepository.findByName(name);
+        Optional<UserRole> role = userRoleRepository.findByName(name);
+        return role.orElseThrow(() -> new NotFoundException("UserRole", "name", name));
     }
 
     public UserRole save(UserRole UserRole) {

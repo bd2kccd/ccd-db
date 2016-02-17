@@ -29,6 +29,7 @@ import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import edu.pitt.dbmi.ccd.db.repository.AttributeRepository;
+import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -48,28 +49,39 @@ public class AttributeService {
         return attributeRepository.save(attribute);
     }
 
-    public Optional<Attribute> findOne(Long id) {
-        return attributeRepository.findByAttributeId(id);
+    public Attribute findOne(Long id) {
+        Optional<Attribute> attribute = attributeRepository.findByAttributeId(id);
+        return attribute.orElseThrow(() -> new NotFoundException("Attribute", "id", id));
     }
 
-    public Optional<Attribute> findByVocabAndId(Vocabulary vocab, Long id) {
-        return attributeRepository.findByVocabAndId(vocab, id);
+    public Attribute findByVocabAndId(String vocabName, Long id) {
+        Optional<Attribute> attribute = attributeRepository.findByVocabAndId(vocabName, id);
+        return attribute.orElseThrow(() -> new NotFoundException("Attribute",
+                                                                 new String[]{"vocab", "id"},
+                                                                 new Object[]{vocabName, id}));
     }
 
-    public Optional<Attribute> findByVocabAndLevelAndName(Vocabulary vocab, String level, String name) {
-        return attributeRepository.findByVocabAndLevelAndName(vocab, level, name);
+    public Attribute findByVocabAndLevelAndName(String vocabName, String level, String name) {
+        Optional<Attribute> attribute = attributeRepository.findByVocabAndLevelAndName(vocabName, level, name);
+        return attribute.orElseThrow(() -> new NotFoundException("Attribute",
+                                                                 new String[]{"vocab", "level", "name"},
+                                                                 new Object[]{vocabName, level, name}));
     }
 
-    public Page<Attribute> findByVocab(Vocabulary vocab, Pageable pageable) {
-        return attributeRepository.findByVocab(vocab, pageable);
+    public Page<Attribute> findByVocab(String vocabName, Pageable pageable) {
+        return attributeRepository.findByVocab(vocabName, pageable);
     }
 
-    public Page<Attribute> findByVocabAndParent(Vocabulary vocab, Attribute parent, Pageable pageable) {
-        return attributeRepository.findByVocabAndParent(vocab, parent, pageable);
+    public Page<Attribute> findByVocabAndParent(String vocabName, Long parent, Pageable pageable) {
+        return attributeRepository.findByVocabAndParent(vocabName, parent, pageable);
     }
 
-    public Page<Attribute> findByVocabAndParentIsNull(Vocabulary vocab, Pageable pageable) {
-        return attributeRepository.findByVocabAndParentIsNull(vocab, pageable);
+    public Page<Attribute> findByVocabAndParent(String vocabName, Attribute parent, Pageable pageable) {
+        return attributeRepository.findByVocabAndParent(vocabName, parent, pageable);
+    }
+
+    public Page<Attribute> findByVocabAndParentIsNull(String vocabName, Pageable pageable) {
+        return attributeRepository.findByVocabAndParentIsNull(vocabName, pageable);
     }
 
     /**
@@ -81,8 +93,8 @@ public class AttributeService {
      * @param  pageable         page request
      * @return                  matching attributes
      */
-    public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevel(Vocabulary vocab, String level, String name, String requirementLevel, Pageable pageable) {
-        return attributeRepository.findByVocabAndLevelAndNameAndRequirementLevel(vocab, level, name, requirementLevel, pageable);
+    public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevel(String vocabName, String level, String name, String requirementLevel, Pageable pageable) {
+        return attributeRepository.findByVocabAndLevelAndNameAndRequirementLevel(vocabName, level, name, requirementLevel, pageable);
     }
 
     /**
@@ -94,8 +106,8 @@ public class AttributeService {
      * @param  pageable         page request
      * @return                  matching attributes
      */
-    public Page<Attribute> findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains(Vocabulary vocab, String level, String name, String requirementLevel, Pageable pageable) {
-        return attributeRepository.findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains(vocab, level, name, requirementLevel, pageable);
+    public Page<Attribute> findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains(String vocabName, String level, String name, String requirementLevel, Pageable pageable) {
+        return attributeRepository.findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains(vocabName, level, name, requirementLevel, pageable);
     }
 
     public Page<Attribute> findByParent(Attribute parent, Pageable pageable) {

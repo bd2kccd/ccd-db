@@ -32,6 +32,7 @@ import edu.pitt.dbmi.ccd.db.entity.Annotation;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationRepository;
+import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -51,8 +52,9 @@ public class AnnotationService {
         return annotationRepository.save(annotation);
     }
 
-    public Optional<Annotation> findOne(UserAccount requester, Long annoId) {
-        return annotationRepository.findById(requester, annoId);
+    public Annotation findOne(UserAccount requester, Long id) {
+        Optional<Annotation> annotation = annotationRepository.findById(requester, id);
+        return annotation.orElseThrow(() -> new NotFoundException("Annotation", "id", id));
     }
 
     public Page<Annotation> findByUser(UserAccount requester, String username, Pageable pageable) {
@@ -111,20 +113,6 @@ public class AnnotationService {
             Pageable pageable) {
         return annotationRepository.search(requester, username, group, upload, vocab, terms, attributeLevel, attributeName, attributeRequirementLevel, pageable);
     }
-
-    // public Page<Annotation> searchTest(
-    //         UserAccount requester,
-    //         String username,
-    //         String group,
-    //         Long upload,
-    //         String vocab,
-    //         List<String> terms,
-    //         String attributeLevel,
-    //         String attributeName,
-    //         String attributeRequirementLevel,
-    //         Pageable pageable) {
-    //     return annotationRepository.searchTest(requester, username, group, upload, vocab, terms, attributeLevel, attributeName, attributeRequirementLevel, pageable);
-    // }
 
     public Page<Annotation> findByVocab(UserAccount requester, String username, Pageable pageable) {
         return annotationRepository.findByVocab(requester, username, pageable);

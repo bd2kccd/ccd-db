@@ -32,8 +32,9 @@ import edu.pitt.dbmi.ccd.db.entity.Person;
  * Jul 23, 2015 1:44:13 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis  (marksilvis@pitt.edu)
  */
-// @Repository
+@Repository
 @RepositoryRestResource(exported=false)
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
@@ -41,9 +42,9 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     public Optional<Person> findByEmail(String email);
 
-    public Optional<Person> findByFirstNameAndLastName(String first, String last);
+    public Page<Person> findByFirstNameAndLastName(String first, String last, Pageable pageable);
 
-    public Optional<Person> findByFirstNameAndMiddleNameAndLastName(String first, String middle, String last);
+    // public Page<Person> findByFirstNameAndMiddleNameAndLastName(String first, String middle, String last);
 
     public Page<Person> findByDescriptionContains(String terms, Pageable pageable);
 

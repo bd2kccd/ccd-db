@@ -31,7 +31,7 @@ import edu.pitt.dbmi.ccd.db.entity.Group;
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
-// @RepositoryRestResource(exported=false)
+@RepositoryRestResource(exported=false)
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
     public Optional<Group> findById(Long id);

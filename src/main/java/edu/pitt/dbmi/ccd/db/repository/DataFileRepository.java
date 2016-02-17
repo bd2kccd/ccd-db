@@ -18,21 +18,24 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.DataFile;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.List;
 import java.util.Set;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import edu.pitt.dbmi.ccd.db.entity.DataFile;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  *
  * Jul 23, 2015 5:32:43 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis  (marksilvis2pitt.edu)
  */
 @Repository
+@RepositoryRestResource(exported=false)
 public interface DataFileRepository extends JpaRepository<DataFile, Long> {
 
     public DataFile findByName(String name);

@@ -1,4 +1,4 @@
-
+// /*
 //  * Copyright (C) 2015 University of Pittsburgh.
 //  *
 //  * This library is free software; you can redistribute it and/or
@@ -15,23 +15,36 @@
 //  * License along with this library; if not, write to the Free Software
 //  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 //  * MA 02110-1301  USA
- 
+//  */
 
-// package edu.pitt.dbmi.ccd.db.error;
+// package edu.pitt.dbmi.ccd.db.specification;
 
-// import edu.pitt.dbmi.ccd.db.entity.Group;
+// import javax.persistence.criteria.CriteriaBuilder;
+// import javax.persistence.criteria.CriteriaQuery;
+// import javax.persistence.criteria.Predicate;
+// import javax.persistence.criteria.Root;
+// import org.springframework.data.jpa.domain.Specification;
+// import edu.pitt.dbmi.ccd.db.entity.Annotation;
 
 // /**
 //  * @author Mark Silvis (marksilvis@pitt.edu)
 //  */
-// public final class GroupNotFoundException extends NotFoundException<Group, String> { 
-    
-//     public GroupNotFoundException(String name) {
-//         super(name);
+// public final class AnnotationSpecification {
+
+//     private AnnotationSpecification() { }
+
+//     static Specification<Annotation> search(String terms) {
+//         return (root, query, cb) -> {
+//             final String contains = containsLike(terms);
+//             return cb;
+//         };
 //     }
 
-//     @Override
-//     public String toString() {
-//         return String.format("%s with name: %s", getMessage(), getIdentifier());
+//     private static String containsLike(String terms) {
+//         if (terms == null || terms.isEmpty()) {
+//             return "%";
+//         } else {
+//             return "%" + terms.toLowerCase() + "%";
+//         }
 //     }
 // }

@@ -18,11 +18,13 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import java.util.Optional;
+import java.util.Set;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.jpa.repository.JpaRepository;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.entity.UserRole;
-import java.util.Set;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 /**
  *
@@ -31,10 +33,13 @@ import org.springframework.stereotype.Repository;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
+@RepositoryRestResource(exported=false)
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
 
-    public UserRole findByName(String name);
+    public Optional<UserRole> findById(Long id);
 
-    public UserRole findByUserAccounts(Set<UserAccount> userAccounts);
+    public Optional<UserRole> findByName(String name);
+
+    public Optional<UserRole> findByUserAccounts(Set<UserAccount> userAccounts);
 
 }
