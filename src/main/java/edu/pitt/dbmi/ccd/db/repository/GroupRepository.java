@@ -23,6 +23,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Group;
@@ -32,7 +34,7 @@ import edu.pitt.dbmi.ccd.db.entity.Group;
  */
 @Repository
 @RepositoryRestResource(exported=false)
-public interface GroupRepository extends JpaRepository<Group, Long> {
+public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecificationExecutor<Group> {
 
     public Optional<Group> findById(Long id);
 
@@ -40,5 +42,9 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     public Page<Group> findByNameContainsAndDescriptionContains(String name, String description, Pageable pageable);
 
+    // search
+    public Page<Group> findAll(Specification<Group> spec, Pageable  pageable);
+
+    // find all
     public Page<Group> findAll(Pageable pageable);
 }

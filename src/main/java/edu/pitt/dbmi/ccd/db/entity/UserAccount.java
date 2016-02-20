@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
@@ -40,8 +41,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.CascadeType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 /**
  *
@@ -69,7 +68,6 @@ public class UserAccount implements Serializable {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @JsonIgnore
     @NotNull
     @Size(max=60)
     @Column(name = "password", length=60, nullable = false, columnDefinition="CHAR(60)")
@@ -113,7 +111,7 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)})
     private Set<SecurityAnswer> securityAnswers = new HashSet<>(0);
 
-    @ManyToMany(mappedBy="members", fetch=FetchType.LAZY)
+    @ManyToMany(mappedBy="members", fetch=FetchType.EAGER)
     private Set<Group> groups = new HashSet<>(0);
 
     @ManyToMany(mappedBy="admins", fetch=FetchType.LAZY)

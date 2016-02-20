@@ -83,7 +83,7 @@ public class Annotation implements Serializable {
     @JoinColumn(name="accessControl", nullable=false)
     private Access accessControl;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="groupId", nullable=true)
     private Group group;
 

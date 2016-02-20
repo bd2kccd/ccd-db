@@ -19,6 +19,9 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
+import static edu.pitt.dbmi.ccd.db.specification.GroupSpecification.searchNamesAndDescriptions;
+
+import java.util.Set;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -66,8 +69,12 @@ public class GroupService {
         return group.orElseThrow(() -> new NotFoundException("Group", "name", name));
     }
 
-    public Page<Group> findByNameContainsAndDescriptionContains(String name, String description, Pageable pageable) {
-        return groupRepository.findByNameContainsAndDescriptionContains(name, description, pageable);
+    // public Page<Group> findByNameContainsAndDescriptionContains(String name, String description, Pageable pageable) {
+    //     return groupRepository.findByNameContainsAndDescriptionContains(name, description, pageable);
+    // }
+
+    public Page<Group> search(Set<String> terms, Pageable pageable) {
+        return groupRepository.findAll(searchNamesAndDescriptions(terms), pageable);
     }
 
     public Page<Group> findAll(Pageable pageable) {

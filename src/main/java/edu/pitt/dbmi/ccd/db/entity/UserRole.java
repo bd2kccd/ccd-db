@@ -60,7 +60,7 @@ public class UserRole implements Serializable {
     //     @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     // private Set<UserAccount> userAccounts = new HashSet<>(0);
 
-    @ManyToMany(mappedBy="roles", fetch=FetchType.LAZY)
+    @ManyToMany(mappedBy="roles", fetch=FetchType.EAGER)
     private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.EAGER)

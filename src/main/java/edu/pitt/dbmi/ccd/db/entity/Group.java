@@ -29,6 +29,7 @@ import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
+import javax.persistence.ManyToOne;
 import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -64,16 +65,13 @@ public class Group implements Serializable {
     @Column(length=500, nullable=false)
     private String description;
 
-    @CreatedBy
-    private UserAccount creator;
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupAdministration",
         joinColumns = { @JoinColumn(name="groupId") },
         inverseJoinColumns = { @JoinColumn(name="userAccountId") })
     private Set<UserAccount> admins = new HashSet<>(0);
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupMembership",
         joinColumns = { @JoinColumn(name="groupId") },
         inverseJoinColumns = { @JoinColumn(name="userAccountId") })
@@ -84,13 +82,8 @@ public class Group implements Serializable {
     public Group(String name, String description) {
         this.name = name;
         this.description = description;
-        this.creator = null;
     }
 
-    public Group(String name, String description, UserAccount creator) {
-        this(name, description);
-        this.creator = creator;
-    }
 
     public Long getId() {
         return id;
@@ -114,10 +107,6 @@ public class Group implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public UserAccount getCreator() {
-        return creator;
     }
 
     public Set<UserAccount> getAdmins() {
