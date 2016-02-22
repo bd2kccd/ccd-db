@@ -21,6 +21,7 @@ package edu.pitt.dbmi.ccd.db.repository;
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.entity.UserLogin;
 import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,16 +51,18 @@ public class UserLoginRepositoryTest {
     public void testGetOne() {
         System.out.println("getOne");
 
+        Long id = 1L;
+        UserLogin userLogin = userLoginRepository.findOne(id);
+        Assert.assertNotNull(userLogin);
+    }
+
+    @Test
+    public void testFindAll() {
+        System.out.println("findAll");
+
         List<UserLogin> userLogins = userLoginRepository.findAll();
-        System.out.println("================================================================================");
-        userLogins.forEach(userLogin -> {
-            System.out.printf("ID: %d\n", userLogin.getId());
-            System.out.printf("Last Login Date: %s\n", userLogin.getLastLoginDate());
-            System.out.printf("Last Login Location: %d\n", userLogin.getLastLoginLocation());
-            System.out.printf("Login Date: %s\n", userLogin.getLoginDate());
-            System.out.printf("Login Location: %d\n", userLogin.getLoginLocation());
-        });
-        System.out.println("================================================================================");
+        Assert.assertNotNull(userLogins);
+        Assert.assertTrue(!userLogins.isEmpty());
     }
 
 }
