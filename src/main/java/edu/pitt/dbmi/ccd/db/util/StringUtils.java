@@ -6,9 +6,9 @@ package edu.pitt.dbmi.ccd.db.util;
 public abstract class StringUtils {
     
     /**
-     * Returns true for any non-null, non-empty string
-     * False for any Object that is null, empty, or not a String
-     * @param  str string
+     * Returns true for Object that is either null or the empty string
+     * False for any Object that is neither null nor the empty string
+     * @param  str object
      */
     public static boolean isNullOrEmpty(Object str) {
         return (str == null || "".equals(str));

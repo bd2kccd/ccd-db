@@ -18,19 +18,25 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.searchAll;
+
 import java.util.Optional;
+import java.util.Set;
 import java.util.List;
+import java.util.Arrays;
 import java.util.stream.StreamSupport;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageImpl;
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationRepository;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
@@ -86,34 +92,6 @@ public class AnnotationService {
         return null;
     }
 
-    /**
-     * Search for annotations matching non-null parameters
-     * @param  requester                 requesting user (required)
-     * @param  username                  username (nullable)
-     * @param  group                     group name (nullable) 
-     * @param  upload                    upload id (nullable)
-     * @param  vocab                     vocab name (nullable)
-     * @param  terms                     value contains (nullable)
-     * @param  attributeLevel            attribute level (nullable)
-     * @param  attributeName             attribute name (nullable)
-     * @param  attributeRequirementLevel attribute requirement level (nullable)
-     * @param  pageable                  page request
-     * @return                           page of matches
-     */
-    public Page<Annotation> search(
-            UserAccount requester,
-            String username,
-            String group,
-            Long upload,
-            String vocab,
-            String terms,
-            String attributeLevel,
-            String attributeName,
-            String attributeRequirementLevel,
-            Pageable pageable) {
-        return annotationRepository.search(requester, username, group, upload, vocab, terms, attributeLevel, attributeName, attributeRequirementLevel, pageable);
-    }
-
     public Page<Annotation> findByVocab(UserAccount requester, String username, Pageable pageable) {
         return annotationRepository.findByVocab(requester, username, pageable);
     }
@@ -124,6 +102,21 @@ public class AnnotationService {
 
     public Page<Annotation> findAllPublic(Pageable pageable) {
         return annotationRepository.findAllPublic(pageable);
+    }
+
+    public Page<Annotation> search(UserAccount requester,
+                                   String username,
+                                   String group,
+                                   Long upload,
+                                   String vocab,
+                                   Set<String> matches,
+                                   Set<String> nots,
+                                   String attributeLevel,
+                                   String attributeName,
+                                   String attributeRequirementLevel,
+                                   Pageable pageable) {
+        Specification<Annotation> spec = searchAll(requester, username, group, upload, vocab, matches, nots, attributeLevel, attributeName, attributeRequirementLevel);
+        return annotationRepository.findAll(spec, pageable);
     }
 
     public Page<Annotation> findAll(UserAccount requester, Pageable pageable) {
