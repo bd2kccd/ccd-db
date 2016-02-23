@@ -55,16 +55,6 @@ public interface AnnotationRepository extends JpaRepository<Annotation, Long>, J
                    "OR (a.accessControl.name = 'GROUP' AND a.group = g))")       // OR         annotation has group access and requester belongs to group]
     public Optional<Annotation> findById(@Param("requester") UserAccount requester, @Param("id") Long id);
 
-    @Query(value="SELECT a FROM Annotation AS a " +
-                 "LEFT JOIN a.group g ON g IN :#{#requester.getGroups()} " +     // LEFT JOIN annotation group on requester groups
-                 "WHERE a IN " +                                                 // WHERE     annotation has data whose value contains terms
-                    "(SELECT DISTINCT d.annotation FROM AnnotationData AS d " +  //
-                    "WHERE d.value LIKE CONCAT('%', :terms, '%')) " +            //
-                 "AND (a.user = :requester " +                                   // AND       [annotation belongs to the requester
-                   "OR (a.accessControl.name = 'PUBLIC') " +                     // OR         annotation has public access
-                   "OR (a.accessControl.name = 'GROUP' AND a.group = g))")       // OR         annotation has group access and requester belongs to group]
-    public Page<Annotation> findByDataValue(@Param("requester") UserAccount requester, @Param("terms") String terms, Pageable pageable);
-
     /**
      * Find annotations by user viewable by requester
      * @param  requester requester
@@ -73,10 +63,11 @@ public interface AnnotationRepository extends JpaRepository<Annotation, Long>, J
      * @return           page of annotations
      */
     @Query(value="SELECT DISTINCT a FROM Annotation AS a " +
-                 "LEFT JOIN a.group g ON g IN :#{#requester.getGroups()} " +     // LEFT JOIN annotation group on set of users' groups
-                 "WHERE a.user.username = :username " +                          // WHERE     annotation belongs to user
-                 "AND (a.accessControl.name = 'PUBLIC' " +                       // AND       annotation has public acccess
-                   "OR (a.accessControl.name = 'GROUP' AND a.group = g))")       // OR        annotation has group acccess and requester belongs to group
+                 "LEFT JOIN a.group g ON g IN :#{#requester.getGroups()} " +           // LEFT JOIN annotation group on set of users' groups
+                 "WHERE a.user.username = :username " +                                // WHERE     annotation belongs to user
+                 "AND (a.accessControl.name = 'PUBLIC' " +                             // AND       annotation has public acccess
+                   "OR (a.accessControl.name = 'PRIVATE' AND a.user = :requester) " +  // OR        annotation has private access and belongs to requester
+                   "OR (a.accessControl.name = 'GROUP' AND a.group = g))")             // OR        annotation has group acccess and requester belongs to group
     public Page<Annotation> findByUser(@Param("requester") UserAccount requester, @Param("username") String username, Pageable pageable);
 
     /**
@@ -105,52 +96,6 @@ public interface AnnotationRepository extends JpaRepository<Annotation, Long>, J
                    "OR a.accessControl.name = 'PUBLIC' " +                       // OR        annotation has public access
                    "OR (a.accessControl.name = 'GROUP' AND a.group = g))")       // OR        annotation has group access and requester belongs to group]
     public Page<Annotation> findByUpload(@Param("requester") UserAccount requester, @Param("uploadId") Long uploadId, Pageable pageable);
-
-    /**
-     * Find annotations by user and group viewable by requester
-     * @param  requester requester
-     * @param  username  username
-     * @param  groupName group name
-     * @param  pageable  page request
-     * @return           page of annotations
-     */
-    @Query(value="SELECT DISTINCT a FROM Annotation AS a " +
-                 "INNER JOIN a.group g ON g IN :#{#requester.getGroups()} " +    // INNER JOIN annotation group on reqester groups
-                 "WHERE a.user.username = :username " +                          // WHERE      annotation belongs to user
-                 "AND a.group.name = :groupName " +                              // AND        annotation belongs to group
-                 "AND (a.accessControl.name = 'GROUP' AND a.group = g)")         // AND        annotation has group access and requester belongs to group
-    public Page<Annotation> findByUserAndGroup(@Param("requester") UserAccount requester, @Param("username") String username, @Param("groupName") String groupName, Pageable pageable);
-
-    /**
-     * Find annotations by user and upload viewable by requester
-     * @param  requester requester
-     * @param  username  username
-     * @param  uploadId  upload id
-     * @param  pageable  page request
-     * @return           page of annotations
-     */
-    @Query(value="SELECT DISTINCT a FROM Annotation AS a " +
-                 "LEFT JOIN a.group g ON g IN :#{#requester.getGroups()} " +     // LEFT JOIN annotation group on requester groups
-                 "WHERE a.user.username = :username " +                          // WHERE     annotation belongs to user
-                 "AND a.target.id = :uploadId " +                                // AND       annotation targets upload
-                 "AND (a.accessControl.name = 'PUBLIC' " +                       // AND      [annotation has public access
-                    "OR (a.accessControl.name = 'GROUP' AND a.group = g))")      // OR        annotation has group access and reqester belongs to group]
-    public Page<Annotation> findByUserAndUpload(@Param("requester") UserAccount requester, @Param("username") String username, @Param("uploadId") Long uploadId, Pageable pageable);
-
-    /**
-     * Find annotations by group and upload viewable by requester
-     * @param requester  requester
-     * @param groupName  group name
-     * @param uploadId   upload id
-     * @param pageable   page request
-     * @return           page of annotations
-     */
-    @Query(value="SELECT DISTINCT a FROM Annotation AS a " +
-                 "INNER JOIN a.group g ON g IN :#{#requester.getGroups()} " +     // LEFT JOIN annotation group on requester groups
-                 "WHERE a.target.id = :uploadId " +                              // WHERE     annotation targets upload
-                 "AND a.group.name = :groupName " +                              // AND       annotation belongs to group
-                 "AND (a.accessControl.name = 'GROUP' AND a.group = g)")         // AND       annotation has group access and requester belongs to group
-    public Page<Annotation> findByGroupAndUpload(@Param("requester") UserAccount requester, @Param("groupName") String groupName, @Param("uploadId") Long uploadId, Pageable pageable);
 
     // @Query(value="SELECT DISTINCT a FROM Annotation AS a " +
     //              "LEFT JOIN a.group g ON g IN :#{#requester.getGroups()} " +              // LEFT JOIN annotation group on requester groups
@@ -185,45 +130,6 @@ public interface AnnotationRepository extends JpaRepository<Annotation, Long>, J
     //     @Param("attributeReqLevel") String attributeRequirementLevel,
     //     Pageable pageable);
 
-    // @Query(value="SELECT DISTINCT a FROM Annotation AS a " +
-    //              "LEFT JOIN a.group g ON g IN :#{#requester.getGroups()} " +              // LEFT JOIN annotation group on requester groups
-    //              "WHERE (:username IS NULL OR a.user.username = :username) " +            // WHERE     username param is null OR annotation belongs to user 
-    //              "AND (:group IS NULL OR a.group.name = :group) " +                       // AND       group param is null OR annotation belongs to group
-    //              "AND (:upload IS NULL OR a.target.id = :upload) " +                      // AND       upload param is null OR annotation targets upload
-    //              "AND (:vocab IS NULL OR a.vocab.name = :vocab) " +                       // AND       vocab param is null OR annotation belongs to vocabulary
-    //              "AND (:attributeLevel IS NULL " +                                        // AND       attribute level param is null
-    //                "OR a IN (SELECT DISTINCT d.annotation FROM AnnotationData AS d " +    //           OR annotation data has attribute level
-    //                "WHERE d.attribute.level LIKE :attributeLevel)) " +
-    //              "AND (:attributeName IS NULL " +                                         // AND       attribute name param is null
-    //                "OR a IN (SELECT DISTINCT d.annotation FROM AnnotationData AS d " +    //           OR annotation data has attribute name 
-    //                "WHERE d.attribute.name LIKE :attributeName)) " +
-    //              "AND (:attributeReqLevel IS NULL " +                                     // AND       attribute requirement level param is null
-    //                "OR a IN (SELECT DISTINCT d.annotation FROM AnnotationData AS d " +    //           OR annotation data has attribute requirement level
-    //                "WHERE d.attribute.requirementLevel LIKE :attributeReqLevel)) " +
-    //              "AND ((a.user = :requester AND a.accessControl.name = 'PRIVATE') " +     // AND       annotation belongs to the requester
-    //                "OR (a.accessControl.name = 'PUBLIC') " +                              //           OR annotation has public access
-    //                "OR (a.accessControl.name = 'GROUP' AND a.group = g))" )               //           OR annotation has group access AND requester belongs to group]
-    // public Page<Annotation> searchTest(
-    //     @Param("requester") UserAccount requester,
-    //     @Param("username") String username,
-    //     @Param("group") String group,
-    //     @Param("upload") Long upload,
-    //     @Param("vocab") String vocab,
-    //     @Param("attributeLevel") String attributeLevel,
-    //     @Param("attributeName") String attributeName,
-    //     @Param("attributeReqLevel") String attributeRequirementLevel,
-    //     Pageable pageable);
-
-    /**
-     * Find annotations belonging to requester
-     * @param  requester requester
-     * @param  pageable  page request
-     * @return           page of annotations
-     */
-    @Query(value="SELECT a FROM Annotation AS a " +
-                 "WHERE a.user = :requester")                  // WHERE annotation belongs to requester
-    public Page<Annotation> findByRequester(@Param("requester") UserAccount requester, Pageable pageable);
-
     @Query(value="SELECT a FROM Annotation AS a " +
                  "LEFT JOIN a.group g ON g IN :#{#requester.getGroups()} " +
                  "WHERE a.vocab.name LIKE :vocab " +
@@ -241,7 +147,7 @@ public interface AnnotationRepository extends JpaRepository<Annotation, Long>, J
                  "WHERE a.accessControl.name = 'PUBLIC'")      // WHERE annotation has public access
     public Page<Annotation> findAllPublic(Pageable pageable);
 
-    // search
+    // spec (search or filter)
     public Page<Annotation> findAll(Specification<Annotation> spec, Pageable pageable);
 
     /**

@@ -43,9 +43,9 @@ import javax.persistence.EnumType;
 import javax.persistence.FetchType;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -65,7 +65,6 @@ public class Annotation implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @JsonIgnore
     @Version
     private Integer version;
 
@@ -103,9 +102,11 @@ public class Annotation implements Serializable {
     @JoinTable(name="AnnotationUploadReferences", joinColumns = {
         @JoinColumn(name="annotationId", nullable=false)}, inverseJoinColumns = {
         @JoinColumn(name="uploadId", nullable=false)})
+    @OrderBy
     Set<Upload> references = new HashSet<>(0);
 
     @OneToMany(mappedBy="annotation", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @OrderBy("attribute")
     private Set<AnnotationData> data = new HashSet<>(0);
 
     @PrePersist

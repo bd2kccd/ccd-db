@@ -40,8 +40,6 @@ public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecific
 
     public Optional<Group> findByName(String name);
 
-    public Page<Group> findByNameContainsAndDescriptionContains(String name, String description, Pageable pageable);
-
     // search
     public Page<Group> findAll(Specification<Group> spec, Pageable  pageable);
 

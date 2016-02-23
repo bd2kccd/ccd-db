@@ -19,7 +19,10 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
+import static edu.pitt.dbmi.ccd.db.specification.VocabularySpecification.searchSpec;
+
 import java.util.List;
+import java.util.Set;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,10 +86,10 @@ public class VocabularyService {
         Optional<Vocabulary> vocab = vocabRepository.findByName(name);
         return vocab.orElseThrow(() -> new NotFoundException("Vocabulary", "name", name));
     }
-    
-    public Page<Vocabulary> findByNameContainsAndDescriptionContains(String name, String description, Pageable pageable) {
-        return vocabRepository.findByNameContainsAndDescriptionContains(name, description, pageable);
-    }
+
+    public Page<Vocabulary> search(Set<String> matches, Set<String> nots, Pageable pageable) {
+        return vocabRepository.findAll(searchSpec(matches, nots), pageable);
+    }    
 
     public Page<Vocabulary> findAll(Pageable pageable) {
         return vocabRepository.findAll(pageable);

@@ -19,6 +19,7 @@
 
 package edu.pitt.dbmi.ccd.db.error;
 
+import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
 import java.util.stream.IntStream;
 
 /**
@@ -91,7 +92,9 @@ public final class NotFoundException extends RuntimeException {
      */
     private String buildMessage() {
         StringBuilder builder = new StringBuilder(String.format(NOT_FOUND, entity));
-        int len = (fields.length < values.length) ? fields.length : values.length;
+        int len = (isNullOrEmpty(fields) || isNullOrEmpty(values)) ? 0
+                : (fields.length < values.length) ? fields.length
+                : values.length;
         if (len > 0) {
             builder.append(WITH).append(fields[0]).append(SEP).append(values[0]);
             if (len > 1) {
@@ -99,7 +102,7 @@ public final class NotFoundException extends RuntimeException {
                          .forEach(i -> {
                             String f = fields[i];
                             Object v = values[i];
-                            if (f != null && v != null) {
+                            if (!isNullOrEmpty(f) && !isNullOrEmpty(v)) {
                                 builder.append(AND).append(f).append(SEP).append(v);
                             }
                          });

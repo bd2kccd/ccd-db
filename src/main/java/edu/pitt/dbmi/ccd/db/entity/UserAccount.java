@@ -39,6 +39,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.CascadeType;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -91,6 +92,7 @@ public class UserAccount implements Serializable {
     @JoinTable(name="UserAccountUserRoleRel", joinColumns = {
         @JoinColumn(name="userAccountId", nullable=false)}, inverseJoinColumns = {
         @JoinColumn(name="userRoleId", nullable=false)})
+    @OrderBy
     Set<UserRole> roles = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -112,15 +114,19 @@ public class UserAccount implements Serializable {
     private Set<SecurityAnswer> securityAnswers = new HashSet<>(0);
 
     @ManyToMany(mappedBy="members", fetch=FetchType.EAGER)
+    @OrderBy("name")
     private Set<Group> groups = new HashSet<>(0);
 
     @ManyToMany(mappedBy="admins", fetch=FetchType.LAZY)
+    @OrderBy("name")
     private Set<Group> administers = new HashSet<>(0);
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    @OrderBy
     private Set<Upload> uploads = new HashSet<>(0);
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    @OrderBy
     private Set<Annotation> annotations = new HashSet<>(0);
 
     public UserAccount() { }

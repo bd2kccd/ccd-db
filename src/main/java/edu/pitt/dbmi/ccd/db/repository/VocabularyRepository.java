@@ -23,6 +23,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
@@ -32,13 +34,13 @@ import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
  */
 @Repository
 @RepositoryRestResource(exported=false)
-public interface VocabularyRepository extends JpaRepository<Vocabulary, Long> {
+public interface VocabularyRepository extends JpaRepository<Vocabulary, Long>, JpaSpecificationExecutor<Vocabulary> {
     
     public Optional<Vocabulary> findById(Long id);
 
     public Optional<Vocabulary> findByName(String name);
 
-    public Page<Vocabulary> findByNameContainsAndDescriptionContains(String name, String description, Pageable pageable);
+    public Page<Vocabulary> findAll(Specification<Vocabulary> spec, Pageable pageable);
 
     public Page<Vocabulary> findAll(Pageable pageable);
 }

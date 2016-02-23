@@ -37,10 +37,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author Mark Silvis  (marksilvis@pitt.edu)
@@ -60,7 +60,6 @@ public class Upload implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @JsonIgnore
     @Version
     private Integer version;
 
@@ -83,6 +82,7 @@ public class Upload implements Serializable {
     private Url url;
 
     @OneToMany(mappedBy="target", fetch=FetchType.LAZY)
+    @OrderBy
     private Set<Annotation> annotations = new HashSet<>(0);
 
     @PrePersist

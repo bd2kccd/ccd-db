@@ -23,8 +23,11 @@ import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
 
 import java.util.Set;
 import java.util.List;
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.stream.StreamSupport;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -60,23 +63,41 @@ public final class AnnotationSpecification {
 
     private AnnotationSpecification() { }
 
-    public static Specification<Annotation> searchAll(UserAccount requester,
-                                                      String username,
-                                                      String group,
-                                                      Long upload,
-                                                      String vocab,
-                                                      Set<String> matches,
-                                                      Set<String> nots,
-                                                      String attributeLevel,
-                                                      String attributeName,
-                                                      String attributeReqLevel) {
+    public static Specification<Annotation> authSpec(UserAccount requester) {
         return (root, query, cb) -> {
-            return cb.and(buildPredicates(root, query, cb, requester, username, group, upload, vocab, matches, nots, attributeLevel, attributeName, attributeReqLevel));
+            return authFilter(root, cb, requester);
         };
     }
 
-    // build predicates of non-null parameters
-    private static Predicate[] buildPredicates(Root<Annotation> root,
+    public static Specification<Annotation> filterSpec(UserAccount requester,
+                                                       String username,
+                                                       String group,
+                                                       Long upload,
+                                                       String vocab,
+                                                       String attributeLevel,
+                                                       String attributeName,
+                                                       String attributeReqLevel) {
+        return (root, query, cb) -> {
+            return buildFilterSpec(root, query, cb, requester, username, group, upload, vocab, attributeLevel, attributeName, attributeReqLevel);
+        };
+    }
+
+    public static Specification<Annotation> searchSpec(UserAccount requester,
+                                                       String username,
+                                                       String group,
+                                                       Long upload,
+                                                       String vocab,
+                                                       String attributeName,
+                                                       String attributeReqLevel,
+                                                       String attributeLevel,
+                                                       Set<String> matches,
+                                                       Set<String> nots) {
+        return (root, query, cb) -> {
+            return buildSearchSpec(root, query, cb, requester, username, group, upload, vocab, attributeLevel, attributeName, attributeReqLevel, matches, nots);
+        };
+    }
+  
+   private static Predicate buildFilterSpec(Root<Annotation> root,
                                                CriteriaQuery query,
                                                CriteriaBuilder cb,
                                                UserAccount requester,
@@ -84,15 +105,72 @@ public final class AnnotationSpecification {
                                                String group,
                                                Long upload,
                                                String vocab,
-                                               Set<String> matches,
-                                               Set<String> nots,
-                                               String attributeLevel,
                                                String attributeName,
-                                               String attributeReqLevel) {
+                                               String attributeReqLevel,
+                                               String attributeLevel) {
+        List<Predicate> predicates = new ArrayList<>(0);
+        Predicate authPredicate = authFilter(root, cb, requester);
+        List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, upload, vocab, attributeName, attributeLevel, attributeReqLevel);
+        
+        predicates.add(authPredicate);
+        predicates.addAll(filterPredicates);
+        
+        return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+    }
+
+    private static Predicate buildSearchSpec(Root<Annotation> root,
+                                               CriteriaQuery query,
+                                               CriteriaBuilder cb,
+                                               UserAccount requester,
+                                               String username,
+                                               String group,
+                                               Long upload,
+                                               String vocab,
+                                               String attributeName,
+                                               String attributeReqLevel,
+                                               String attributeLevel,
+                                               Set<String> matches,
+                                               Set<String> nots) {
+        List<Predicate> predicates = new ArrayList<>(0);
+        Predicate authPredicate = authFilter(root, cb, requester);
+        List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, upload, vocab, attributeName, attributeLevel, attributeReqLevel);
+        List<Predicate> searchPredicates = buildSearchPredicates(root, query, cb, matches, nots);
+        
+        predicates.add(authPredicate);
+        predicates.addAll(filterPredicates);
+        predicates.addAll(searchPredicates);
+        
+        return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+    }
+
+    /**
+     * Requester access predicate
+     * 
+     * annotation is private AND belongs to user
+     * OR annotation has public access
+     * OR annotation has group access AND requester is in group
+     */
+    private static Predicate authFilter(Root<Annotation> root, CriteriaBuilder cb, UserAccount requester) {
+        return cb.or(cb.like(root.get(ACCESS).get(NAME), PUBLIC_ACCESS),
+                     cb.and(cb.like(root.get(ACCESS).get(NAME), PRIVATE_ACCESS),
+                            cb.equal(root.get(USER), requester)),
+                     cb.and(cb.like(root.get(ACCESS).get(NAME), GROUP_ACCESS),
+                            root.get(GROUP).in(requester.getGroups())));
+    }
+
+    // build filter predicates of non-null parameters
+    private static List<Predicate> buildFilterPredicates(Root<Annotation> root,
+                                                         CriteriaQuery query,
+                                                         CriteriaBuilder cb,
+                                                         String username,
+                                                         String group,
+                                                         Long upload,
+                                                         String vocab,
+                                                         String attributeLevel,
+                                                         String attributeName,
+                                                         String attributeReqLevel) {
         
         List<Predicate> predicates = new ArrayList<>(0);
-        predicates.add(isViewableByRequester(root, cb, requester));
-
         if (!isNullOrEmpty(username)) {
             predicates.add(belongsToUser(root, cb, username));
         }
@@ -105,12 +183,6 @@ public final class AnnotationSpecification {
         if (!isNullOrEmpty(vocab)) {
             predicates.add(hasVocabulary(root, cb, vocab));
         }
-        if (!isNullOrEmpty(matches)) {
-            predicates.addAll(containsTerms(root, query, cb, matches));
-        }
-        if (!isNullOrEmpty(nots)) {
-            predicates.addAll(doesNotContainTerms(root, query, cb, nots));
-        }
         if (!isNullOrEmpty(attributeLevel)) {
             predicates.add(hasAttributeLevel(root, query, cb, attributeLevel));            
         }
@@ -121,23 +193,26 @@ public final class AnnotationSpecification {
             predicates.add(hasAttributeReqLevel(root, query, cb, attributeReqLevel));            
         }
 
-        return predicates.toArray(new Predicate[predicates.size()]);
+        return predicates;
     }
 
-    /**
-     * Requester access predicate
-     * 
-     * annotation is private AND belongs to user
-     * OR annotation has public access
-     * OR annotation has group access AND requester is in group
-     */
-    private static Predicate isViewableByRequester(Root<Annotation> root, CriteriaBuilder cb, UserAccount requester) {
-        return cb.or(cb.like(root.get(ACCESS).get(NAME), PUBLIC_ACCESS),
-                     cb.and(cb.like(root.get(ACCESS).get(NAME), PRIVATE_ACCESS),
-                            cb.equal(root.get(USER), requester)),
-                     cb.and(cb.like(root.get(ACCESS).get(NAME), GROUP_ACCESS),
-                            root.get(GROUP).in(requester.getGroups())));
+    // build search predicates of non-null parameters
+    private static List<Predicate> buildSearchPredicates(Root<Annotation> root,
+                                                         CriteriaQuery query,
+                                                         CriteriaBuilder cb,
+                                                         Set<String> matches,
+                                                         Set<String> nots) {
+        
+        List<Predicate> predicates = new ArrayList<>(0);
+        if (!isNullOrEmpty(matches)) {
+            predicates.addAll(containsTerms(root, query, cb, matches));
+        }
+        if (!isNullOrEmpty(nots)) {
+            predicates.addAll(doesNotContainTerms(root, query, cb, nots));
+        }
+        return predicates;
     }
+
 
     // belong to user predicate
     private static Predicate belongsToUser(Root<Annotation> root, CriteriaBuilder cb, String username) {
@@ -215,14 +290,6 @@ public final class AnnotationSpecification {
                                  .where(cb.and(cb.equal(subroot.get(ANNO), root),
                                                cb.like(cb.lower(subroot.get(ATTRIB).get(REQ_LEVEL)), attributeReqLevel.toLowerCase()))));
     }
-
-    // private static String nullToWildcard(String str) {
-    //     if (isNullOrEmpty(str)) {
-    //         return "%";
-    //     } else {
-    //         return str;
-    //     }
-    // }
 
     private static String containsLike(String terms) {
         if (isNullOrEmpty(terms)) {

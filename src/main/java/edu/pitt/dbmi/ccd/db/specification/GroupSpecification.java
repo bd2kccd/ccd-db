@@ -22,6 +22,11 @@ package edu.pitt.dbmi.ccd.db.specification;
 import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
 
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -45,19 +50,41 @@ public final class GroupSpecification {
      * @param  terms search terms
      * @return       specification
      */
-    public static Specification<Group> searchNamesAndDescriptions(Set<String> terms) {
+    public static Specification<Group> searchSpec(Set<String> matches,
+                                                  Set<String> nots) {
         return (root, query, cb) -> {
-            return cb.and(inNameOrDescription(root, cb, terms));
+            return buildSearchSpec(root, cb, matches, nots);
         };
     }
 
+    // build search predicates
+    private static Predicate buildSearchSpec(Root<Group> root, CriteriaBuilder cb, Set<String> matches, Set<String> nots) {
+        List<Predicate> predicates = new ArrayList<>(0);
+        if (!isNullOrEmpty(matches)) {
+            predicates.addAll(inNameOrDescription(root, cb, matches));
+        }
+        if (!isNullOrEmpty(nots)) {
+            predicates.addAll(notInNameOrDescription(root, cb, nots));
+        }
+        return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+    }
+
     // build (name or description contains term) predicate for each search term
-    private static Predicate[] inNameOrDescription(Root<Group> root, CriteriaBuilder cb, Set<String> terms) {
+    private static List<Predicate> inNameOrDescription(Root<Group> root, CriteriaBuilder cb, Set<String> terms) {
         return terms.stream()
                     .map(t -> containsLike(t))
                     .map(t -> cb.or(nameContains(root, cb, t),
                                     descriptionContains(root, cb, t)))
-                    .toArray(Predicate[]::new);
+                    .collect(Collectors.toList());
+    }
+
+    // build (neither name or description contains term) predicate for each search term
+    private static List<Predicate> notInNameOrDescription(Root<Group> root, CriteriaBuilder cb, Set<String> terms) {
+        return terms.stream()
+                    .map(t -> containsLike(t))
+                    .map(t -> cb.not(cb.or(nameContains(root, cb, t),
+                                           descriptionContains(root, cb, t))))
+                    .collect(Collectors.toList());
     }
 
     // build name contains term predicate

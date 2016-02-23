@@ -35,6 +35,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedBy;
@@ -69,12 +70,14 @@ public class Group implements Serializable {
     @JoinTable(name = "GroupAdministration",
         joinColumns = { @JoinColumn(name="groupId") },
         inverseJoinColumns = { @JoinColumn(name="userAccountId") })
+    @OrderBy("username")
     private Set<UserAccount> admins = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupMembership",
         joinColumns = { @JoinColumn(name="groupId") },
         inverseJoinColumns = { @JoinColumn(name="userAccountId") })
+    @OrderBy("username")
     private Set<UserAccount> members = new HashSet<>(0);
 
     public Group() { }

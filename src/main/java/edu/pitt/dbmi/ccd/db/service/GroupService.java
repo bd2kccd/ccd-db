@@ -19,7 +19,7 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
-import static edu.pitt.dbmi.ccd.db.specification.GroupSpecification.searchNamesAndDescriptions;
+import static edu.pitt.dbmi.ccd.db.specification.GroupSpecification.searchSpec;
 
 import java.util.Set;
 import java.util.List;
@@ -69,12 +69,8 @@ public class GroupService {
         return group.orElseThrow(() -> new NotFoundException("Group", "name", name));
     }
 
-    // public Page<Group> findByNameContainsAndDescriptionContains(String name, String description, Pageable pageable) {
-    //     return groupRepository.findByNameContainsAndDescriptionContains(name, description, pageable);
-    // }
-
-    public Page<Group> search(Set<String> terms, Pageable pageable) {
-        return groupRepository.findAll(searchNamesAndDescriptions(terms), pageable);
+    public Page<Group> search(Set<String> matches, Set<String> nots, Pageable pageable) {
+        return groupRepository.findAll(searchSpec(matches, nots), pageable);
     }
 
     public Page<Group> findAll(Pageable pageable) {

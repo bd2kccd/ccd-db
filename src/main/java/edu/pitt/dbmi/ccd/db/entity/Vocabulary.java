@@ -38,11 +38,11 @@ import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.annotations.NaturalId;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -62,7 +62,6 @@ public class Vocabulary implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @JsonIgnore
     @Version
     private Integer version;
 
@@ -77,8 +76,8 @@ public class Vocabulary implements Serializable {
     @Column(length=500, nullable=false)
     private String description;
 
-    @JsonIgnore
     @OneToMany(mappedBy="vocab", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @OrderBy
     private Set<Attribute> attributes = new HashSet<>(0);
 
     @PrePersist
