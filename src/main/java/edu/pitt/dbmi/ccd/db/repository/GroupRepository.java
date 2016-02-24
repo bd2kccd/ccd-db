@@ -36,13 +36,32 @@ import edu.pitt.dbmi.ccd.db.entity.Group;
 @RepositoryRestResource(exported=false)
 public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecificationExecutor<Group> {
 
+    /**
+     * Find group by id
+     * @param  id group id
+     * @return    group
+     */
     public Optional<Group> findById(Long id);
 
+    /**
+     * Find group by name
+     * @param  name group name
+     * @return      group
+     */
     public Optional<Group> findByName(String name);
 
-    // search
+    /**
+     * Find all groups by spec
+     * @param  spec      group specification
+     * @param  pageable  page request
+     * @return           page of groups matching parameters
+     */
     public Page<Group> findAll(Specification<Group> spec, Pageable  pageable);
 
-    // find all
+    /**
+     * Find all groups
+     * @param  pageable  page request
+     * @return           page of groups
+     */
     public Page<Group> findAll(Pageable pageable);
 }

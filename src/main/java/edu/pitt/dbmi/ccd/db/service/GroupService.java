@@ -59,7 +59,7 @@ public class GroupService {
         return groupRepository.save(group);
     }
 
-    public Group findOne(Long id) {
+    public Group findById(Long id) {
         Optional<Group> group = groupRepository.findById(id);
         return group.orElseThrow(() -> new NotFoundException("Group", "id", id));
     }

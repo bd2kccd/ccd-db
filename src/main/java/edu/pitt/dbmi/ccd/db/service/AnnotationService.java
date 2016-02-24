@@ -59,7 +59,7 @@ public class AnnotationService {
         return annotationRepository.save(annotation);
     }
 
-    public Annotation findOne(UserAccount requester, Long id) {
+    public Annotation findById(UserAccount requester, Long id) {
         Optional<Annotation> annotation = annotationRepository.findById(requester, id);
         return annotation.orElseThrow(() -> new NotFoundException("Annotation", "id", id));
     }
@@ -78,6 +78,10 @@ public class AnnotationService {
 
     public Page<Annotation> findByVocab(UserAccount requester, String username, Pageable pageable) {
         return annotationRepository.findByVocab(requester, username, pageable);
+    }
+
+    public Page<Annotation> findByParent(UserAccount requester, Long id, Pageable pageable) {
+      return annotationRepository.findByParent(requester, id, pageable);
     }
 
     public Page<Annotation> findAllPublic(Pageable pageable) {

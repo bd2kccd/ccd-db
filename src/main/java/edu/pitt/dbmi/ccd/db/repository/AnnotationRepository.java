@@ -138,6 +138,14 @@ public interface AnnotationRepository extends JpaRepository<Annotation, Long>, J
                    "OR (a.accessControl.name = 'GROUP' AND a.group = g))")
     public Page<Annotation> findByVocab(@Param("requester") UserAccount requester, @Param("vocab") String vocab, Pageable pageable);
 
+    @Query(value="SELECT a FROM Annotation AS a " +
+                 "Left JOIN a.group g ON g IN :#{#requester.getGroups()} " +
+                 "WHERE a.parent.id = :id " +
+                 "AND (a.user = :requester " +
+                   "OR (a.accessControl.name = 'PUBLIC') " +
+                   "OR (a.accessControl.name = 'GROUP' AND a.group = g))")
+    public Page<Annotation> findByParent(@Param("requester") UserAccount requester, @Param("id") Long id, Pageable pageable);
+
     /**
      * Find publicly viewable annotations, does not require requester information
      * @param pageable page request
