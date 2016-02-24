@@ -53,14 +53,14 @@ public class UserLogin implements Serializable {
     private Date loginDate;
 
     @Column(name = "login_location")
-    private Integer loginLocation;
+    private Long loginLocation;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_login_date", length = 19)
     private Date lastLoginDate;
 
     @Column(name = "last_login_location")
-    private Integer lastLoginLocation;
+    private Long lastLoginLocation;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userLogin")
     private Set<UserAccount> userAccounts = new HashSet<>(0);
@@ -68,7 +68,7 @@ public class UserLogin implements Serializable {
     public UserLogin() {
     }
 
-    public UserLogin(Long id, Date loginDate, Integer loginLocation, Date lastLoginDate, Integer lastLoginLocation) {
+    public UserLogin(Long id, Date loginDate, Long loginLocation, Date lastLoginDate, Long lastLoginLocation) {
         this.id = id;
         this.loginDate = loginDate;
         this.loginLocation = loginLocation;
@@ -92,11 +92,11 @@ public class UserLogin implements Serializable {
         this.loginDate = loginDate;
     }
 
-    public Integer getLoginLocation() {
+    public Long getLoginLocation() {
         return loginLocation;
     }
 
-    public void setLoginLocation(Integer loginLocation) {
+    public void setLoginLocation(Long loginLocation) {
         this.loginLocation = loginLocation;
     }
 
@@ -108,11 +108,11 @@ public class UserLogin implements Serializable {
         this.lastLoginDate = lastLoginDate;
     }
 
-    public Integer getLastLoginLocation() {
+    public Long getLastLoginLocation() {
         return lastLoginLocation;
     }
 
-    public void setLastLoginLocation(Integer lastLoginLocation) {
+    public void setLastLoginLocation(Long lastLoginLocation) {
         this.lastLoginLocation = lastLoginLocation;
     }
 

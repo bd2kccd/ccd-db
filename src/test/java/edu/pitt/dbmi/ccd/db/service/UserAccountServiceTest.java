@@ -92,9 +92,9 @@ public class UserAccountServiceTest {
 
         UserLogin userLogin = new UserLogin();
         userLogin.setLastLoginDate(new Date(System.currentTimeMillis()));
-        userLogin.setLastLoginLocation(2130706433);
+        userLogin.setLastLoginLocation(2130706433L);
         userLogin.setLoginDate(new Date(System.currentTimeMillis()));
-        userLogin.setLoginLocation(2130706433);
+        userLogin.setLoginLocation(2130706433L);
 
         UserLoginAttempt userLoginAttempt = new UserLoginAttempt();
 
@@ -111,7 +111,7 @@ public class UserAccountServiceTest {
         user.setDisabled(false);
         user.setPassword("$shiro1$SHA-256$500000$x+VrejAj+iuxOrykFM9WRw==$FP1HOPWIpJuUUR1nR2niYi5pO3FokaiX1CTLZ9t0jMk=");
         user.setRegistrationDate(new Date(System.currentTimeMillis()));
-        user.setRegistrationLocation(Integer.MAX_VALUE);
+        user.setRegistrationLocation(Long.MAX_VALUE);
         user.setUsername("aturing");
         user.setUserLogin(userLogin);
         user.setUserLoginAttempt(userLoginAttempt);

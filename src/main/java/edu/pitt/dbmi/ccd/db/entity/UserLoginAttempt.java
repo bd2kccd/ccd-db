@@ -53,7 +53,7 @@ public class UserLoginAttempt implements Serializable {
     private Date attemptDate;
 
     @Column(name = "attempt_location")
-    private Integer attemptLocation;
+    private Long attemptLocation;
 
     @Column(name = "attempt_count")
     private Byte attemptCount;
@@ -64,7 +64,7 @@ public class UserLoginAttempt implements Serializable {
     public UserLoginAttempt() {
     }
 
-    public UserLoginAttempt(Long id, Date attemptDate, Integer attemptLocation, Byte attemptCount) {
+    public UserLoginAttempt(Long id, Date attemptDate, Long attemptLocation, Byte attemptCount) {
         this.id = id;
         this.attemptDate = attemptDate;
         this.attemptLocation = attemptLocation;
@@ -87,11 +87,11 @@ public class UserLoginAttempt implements Serializable {
         this.attemptDate = attemptDate;
     }
 
-    public Integer getAttemptLocation() {
+    public Long getAttemptLocation() {
         return attemptLocation;
     }
 
-    public void setAttemptLocation(Integer attemptLocation) {
+    public void setAttemptLocation(Long attemptLocation) {
         this.attemptLocation = attemptLocation;
     }
 

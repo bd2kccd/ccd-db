@@ -77,7 +77,7 @@ public class UserAccount implements Serializable {
     private Date registrationDate;
 
     @Column(name = "registration_location")
-    private Integer registrationLocation;
+    private Long registrationLocation;
 
     @Column(name = "account", nullable = false)
     private String account;
@@ -97,7 +97,7 @@ public class UserAccount implements Serializable {
         this.account = account;
     }
 
-    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, String username, String password, boolean active, boolean disabled, Date registrationDate, Integer registrationLocation, String account) {
+    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account) {
         this.person = person;
         this.userLogin = userLogin;
         this.userLoginAttempt = userLoginAttempt;
@@ -182,11 +182,11 @@ public class UserAccount implements Serializable {
         this.registrationDate = registrationDate;
     }
 
-    public Integer getRegistrationLocation() {
+    public Long getRegistrationLocation() {
         return registrationLocation;
     }
 
-    public void setRegistrationLocation(Integer registrationLocation) {
+    public void setRegistrationLocation(Long registrationLocation) {
         this.registrationLocation = registrationLocation;
     }
 
