@@ -1,8 +1,8 @@
--- MySQL dump 10.15  Distrib 10.0.21-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.15  Distrib 10.0.23-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: ccd
 -- ------------------------------------------------------
--- Server version	10.0.21-MariaDB
+-- Server version	10.0.23-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -56,7 +56,7 @@ CREATE TABLE `UserAccount` (
   `active` tinyint(1) NOT NULL,
   `disabled` tinyint(1) NOT NULL,
   `registration_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `registration_location` int(11) DEFAULT NULL,
+  `registration_location` bigint(20) DEFAULT NULL,
   `account` varchar(255) NOT NULL,
   `user_login_id` bigint(20) NOT NULL,
   `user_login_attempt_id` bigint(20) NOT NULL,
@@ -91,9 +91,9 @@ DROP TABLE IF EXISTS `UserLogin`;
 CREATE TABLE `UserLogin` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `login_date` timestamp NULL DEFAULT NULL,
-  `login_location` int(11) DEFAULT NULL,
+  `login_location` bigint(20) DEFAULT NULL,
   `last_login_date` timestamp NULL DEFAULT NULL,
-  `last_login_location` int(11) DEFAULT NULL,
+  `last_login_location` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -117,7 +117,7 @@ DROP TABLE IF EXISTS `UserLoginAttempt`;
 CREATE TABLE `UserLoginAttempt` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `attempt_date` timestamp NULL DEFAULT NULL,
-  `attempt_location` int(11) DEFAULT NULL,
+  `attempt_location` bigint(20) DEFAULT NULL,
   `attempt_count` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -141,4 +141,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-02-20 21:45:49
+-- Dump completed on 2016-02-24 13:01:24
