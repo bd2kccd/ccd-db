@@ -19,7 +19,7 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
-import static edu.pitt.dbmi.ccd.db.specification.VocabularySpecification.searchSpec;
+// import static edu.pitt.dbmi.ccd.db.specification.VocabularySpecification.searchSpec;
 
 import java.util.List;
 import java.util.Set;
@@ -77,7 +77,7 @@ public class VocabularyService {
         return vocabRepository.save(vocab);
     }
 
-    public Vocabulary findOne(Long id) {
+    public Vocabulary findById(Long id) {
         Optional<Vocabulary> vocab = vocabRepository.findById(id);
         return vocab.orElseThrow(() -> new NotFoundException("Vocabulary", "id", id));
     }
@@ -87,9 +87,9 @@ public class VocabularyService {
         return vocab.orElseThrow(() -> new NotFoundException("Vocabulary", "name", name));
     }
 
-    public Page<Vocabulary> search(Set<String> matches, Set<String> nots, Pageable pageable) {
-        return vocabRepository.findAll(searchSpec(matches, nots), pageable);
-    }    
+    // public Page<Vocabulary> search(Set<String> matches, Set<String> nots, Pageable pageable) {
+    //     return vocabRepository.findAll(searchSpec(matches, nots), pageable);
+    // }    
 
     public Page<Vocabulary> findAll(Pageable pageable) {
         return vocabRepository.findAll(pageable);
