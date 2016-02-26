@@ -31,6 +31,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import edu.pitt.dbmi.ccd.db.validation.Name;
 
 /**
  *
@@ -48,6 +49,7 @@ public class UserRole implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
+    @Name
     @Column(name = "name", nullable = false)
     private String name;
 

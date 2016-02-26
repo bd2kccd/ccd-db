@@ -19,16 +19,19 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
-// import static edu.pitt.dbmi.ccd.db.specification.VocabularySpecification.searchSpec;
+import static edu.pitt.dbmi.ccd.db.specification.VocabularySpecification.searchSpec;
 
 import java.util.List;
 import java.util.Set;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.dao.DuplicateKeyException;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
 import edu.pitt.dbmi.ccd.db.repository.VocabularyRepository;
@@ -40,6 +43,9 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 @Service
 @Transactional
 public class VocabularyService {
+
+    private static final String DUPLICATE = "Vocabulary already exists with name: %s";
+    private static final String DUPLICATES = "Vocabularies already exist with names: ";
 
     private final VocabularyRepository vocabRepository;
 
@@ -66,7 +72,7 @@ public class VocabularyService {
                 new Attribute(hcls, id++, "Version", "Data Source Provenance", "Optional"),
                 new Attribute(hcls, id++, "Version", "Distribution", "Optional"),
                 new Attribute(hcls, id++, "Version", "Issued", "Required"),
-                new Attribute(hcls, id, "Version", "Download URI", "Required")
+                new Attribute(hcls, id,   "Version", "Download URI", "Required")
             );
 
             vocabRepository.save(vocabs);
@@ -74,7 +80,24 @@ public class VocabularyService {
     }
 
     public Vocabulary save(Vocabulary vocab) {
+        vocabRepository.findByName(vocab.getName())
+                       .ifPresent(v -> {
+                         throw new DuplicateKeyException(String.format(DUPLICATE, v.getName()));
+                       });
         return vocabRepository.save(vocab);
+    }
+
+    public List<Vocabulary> save(Iterable<Vocabulary> vocabs) {
+        final List<String> found = StreamSupport.stream(vocabs.spliterator(), false)
+                                                .distinct()
+                                                .filter(v -> vocabRepository.findByName(v.getName()).isPresent())
+                                                .map(Vocabulary::getName)
+                                                .collect(Collectors.toList());
+        if (found.size() > 0) {
+            throw new DuplicateKeyException(DUPLICATES + String.join(", ", found));
+        } else {
+            return vocabRepository.save(vocabs);
+        }
     }
 
     public Vocabulary findById(Long id) {
@@ -87,9 +110,9 @@ public class VocabularyService {
         return vocab.orElseThrow(() -> new NotFoundException("Vocabulary", "name", name));
     }
 
-    // public Page<Vocabulary> search(Set<String> matches, Set<String> nots, Pageable pageable) {
-    //     return vocabRepository.findAll(searchSpec(matches, nots), pageable);
-    // }    
+    public Page<Vocabulary> search(Set<String> matches, Set<String> nots, Pageable pageable) {
+        return vocabRepository.findAll(searchSpec(matches, nots), pageable);
+    }    
 
     public Page<Vocabulary> findAll(Pageable pageable) {
         return vocabRepository.findAll(pageable);

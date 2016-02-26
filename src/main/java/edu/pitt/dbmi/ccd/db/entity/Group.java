@@ -41,6 +41,7 @@ import javax.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedBy;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.annotations.NaturalId;
+import edu.pitt.dbmi.ccd.db.validation.Name;
 
 /** 
 * @author Mark Silvis  (marksilvis@pitt.edu)
@@ -57,8 +58,9 @@ public class Group implements Serializable {
 
     @NotBlank
     @Size(min=4, max=128)
-    @Column(length=128, unique=true, nullable=false)
+    @Name
     @NaturalId(mutable=false)
+    @Column(length=128, unique=true, nullable=false)
     private String name;
 
     @NotBlank

@@ -42,6 +42,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import edu.pitt.dbmi.ccd.db.validation.Username;
 
 /**
  *
@@ -64,6 +65,7 @@ public class UserAccount implements Serializable {
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
 
+    @Username
     @NotNull
     @Size(max=255)
     @Column(name = "username", unique = true, nullable = false)

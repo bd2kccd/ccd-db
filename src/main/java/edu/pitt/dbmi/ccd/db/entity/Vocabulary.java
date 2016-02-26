@@ -43,6 +43,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.annotations.NaturalId;
+import edu.pitt.dbmi.ccd.db.validation.Name;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -65,6 +66,7 @@ public class Vocabulary implements Serializable {
     @Version
     private Integer version;
 
+    @Name
     @NotBlank
     @Size(min=4, max=255)
     @Column(length=255, unique=true, nullable=false)

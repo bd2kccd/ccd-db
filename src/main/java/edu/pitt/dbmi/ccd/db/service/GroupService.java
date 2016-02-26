@@ -24,11 +24,14 @@ import static edu.pitt.dbmi.ccd.db.specification.GroupSpecification.searchSpec;
 import java.util.Set;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.dao.DuplicateKeyException;
 import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.repository.GroupRepository;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
@@ -39,6 +42,9 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 @Service
 @Transactional
 public class GroupService {
+
+    private static final String DUPLICATE = "Group already exists with name: %s";
+    private static final String DUPLICATES = "Groups already exist with names: ";
 
     private final GroupRepository groupRepository;
 
@@ -56,7 +62,24 @@ public class GroupService {
     }
 
     public Group save(Group group) {
+        groupRepository.findByName(group.getName())
+                       .ifPresent(g -> {
+                         throw new DuplicateKeyException(String.format(DUPLICATE, g.getName()));
+                       });
         return groupRepository.save(group);
+    }
+
+    public List<Group> save(Iterable<Group> groups) {
+        final List<String> found = StreamSupport.stream(groups.spliterator(), false)
+                                                .distinct()
+                                                .filter(g -> groupRepository.findByName(g.getName()).isPresent())
+                                                .map(Group::getName)
+                                                .collect(Collectors.toList());
+        if (found.size() > 0) {
+            throw new DuplicateKeyException(DUPLICATES + String.join(", ", found));
+        } else {
+            return groupRepository.save(groups);
+        }
     }
 
     public Group findById(Long id) {
@@ -67,6 +90,13 @@ public class GroupService {
     public Group findByName(String name) {
         Optional<Group> group = groupRepository.findByName(name);
         return group.orElseThrow(() -> new NotFoundException("Group", "name", name));
+    }
+
+    public List<Group> findByNames(Iterable<String> names) {
+        return StreamSupport.stream(names.spliterator(), false)
+                            .distinct()
+                            .map(n -> findByName(n))
+                            .collect(Collectors.toList());
     }
 
     public Page<Group> search(Set<String> matches, Set<String> nots, Pageable pageable) {
