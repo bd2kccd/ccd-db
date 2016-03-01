@@ -39,7 +39,7 @@ public class UsernameConstraintValidator implements ConstraintValidator<Username
         if (username == null) {
             return false;
         } else {
-            return username.matches(NAME_PATTERN);
+            return username.matches(USERNAME_PATTERN);
         }
     }
 }

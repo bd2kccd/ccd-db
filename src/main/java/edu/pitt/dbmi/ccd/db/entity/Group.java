@@ -59,7 +59,7 @@ public class Group implements Serializable {
     @NotBlank
     @Size(min=4, max=128)
     @Name
-    @NaturalId(mutable=false)
+    @NaturalId(mutable=true)
     @Column(length=128, unique=true, nullable=false)
     private String name;
 
@@ -88,7 +88,6 @@ public class Group implements Serializable {
         this.name = name;
         this.description = description;
     }
-
 
     public Long getId() {
         return id;

@@ -57,29 +57,38 @@ public class GroupService {
             groups.add(
                 new Group("global", "Group of all users")
             );
-            groupRepository.save(groups);
+            save(groups);
         }
     }
 
-    public Group save(Group group) {
+    public Group create(Group group) {
         groupRepository.findByName(group.getName())
                        .ifPresent(g -> {
                          throw new DuplicateKeyException(String.format(DUPLICATE, g.getName()));
                        });
-        return groupRepository.save(group);
+        return save(group);
     }
 
-    public List<Group> save(Iterable<Group> groups) {
-        final List<String> found = StreamSupport.stream(groups.spliterator(), false)
-                                                .distinct()
-                                                .filter(g -> groupRepository.findByName(g.getName()).isPresent())
-                                                .map(Group::getName)
-                                                .collect(Collectors.toList());
+    public List<Group> create(Set<Group> groups) {
+        final Set<String> found = groups.stream()
+                                        .filter(g -> groupRepository.findByName(g.getName()).isPresent())
+                                        .map(Group::getName)
+                                        .collect(Collectors.toSet());
         if (found.size() > 0) {
             throw new DuplicateKeyException(DUPLICATES + String.join(", ", found));
         } else {
-            return groupRepository.save(groups);
+            return save(groups);
         }
+    }
+
+    public Group update(Group group, Group changes) {
+        group.setName(changes.getName());
+        group.setDescription(changes.getDescription());
+        return save(group);
+    }
+
+    public Group patch(Group group) {
+        return null;
     }
 
     public Group findById(Long id) {
@@ -105,5 +114,13 @@ public class GroupService {
 
     public Page<Group> findAll(Pageable pageable) {
         return groupRepository.findAll(pageable);
+    }
+
+    private Group save(Group group) {
+        return groupRepository.save(group);
+    }
+
+    private List<Group> save(Iterable<Group> groups) {
+        return groupRepository.save(groups);
     }
 }
