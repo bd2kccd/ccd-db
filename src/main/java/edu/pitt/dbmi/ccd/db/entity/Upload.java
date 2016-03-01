@@ -41,6 +41,7 @@ import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.URL;
 
 /**
  * @author Mark Silvis  (marksilvis@pitt.edu)
@@ -77,12 +78,13 @@ public class Upload implements Serializable {
     @JoinColumn(name="fileId", insertable=true, updatable=true, nullable=true)
     private DataFile file;
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="urlId", insertable=true, updatable=true, nullable=true)
-    private Url url;
+    @URL
+    @NotNull
+    @Size(min=2, max=2083)
+    @Column(length=2083, unique=true, nullable=true)
+    private String address;
 
     @OneToMany(mappedBy="target", fetch=FetchType.LAZY)
-    @OrderBy
     private Set<Annotation> annotations = new HashSet<>(0);
 
     @PrePersist
@@ -97,21 +99,18 @@ public class Upload implements Serializable {
 
     public Upload() { }
 
-    private Upload(UserAccount user) {
-        this();
-        this.user = user;
-    }
-
     public Upload(UserAccount user, String title, DataFile file) {
-        this(user);
+        this.user = user;
         this.title = title;
         this.file = file;
+        this.address = null;
     }
 
-    public Upload(UserAccount user, String title, Url url) {
-        this(user);
+    private Upload(UserAccount user, String title, String address) {
+        this.user = user;
         this.title = title;
-        this.url = url;
+        this.file = null;
+        this.address = address;
     }
 
     public Long getId() {
@@ -120,6 +119,18 @@ public class Upload implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public Date getModified() {
+        return modified;
     }
 
     public UserAccount getUploader() {
@@ -146,11 +157,11 @@ public class Upload implements Serializable {
         this.file = file;
     }
 
-    public Url getUrl() {
-        return url;
+    public String getAddress() {
+        return address;
     }
 
-    public void setUrl(Url url) {
-        this.url = url;
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

@@ -56,15 +56,15 @@ public class Group implements Serializable {
     @GeneratedValue
     public Long id;
 
-    @NotBlank
-    @Size(min=4, max=128)
-    @Name
+    @NotBlank(message="Name cannot be empty")
+    @Size(min=4, max=128, message="Name must be between 4 and 128 characters")
+    @Name(message="Valid characters: a-z, A-Z, 0-9, dash (-), and space")
     @NaturalId(mutable=true)
     @Column(length=128, unique=true, nullable=false)
     private String name;
 
-    @NotBlank
-    @Size(max=500)
+    @NotBlank(message="Description cannot be empty")
+    @Size(max=500, message="Description must be fewer than 500 characters")
     @Column(length=500, nullable=false)
     private String description;
 
@@ -85,7 +85,7 @@ public class Group implements Serializable {
     public Group() { }
 
     public Group(String name, String description) {
-        this.name = name;
+        this.name = formatName(name);
         this.description = description;
     }
 
@@ -102,7 +102,7 @@ public class Group implements Serializable {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = formatName(name);
     }
 
     public String getDescription() {
@@ -199,5 +199,16 @@ public class Group implements Serializable {
 
     public void removeMembers(Collection<UserAccount> members) {
         this.members.removeAll(members);
+    }
+
+    /**
+     * Format name for database
+     * Replace multiple spaces with a single underscore
+     * Replace multiple underscores with a single underscore
+     * @param  name group name
+     * @return      formatted group name
+     */
+    private String formatName(String name) {
+        return name.trim().replaceAll("\\s+", "_").replaceAll("_+", "_");
     }
 }

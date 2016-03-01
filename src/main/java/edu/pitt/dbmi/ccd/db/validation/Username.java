@@ -38,7 +38,7 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Username {
 
-    String message() default "{Username}";
+    String message() default "{edu.pitt.dbmi.ccd.db.validation.Username.message}";
 
     Class<?>[] groups() default {};
 

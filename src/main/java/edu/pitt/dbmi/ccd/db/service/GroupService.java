@@ -20,6 +20,7 @@
 package edu.pitt.dbmi.ccd.db.service;
 
 import static edu.pitt.dbmi.ccd.db.specification.GroupSpecification.searchSpec;
+import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
 
 import java.util.Set;
 import java.util.List;
@@ -63,9 +64,7 @@ public class GroupService {
 
     public Group create(Group group) {
         groupRepository.findByName(group.getName())
-                       .ifPresent(g -> {
-                         throw new DuplicateKeyException(String.format(DUPLICATE, g.getName()));
-                       });
+                       .ifPresent(g -> {throw new DuplicateKeyException(String.format(DUPLICATE, g.getName()));});
         return save(group);
     }
 
@@ -82,9 +81,28 @@ public class GroupService {
     }
 
     public Group update(Group group, Group changes) {
-        group.setName(changes.getName());
-        group.setDescription(changes.getDescription());
-        return save(group);
+        final String name = changes.getName();
+        final String description = changes.getDescription();
+
+        return patch(group, name, description);
+    }
+
+    public Group patch(Group group, String name, String description) {
+        // update name
+        if (!(isNullOrEmpty(name) || group.getName().equals(name))) {
+            // check if name isn't just case change
+            if (!group.getName().equalsIgnoreCase(name)) {            
+                // check that name doesn't already exist
+                groupRepository.findByName(name)
+                               .ifPresent(g -> {throw new DuplicateKeyException(String.format(DUPLICATE, name));});
+            }
+            group.setName(name);
+        }
+        // update description
+        if (!isNullOrEmpty(description)) {
+            group.setDescription(description);
+        }
+        return saveAndFlush(group);
     }
 
     public Group patch(Group group) {
@@ -122,5 +140,13 @@ public class GroupService {
 
     private List<Group> save(Iterable<Group> groups) {
         return groupRepository.save(groups);
+    }
+
+    private void flush() {
+        groupRepository.flush();
+    }
+
+    private Group saveAndFlush(Group group) {
+        return groupRepository.saveAndFlush(group);
     }
 }
