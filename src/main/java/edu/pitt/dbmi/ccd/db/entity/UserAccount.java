@@ -119,9 +119,12 @@ public class UserAccount implements Serializable {
     @OrderBy("name")
     private Set<Group> groups = new HashSet<>(0);
 
-    @ManyToMany(mappedBy="admins", fetch=FetchType.LAZY)
+    @ManyToMany(mappedBy="mods", fetch=FetchType.LAZY)
     @OrderBy("name")
-    private Set<Group> administers = new HashSet<>(0);
+    private Set<Group> moderates = new HashSet<>(0);
+
+    @ManyToMany(mappedBy="requesters", fetch=FetchType.LAZY)
+    private Set<Group> requesting = new HashSet<>(0);
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
     @OrderBy
@@ -294,43 +297,43 @@ public class UserAccount implements Serializable {
         this.securityAnswers = securityAnswers;
     }
 
-    public Set<Group> getAdmins() {
-        return administers;
+    public Set<Group> getMods() {
+        return moderates;
     }
 
-    public boolean isAdmin(Group group) {
-        return administers.contains(group);
+    public boolean isMod(Group group) {
+        return moderates.contains(group);
     }
 
-    public boolean isAdmin(Collection<Group> groups) {
-        return this.administers.containsAll(groups);
+    public boolean isMod(Collection<Group> groups) {
+        return this.moderates.containsAll(groups);
     }
 
-    public void addAdmin(Group group) {
-        administers.add(group);
+    public void addMod(Group group) {
+        moderates.add(group);
     }
 
-    public void addAdmins(Collection<Group> groups) {
-        this.administers.addAll(groups);
+    public void addMods(Collection<Group> groups) {
+        this.moderates.addAll(groups);
     }
 
-    public void addAdmins(Group... groups) {
+    public void addMods(Group... groups) {
         for (Group g: groups) {
-            addAdmin(g);
+            addMod(g);
         }
     }
 
-    public void removeAdmin(Group group) {
-        administers.remove(group);
+    public void removeMod(Group group) {
+        moderates.remove(group);
     }
 
-    public void removeAdmins(Collection<Group> groups) {
-        this.administers.removeAll(groups);
+    public void removeMods(Collection<Group> groups) {
+        this.moderates.removeAll(groups);
     }
 
-    public void removeAdmins(Group... groups) {
+    public void removeMods(Group... groups) {
         for (Group g: groups) {
-            removeAdmin(g);
+            removeMod(g);
         }
     }
 
@@ -372,6 +375,10 @@ public class UserAccount implements Serializable {
         for (Group g: groups) {
             removeGroup(g);
         }
+    }
+
+    public Set<Group> getRequesting() {
+        return requesting;
     }
 
     public Set<Upload> getUploads() {

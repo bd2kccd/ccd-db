@@ -26,6 +26,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import edu.pitt.dbmi.ccd.db.entity.Group;
 
 /**
  *
@@ -50,8 +51,11 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
     @Query("SELECT ua FROM UserAccount ua WHERE ua.person.firstName = ?1 AND ua.person.lastName = ?2")
     public Optional<UserAccount> findByFirstNameAndLastName(String first, String last);
 
-    // @Query("SELECT ua FROM UserAccount ua WHERE ua.person.firstName = ?1 AND ua.person.middleName = ?2 AND ua.person.lastName = ?3")
-    // public Optional<UserAccount> findByFirstNameAndMiddleNameAndLastName(String first, String middle, String last);
+    @Query("SELECT ua FROM UserAccount ua WHERE ?1 IN ua.groups")
+    public Page<UserAccount> findByGroup(Group group, Pageable pageable);
+
+    @Query("SELECT ua FROM UserAccount ua WHERE ?1 IN ua.moderates")
+    public Page<UserAccount> findByGroupMod(Group group, Pageable pageable);
 
     public Page<UserAccount> findAll(Pageable pageable);
 }

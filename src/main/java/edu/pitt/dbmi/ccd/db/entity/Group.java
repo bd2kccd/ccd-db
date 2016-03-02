@@ -69,11 +69,11 @@ public class Group implements Serializable {
     private String description;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "GroupAdministration",
+    @JoinTable(name = "GroupModeration",
         joinColumns = { @JoinColumn(name="groupId") },
         inverseJoinColumns = { @JoinColumn(name="userAccountId") })
     @OrderBy("username")
-    private Set<UserAccount> admins = new HashSet<>(0);
+    private Set<UserAccount> mods = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupMembership",
@@ -81,6 +81,12 @@ public class Group implements Serializable {
         inverseJoinColumns = { @JoinColumn(name="userAccountId") })
     @OrderBy("username")
     private Set<UserAccount> members = new HashSet<>(0);
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "GroupRequests",
+        joinColumns = { @JoinColumn(name="groupId") },
+        inverseJoinColumns = { @JoinColumn(name="userAccountId") })
+    private Set<UserAccount> requesters = new HashSet<>(0);
 
     public Group() { }
 
@@ -113,48 +119,48 @@ public class Group implements Serializable {
         this.description = description;
     }
 
-    public Set<UserAccount> getAdmins() {
-        return admins;
+    public Set<UserAccount> getMods() {
+        return mods;
     }
 
-    public boolean hasAdmin(UserAccount admin) {
-        return admins.contains(admin);
+    public boolean hasMod(UserAccount mod) {
+        return mods.contains(mod);
     }
 
-    public boolean hasAdmins(UserAccount... admins) {
-        return hasAdmins(Arrays.asList(admins));
+    public boolean hasMods(UserAccount... mods) {
+        return hasMods(Arrays.asList(mods));
     }
 
-    public boolean hasAdmins(Collection<UserAccount> admins) {
-        return this.admins.containsAll(admins);
+    public boolean hasMods(Collection<UserAccount> mods) {
+        return this.mods.containsAll(mods);
     }
 
-    public void addAdmin(UserAccount admin) {
-        admins.add(admin);
+    public void addMod(UserAccount mod) {
+        mods.add(mod);
     }
 
-    public void addAdmins(UserAccount... admins) {
-        for (UserAccount a : admins) {
-            addAdmin(a);
+    public void addMods(UserAccount... mods) {
+        for (UserAccount a : mods) {
+            addMod(a);
         }
     }
 
-    public void addAdmins(Collection<UserAccount> admins) {
-        this.admins.addAll(admins);
+    public void addMods(Collection<UserAccount> mods) {
+        this.mods.addAll(mods);
     }
 
-    public void removeAdmin(UserAccount admin) {
-        admins.remove(admin);
+    public void removeMod(UserAccount mod) {
+        mods.remove(mod);
     }
 
-    public void removeAdmins(UserAccount... admins) {
-        for (UserAccount a : admins) {
-            removeAdmin(a);
+    public void removeMods(UserAccount... mods) {
+        for (UserAccount a : mods) {
+            removeMod(a);
         }
     }
 
-    public void removeAdmins(Collection<UserAccount> admins) {
-        this.admins.removeAll(admins);
+    public void removeMods(Collection<UserAccount> mods) {
+        this.mods.removeAll(mods);
     }
 
     public Set<UserAccount> getMembers() {
@@ -199,6 +205,50 @@ public class Group implements Serializable {
 
     public void removeMembers(Collection<UserAccount> members) {
         this.members.removeAll(members);
+    }
+
+    public Set<UserAccount> getRequesters() {
+        return requesters;
+    }
+
+    public boolean hasRequester(UserAccount requester) {
+        return requesters.contains(requester);
+    }
+
+    public boolean hasRequesters(UserAccount... requesters) {
+        return hasRequesters(Arrays.asList(requesters));
+    }
+
+    public boolean hasRequesters(Collection<UserAccount> requesters) {
+        return this.requesters.containsAll(requesters);
+    }
+
+    public void addRequester(UserAccount requester) {
+        requesters.add(requester);
+    }
+
+    public void addRequesters(UserAccount... requesters) {
+        for (UserAccount a : requesters) {
+            addRequester(a);
+        }
+    }
+
+    public void addRequesters(Collection<UserAccount> requesters) {
+        this.requesters.addAll(requesters);
+    }
+
+    public void removeRequester(UserAccount requester) {
+        requesters.remove(requester);
+    }
+
+    public void removeRequesters(UserAccount... requesters) {
+        for (UserAccount a : requesters) {
+            removeRequester(a);
+        }
+    }
+
+    public void removeRequesters(Collection<UserAccount> requesters) {
+        this.requesters.removeAll(requesters);
     }
 
     /**

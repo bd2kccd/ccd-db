@@ -87,6 +87,10 @@ public class GroupService {
         return patch(group, name, description);
     }
 
+    public Group patch(Group group) {
+        return patch(group, null, null);
+    }
+
     public Group patch(Group group, String name, String description) {
         // update name
         if (!(isNullOrEmpty(name) || group.getName().equals(name))) {
@@ -103,10 +107,6 @@ public class GroupService {
             group.setDescription(description);
         }
         return saveAndFlush(group);
-    }
-
-    public Group patch(Group group) {
-        return null;
     }
 
     public Group findById(Long id) {
