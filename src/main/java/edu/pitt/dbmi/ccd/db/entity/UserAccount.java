@@ -61,7 +61,7 @@ public class UserAccount implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
 
