@@ -87,6 +87,18 @@ public class GroupService {
         return patch(group, name, description);
     }
 
+    public Group save(Group group) {
+        return groupRepository.save(group);
+    }
+
+    public List<Group> save(Iterable<Group> groups) {
+        return groupRepository.save(groups);
+    }
+
+    public Group saveAndFlush(Group group) {
+        return groupRepository.saveAndFlush(group);
+    }
+
     public Group patch(Group group) {
         return patch(group, null, null);
     }
@@ -134,19 +146,7 @@ public class GroupService {
         return groupRepository.findAll(pageable);
     }
 
-    private Group save(Group group) {
-        return groupRepository.save(group);
-    }
-
-    private List<Group> save(Iterable<Group> groups) {
-        return groupRepository.save(groups);
-    }
-
     private void flush() {
         groupRepository.flush();
-    }
-
-    private Group saveAndFlush(Group group) {
-        return groupRepository.saveAndFlush(group);
     }
 }
