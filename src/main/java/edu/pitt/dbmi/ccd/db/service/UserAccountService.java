@@ -26,7 +26,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
@@ -68,14 +67,6 @@ public class UserAccountService {
         return user.orElseThrow(() -> new NotFoundException("User", "email", email));
     }
     
-    public Page<UserAccount> findByGroup(Group group, Pageable pageable) {
-        return userAccountRepository.findByGroup(group, pageable);
-    }
-
-    public Page<UserAccount> findByGroupMod(Group group, Pageable pageable) {
-        return userAccountRepository.findByGroupMod(group, pageable);
-    }
-
     public Page<UserAccount> findAll(Pageable pageable) {
         return userAccountRepository.findAll(pageable);
     }
