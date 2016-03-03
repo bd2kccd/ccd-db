@@ -79,7 +79,6 @@ public class Upload implements Serializable {
     private DataFile file;
 
     @URL
-    @NotNull
     @Size(min=2, max=2083)
     @Column(length=2083, unique=true, nullable=true)
     private String address;
