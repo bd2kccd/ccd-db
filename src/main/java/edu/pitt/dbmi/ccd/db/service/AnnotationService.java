@@ -96,8 +96,9 @@ public class AnnotationService {
                                    String attributeLevel,
                                    String attributeName,
                                    String attributeRequirementLevel,
+                                   Boolean showRedacted,
                                    Pageable pageable) {
-        Specification<Annotation> spec = filterSpec(requester, username, group, upload, vocab, attributeLevel, attributeName, attributeRequirementLevel);
+        Specification<Annotation> spec = filterSpec(requester, username, group, upload, vocab, attributeLevel, attributeName, attributeRequirementLevel, showRedacted);
         return annotationRepository.findAll(spec, pageable);
     }
 
@@ -109,10 +110,11 @@ public class AnnotationService {
                                    String attributeLevel,
                                    String attributeName,
                                    String attributeRequirementLevel,
+                                   Boolean showRedacted,
                                    Set<String> matches,
                                    Set<String> nots,
                                    Pageable pageable) {
-        Specification<Annotation> spec = searchSpec(requester, username, group, upload, vocab, attributeLevel, attributeName, attributeRequirementLevel, matches, nots);
+        Specification<Annotation> spec = searchSpec(requester, username, group, upload, vocab, attributeLevel, attributeName, attributeRequirementLevel, showRedacted, matches, nots);
         return annotationRepository.findAll(spec, pageable);
     }
 

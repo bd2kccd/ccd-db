@@ -60,6 +60,7 @@ public final class AnnotationSpecification {
     public static final String VALUE = "value";
     public static final String LEVEL = "level";
     public static final String REQ_LEVEL = "requirementLevel";
+    public static final String REDACTED = "redacted";
 
     private AnnotationSpecification() { }
 
@@ -76,9 +77,10 @@ public final class AnnotationSpecification {
                                                        String vocab,
                                                        String attributeLevel,
                                                        String attributeName,
-                                                       String attributeReqLevel) {
+                                                       String attributeReqLevel,
+                                                       Boolean showRedacted) {
         return (root, query, cb) -> {
-            return buildFilterSpec(root, query, cb, requester, username, group, upload, vocab, attributeLevel, attributeName, attributeReqLevel);
+            return buildFilterSpec(root, query, cb, requester, username, group, upload, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted);
         };
     }
 
@@ -87,13 +89,14 @@ public final class AnnotationSpecification {
                                                        String group,
                                                        Long upload,
                                                        String vocab,
+                                                       String attributeLevel,
                                                        String attributeName,
                                                        String attributeReqLevel,
-                                                       String attributeLevel,
+                                                       Boolean showRedacted,
                                                        Set<String> matches,
                                                        Set<String> nots) {
         return (root, query, cb) -> {
-            return buildSearchSpec(root, query, cb, requester, username, group, upload, vocab, attributeLevel, attributeName, attributeReqLevel, matches, nots);
+            return buildSearchSpec(root, query, cb, requester, username, group, upload, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted, matches, nots);
         };
     }
   
@@ -105,12 +108,13 @@ public final class AnnotationSpecification {
                                                String group,
                                                Long upload,
                                                String vocab,
+                                               String attributeLevel,
                                                String attributeName,
                                                String attributeReqLevel,
-                                               String attributeLevel) {
+                                               Boolean showRedacted) {
         List<Predicate> predicates = new ArrayList<>(0);
         Predicate authPredicate = authFilter(root, cb, requester);
-        List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, upload, vocab, attributeName, attributeLevel, attributeReqLevel);
+        List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, upload, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted);
         
         predicates.add(authPredicate);
         predicates.addAll(filterPredicates);
@@ -126,14 +130,15 @@ public final class AnnotationSpecification {
                                                String group,
                                                Long upload,
                                                String vocab,
+                                               String attributeLevel,
                                                String attributeName,
                                                String attributeReqLevel,
-                                               String attributeLevel,
+                                               Boolean showRedacted,
                                                Set<String> matches,
                                                Set<String> nots) {
         List<Predicate> predicates = new ArrayList<>(0);
         Predicate authPredicate = authFilter(root, cb, requester);
-        List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, upload, vocab, attributeName, attributeLevel, attributeReqLevel);
+        List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, upload, vocab, attributeName, attributeLevel, attributeReqLevel, showRedacted);
         List<Predicate> searchPredicates = buildSearchPredicates(root, query, cb, matches, nots);
         
         predicates.add(authPredicate);
@@ -168,7 +173,8 @@ public final class AnnotationSpecification {
                                                          String vocab,
                                                          String attributeLevel,
                                                          String attributeName,
-                                                         String attributeReqLevel) {
+                                                         String attributeReqLevel,
+                                                         Boolean showRedacted) {
         
         List<Predicate> predicates = new ArrayList<>(0);
         if (!isNullOrEmpty(username)) {
@@ -191,6 +197,9 @@ public final class AnnotationSpecification {
         }
         if (!isNullOrEmpty(attributeReqLevel)) {
             predicates.add(hasAttributeReqLevel(root, query, cb, attributeReqLevel));            
+        }
+        if (!showRedacted) {
+            predicates.add(notRedacted(root, cb));
         }
 
         return predicates;
@@ -289,6 +298,11 @@ public final class AnnotationSpecification {
         return cb.exists(subquery.select(subroot)
                                  .where(cb.and(cb.equal(subroot.get(ANNO), root),
                                                cb.like(cb.lower(subroot.get(ATTRIB).get(REQ_LEVEL)), attributeReqLevel.toLowerCase()))));
+    }
+
+    // annotation is not redacted
+    private static Predicate notRedacted(Root<Annotation> root, CriteriaBuilder cb) {
+        return cb.equal(root.get(REDACTED), false);
     }
 
     private static String containsLike(String terms) {
