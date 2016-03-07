@@ -18,12 +18,14 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import java.util.Optional;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import edu.pitt.dbmi.ccd.db.entity.Upload;
 import edu.pitt.dbmi.ccd.db.repository.UploadRepository;
+import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -45,5 +47,10 @@ public class UploadService {
 
     public Upload findUpload(Long id) {
         return uploadRepository.findOne(id);
+    }
+
+    public Upload findOne(Long id) {
+        Optional<Upload> upload = uploadRepository.findById(id);
+        return upload.orElseThrow(() -> new NotFoundException("Upload", "id", id));
     }
 }

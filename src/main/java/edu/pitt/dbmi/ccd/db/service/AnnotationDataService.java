@@ -27,8 +27,11 @@ import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.Attribute;
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationDataRepository;
 import edu.pitt.dbmi.ccd.db.service.AnnotationService;
+import edu.pitt.dbmi.ccd.db.service.AttributeService;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
@@ -39,10 +42,20 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 public class AnnotationDataService {
 
     private final AnnotationDataRepository annotationDataRepository;
+    private final AttributeService attributeService;
 
     @Autowired(required=true)
-    public AnnotationDataService(AnnotationDataRepository annotationDataRepository) {
+    public AnnotationDataService(AnnotationDataRepository annotationDataRepository, AttributeService attributeService) {
         this.annotationDataRepository = annotationDataRepository;
+        this.attributeService = attributeService;
+    }
+
+    public AnnotationData create(Annotation annotation, Long parentId, Vocabulary vocabulary, Long attributeId, String value) {
+        final AnnotationData parent = (parentId != null) ? findOne(parentId)
+                                                         : null;
+        final Attribute attribute = attributeService.findById(attributeId);
+        final AnnotationData annoData = new AnnotationData(annotation, parent, attribute, value);
+        return save(annoData);   
     }
 
     public AnnotationData save(AnnotationData data) {

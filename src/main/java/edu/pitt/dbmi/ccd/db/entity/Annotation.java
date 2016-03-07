@@ -121,13 +121,13 @@ public class Annotation implements Serializable {
 
     public Annotation() { }
 
-    public Annotation(UserAccount user, Access accessControl, Group group, Vocabulary vocab, Upload upload, Annotation parent) {
+    public Annotation(UserAccount user, Upload target, Annotation parent, Access accessControl, Group group, Vocabulary vocab) {
         this.user = user;
+        this.target = target;
+        this.parent = parent;
         this.accessControl = accessControl;
         this.group = group;
         this.vocab = vocab;
-        this.target = upload;
-        this.parent = parent;
     }
 
     public Long getId() {

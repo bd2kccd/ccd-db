@@ -37,8 +37,16 @@ import org.springframework.data.domain.PageImpl;
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.Upload;
+import edu.pitt.dbmi.ccd.db.entity.Access;
 import edu.pitt.dbmi.ccd.db.entity.Group;
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationRepository;
+import edu.pitt.dbmi.ccd.db.service.UploadService;
+import edu.pitt.dbmi.ccd.db.service.AccessService;
+import edu.pitt.dbmi.ccd.db.service.GroupService;
+import edu.pitt.dbmi.ccd.db.service.VocabularyService;
+
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
@@ -49,10 +57,41 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 public class AnnotationService {
 
     private final AnnotationRepository annotationRepository;
+    private final UploadService uploadService;
+    private final AccessService accessService;
+    private final GroupService groupService;
+    private final VocabularyService vocabularyService;
 
     @Autowired(required=true)
-    public AnnotationService(AnnotationRepository annotationRepository) {
+    public AnnotationService(
+            AnnotationRepository annotationRepository,
+            UploadService uploadService,
+            AccessService accessService,
+            GroupService groupService,
+            VocabularyService vocabularyService) {
         this.annotationRepository = annotationRepository;
+        this.uploadService = uploadService;
+        this.accessService = accessService;
+        this.groupService = groupService;
+        this.vocabularyService = vocabularyService;
+    }
+
+    public Annotation create(
+            UserAccount user,
+            Long targetId,
+            Long parentId,
+            String accessName,
+            String groupName,
+            String vocababularyName) {
+        final Upload upload = uploadService.findOne(targetId);
+        final Annotation anno = (parentId != null) ? findById(user, parentId)
+                                                   : null;
+        final Access access = accessService.findByName(accessName);
+        final Group group = (groupName != null) ? groupService.findByName(groupName)
+                                                : null;
+        final Vocabulary vocab = vocabularyService.findByName(vocababularyName);
+        final Annotation annotation = new Annotation(user, upload, anno, access, group, vocab);
+        return save(annotation);
     }
 
     public Annotation save(Annotation annotation) {

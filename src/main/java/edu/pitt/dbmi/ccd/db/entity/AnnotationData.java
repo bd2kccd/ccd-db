@@ -47,7 +47,7 @@ public class AnnotationData implements Serializable {
     private Long id;
 
     @NotNull
-    @ManyToOne(optional=false, fetch=FetchType.EAGER)
+    @ManyToOne(optional=false, fetch=FetchType.LAZY)
     @JoinColumn(nullable=false)
     private Annotation annotation;
 
@@ -92,7 +92,7 @@ public class AnnotationData implements Serializable {
         this.parent = parent;
     }
 
-    public AnnotationData(Annotation annotation, Attribute attribute, String value, AnnotationData parent) {
+    public AnnotationData(Annotation annotation, AnnotationData parent, Attribute attribute, String value) {
         this(annotation, attribute, value);
         this.parent = parent;
     }
