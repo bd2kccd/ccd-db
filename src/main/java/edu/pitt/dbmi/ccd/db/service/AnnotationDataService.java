@@ -53,7 +53,7 @@ public class AnnotationDataService {
     public AnnotationData create(Annotation annotation, Long parentId, Vocabulary vocabulary, Long attributeId, String value) {
         final AnnotationData parent = (parentId != null) ? findOne(parentId)
                                                          : null;
-        final Attribute attribute = attributeService.findById(attributeId);
+        final Attribute attribute = attributeService.findByVocabAndId(vocabulary, attributeId);
         final AnnotationData annoData = new AnnotationData(annotation, parent, attribute, value);
         return save(annoData);   
     }

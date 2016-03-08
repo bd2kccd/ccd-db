@@ -105,7 +105,7 @@ public class Upload implements Serializable {
         this.address = null;
     }
 
-    private Upload(UserAccount user, String title, String address) {
+    public Upload(UserAccount user, String title, String address) {
         this.user = user;
         this.title = title;
         this.file = null;

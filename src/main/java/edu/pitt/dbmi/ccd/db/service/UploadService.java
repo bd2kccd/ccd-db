@@ -18,12 +18,19 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import static edu.pitt.dbmi.ccd.db.specification.UploadSpecification.filterSpec;
+import static edu.pitt.dbmi.ccd.db.specification.UploadSpecification.searchSpec;
+
 import java.util.Optional;
 import java.util.List;
+import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Upload;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.UploadRepository;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
@@ -41,6 +48,10 @@ public class UploadService {
         this.uploadRepository = uploadRepository;
     }
 
+    public Upload create(UserAccount uploader, String title, String address) {
+        return save(new Upload(uploader, title, address));
+    }
+
     public Upload save(Upload upload) {
         return uploadRepository.save(upload);
     }
@@ -52,5 +63,17 @@ public class UploadService {
     public Upload findOne(Long id) {
         Optional<Upload> upload = uploadRepository.findById(id);
         return upload.orElseThrow(() -> new NotFoundException("Upload", "id", id));
+    }
+
+    public Page<Upload> filter(String username, String type, Pageable pageable) {
+        return uploadRepository.findAll(filterSpec(username, type), pageable);
+    }
+
+    public Page<Upload> search(String username, String type, Set<String> matches, Set<String> nots, Pageable pageable) {
+        return uploadRepository.findAll(searchSpec(username, type, matches, nots), pageable);
+    }
+
+    public Page<Upload> findAll(Pageable pageable) {
+        return uploadRepository.findAll(pageable);
     }
 }

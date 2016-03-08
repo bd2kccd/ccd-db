@@ -61,6 +61,13 @@ public class AttributeService {
                                                                  new Object[]{vocabName, id}));
     }
 
+    public Attribute findByVocabAndId(Vocabulary vocabulary, Long id) {
+        Optional<Attribute> attribute = attributeRepository.findByVocabAndId(vocabulary, id);
+        return attribute.orElseThrow(() -> new NotFoundException("Attribute",
+                                                                 new String[]{"vocab", "id"},
+                                                                 new Object[]{vocabulary.getName(), id}));
+    }
+
     public Attribute findByVocabAndLevelAndName(String vocabName, String level, String name) {
         Optional<Attribute> attribute = attributeRepository.findByVocabAndLevelAndName(vocabName, level, name);
         return attribute.orElseThrow(() -> new NotFoundException("Attribute",
