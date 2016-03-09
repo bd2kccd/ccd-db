@@ -23,6 +23,9 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.ManyToOne;
@@ -38,6 +41,9 @@ import javax.validation.constraints.Size;
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
+@Table(uniqueConstraints={
+    @UniqueConstraint(columnNames={"annotationId", "dataId"})
+})
 public class AnnotationData implements Serializable {
 
     private static final long serialVersionUID = 6905712225800779882L;
@@ -46,9 +52,13 @@ public class AnnotationData implements Serializable {
     @GeneratedValue
     private Long id;
 
+    // id relative to annotation
+    @Column(unique=false, nullable=false)
+    private Long dataId;
+
     @NotNull
     @ManyToOne(optional=false, fetch=FetchType.LAZY)
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="annotationId", nullable=false)
     private Annotation annotation;
 
     @ManyToOne(fetch=FetchType.EAGER)
@@ -68,32 +78,33 @@ public class AnnotationData implements Serializable {
 
     public AnnotationData() { }
 
-    public AnnotationData(Annotation annotation) {
+    public AnnotationData(Long dataId, Annotation annotation) {
+        this.dataId = dataId;
         this.annotation = annotation;
     }
 
-    public AnnotationData(Annotation annotation, Attribute attribute) {
-        this(annotation);
+    public AnnotationData(Long dataId, Annotation annotation, Attribute attribute) {
+        this(dataId, annotation);
         this.attribute = attribute;
     }
 
-    public AnnotationData(Annotation annotation, String value) {
-        this(annotation);
+    public AnnotationData(Long dataId, Annotation annotation, String value) {
+        this(dataId, annotation);
         this.value = value;
     }
 
-    public AnnotationData(Annotation annotation, Attribute attribute, String value) {
-        this(annotation, attribute);
+    public AnnotationData(Long dataId, Annotation annotation, Attribute attribute, String value) {
+        this(dataId, annotation, attribute);
         this.value = value;
     }
 
-    public AnnotationData(Annotation annotation, Attribute attribute, AnnotationData parent) {
-        this(annotation, attribute);
+    public AnnotationData(Long dataId, Annotation annotation, Attribute attribute, AnnotationData parent) {
+        this(dataId, annotation, attribute);
         this.parent = parent;
     }
 
-    public AnnotationData(Annotation annotation, AnnotationData parent, Attribute attribute, String value) {
-        this(annotation, attribute, value);
+    public AnnotationData(Long dataId, Annotation annotation, AnnotationData parent, Attribute attribute, String value) {
+        this(dataId, annotation, attribute, value);
         this.parent = parent;
     }
 
@@ -103,6 +114,14 @@ public class AnnotationData implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(Long dataId) {
+        this.dataId = dataId;
     }
 
     public Annotation getAnnotation() {

@@ -65,16 +65,14 @@ public class Attribute implements Serializable {
     @JoinColumn(name="vocabId", nullable=false)
     private Vocabulary vocab;
 
-    @NotBlank
-    @Column(unique=false, nullable=false)
+    @Column(unique=false, nullable=true)
     private String level;
 
     @NotBlank
     @Column(unique=false, nullable=false)
     private String name;
 
-    @NotBlank
-    @Column(unique=false, nullable=false)
+    @Column(unique=false, nullable=true)
     private String requirementLevel;
 
     @ManyToOne(fetch=FetchType.LAZY)

@@ -50,12 +50,16 @@ public class AnnotationDataService {
         this.attributeService = attributeService;
     }
 
-    public AnnotationData create(Annotation annotation, Long parentId, Vocabulary vocabulary, Long attributeId, String value) {
-        final AnnotationData parent = (parentId != null) ? findOne(parentId)
-                                                         : null;
-        final Attribute attribute = attributeService.findByVocabAndId(vocabulary, attributeId);
-        final AnnotationData annoData = new AnnotationData(annotation, parent, attribute, value);
-        return save(annoData);   
+    public AnnotationData create(Long dataId, Annotation annotation, Long attributeId, String value) {
+        final Attribute attribute = attributeService.findByVocabAndId(annotation.getVocabulary(), attributeId);
+        final AnnotationData annoData = new AnnotationData(dataId, annotation, attribute, value);
+        return save(annoData);
+    }
+
+    public AnnotationData create(Long dataId, Annotation annotation, AnnotationData parent, Long attributeId, String value) {
+        final Attribute attribute = attributeService.findByVocabAndId(annotation.getVocabulary(), attributeId);
+        final AnnotationData annoData = new AnnotationData(dataId, annotation, parent, attribute, value);
+        return save(annoData);
     }
 
     public AnnotationData save(AnnotationData data) {

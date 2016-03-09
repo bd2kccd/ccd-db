@@ -22,6 +22,7 @@ package edu.pitt.dbmi.ccd.db.service;
 import static edu.pitt.dbmi.ccd.db.specification.VocabularySpecification.searchSpec;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -56,7 +57,6 @@ public class VocabularyService {
         List<Vocabulary> vocabs = vocabRepository.findAll();
         if (vocabs.isEmpty()) {
             Vocabulary hcls = new Vocabulary("HCLS", "http://www.w3.org/2001/sw/hcls/notes/hcls-dataset/");
-            vocabs.add(hcls);
             long id = 1L;
             hcls.addAttributes(
                 new Attribute(hcls, id++, "Summary", "Type", "Required"),
@@ -74,6 +74,11 @@ public class VocabularyService {
                 new Attribute(hcls, id++, "Version", "Issued", "Required"),
                 new Attribute(hcls, id,   "Version", "Download URI", "Required")
             );
+            vocabs.add(hcls);
+            
+            Vocabulary plaintext = new Vocabulary("Plaintext", "Text with no required structure");
+            plaintext.addAttribute(new Attribute(plaintext, 1L, null, "Text", null));
+            vocabs.add(plaintext);
 
             vocabRepository.save(vocabs);
         }
