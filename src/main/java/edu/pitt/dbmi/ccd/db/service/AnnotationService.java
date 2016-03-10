@@ -98,6 +98,10 @@ public class AnnotationService {
         return annotationRepository.save(annotation);
     }
 
+    public Annotation saveAndFlush(Annotation annotation) {
+      return annotationRepository.saveAndFlush(annotation);
+    }
+
     public Annotation findById(UserAccount requester, Long id) {
         Optional<Annotation> annotation = annotationRepository.findById(requester, id);
         return annotation.orElseThrow(() -> new NotFoundException("Annotation", "id", id));
