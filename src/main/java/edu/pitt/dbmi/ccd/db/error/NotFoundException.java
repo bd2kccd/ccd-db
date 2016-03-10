@@ -93,8 +93,7 @@ public final class NotFoundException extends RuntimeException {
     private String buildMessage() {
         StringBuilder builder = new StringBuilder(String.format(NOT_FOUND, entity));
         int len = (isNullOrEmpty(fields) || isNullOrEmpty(values)) ? 0
-                : (fields.length < values.length) ? fields.length
-                : values.length;
+                : Math.min(fields.length, values.length);
         if (len > 0) {
             builder.append(WITH).append(fields[0]).append(SEP).append(values[0]);
             if (len > 1) {
