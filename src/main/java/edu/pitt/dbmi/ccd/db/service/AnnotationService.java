@@ -46,8 +46,8 @@ import edu.pitt.dbmi.ccd.db.service.UploadService;
 import edu.pitt.dbmi.ccd.db.service.AccessService;
 import edu.pitt.dbmi.ccd.db.service.GroupService;
 import edu.pitt.dbmi.ccd.db.service.VocabularyService;
-
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
+import edu.pitt.dbmi.ccd.db.error.AccessUpdateException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -93,6 +93,35 @@ public class AnnotationService {
         final Annotation annotation = new Annotation(user, upload, anno, access, group, vocab);
         return save(annotation);
     }
+
+    public Annotation patch(Annotation annotation, String accessName, String groupName) {
+        final Access access = accessService.findByName(accessName);
+        final Group group = (groupName != null) ? groupService.findByName(groupName) : null;
+        if (annotation.getAccess().getName().equalsIgnoreCase(access.getName())) {
+            return annotation;
+        } else if (annotation.getAccess().getName().equalsIgnoreCase("PRIVATE") && access.getName().equalsIgnoreCase("GROUP")) {
+            if (group == null) {
+              throw new AccessUpdateException(true);
+            } else {
+              annotation.setAccess(access);
+              annotation.setGroup(group);
+              return save(annotation);
+            }
+        } else if (annotation.getAccess().getName().equalsIgnoreCase("PRIVATE") && access.getName().equalsIgnoreCase("PUBLIC")) {
+            annotation.setAccess(access);
+            return save(annotation);
+        } else if (annotation.getAccess().getName().equalsIgnoreCase("GROUP") && access.getName().equalsIgnoreCase("PUBLIC")) {
+            annotation.setAccess(access);
+            annotation.setGroup(null);
+            return save(annotation);          
+        } else {
+            throw new AccessUpdateException(annotation.getAccess(), access);
+        }
+    }
+
+    // public Annotation updateData(AnnotationData data) {
+    //   return data;
+    // }
 
     public Annotation save(Annotation annotation) {
         return annotationRepository.save(annotation);

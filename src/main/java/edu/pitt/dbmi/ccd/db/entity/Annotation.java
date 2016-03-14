@@ -178,11 +178,11 @@ public class Annotation implements Serializable {
         redacted = true;
     }
 
-    public Access getAccessControl() {
+    public Access getAccess() {
         return accessControl;
     }
 
-    public void setAccessControl(Access accessControl) {
+    public void setAccess(Access accessControl) {
         this.accessControl = accessControl;
     }
 

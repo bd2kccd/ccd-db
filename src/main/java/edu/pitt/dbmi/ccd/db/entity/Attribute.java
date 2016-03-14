@@ -45,8 +45,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 @Table(uniqueConstraints={
-    @UniqueConstraint(columnNames={"vocabId", "level", "name"}),
-    @UniqueConstraint(columnNames={"vocabId", "id"})
+    @UniqueConstraint(columnNames={"vocabId", "level", "name"})
 })
 public class Attribute implements Serializable {
 
@@ -54,10 +53,6 @@ public class Attribute implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long attributeId;
-
-    // id relative to vocabulary
-    @Column(unique=false, nullable=false)
     private Long id;
 
     @NotNull
@@ -100,14 +95,6 @@ public class Attribute implements Serializable {
     public Attribute(Vocabulary vocab, Long id, String level, String name, String requirementLevel, Attribute parent) {
         this(vocab, id, level, name, requirementLevel);
         this.parent = parent;
-    }
-
-    public Long getAttributeId() {
-        return attributeId;
-    }
-
-    public void setAttributeId(Long attributeId) {
-        this.attributeId = attributeId;
     }
 
     public Long getId() {

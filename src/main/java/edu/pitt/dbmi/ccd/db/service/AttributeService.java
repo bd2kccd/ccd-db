@@ -50,23 +50,23 @@ public class AttributeService {
     }
 
     public Attribute findOne(Long id) {
-        Optional<Attribute> attribute = attributeRepository.findByAttributeId(id);
+        Optional<Attribute> attribute = attributeRepository.findById(id);
         return attribute.orElseThrow(() -> new NotFoundException("Attribute", "id", id));
     }
 
-    public Attribute findByVocabAndId(String vocabName, Long id) {
-        Optional<Attribute> attribute = attributeRepository.findByVocabAndId(vocabName, id);
-        return attribute.orElseThrow(() -> new NotFoundException("Attribute",
-                                                                 new String[]{"vocab", "id"},
-                                                                 new Object[]{vocabName, id}));
-    }
+    // public Attribute findByVocabAndId(String vocabName, Long id) {
+    //     Optional<Attribute> attribute = attributeRepository.findByVocabAndId(vocabName, id);
+    //     return attribute.orElseThrow(() -> new NotFoundException("Attribute",
+    //                                                              new String[]{"vocab", "id"},
+    //                                                              new Object[]{vocabName, id}));
+    // }
 
-    public Attribute findByVocabAndId(Vocabulary vocabulary, Long id) {
-        Optional<Attribute> attribute = attributeRepository.findByVocabAndId(vocabulary, id);
-        return attribute.orElseThrow(() -> new NotFoundException("Attribute",
-                                                                 new String[]{"vocab", "id"},
-                                                                 new Object[]{vocabulary.getName(), id}));
-    }
+    // public Attribute findByVocabAndId(Vocabulary vocabulary, Long id) {
+    //     Optional<Attribute> attribute = attributeRepository.findByVocabAndId(vocabulary, id);
+    //     return attribute.orElseThrow(() -> new NotFoundException("Attribute",
+    //                                                              new String[]{"vocab", "id"},
+    //                                                              new Object[]{vocabulary.getName(), id}));
+    // }
 
     public Attribute findByVocabAndLevelAndName(String vocabName, String level, String name) {
         Optional<Attribute> attribute = attributeRepository.findByVocabAndLevelAndName(vocabName, level, name);

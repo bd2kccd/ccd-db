@@ -33,6 +33,7 @@ import edu.pitt.dbmi.ccd.db.repository.AnnotationDataRepository;
 import edu.pitt.dbmi.ccd.db.service.AnnotationService;
 import edu.pitt.dbmi.ccd.db.service.AttributeService;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
+import edu.pitt.dbmi.ccd.db.error.VocabularyMismatchException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -51,15 +52,30 @@ public class AnnotationDataService {
     }
 
     public AnnotationData create(Annotation annotation, Long attributeId, String value) {
-        final Attribute attribute = attributeService.findByVocabAndId(annotation.getVocabulary(), attributeId);
+        final Attribute attribute = attributeService.findOne(attributeId);
         final AnnotationData annoData = new AnnotationData(annotation, attribute, value);
         return save(annoData);
     }
 
     public AnnotationData create(Annotation annotation, AnnotationData parent, Long attributeId, String value) {
-        final Attribute attribute = attributeService.findByVocabAndId(annotation.getVocabulary(), attributeId);
+        final Attribute attribute = attributeService.findOne(attributeId);
         final AnnotationData annoData = new AnnotationData(annotation, parent, attribute, value);
         return save(annoData);
+    }
+
+    public AnnotationData patch(AnnotationData data, Long attributeId, String value) {
+        final Attribute attribute = (attributeId != null) ? attributeService.findOne(attributeId) : null;
+        if (attribute != null) {
+            if (data.getAnnotation().getVocabulary() != attribute.getVocabulary()) {
+                throw new VocabularyMismatchException(attribute, data.getAnnotation().getVocabulary());
+            } else {
+                data.setAttribute(attribute);
+            }
+        }
+        if (value != null) {
+            data.setValue(value);
+        }
+        return save(data);
     }
 
     public AnnotationData save(AnnotationData data) {

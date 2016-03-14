@@ -39,14 +39,14 @@ import edu.pitt.dbmi.ccd.db.entity.Attribute;
 @RepositoryRestResource(exported=false)
 public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 
-    public Optional<Attribute> findByAttributeId(Long id);
+    public Optional<Attribute> findById(Long id);
 
-    public Optional<Attribute> findByVocabAndId(Vocabulary vocabulary, Long id);
+    // public Optional<Attribute> findByVocabAndId(Vocabulary vocabulary, Long id);
 
-    @Query(value="SELECT a FROM Attribute AS a " +
-                 "WHERE a.vocab.name = ?1 " +
-                 "AND a.id = ?2")
-    public Optional<Attribute> findByVocabAndId(String vocabName, Long id);
+    // @Query(value="SELECT a FROM Attribute AS a " +
+    //              "WHERE a.vocab.name = ?1 " +
+    //              "AND a.id = ?2")
+    // public Optional<Attribute> findByVocabAndId(String vocabName, Long id);
 
 
     @Query(value="SELECT a FROM Attribute AS a " +
