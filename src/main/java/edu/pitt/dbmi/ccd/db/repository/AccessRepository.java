@@ -23,6 +23,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Access;
 
 /**
@@ -35,4 +37,6 @@ public interface AccessRepository extends JpaRepository<Access, Long> {
     public Optional<Access> findById(Long id);
 
     public Optional<Access> findByName(String name);
+
+    public Page<Access> findAll(Pageable pageable);
 }

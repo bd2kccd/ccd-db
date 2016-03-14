@@ -23,6 +23,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Access;
 import edu.pitt.dbmi.ccd.db.repository.AccessRepository;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
@@ -62,5 +64,9 @@ public class AccessService {
     public Access findByName(String name) {
         Optional<Access> access = accessRepository.findByName(name);
         return access.orElseThrow(() -> new NotFoundException("Access", "name", name));
+    }
+
+    public Page<Access> findAll(Pageable pageable) {
+        return accessRepository.findAll(pageable);
     }
 }
