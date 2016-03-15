@@ -59,8 +59,8 @@ public class Group implements Serializable {
     @NotBlank(message="Name cannot be empty")
     @Size(min=4, max=128, message="Name must be between 4 and 128 characters")
     @Name(message="Valid characters: a-z, A-Z, 0-9, dash (-), and space")
-    @NaturalId(mutable=true)
     @Column(length=128, unique=true, nullable=false)
+    @NaturalId(mutable=true)
     private String name;
 
     @NotBlank(message="Description cannot be empty")
@@ -68,6 +68,7 @@ public class Group implements Serializable {
     @Column(length=500, nullable=false)
     private String description;
 
+    // Group moderators
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupModeration",
         joinColumns = { @JoinColumn(name="groupId") },
@@ -75,6 +76,7 @@ public class Group implements Serializable {
     @OrderBy("username")
     private Set<UserAccount> mods = new HashSet<>(0);
 
+    // Group members
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupMembership",
         joinColumns = { @JoinColumn(name="groupId") },
@@ -82,6 +84,7 @@ public class Group implements Serializable {
     @OrderBy("username")
     private Set<UserAccount> members = new HashSet<>(0);
 
+    // Users requesting Group membership
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupRequests",
         joinColumns = { @JoinColumn(name="groupId") },

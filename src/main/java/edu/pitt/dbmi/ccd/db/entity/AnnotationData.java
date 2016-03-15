@@ -16,10 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
 import javax.persistence.Entity;
@@ -30,7 +30,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
-import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -48,7 +47,7 @@ public class AnnotationData implements Serializable {
 
     @NotNull
     @ManyToOne(optional=false, fetch=FetchType.LAZY)
-    @JoinColumn(name="annotationId", nullable=false)
+    @JoinColumn(nullable=false)
     private Annotation annotation;
 
     @ManyToOne(fetch=FetchType.EAGER)
@@ -63,7 +62,6 @@ public class AnnotationData implements Serializable {
     private AnnotationData parent;
 
     @OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
-    @OrderBy("attribute")
     private Set<AnnotationData> children = new HashSet<>(0);
 
     public AnnotationData() { }
@@ -87,7 +85,7 @@ public class AnnotationData implements Serializable {
         this.value = value;
     }
 
-    public AnnotationData(Annotation annotation, Attribute attribute, AnnotationData parent) {
+    public AnnotationData(Annotation annotation, AnnotationData parent, Attribute attribute) {
         this(annotation, attribute);
         this.parent = parent;
     }
@@ -143,37 +141,5 @@ public class AnnotationData implements Serializable {
 
     public boolean hasChild(AnnotationData child) {
         return children.contains(child);
-    }
-
-    public boolean hasChildren(Collection<AnnotationData> children) {
-        return this.children.containsAll(children);
-    }
-
-    public void addChild(AnnotationData child) {
-        children.add(child);
-    }
-
-    public void addChildren(AnnotationData... children) {
-        for (AnnotationData d : children) {
-            addChild(d);
-        }
-    }
-
-    public void addChildren(Collection<AnnotationData> children) {
-        this.children.addAll(children);
-    }
-
-    public void removeChild(AnnotationData child) {
-        children.remove(child);
-    }
-
-    public void removeChildren(AnnotationData... children) {
-        for (AnnotationData d : children) {
-            removeChild(d);
-        }
-    }
-
-    public void removeChildren(Collection<AnnotationData> children) {
-        this.children.removeAll(children);
     }
 }

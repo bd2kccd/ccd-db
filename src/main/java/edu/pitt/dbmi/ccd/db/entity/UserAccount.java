@@ -73,7 +73,7 @@ public class UserAccount implements Serializable {
 
     @NotNull
     @Size(max=60)
-    @Column(name = "password", length=60, nullable = false, columnDefinition="CHAR(60)")
+    @Column(name = "password", columnDefinition="CHAR(60)", length=60, nullable=false)
     private String password;
 
     @Column(name = "active", nullable = false)
@@ -83,18 +83,17 @@ public class UserAccount implements Serializable {
     private String activationKey;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "createdDate", nullable = false)//, length = 19)
+    @Column(name = "createdDate", nullable = false, length = 19)
     private Date createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "lastLoginDate")//, length = 19)
+    @Column(name = "lastLoginDate", length = 19)
     private Date lastLoginDate;
 
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name="UserAccountUserRoleRel", joinColumns = {
         @JoinColumn(name="userAccountId", nullable=false)}, inverseJoinColumns = {
         @JoinColumn(name="userRoleId", nullable=false)})
-    @OrderBy
     Set<UserRole> roles = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -127,11 +126,11 @@ public class UserAccount implements Serializable {
     private Set<Group> requesting = new HashSet<>(0);
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
-    @OrderBy
+    @OrderBy("created")
     private Set<Upload> uploads = new HashSet<>(0);
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
-    @OrderBy
+    @OrderBy("created")
     private Set<Annotation> annotations = new HashSet<>(0);
 
     public UserAccount() { }

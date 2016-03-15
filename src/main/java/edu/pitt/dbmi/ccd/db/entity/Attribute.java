@@ -20,10 +20,8 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Arrays;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -35,7 +33,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
-import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
@@ -75,25 +72,19 @@ public class Attribute implements Serializable {
     private Attribute parent;
 
     @OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
-    @OrderBy
     private Set<Attribute> children = new HashSet<>(0);
 
     public Attribute() { }
 
-    protected Attribute(String level, String name, String requirementLevel) {
+    public Attribute(Vocabulary vocab, String level, String name, String requirementLevel) {
+        this.vocab = vocab;
         this.level = level;
         this.name = name;
         this.requirementLevel = requirementLevel;        
     }
 
-    public Attribute(Vocabulary vocab, Long id, String level, String name, String requirementLevel) {
-        this(level, name, requirementLevel);
-        this.id = id;
-        this.vocab = vocab;
-    }
-
-    public Attribute(Vocabulary vocab, Long id, String level, String name, String requirementLevel, Attribute parent) {
-        this(vocab, id, level, name, requirementLevel);
+    public Attribute(Vocabulary vocab, Attribute parent, String level, String name, String requirementLevel) {
+        this(vocab, level, name, requirementLevel);
         this.parent = parent;
     }
 
@@ -151,41 +142,5 @@ public class Attribute implements Serializable {
 
     public boolean hasChild(Attribute child) {
         return children.contains(child);
-    }
-
-    public boolean hasChildren(Attribute... children) {
-        return hasChildren(Arrays.asList(children));
-    }
-
-    public boolean hasChildren(Collection<Attribute> children) {
-        return this.children.containsAll(children);
-    }
-
-    public void addChild(Attribute child) {
-        children.add(child);
-    }
-
-    public void addChildren(Attribute... children) {
-        for (Attribute c : children) {
-            addChild(c);
-        }
-    }
-
-    public void addChildren(Collection<Attribute> children) {
-        this.children.addAll(children);
-    }
-
-    public void removeChild(Attribute child) {
-        children.remove(child);
-    }
-
-    public void removeChildren(Attribute... children) {
-        for (Attribute c : children) {
-            removeChild(c);
-        }
-    }
-
-    public void removeChildren(Collection<Attribute> children) {
-        this.children.removeAll(children);
     }
 }

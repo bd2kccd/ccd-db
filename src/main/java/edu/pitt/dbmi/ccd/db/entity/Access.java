@@ -55,12 +55,8 @@ public class Access implements Serializable {
 
     public Access() { }
 
-    public Access(String name) {
-        this.name = name;
-    }
-
     public Access(String name, String description) {
-        this(name);
+        this.name = name;
         this.description = description;
     }
 

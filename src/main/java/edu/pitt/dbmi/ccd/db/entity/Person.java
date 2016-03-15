@@ -29,7 +29,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.URL;
 
 /**
  *
@@ -72,16 +71,7 @@ public class Person implements Serializable {
     @Column(length=500, nullable=true)
     private String description;
 
-    @URL
-    @Size(min=2, max=2083)
-    @Column(length=2083, nullable=true)
-    private String webPage;
-
-    @Column(nullable=true)
-    private String picturePath;
-
-    public Person() {
-    }
+    public Person() { }
 
     public Person(String firstName, String lastName, String email, String workspace) {
         this.firstName = firstName;
@@ -98,16 +88,6 @@ public class Person implements Serializable {
     public Person(String firstName, String middleName, String lastName, String email, String workspace, String description) {
         this(firstName, middleName, lastName, email, workspace);
         this.description = description;
-    }
-
-    public Person(String firstName, String middleName, String lastName, String email, String workspace, String description, String webPage) {
-        this(firstName, middleName, lastName, email, workspace, description);
-        this.webPage = webPage;
-    }
-
-    public Person(String firstName, String middleName, String lastName, String email, String workspace, String description, String webPage, String picturePath) {
-        this(firstName, middleName, lastName, email, workspace, description, webPage);
-        this.picturePath = picturePath;
     }
 
     public Long getId() {
@@ -142,6 +122,14 @@ public class Person implements Serializable {
         this.lastName = lastName;
     }
 
+    public String getFullName() {
+        if (middleName != null) {
+            return String.format("%s %s %s", firstName, middleName, lastName);
+        } else {
+            return String.format("%s %s", firstName, lastName);
+        }
+    }
+
     public String getEmail() {
         return email;
     }
@@ -164,21 +152,5 @@ public class Person implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getWebPage() {
-        return webPage;
-    }
-
-    public void setWebPage(String webPage) {
-        this.webPage = webPage;
-    }
-
-    public String getPicturePath() {
-        return picturePath;
-    }
-
-    public void setPicturePath(String picturePath) {
-        this.picturePath = picturePath;
     }
 }

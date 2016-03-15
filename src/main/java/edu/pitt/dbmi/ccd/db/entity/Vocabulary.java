@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Arrays;
 import java.util.Date;
+import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
@@ -57,11 +58,11 @@ public class Vocabulary implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
+    // @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp created;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modified;
+    // @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp modified;
 
     @Version
     private Integer version;
@@ -84,18 +85,18 @@ public class Vocabulary implements Serializable {
 
     @PrePersist
     protected void onCreate() {
-        created = new Date();
+        created = new Timestamp((new Date()).getTime());
     }
 
     @PreUpdate
     protected void onUpdate() {
-        modified = new Date();
+        modified = new Timestamp((new Date()).getTime());
     }
 
     public Vocabulary() { }
 
     public Vocabulary(String name, String description) {
-        this.name = name;
+        this.name = formatName(name);
         this.description = description;
     }
 
@@ -107,12 +108,24 @@ public class Vocabulary implements Serializable {
         this.id = id;
     }
 
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public Timestamp getModified() {
+        return modified;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = formatName(name);
     }
 
     public String getDescription() {
@@ -165,5 +178,16 @@ public class Vocabulary implements Serializable {
 
     public void removeAttributes(Collection<Attribute> attributes) {
         this.attributes.removeAll(attributes);
+    }
+
+    /**
+     * Format name for database
+     * Replace multiple spaces with a single underscore
+     * Replace multiple underscores with a single underscore
+     * @param  name group name
+     * @return      formatted group name
+     */
+    private String formatName(String name) {
+        return name.trim().replaceAll("\\s+", "_").replaceAll("_+", "_");
     }
 }

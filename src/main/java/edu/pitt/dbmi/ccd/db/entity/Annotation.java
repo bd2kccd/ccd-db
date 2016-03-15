@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
@@ -24,13 +25,13 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Arrays;
 import java.util.Date;
+import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
-import javax.persistence.OneToOne;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.ManyToMany;
@@ -59,11 +60,11 @@ public class Annotation implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
+    // @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp created;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modified;
+    // @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp modified;
 
     @Version
     private Integer version;
@@ -86,10 +87,12 @@ public class Annotation implements Serializable {
     @JoinColumn(name="groupId", nullable=true)
     private Group group;
 
+    @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(nullable=false)
     private Vocabulary vocab;
 
+    @NotNull
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="uploadId", nullable=false)
     private Upload target;
@@ -98,26 +101,17 @@ public class Annotation implements Serializable {
     @JoinColumn(nullable=true)
     private Annotation parent;
 
+    @OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
+    private Set<Annotation> children = new HashSet<>(0);
+
     @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name="AnnotationUploadReferences", joinColumns = {
         @JoinColumn(name="annotationId", nullable=false)}, inverseJoinColumns = {
         @JoinColumn(name="uploadId", nullable=false)})
-    @OrderBy
     Set<Upload> references = new HashSet<>(0);
 
     @OneToMany(mappedBy="annotation", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    @OrderBy("attribute")
     private Set<AnnotationData> data = new HashSet<>(0);
-
-    @PrePersist
-    protected void onCreate() {
-        created = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        modified = new Date();
-    }
 
     public Annotation() { }
 
@@ -129,6 +123,16 @@ public class Annotation implements Serializable {
         this.group = group;
         this.vocab = vocab;
     }
+    
+    @PrePersist
+    private void onCreate() {
+        created = new Timestamp((new Date()).getTime());
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        modified = new Timestamp((new Date()).getTime());
+    }
 
     public Long getId() {
         return id;
@@ -138,11 +142,11 @@ public class Annotation implements Serializable {
         this.id = id;
     }
 
-    public Date getCreated() {
+    public Timestamp getCreated() {
         return created;
     }
 
-    public Date getModified() {
+    public Timestamp getModified() {
         return modified;
     }
 
@@ -204,6 +208,10 @@ public class Annotation implements Serializable {
 
     public Annotation getParent() {
         return parent;
+    }
+
+    public Set<Annotation> getChildren() {
+        return children;
     }
 
     public Set<Upload> getReferences() {

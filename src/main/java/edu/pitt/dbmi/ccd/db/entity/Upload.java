@@ -16,12 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Date;
+import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
@@ -37,7 +39,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
@@ -55,11 +56,11 @@ public class Upload implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
+    // @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp created;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modified;
+    // @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp modified;
 
     @Version
     private Integer version;
@@ -86,16 +87,6 @@ public class Upload implements Serializable {
     @OneToMany(mappedBy="target", fetch=FetchType.LAZY)
     private Set<Annotation> annotations = new HashSet<>(0);
 
-    @PrePersist
-    protected void onCreate() {
-        created = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        modified = new Date();
-    }
-
     public Upload() { }
 
     public Upload(UserAccount user, String title, DataFile file) {
@@ -112,6 +103,16 @@ public class Upload implements Serializable {
         this.address = address;
     }
 
+    @PrePersist
+    protected void onCreate() {
+        created = new Timestamp((new Date()).getTime());
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        modified = new Timestamp((new Date()).getTime());
+    }
+
     public Long getId() {
         return id;
     }
@@ -124,11 +125,11 @@ public class Upload implements Serializable {
         return version;
     }
 
-    public Date getCreated() {
+    public Timestamp getCreated() {
         return created;
     }
 
-    public Date getModified() {
+    public Timestamp getModified() {
         return modified;
     }
 
