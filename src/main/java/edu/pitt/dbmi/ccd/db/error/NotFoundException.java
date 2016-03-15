@@ -92,15 +92,16 @@ public final class NotFoundException extends RuntimeException {
      */
     private String buildMessage() {
         StringBuilder builder = new StringBuilder(String.format(NOT_FOUND, entity));
-        int len = (isNullOrEmpty(fields) || isNullOrEmpty(values)) ? 0
-                : Math.min(fields.length, values.length);
+        final int len = (isNullOrEmpty(fields) || isNullOrEmpty(values))
+                      ? 0
+                      : Math.min(fields.length, values.length);
         if (len > 0) {
             builder.append(WITH).append(fields[0]).append(SEP).append(values[0]);
             if (len > 1) {
                 IntStream.range(1, len)
                          .forEach(i -> {
-                            String f = fields[i];
-                            Object v = values[i];
+                            final String f = fields[i];
+                            final Object v = values[i];
                             if (!isNullOrEmpty(f) && !isNullOrEmpty(v)) {
                                 builder.append(AND).append(f).append(SEP).append(v);
                             }

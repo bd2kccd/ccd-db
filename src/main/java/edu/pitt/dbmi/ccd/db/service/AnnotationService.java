@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.service;
 
 import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.filterSpec;
@@ -84,11 +85,13 @@ public class AnnotationService {
             String groupName,
             String vocababularyName) {
         final Upload upload = uploadService.findOne(targetId);
-        final Annotation anno = (parentId != null) ? findById(user, parentId)
-                                                   : null;
+        final Annotation anno = (parentId != null)
+                              ? findById(user, parentId)
+                              : null;
         final Access access = accessService.findByName(accessName);
-        final Group group = (groupName != null) ? groupService.findByName(groupName)
-                                                : null;
+        final Group group = (groupName != null)
+                          ? groupService.findByName(groupName)
+                          : null;
         final Vocabulary vocab = vocabularyService.findByName(vocababularyName);
         final Annotation annotation = new Annotation(user, upload, anno, access, group, vocab);
         return save(annotation);
@@ -96,7 +99,9 @@ public class AnnotationService {
 
     public Annotation patch(Annotation annotation, String accessName, String groupName) {
         final Access access = accessService.findByName(accessName);
-        final Group group = (groupName != null) ? groupService.findByName(groupName) : null;
+        final Group group = (groupName != null)
+                          ? groupService.findByName(groupName)
+                          : null;
         if (annotation.getAccess().getName().equalsIgnoreCase(access.getName())) {
             return annotation;
         } else if (annotation.getAccess().getName().equalsIgnoreCase("PRIVATE") && access.getName().equalsIgnoreCase("GROUP")) {
@@ -119,10 +124,6 @@ public class AnnotationService {
         }
     }
 
-    // public Annotation updateData(AnnotationData data) {
-    //   return data;
-    // }
-
     public Annotation save(Annotation annotation) {
         return annotationRepository.save(annotation);
     }
@@ -136,22 +137,6 @@ public class AnnotationService {
         return annotation.orElseThrow(() -> new NotFoundException("Annotation", "id", id));
     }
 
-    public Page<Annotation> findByUser(UserAccount requester, String username, Pageable pageable) {
-        return annotationRepository.findByUser(requester, username, pageable);
-    }
-
-    public Page<Annotation> findByGroup(UserAccount requester, String groupName, Pageable pageable) {
-        return annotationRepository.findByGroup(requester, groupName, pageable);
-    }
-
-    public Page<Annotation> findByUpload(UserAccount requester, Long uploadId, Pageable pageable) {
-        return annotationRepository.findByUpload(requester, uploadId, pageable);
-    }
-
-    public Page<Annotation> findByVocab(UserAccount requester, String username, Pageable pageable) {
-        return annotationRepository.findByVocab(requester, username, pageable);
-    }
-
     public Page<Annotation> findByParent(UserAccount requester, Long id, Pageable pageable) {
       return annotationRepository.findByParent(requester, id, pageable);
     }
@@ -160,32 +145,34 @@ public class AnnotationService {
         return annotationRepository.findAllPublic(pageable);
     }
 
-    public Page<Annotation> filter(UserAccount requester,
-                                   String username,
-                                   String group,
-                                   Long upload,
-                                   String vocab,
-                                   String attributeLevel,
-                                   String attributeName,
-                                   String attributeRequirementLevel,
-                                   Boolean showRedacted,
-                                   Pageable pageable) {
+    public Page<Annotation> filter(
+            UserAccount requester,
+            String username,
+            String group,
+            Long upload,
+            String vocab,
+            String attributeLevel,
+            String attributeName,
+            String attributeRequirementLevel,
+            Boolean showRedacted,
+            Pageable pageable) {
         Specification<Annotation> spec = filterSpec(requester, username, group, upload, vocab, attributeLevel, attributeName, attributeRequirementLevel, showRedacted);
         return annotationRepository.findAll(spec, pageable);
     }
 
-    public Page<Annotation> search(UserAccount requester,
-                                   String username,
-                                   String group,
-                                   Long upload,
-                                   String vocab,
-                                   String attributeLevel,
-                                   String attributeName,
-                                   String attributeRequirementLevel,
-                                   Boolean showRedacted,
-                                   Set<String> matches,
-                                   Set<String> nots,
-                                   Pageable pageable) {
+    public Page<Annotation> search(
+            UserAccount requester,
+            String username,
+            String group,
+            Long upload,
+            String vocab,
+            String attributeLevel,
+            String attributeName,
+            String attributeRequirementLevel,
+            Boolean showRedacted,
+            Set<String> matches,
+            Set<String> nots,
+            Pageable pageable) {
         Specification<Annotation> spec = searchSpec(requester, username, group, upload, vocab, attributeLevel, attributeName, attributeRequirementLevel, showRedacted, matches, nots);
         return annotationRepository.findAll(spec, pageable);
     }

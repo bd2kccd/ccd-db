@@ -33,7 +33,8 @@ public final class AccessUpdateException extends RuntimeException {
 
     public AccessUpdateException() {
         super();
-        this.message = String.format(LOWER_ACCESS_MESSAGE, "", "");
+        // backspace character to remove format literals
+        this.message = String.format(LOWER_ACCESS_MESSAGE, "\b", "\b");
     }
 
     /**
@@ -48,12 +49,12 @@ public final class AccessUpdateException extends RuntimeException {
      * Constructor
      * @param  groupMissing return exception for missing group
      */
-    public AccessUpdateException(Boolean groupMissing) {
+    public AccessUpdateException(boolean groupMissing) {
         super();
         if (groupMissing) {
             this.message = NO_GROUP_MESSAGE;
         } else {
-            this.message = LOWER_ACCESS_MESSAGE;
+            this.message = String.format(LOWER_ACCESS_MESSAGE, "\b", "\b");
         }
     }
 

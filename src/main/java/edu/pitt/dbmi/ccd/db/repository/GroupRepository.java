@@ -51,10 +51,10 @@ public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecific
     public Optional<Group> findByName(String name);
 
     /**
-     * Find all uploads by spec
-     * @param  spec      upload specification
+     * Find all groups by spec
+     * @param  spec      group specification
      * @param  pageable  page request
-     * @return           page of uploads matching parameters
+     * @return           page of groups matching parameters
      */
     public Page<Group> findAll(Specification<Group> spec, Pageable  pageable);
 

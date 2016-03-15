@@ -26,6 +26,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 /**
  * Name constraint
@@ -33,14 +35,31 @@ import javax.validation.Payload;
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Documented
-@Constraint(validatedBy=NameConstraintValidator.class)
+@Constraint(validatedBy=edu.pitt.dbmi.ccd.db.validation.Name.NameConstraintValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Name {
 
-    String message() default "{edu.pitt.dbmi.ccd.db.validation.Name.message}";
+    String message() default "{edu.pitt.dbmi.ccd.db.validation.Name}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    public class NameConstraintValidator implements ConstraintValidator<Name, String> {
+    
+        private static final String NAME_PATTERN = "[a-zA-Z][a-zA-Z0-9\\-_]+[a-zA-Z0-9]";
+    
+        @Override
+        public void initialize(Name String) { }
+    
+        @Override
+        public boolean isValid(String name, ConstraintValidatorContext ctx) {
+            if (name == null) {
+                return false;
+            } else {
+                return name.matches(NAME_PATTERN);
+            }
+        }
+    }
 }
