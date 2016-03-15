@@ -78,4 +78,8 @@ public class UserAccountService {
         return userAccountRepository.save(userAccount);
     }
 
+    public void delete(UserAccount account) {
+        userAccountRepository.delete(account);
+    }
+
 }

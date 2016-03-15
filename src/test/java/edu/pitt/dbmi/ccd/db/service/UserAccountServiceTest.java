@@ -18,9 +18,12 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import static org.junit.Assert.*;
+
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -51,7 +54,44 @@ public class UserAccountServiceTest {
     @Autowired
     private UserAccountService userAccountService;
 
-    public UserAccountServiceTest() {
+    public UserAccountServiceTest() { }
+
+    private static final String firstName = "Isaac";
+    private static final String lastName = "Newton";
+    private static final String email = "test@example.com";
+    private static final String workspace = "~/.test_workspace";
+    private static final String username = "test";
+    private static final String password = "test";
+    private static final boolean active = true;
+    private static final Date created = new Date();
+
+    private static final String none = "No Such Username";
+
+    @Test
+    public void testCrud() {
+        final Person person = new Person(firstName, lastName, email, workspace);
+        UserAccount user = new UserAccount(person, username, password, active, created);
+
+        // create
+        user = userAccountService.saveUserAccount(user);
+        assertNotNull(user.getId());
+
+        // findByUsername
+        try {
+            final UserAccount found = userAccountService.findByUsername(username);
+            assertEquals(user, found);
+        } catch (NotFoundException ex) {
+            userAccountService.delete(user);
+            fail(ex.getMessage());
+        }
+
+        // delete
+        userAccountService.delete(user);
+    }
+
+    @Test(expected=NotFoundException.class)
+    public void testNotFound() {
+        userAccountService.findByUsername(none);
     }
 
     @Ignore

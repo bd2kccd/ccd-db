@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.service;
 
 import java.util.List;
@@ -68,5 +69,9 @@ public class AccessService {
 
     public Page<Access> findAll(Pageable pageable) {
         return accessRepository.findAll(pageable);
+    }
+
+    protected void delete(Access access) {
+        accessRepository.delete(access);
     }
 }
