@@ -114,7 +114,7 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)})
     private Set<SecurityAnswer> securityAnswers = new HashSet<>(0);
 
-    @ManyToMany(mappedBy="members", fetch=FetchType.EAGER)
+    @ManyToMany(mappedBy="members", fetch=FetchType.LAZY)
     @OrderBy("name")
     private Set<Group> groups = new HashSet<>(0);
 
