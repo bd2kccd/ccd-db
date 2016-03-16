@@ -27,9 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.runner.RunWith;
 import org.junit.Test;
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Access;
-import edu.pitt.dbmi.ccd.db.repository.AccessRepository;
-import edu.pitt.dbmi.ccd.db.service.AccessService;
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
+import edu.pitt.dbmi.ccd.db.repository.VocabularyRepository;
+import edu.pitt.dbmi.ccd.db.service.VocabularyService;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
@@ -37,10 +37,10 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
-public class AccessServiceTest {
+public class VocabularyServiceTest {
 
     @Autowired(required=true)
-    private AccessService accessService;
+    private VocabularyService vocabService;
 
     private static final String name = "TEST";
     private static final String description = "Test description";
@@ -49,24 +49,24 @@ public class AccessServiceTest {
     @Test
     public void testCrud() {
         // create
-        final Access access = accessService.save(new Access(name, description));
-        assertNotNull(access.getId());
+        final Vocabulary vocab = vocabService.save(new Vocabulary(name, description));
+        assertNotNull(vocab.getId());
 
         // findByName
         try {
-            final Access found = accessService.findByName(name);
-            assertEquals(access.getId(), found.getId());
+            final Vocabulary found = vocabService.findByName(name);
+            assertEquals(vocab.getId(), found.getId());
         } catch (NotFoundException ex) {
-            accessService.delete(access);
+            vocabService.delete(vocab);
             fail(ex.getMessage());
         }
 
         // delete
-        accessService.delete(access);        
+        vocabService.delete(vocab);        
     }
 
     @Test(expected=NotFoundException.class)
     public void testNotFound() {
-        accessService.findByName(none);
+        vocabService.findByName(none);
     }
 }

@@ -69,17 +69,17 @@ public class UserAccountServiceTest {
 
     @Test
     public void testCrud() {
+        // depencencies
         final Person person = new Person(firstName, lastName, email, workspace);
-        UserAccount user = new UserAccount(person, username, password, active, created);
 
         // create
-        user = userAccountService.saveUserAccount(user);
+        final UserAccount user = userAccountService.create(new UserAccount(person, username, password, active, created));
         assertNotNull(user.getId());
 
         // findByUsername
         try {
             final UserAccount found = userAccountService.findByUsername(username);
-            assertEquals(user, found);
+            assertEquals(user.getId(), found.getId());
         } catch (NotFoundException ex) {
             userAccountService.delete(user);
             fail(ex.getMessage());

@@ -24,12 +24,13 @@ import static org.junit.Assert.*;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.junit.runner.RunWith;
 import org.junit.Test;
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Access;
-import edu.pitt.dbmi.ccd.db.repository.AccessRepository;
-import edu.pitt.dbmi.ccd.db.service.AccessService;
+import edu.pitt.dbmi.ccd.db.entity.Group;
+import edu.pitt.dbmi.ccd.db.repository.GroupRepository;
+import edu.pitt.dbmi.ccd.db.service.GroupService;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
@@ -37,36 +38,44 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
-public class AccessServiceTest {
+public class GroupServiceTest {
 
     @Autowired(required=true)
-    private AccessService accessService;
+    private GroupService groupService;
 
-    private static final String name = "TEST";
+    private static final String name = "TEST_GROUP";
     private static final String description = "Test description";
     private static final String none = "Does Not Exist";
 
     @Test
     public void testCrud() {
         // create
-        final Access access = accessService.save(new Access(name, description));
-        assertNotNull(access.getId());
+        final Group group = groupService.create(new Group(name, description));
+        assertNotNull(group.getId());
 
         // findByName
         try {
-            final Access found = accessService.findByName(name);
-            assertEquals(access.getId(), found.getId());
+            final Group found = groupService.findByName(name);
+            assertEquals(group.getId(), found.getId());
         } catch (NotFoundException ex) {
-            accessService.delete(access);
+            groupService.delete(group);
             fail(ex.getMessage());
         }
 
         // delete
-        accessService.delete(access);        
+        groupService.delete(group);
     }
 
     @Test(expected=NotFoundException.class)
     public void testNotFound() {
-        accessService.findByName(none);
+        groupService.findByName(none);
+    }
+
+    @Test(expected=DuplicateKeyException.class)
+    public void testDuplicateName() {
+        final Group group = new Group(name, description);
+        groupService.create(group);     // should create group
+        groupService.create(group);     // should throw DuplicateKeyException
+        groupService.delete(group);        
     }
 }

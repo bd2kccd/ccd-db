@@ -28,21 +28,32 @@ import java.util.stream.IntStream;
 public final class NotFoundException extends RuntimeException {
 
     private static final String NOT_FOUND = "%s not found";
-    private static final String WITH = " with ";
-    private static final String AND = " and ";
-    private static final String SEP = ": ";
+    private static final String WITH =      " with ";
+    private static final String AND =       " and ";
+    private static final String SEP =       ": "; 
 
-    private final String entity;
+    private final String   entity;
     private final String[] fields;
     private final Object[] values;
-    private final String message;
+    private final String   message;
+
+    /**
+     * Constructor
+     * @param  entity  name of entity not found
+     */
+    public NotFoundException(String entity) {
+        super();
+        this.entity = entity;
+        this.fields = null;
+        this.values = null;
+        this.message = buildMessage();
+    }
 
     /**
      * Constructor
      * @param  entity  name of entity not found
      * @param  fields  fields of entity used
      * @param  values  values looked for
-     * @return         NotFoundException
      */
     public NotFoundException(String entity, String[] fields, Object[] values) {
         super();
@@ -57,7 +68,6 @@ public final class NotFoundException extends RuntimeException {
      * @param  entity  name of entity not found
      * @param  field   field of entity used
      * @param  value   value looked for
-     * @return         NotFoundException
      */
     public NotFoundException(String entity, String field, Object value) {
         this(entity, new String[]{field}, new Object[]{value});
@@ -91,7 +101,7 @@ public final class NotFoundException extends RuntimeException {
      * Build error message
      */
     private String buildMessage() {
-        StringBuilder builder = new StringBuilder(String.format(NOT_FOUND, entity));
+        final StringBuilder builder = new StringBuilder(String.format(NOT_FOUND, entity));
         final int len = (isNullOrEmpty(fields) || isNullOrEmpty(values))
                       ? 0
                       : Math.min(fields.length, values.length);
@@ -99,13 +109,13 @@ public final class NotFoundException extends RuntimeException {
             builder.append(WITH).append(fields[0]).append(SEP).append(values[0]);
             if (len > 1) {
                 IntStream.range(1, len)
-                         .forEach(i -> {
-                            final String f = fields[i];
-                            final Object v = values[i];
-                            if (!isNullOrEmpty(f) && !isNullOrEmpty(v)) {
-                                builder.append(AND).append(f).append(SEP).append(v);
-                            }
-                         });
+                    .forEach(i -> {
+                       final String f = fields[i];
+                       final Object v = values[i];
+                       if (!isNullOrEmpty(f) && !isNullOrEmpty(v)) {
+                           builder.append(AND).append(f).append(SEP).append(v);
+                       }
+                    });
             }
         }
         return builder.toString();

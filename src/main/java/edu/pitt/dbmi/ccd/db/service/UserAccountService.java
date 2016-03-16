@@ -24,32 +24,63 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
+// logging
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * Jul 24, 2015 1:29:56 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Service
 @Transactional
 public class UserAccountService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserAccountService.class);
+
     private final UserAccountRepository userAccountRepository;
 
     private final PersonRepository personRepository;
+    
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    // Number of rounds when performing BCrypt on passwords (Default is 10)
+    private static final int BCRYPT_ROUNDS = 10;
 
     @Autowired(required = true)
-    public UserAccountService(
-            UserAccountRepository userAccountRepository,
-            PersonRepository personRepository) {
+    public UserAccountService(UserAccountRepository userAccountRepository, PersonRepository personRepository) {
         this.userAccountRepository = userAccountRepository;
         this.personRepository = personRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder(BCRYPT_ROUNDS);
+    }
+
+    public UserAccount create(UserAccount account) {
+        // encode password
+        final String encodedPassword = passwordEncoder.encode(account.getPassword());
+        account.setPassword(encodedPassword);
+        return saveUserAccount(account);
+    }
+
+    public boolean updatePassword(UserAccount principal, String currPass, String newPass) {
+        if (passwordEncoder.matches(currPass, principal.getPassword())) {
+            final String encodedPassword = passwordEncoder.encode(newPass);
+            principal.setPassword(encodedPassword);
+            save(principal);
+            return true;
+        } else {
+            LOGGER.info("Failed password change by user: " + principal.getId());
+            return false;
+        }
     }
 
     public UserAccount findOne(Long id) {
@@ -71,6 +102,10 @@ public class UserAccountService {
         return userAccountRepository.findAll(pageable);
     }
 
+    public UserAccount save(UserAccount account) {
+        return userAccountRepository.save(account);
+    }
+
     public UserAccount saveUserAccount(UserAccount userAccount) {
         Person person = personRepository.save(userAccount.getPerson());
         userAccount.setPerson(person);
@@ -81,5 +116,4 @@ public class UserAccountService {
     public void delete(UserAccount account) {
         userAccountRepository.delete(account);
     }
-
 }

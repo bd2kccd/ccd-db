@@ -146,7 +146,7 @@ public class GroupService {
         return groupRepository.findAll(pageable);
     }
 
-    private void flush() {
-        groupRepository.flush();
+    protected void delete(Group group) {
+        groupRepository.delete(group);
     }
 }

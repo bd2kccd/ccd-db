@@ -121,4 +121,8 @@ public class VocabularyService {
     public Page<Vocabulary> findAll(Pageable pageable) {
         return vocabRepository.findAll(pageable);
     }
+
+    protected void delete(Vocabulary vocab) {
+        vocabRepository.delete(vocab);
+    }
 }
