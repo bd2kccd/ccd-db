@@ -60,10 +60,8 @@ public class Annotation implements Serializable {
     @GeneratedValue
     private Long id;
 
-    // @Temporal(TemporalType.TIMESTAMP)
     private Timestamp created;
 
-    // @Temporal(TemporalType.TIMESTAMP)
     private Timestamp modified;
 
     @Version
@@ -74,7 +72,7 @@ public class Annotation implements Serializable {
     private Boolean redacted = false;
 
     @NotNull
-    @ManyToOne(optional=false, fetch=FetchType.LAZY)
+    @ManyToOne(optional=false, fetch=FetchType.EAGER)
     @JoinColumn(name="userAccountId", nullable=false)
     private UserAccount user;
 
@@ -93,7 +91,7 @@ public class Annotation implements Serializable {
     private Vocabulary vocab;
 
     @NotNull
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="uploadId", nullable=false)
     private Upload target;
 
@@ -113,6 +111,16 @@ public class Annotation implements Serializable {
     @OneToMany(mappedBy="annotation", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     private Set<AnnotationData> data = new HashSet<>(0);
 
+    @PrePersist
+    private void onCreate() {
+        created = new Timestamp((new Date()).getTime());
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        modified = new Timestamp((new Date()).getTime());
+    }
+
     public Annotation() { }
 
     public Annotation(UserAccount user, Upload target, Annotation parent, Access accessControl, Group group, Vocabulary vocab) {
@@ -124,16 +132,6 @@ public class Annotation implements Serializable {
         this.vocab = vocab;
     }
     
-    @PrePersist
-    private void onCreate() {
-        created = new Timestamp((new Date()).getTime());
-    }
-
-    @PreUpdate
-    private void onUpdate() {
-        modified = new Timestamp((new Date()).getTime());
-    }
-
     public Long getId() {
         return id;
     }
