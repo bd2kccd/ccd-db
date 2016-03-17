@@ -34,6 +34,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.dao.DuplicateKeyException;
 import edu.pitt.dbmi.ccd.db.entity.Group;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.GroupRepository;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
@@ -136,6 +137,18 @@ public class GroupService {
                             .distinct()
                             .map(n -> findByName(n))
                             .collect(Collectors.toList());
+    }
+
+    public Page<Group> findByMember(UserAccount user, Pageable pageable) {
+        return groupRepository.findByMember(user.getUsername(), pageable);
+    }
+
+    public Page<Group> findByModerator(UserAccount user, Pageable pageable) {
+        return groupRepository.findByModerator(user.getUsername(), pageable);
+    }
+
+    public Page<Group> findByRequester(UserAccount user, Pageable pageable) {
+        return groupRepository.findByRequester(user.getUsername(), pageable);
     }
 
     public Page<Group> search(Set<String> matches, Set<String> nots, Pageable pageable) {

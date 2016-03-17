@@ -24,10 +24,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Group;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -49,6 +52,21 @@ public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecific
      * @return      group
      */
     public Optional<Group> findByName(String name);
+
+    @Query(value="SELECT g FROM Group AS g " +
+                 "LEFT JOIN g.members AS m " +
+                 "WHERE m.username = ?1")
+    public Page<Group> findByMember(String username, Pageable pageable);
+
+    @Query(value="SELECT g FROM Group AS g " +
+                 "LEFT JOIN g.mods AS m " +
+                 "WHERE m.username = ?1")
+    public Page<Group> findByModerator(String username, Pageable pageable);    
+
+    @Query(value="SELECT g FROM Group AS g " +
+                 "LEFT JOIN g.requesters AS r " +
+                 "WHERE r.username = ?1")
+    public Page<Group> findByRequester(String username, Pageable pageable);    
 
     /**
      * Find all groups by spec

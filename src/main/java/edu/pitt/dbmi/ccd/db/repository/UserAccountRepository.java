@@ -45,6 +45,21 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     public Optional<UserAccount> findByUsernameAndActivationKey(String username, String activationKey);
 
+    @Query(value="SELECT ua FROM UserAccount ua " +
+                 "LEFT JOIN ua.groups AS m " +
+                 "WHERE m.name = ?1")
+    public Page<UserAccount> findByGroupMembership(String group, Pageable pageable);
+
+    @Query(value="SELECT ua FROM UserAccount ua " +
+                 "LEFT JOIN ua.moderates AS m " +
+                 "WHERE m.name = ?1")
+    public Page<UserAccount> findByGroupModeration(String group, Pageable pageable);
+
+    @Query(value="SELECT ua FROM UserAccount ua " +
+                 "LEFT JOIN ua.requesting AS r " +
+                 "WHERE r.name = ?1")
+    public Page<UserAccount> findByGroupRequests(String group, Pageable pageable);
+
     @Query("SELECT ua FROM UserAccount ua WHERE ua.person.email = ?1")
     public Optional<UserAccount> findByEmail(String email);
 

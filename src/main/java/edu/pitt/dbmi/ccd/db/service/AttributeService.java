@@ -61,8 +61,8 @@ public class AttributeService {
                                                                  new Object[]{vocabName, level, name}));
     }
 
-    public Page<Attribute> findByVocab(String vocabName, Pageable pageable) {
-        return attributeRepository.findByVocab(vocabName, pageable);
+    public Page<Attribute> findByVocab(Vocabulary vocab, Pageable pageable) {
+        return attributeRepository.findByVocab(vocab.getName(), pageable);
     }
 
     public Page<Attribute> findByVocabAndParent(String vocabName, Long parent, Pageable pageable) {
@@ -86,8 +86,12 @@ public class AttributeService {
      * @param  pageable         page request
      * @return                  matching attributes
      */
-    public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevel(String vocabName, String level, String name, String requirementLevel, Pageable pageable) {
-        return attributeRepository.findByVocabAndLevelAndNameAndRequirementLevel(vocabName, level, name, requirementLevel, pageable);
+    public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevel(Vocabulary vocab, String level, String name, String requirementLevel, Pageable pageable) {
+        return attributeRepository.findByVocabAndLevelAndNameAndRequirementLevel(vocab.getName(), level, name, requirementLevel, pageable);
+    }
+
+    public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevelAndParentIsNull(Vocabulary vocab, String level, String name, String requirementLevel, Pageable pageable) {
+        return attributeRepository.findByVocabAndLevelAndNameAndRequirementLevelAndParentIsNull(vocab.getName(), level, name, requirementLevel, pageable);
     }
 
     /**

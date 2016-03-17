@@ -114,11 +114,11 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)})
     private Set<SecurityAnswer> securityAnswers = new HashSet<>(0);
 
-    @ManyToMany(mappedBy="members", fetch=FetchType.LAZY)
+    @ManyToMany(mappedBy="members", fetch=FetchType.EAGER)
     @OrderBy("name")
     private Set<Group> groups = new HashSet<>(0);
 
-    @ManyToMany(mappedBy="mods", fetch=FetchType.LAZY)
+    @ManyToMany(mappedBy="mods", fetch=FetchType.EAGER)
     @OrderBy("name")
     private Set<Group> moderates = new HashSet<>(0);
 
