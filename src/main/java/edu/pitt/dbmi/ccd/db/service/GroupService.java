@@ -122,7 +122,7 @@ public class GroupService {
         return saveAndFlush(group);
     }
 
-    public Group findById(Long id) {
+    public Group findOne(Long id) {
         Optional<Group> group = groupRepository.findById(id);
         return group.orElseThrow(() -> new NotFoundException("Group", "id", id));
     }
@@ -135,7 +135,7 @@ public class GroupService {
     public List<Group> findByNames(Iterable<String> names) {
         return StreamSupport.stream(names.spliterator(), false)
                             .distinct()
-                            .map(n -> findByName(n))
+	                     .map(n -> groupService.findByName(n))
                             .collect(Collectors.toList());
     }
 
@@ -160,6 +160,11 @@ public class GroupService {
     }
 
     protected void delete(Group group) {
+        groupRepository.delete(group);
+    }
+
+    protected void delete(Long id) {
+        final Group group = findOne(id);
         groupRepository.delete(group);
     }
 }
