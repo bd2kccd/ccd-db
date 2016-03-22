@@ -31,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.junit.runner.RunWith;
 import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.repository.GroupRepository;
@@ -53,63 +55,64 @@ public class GroupServiceTest {
     private static final String descriptionUpdated = "Test description updated";
     private static final String none = "Does Not Exist";
     private static final Set<String> searchTerms = new HashSet<>(0);
+    private Group group;
+
+    @Before
+    public void setup() {
+        group = groupService.create(new Group(name, description));
+        // assert that group was created
+        assertNotNull(group.getId());
+    }
+
+    @After
+    public void cleanup() {
+        final Long id = group.getId();
+        groupService.delete(group);
+        // assert that group was deleted
+        try {
+            group = groupService.findOne(id);
+            fail("Group not deleted");
+        } catch (NotFoundException ex) { }
+    }
 
     @Test
-    public void testCrud() {
-        // create
-        final Group group = groupService.create(new Group(name, description));
-        assertNotNull(group.getId());
-        System.out.println("*****\nCREATED\n"+group.getName()+"\n*****");
-
-        // findByName
+    public void findByNameTest() {
         try {
             final Group found = groupService.findByName(name);
             assertEquals(group.getId(), found.getId());
         } catch (NotFoundException ex) {
-            groupService.delete(group);
             fail(ex.getMessage());
         }
-
-        // update
-        final Group updated = groupService.update(group, new Group(nameUpdated, description));
-        assertEquals(nameUpdated, updated.getName());
-        assertEquals(group.getId(), updated.getId());
-
-        System.out.println("*****\nUPDATED\n"+updated.getName()+"\n*****");
-
-        // patch
-        final Group patched = groupService.patch(group, null, descriptionUpdated);
-        assertEquals(descriptionUpdated, group.getDescription());
-        System.out.println("*****\nPATCHED\n"+patched.getName()+"\n*****");
-
-        // delete
-        groupService.delete(group.getId());
     }
 
     @Test
-    public void testSearch() {
-        final Group group = groupService.create(new Group(name, description));
-        searchTerms.addAll(Arrays.asList(name.split("_")));
+    public void updateTest() {
+        final Group updated = groupService.update(group, nameUpdated, descriptionUpdated);
+        assertNotEquals(name, updated.getName());
+        assertEquals(group.getId(), updated.getId());
+    }
+
+    @Test
+    public void searchTest() {
+        searchTerms.addAll(Arrays.asList("TEST"));
         final Iterable<Group> page = groupService.search(searchTerms, null, null);
         final Iterator<Group> iter = page.iterator();
-        // assertTrue(iter.hasNext());
-        // assertEquals(iter.next().getId(), group.getId());
-        System.out.println("*****\n" + iter.next().getName() + "\n*****");
-        groupService.delete(group);
+
+        // assert that a single, correct, group was found
+        assertTrue(iter.hasNext());
+        assertTrue(iter.next().getName().contains("TEST"));
+        assertFalse(iter.hasNext());
     }
 
     /* Exception tests */
 
     @Test(expected=NotFoundException.class)
-    public void testNotFound() {
+    public void notFoundTest() {
         groupService.findByName(none);
     }
 
     @Test(expected=DuplicateKeyException.class)
-    public void testDuplicateName() {
-        final Group group = new Group(name, description);
-        groupService.create(group);     // should create group
-        groupService.create(group);     // should throw DuplicateKeyException
-        groupService.delete(group);        
+    public void duplicateTest() {
+        groupService.create(group);
     }
 }

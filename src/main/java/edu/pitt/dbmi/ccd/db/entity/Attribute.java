@@ -36,6 +36,7 @@ import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
+import edu.pitt.dbmi.ccd.db.validation.Name;
 
 /**
  * @author Mark Silvis  (marksilvis@pitt.edu)
@@ -60,8 +61,9 @@ public class Attribute implements Serializable {
     @Column(unique=false, nullable=true)
     private String level;
 
-    @NotBlank
+    @NotBlank(message="Name is required")
     @Column(unique=false, nullable=false)
+    @Name
     private String name;
 
     @Column(unique=false, nullable=true)

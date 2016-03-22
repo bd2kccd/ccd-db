@@ -88,7 +88,9 @@ public class AnnotationService {
         final Annotation anno = (parentId != null)
                               ? findById(user, parentId)
                               : null;
-        final Access access = accessService.findByName(accessName);
+        final Access access = (groupName != null)
+                            ? accessService.findByName(accessName)
+                            : accessService.findByName("GROUP");
         final Group group = (groupName != null)
                           ? groupService.findByName(groupName)
                           : null;
@@ -97,13 +99,19 @@ public class AnnotationService {
         return save(annotation);
     }
 
-    public Annotation patch(Annotation annotation, String accessName, String groupName) {
+    public Annotation update(Annotation annotation, String accessName, String groupName) {
         final Access access = accessService.findByName(accessName);
         final Group group = (groupName != null)
                           ? groupService.findByName(groupName)
                           : null;
-        if (annotation.getAccess().getName().equalsIgnoreCase(access.getName())) {
+        // no changes, don't update
+        if (annotation.getAccess().getName().equalsIgnoreCase(access.getName()) && annotation.getGroup().getName().equalsIgnoreCase(group.getName())) {
             return annotation;
+        // update just group
+        } else if (annotation.getAccess().getName().equalsIgnoreCase(access.getName()) && access.getName().equalsIgnoreCase("GROUP") && !annotation.getGroup().getName().equalsIgnoreCase(group.getName()) {
+            annotation.setGroup(group);
+            return save(annotation);
+        // update access from private to group and update group
         } else if (annotation.getAccess().getName().equalsIgnoreCase("PRIVATE") && access.getName().equalsIgnoreCase("GROUP")) {
             if (group == null) {
               throw new AccessUpdateException(true);
@@ -112,9 +120,11 @@ public class AnnotationService {
               annotation.setGroup(group);
               return save(annotation);
             }
+        // update access from private to public
         } else if (annotation.getAccess().getName().equalsIgnoreCase("PRIVATE") && access.getName().equalsIgnoreCase("PUBLIC")) {
             annotation.setAccess(access);
             return save(annotation);
+        // update access from group to public and remove group
         } else if (annotation.getAccess().getName().equalsIgnoreCase("GROUP") && access.getName().equalsIgnoreCase("PUBLIC")) {
             annotation.setAccess(access);
             annotation.setGroup(null);
@@ -132,7 +142,7 @@ public class AnnotationService {
       return annotationRepository.saveAndFlush(annotation);
     }
 
-    public Annotation findById(UserAccount requester, Long id) {
+    public Annotation findOne(UserAccount requester, Long id) {
         Optional<Annotation> annotation = annotationRepository.findById(requester, id);
         return annotation.orElseThrow(() -> new NotFoundException("Annotation", "id", id));
     }

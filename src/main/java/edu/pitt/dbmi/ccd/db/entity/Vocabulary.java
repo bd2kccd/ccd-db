@@ -28,8 +28,6 @@ import java.util.Date;
 import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
@@ -39,7 +37,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
@@ -58,10 +55,8 @@ public class Vocabulary implements Serializable {
     @GeneratedValue
     private Long id;
 
-    // @Temporal(TemporalType.TIMESTAMP)
     private Timestamp created;
 
-    // @Temporal(TemporalType.TIMESTAMP)
     private Timestamp modified;
 
     @Version
@@ -69,18 +64,17 @@ public class Vocabulary implements Serializable {
 
     @Name
     @NotBlank
-    @Size(min=4, max=255)
+    @Size(min=4, max=255, message="Name must be between 4 and 255 characters")
     @Column(length=255, unique=true, nullable=false)
     @NaturalId(mutable=true)
     private String name;
 
     @NotBlank
-    @Size(max=500)
+    @Size(max=500, message="Description must be no longer than 500 characters")
     @Column(length=500, nullable=false)
     private String description;
 
     @OneToMany(mappedBy="vocab", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    @OrderBy
     private Set<Attribute> attributes = new HashSet<>(0);
 
     @PrePersist

@@ -58,13 +58,13 @@ public class Group implements Serializable {
 
     @NotBlank(message="Name cannot be empty")
     @Size(min=4, max=128, message="Name must be between 4 and 128 characters")
-    @Name(message="Valid characters: a-z, A-Z, 0-9, dash (-), and space")
+    @Name
     @Column(length=128, unique=true, nullable=false)
     @NaturalId(mutable=true)
     private String name;
 
     @NotBlank(message="Description cannot be empty")
-    @Size(max=500, message="Description must be fewer than 500 characters")
+    @Size(max=500, message="Description must be no longer than 500 characters")
     @Column(length=500, nullable=false)
     private String description;
 

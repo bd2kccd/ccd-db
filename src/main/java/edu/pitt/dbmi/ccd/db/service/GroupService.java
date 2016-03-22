@@ -54,13 +54,14 @@ public class GroupService {
     public GroupService(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
 
-        List<Group> groups = groupRepository.findAll();
-        if (groups.isEmpty()) {
-            groups.add(
-                new Group("global", "Group of all users")
-            );
-            save(groups);
-        }
+        // // default group
+        // List<Group> groups = groupRepository.findAll();
+        // if (groups.isEmpty()) {
+        //     groups.add(
+        //         new Group("global", "Group of all users")
+        //     );
+        //     save(groups);
+        // }
     }
 
     public Group create(Group group) {
@@ -81,30 +82,30 @@ public class GroupService {
         }
     }
 
-    public Group update(Group group, Group changes) {
-        final String name = changes.getName();
-        final String description = changes.getDescription();
-
-        return patch(group, name, description);
-    }
-
-    public Group save(Group group) {
+    private Group save(Group group) {
         return groupRepository.save(group);
     }
 
-    public List<Group> save(Iterable<Group> groups) {
+    private List<Group> save(Iterable<Group> groups) {
         return groupRepository.save(groups);
     }
 
-    public Group saveAndFlush(Group group) {
+    private Group saveAndFlush(Group group) {
         return groupRepository.saveAndFlush(group);
     }
 
-    public Group patch(Group group) {
-        return patch(group, null, null);
-    }
+    // public Group update(Group group, Group changes) {
+    //     final String name = changes.getName();
+    //     final String description = changes.getDescription();
 
-    public Group patch(Group group, String name, String description) {
+    //     return patch(group, name, description);
+    // }
+
+    // public Group patch(Group group) {f
+    //     return patch(group, null, null);
+    // }
+
+    public Group update(Group group, String name, String description) {
         // update name
         if (!(isNullOrEmpty(name) || group.getName().equals(name))) {
             // check if name isn't just case change
@@ -122,6 +123,15 @@ public class GroupService {
         return saveAndFlush(group);
     }
 
+    public void delete(Group group) {
+        groupRepository.delete(group);
+    }
+
+    protected void delete(Long id) {
+        final Group group = findOne(id);
+        groupRepository.delete(group);
+    }
+
     public Group findOne(Long id) {
         Optional<Group> group = groupRepository.findById(id);
         return group.orElseThrow(() -> new NotFoundException("Group", "id", id));
@@ -134,8 +144,7 @@ public class GroupService {
 
     public List<Group> findByNames(Iterable<String> names) {
         return StreamSupport.stream(names.spliterator(), false)
-                            .distinct()
-	                     .map(n -> groupService.findByName(n))
+	                        .map(n -> findByName(n))
                             .collect(Collectors.toList());
     }
 
@@ -157,14 +166,5 @@ public class GroupService {
 
     public Page<Group> findAll(Pageable pageable) {
         return groupRepository.findAll(pageable);
-    }
-
-    protected void delete(Group group) {
-        groupRepository.delete(group);
-    }
-
-    protected void delete(Long id) {
-        final Group group = findOne(id);
-        groupRepository.delete(group);
     }
 }

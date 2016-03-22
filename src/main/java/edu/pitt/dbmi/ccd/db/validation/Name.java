@@ -40,7 +40,7 @@ import javax.validation.ConstraintValidatorContext;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Name {
 
-    String message() default "{edu.pitt.dbmi.ccd.db.validation.Name}";
+    String message() default "Valid characters: letters, numbers, dash (-), and space";
 
     Class<?>[] groups() default {};
 

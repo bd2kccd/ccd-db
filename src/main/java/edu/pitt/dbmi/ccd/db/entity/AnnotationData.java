@@ -25,6 +25,7 @@ import java.util.HashSet;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Version;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
@@ -45,13 +46,17 @@ public class AnnotationData implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @Version
+    private Integer version;
+
     @NotNull
     @ManyToOne(optional=false, fetch=FetchType.LAZY)
     @JoinColumn(nullable=false)
     private Annotation annotation;
 
+    @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(nullable=true)
+    @JoinColumn(nullable=false)
     private Attribute attribute;
 
     @Column(nullable=true)
@@ -66,18 +71,9 @@ public class AnnotationData implements Serializable {
 
     public AnnotationData() { }
 
-    public AnnotationData(Annotation annotation) {
-        this.annotation = annotation;
-    }
-
     public AnnotationData(Annotation annotation, Attribute attribute) {
-        this(annotation);
+        this.annotation = annotation;
         this.attribute = attribute;
-    }
-
-    public AnnotationData(Annotation annotation, String value) {
-        this(annotation);
-        this.value = value;
     }
 
     public AnnotationData(Annotation annotation, Attribute attribute, String value) {
@@ -91,8 +87,8 @@ public class AnnotationData implements Serializable {
     }
 
     public AnnotationData(Annotation annotation, AnnotationData parent, Attribute attribute, String value) {
-        this(annotation, attribute, value);
-        this.parent = parent;
+        this(annotation, parent, attribute);
+        this.value = value;
     }
 
     public Long getId() {
@@ -101,6 +97,10 @@ public class AnnotationData implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getVersion() {
+        return version;
     }
 
     public Annotation getAnnotation() {
@@ -141,5 +141,9 @@ public class AnnotationData implements Serializable {
 
     public boolean hasChild(AnnotationData child) {
         return children.contains(child);
+    }
+
+    public void setChildren(Set<AnnotationData> children) {
+        this.children = children;
     }
 }

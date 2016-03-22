@@ -19,6 +19,7 @@
 package edu.pitt.dbmi.ccd.db.service;
 
 import java.util.Optional;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,10 +66,10 @@ public class UserAccountService {
         this.passwordEncoder = new BCryptPasswordEncoder(BCRYPT_ROUNDS);
     }
 
-    public UserAccount create(UserAccount account) {
+    public UserAccount create(Person person, String username, String password) {
         // encode password
         final String encodedPassword = passwordEncoder.encode(account.getPassword());
-        account.setPassword(encodedPassword);
+        final UserAccount account = new UserAccount(person, username, encodedPassword, true, new Date());
         return saveUserAccount(account);
     }
 

@@ -67,7 +67,7 @@ public class Person implements Serializable {
     @Column(name = "workspace", nullable = false)
     private String workspace;
 
-    @Size(max=500)
+    @Size(max=500, message="Description must be no longer than 500 characters")
     @Column(length=500, nullable=true)
     private String description;
 

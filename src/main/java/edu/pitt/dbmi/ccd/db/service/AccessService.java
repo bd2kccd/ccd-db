@@ -48,9 +48,13 @@ public class AccessService {
             accessControls.add(new Access("PUBLIC", "Visable to anyone"));
             accessControls.add(new Access("GROUP", "Visable to specified group"));
             accessControls.add(new Access("PRIVATE", "Visable only to creator"));
-
             accessRepository.save(accessControls);
         }
+    }
+
+    public Access create(String name, String description) {
+        final Access access = new Access(name, description);
+        return accessRepository.save(access);
     }
 
     public Access save(Access access) {

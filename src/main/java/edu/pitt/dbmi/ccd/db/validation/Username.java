@@ -40,7 +40,7 @@ import javax.validation.ConstraintValidatorContext;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Username {
 
-    String message() default "{edu.pitt.dbmi.ccd.db.validation.Username}";
+    String message() default "Valid characters: letters, numbers, dashes (-), and underscores (_)";
 
     Class<?>[] groups() default {};
 

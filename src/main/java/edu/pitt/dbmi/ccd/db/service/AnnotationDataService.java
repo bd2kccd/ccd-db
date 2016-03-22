@@ -16,7 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.service;
+
+import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
 
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -43,36 +46,48 @@ import edu.pitt.dbmi.ccd.db.error.VocabularyMismatchException;
 public class AnnotationDataService {
 
     private final AnnotationDataRepository annotationDataRepository;
+    private final AnnotationService annotationService;
     private final AttributeService attributeService;
 
     @Autowired(required=true)
-    public AnnotationDataService(AnnotationDataRepository annotationDataRepository, AttributeService attributeService) {
+    public AnnotationDataService(AnnotationDataRepository annotationDataRepository, AnnotationService annotationService, AttributeService attributeService) {
         this.annotationDataRepository = annotationDataRepository;
+        this.annotationService = annotationService;
         this.attributeService = attributeService;
     }
 
-    public AnnotationData create(Annotation annotation, Long attributeId, String value) {
+    public AnnotationData create(Long annotationId, Long attributeId, String value) {
+        final Annotation annotation = annotationService.findOne(annotationId);
         final Attribute attribute = attributeService.findOne(attributeId);
         final AnnotationData annoData = new AnnotationData(annotation, attribute, value);
         return save(annoData);
     }
 
-    public AnnotationData create(Annotation annotation, AnnotationData parent, Long attributeId, String value) {
+    public AnnotationData create(Long annotationId, Long annotationDataId, Long attributeId, String value) {
+        final Annotation annotation = annotationService.findOne(annotationId);
+        final AnnotationData parent = AnnotationDataService.findOne(annotationDataId);
         final Attribute attribute = attributeService.findOne(attributeId);
         final AnnotationData annoData = new AnnotationData(annotation, parent, attribute, value);
         return save(annoData);
     }
 
-    public AnnotationData patch(AnnotationData data, Long attributeId, String value) {
+    public AnnotationData create(Long annotationId, Long attributeId, String value) {
+        final Annotation annotation = annotationService.findOne(annotationId);
+        final Attribute attribute = attributeService.findOne(attributeId);
+        final AnnotationData annotationData = new AnnotationData(annotation, attribute, value);
+        return save(annotationData);
+    }
+
+    public AnnotationData update(AnnotationData data, Long attributeId, String value) {
         final Attribute attribute = (attributeId != null) ? attributeService.findOne(attributeId) : null;
-        if (attribute != null) {
+        if (!isNullOrEmpty(attributeId)) {
             if (data.getAnnotation().getVocabulary() != attribute.getVocabulary()) {
                 throw new VocabularyMismatchException(attribute, data.getAnnotation().getVocabulary());
             } else {
                 data.setAttribute(attribute);
             }
         }
-        if (value != null) {
+        if (!isNullOrEmpty(value)) {
             data.setValue(value);
         }
         return save(data);
@@ -89,5 +104,9 @@ public class AnnotationDataService {
 
     public Page<AnnotationData> findByAnnotation(Annotation annotation, Pageable pageable) {
         return annotationDataRepository.findByAnnotation(annotation, pageable);
+    }
+
+    protected void delete(AnnotationData data) {
+        annotationDataRepository.delete(data);
     }
 }

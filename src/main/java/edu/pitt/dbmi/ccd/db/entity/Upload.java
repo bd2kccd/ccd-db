@@ -27,8 +27,6 @@ import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
@@ -56,10 +54,8 @@ public class Upload implements Serializable {
     @GeneratedValue
     private Long id;
 
-    // @Temporal(TemporalType.TIMESTAMP)
     private Timestamp created;
 
-    // @Temporal(TemporalType.TIMESTAMP)
     private Timestamp modified;
 
     @Version
@@ -71,7 +67,7 @@ public class Upload implements Serializable {
     private UserAccount user;
 
     @NotBlank
-    @Size(max=255)
+    @Size(max=255, message="Title cannot be longer than 255 characters")
     @Column(length=255, unique=false, nullable=false)
     private String title;
 
@@ -80,7 +76,7 @@ public class Upload implements Serializable {
     private DataFile file;
 
     @URL
-    @Size(min=2, max=2083)
+    @Size(min=2, max=2083, message="Valid URLs are at least 2 characters")
     @Column(length=2083, unique=true, nullable=true)
     private String address;
 
