@@ -48,6 +48,7 @@ import edu.pitt.dbmi.ccd.db.service.AccessService;
 import edu.pitt.dbmi.ccd.db.service.VocabularyService;
 import edu.pitt.dbmi.ccd.db.service.AttributeService;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
+import edu.pitt.dbmi.ccd.db.error.AccessUpdateException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -69,17 +70,27 @@ public class AnnnotationDataServiceTest {
     @Autowired
     private AttributeService attributeService;
 
+    private UserAccount user;
+    private Upload upload;
+
     private Annotation annotation;
-    private AnnotationData data;
+    private AnnotationData annotationData;
 
     @BeforeClass
     public void setupClass() {
         final Person person = new Person("Isaac", "Newton", "test@example.com", "~/.ccd_workspace");
-        final UserAccount user = userAccountService.create(person, "test", "test", true, new Date()); 
-        final Upload upload = uploadService.create(user, "Department Of Biomedical Informatics", "http://www.dbmi.pitt.edu")
         final Access access = accessService.findByName("PUBLIC");
         final Vocabulary vocab = vocabService.findByName("Plaintext");
+        user = userAccountService.create(person, "test", "test", true, new Date()); 
+        upload = uploadService.create(user, "Department Of Biomedical Informatics", "http://www.dbmi.pitt.edu")
         annotation = annotationService.create(new Annotation(user, upload, null, access, null, vocab);
+    }
+
+    @AfterClass
+    public void cleanupClass() {
+        userAccountService.delete(user);
+        uploadService.delete(upload);
+        annotationService.delete(annotation);
     }
 
     @Before
@@ -99,10 +110,13 @@ public class AnnnotationDataServiceTest {
     }
 
     @Test
-    public void testCrud() {
-        final Vocabulary vocab = vocabService.findByName(vocabName); 
-        final Attribute attribute = vocab.getAttributes().stream().findFirst();
-        final AnnnotationData data = new 
-        // create
+    public void findOneTest() {
+        try {
+            final Long id = annotationData.getId();
+            final AnnotationData found = annotationDataService.findOne(id);
+            assertEquals(id, found.getId());
+        } catch (NotFoundException ex) {
+            fail(ex.getMessage());
+        }
     }
 }
