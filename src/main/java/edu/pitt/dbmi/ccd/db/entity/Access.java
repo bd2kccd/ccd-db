@@ -20,13 +20,13 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Column;
-import org.hibernate.annotations.NaturalId;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.NotBlank;
+
+import edu.pitt.dbmi.ccd.db.validation.Name;
 
 /**
  * Annotation access control
@@ -35,13 +35,14 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 public class Access implements Serializable {
-    
+
     private static final Long serialVersionUID = 7788384757549817895L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Name
     @NotBlank
     @Size(max=20)
     @Column(length=20, unique=true, nullable=false)

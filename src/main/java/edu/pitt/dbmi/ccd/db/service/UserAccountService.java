@@ -68,7 +68,7 @@ public class UserAccountService {
 
     public UserAccount create(Person person, String username, String password) {
         // encode password
-        final String encodedPassword = passwordEncoder.encode(account.getPassword());
+        final String encodedPassword = passwordEncoder.encode(password);
         final UserAccount account = new UserAccount(person, username, encodedPassword, true, new Date());
         return saveUserAccount(account);
     }

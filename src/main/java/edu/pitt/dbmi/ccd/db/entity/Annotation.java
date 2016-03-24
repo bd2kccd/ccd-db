@@ -20,33 +20,10 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Arrays;
-import java.util.Date;
 import java.sql.Timestamp;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Version;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.ManyToMany;
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-import javax.persistence.FetchType;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.OrderBy;
+import java.util.*;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -57,7 +34,7 @@ public class Annotation implements Serializable {
     private static final long serialVersionUID = 3156490985879126383L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Timestamp created;
@@ -106,7 +83,7 @@ public class Annotation implements Serializable {
     @JoinTable(name="AnnotationUploadReferences", joinColumns = {
         @JoinColumn(name="annotationId", nullable=false)}, inverseJoinColumns = {
         @JoinColumn(name="uploadId", nullable=false)})
-    Set<Upload> references = new HashSet<>(0);
+    private Set<Upload> references = new HashSet<>(0);
 
     @OneToMany(mappedBy="annotation", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     private Set<AnnotationData> data = new HashSet<>(0);
@@ -131,7 +108,7 @@ public class Annotation implements Serializable {
         this.group = group;
         this.vocab = vocab;
     }
-    
+
     public Long getId() {
         return id;
     }

@@ -19,20 +19,13 @@
 
 package edu.pitt.dbmi.ccd.db.entity;
 
-import java.io.Serializable;
-import java.util.Set;
-import java.util.HashSet;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Version;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.JoinColumn;
-import javax.persistence.Column;
-import javax.persistence.FetchType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -45,6 +38,10 @@ public class AnnotationData implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
+
+    private Timestamp created;
+
+    private Timestamp modified;
 
     @Version
     private Integer version;
@@ -67,7 +64,17 @@ public class AnnotationData implements Serializable {
     private AnnotationData parent;
 
     @OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
-    private Set<AnnotationData> children = new HashSet<>(0);
+    private Set<AnnotationData> subData = new HashSet<>(0);
+
+    @PrePersist
+    private void onCreate() {
+        created = new Timestamp((new Date()).getTime());
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        modified = new Timestamp((new Date()).getTime());
+    }
 
     public AnnotationData() { }
 
@@ -97,6 +104,14 @@ public class AnnotationData implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public Timestamp getModified() {
+        return modified;
     }
 
     public Integer getVersion() {
@@ -135,15 +150,15 @@ public class AnnotationData implements Serializable {
         this.parent = parent;
     }
 
-    public Set<AnnotationData> getChildren() {
-        return children;
+    public Set<AnnotationData> getSubData() {
+        return subData;
     }
 
-    public boolean hasChild(AnnotationData child) {
-        return children.contains(child);
+    public boolean hasSubData(AnnotationData sub) {
+        return subData.contains(sub);
     }
 
-    public void setChildren(Set<AnnotationData> children) {
-        this.children = children;
+    public void setSubData(Set<AnnotationData> subData) {
+        this.subData = subData;
     }
 }

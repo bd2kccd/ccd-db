@@ -21,27 +21,13 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.CascadeType;
-import javax.persistence.OrderBy;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import edu.pitt.dbmi.ccd.db.validation.Username;
 
 /**
@@ -133,12 +119,16 @@ public class UserAccount implements Serializable {
     @OrderBy("created")
     private Set<Annotation> annotations = new HashSet<>(0);
 
-    public UserAccount() { }
+    protected UserAccount() { }
 
-    public UserAccount(Person person, String username, String password, boolean active, Date createdDate) {
+    public UserAccount(Person person, String username, String password) {
         this.person = person;
         this.username = username;
         this.password = password;
+    }
+
+    public UserAccount(Person person, String username, String password, boolean active, Date createdDate) {
+        this(person, username, password);
         this.active = active;
         this.createdDate = createdDate;
     }

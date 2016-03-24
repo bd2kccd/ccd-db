@@ -19,16 +19,17 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
-import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import edu.pitt.dbmi.ccd.db.entity.Access;
-import edu.pitt.dbmi.ccd.db.repository.AccessRepository;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
+import edu.pitt.dbmi.ccd.db.repository.AccessRepository;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -42,14 +43,6 @@ public class AccessService {
     @Autowired(required=true)
     public AccessService(AccessRepository accessRepository) {
         this.accessRepository = accessRepository;
-
-        List<Access> accessControls = accessRepository.findAll();
-        if (accessControls.isEmpty()) {
-            accessControls.add(new Access("PUBLIC", "Visable to anyone"));
-            accessControls.add(new Access("GROUP", "Visable to specified group"));
-            accessControls.add(new Access("PRIVATE", "Visable only to creator"));
-            accessRepository.save(accessControls);
-        }
     }
 
     public Access create(String name, String description) {

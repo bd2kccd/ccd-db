@@ -24,19 +24,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Date;
 import java.sql.Timestamp;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Version;
-import javax.persistence.Column;
-import javax.persistence.OneToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.FetchType;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
@@ -47,11 +35,11 @@ import org.hibernate.validator.constraints.URL;
  */
 @Entity
 public class Upload implements Serializable {
-   
+
     private static final long serialVersionUID = 1143695321911902433L;
-    
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Timestamp created;
@@ -76,7 +64,7 @@ public class Upload implements Serializable {
     private DataFile file;
 
     @URL
-    @Size(min=2, max=2083, message="Valid URLs are at least 2 characters")
+    @Size(min=2, max=2083, message="Valid URLs are at least 2 characters and no more than 2083 characters")
     @Column(length=2083, unique=true, nullable=true)
     private String address;
 

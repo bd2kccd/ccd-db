@@ -63,7 +63,6 @@ public class Attribute implements Serializable {
 
     @NotBlank(message="Name is required")
     @Column(unique=false, nullable=false)
-    @Name
     private String name;
 
     @Column(unique=false, nullable=true)

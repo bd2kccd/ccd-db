@@ -74,7 +74,7 @@ public class UserAccountServiceTest {
         final Person person = new Person(firstName, lastName, email, workspace);
 
         // create
-        final UserAccount user = userAccountService.create(new UserAccount(person, username, password, active, created));
+        final UserAccount user = userAccountService.create(person, username, password);
         assertNotNull(user.getId());
 
         // findByUsername

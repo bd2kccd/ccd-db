@@ -19,29 +19,15 @@
 
 package edu.pitt.dbmi.ccd.db.entity;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Arrays;
-import java.util.Date;
-import java.sql.Timestamp;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Version;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
-import javax.persistence.JoinColumn;
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.annotations.NaturalId;
 import edu.pitt.dbmi.ccd.db.validation.Name;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.persistence.*;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -52,7 +38,7 @@ public class Vocabulary implements Serializable {
     private static final long serialVersionUID = 7981019296719637838L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Timestamp created;
