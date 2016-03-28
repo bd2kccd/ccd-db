@@ -46,15 +46,42 @@ public class AnnotationRepositoryTest {
     }
 
     @Test
-    public void findById() {
-        // owner request
-        final Optional<Annotation> annotation = annotationRepository.findById(owner, 3L, owner.getGroups());
+    public void findByIdPublic() {
+        Optional<Annotation> annotation;
+
+        // owner
+        annotation = annotationRepository.findById(owner, 1L, owner.getGroups());
         assertTrue(annotation.isPresent());
 
-        // non-owner request
-        final Optional<Annotation> empty = annotationRepository.findById(viewer, 3L, viewer.getGroups());
-        assertFalse(empty.isPresent());
+        // non-owner
+        annotation = annotationRepository.findById(viewer, 1L, viewer.getGroups());
+        assertTrue(annotation.isPresent());
+    }
 
+    @Test
+    public void findByIdGroup() {
+        Optional<Annotation> annotation;
+
+        // member
+        annotation = annotationRepository.findById(owner, 3L, owner.getGroups());
+        assertTrue(annotation.isPresent());
+
+        // non-member
+        annotation = annotationRepository.findById(viewer, 3L, viewer.getGroups());
+        assertFalse(annotation.isPresent());
+    }
+
+    @Test
+    public void findByIdPrivate()  {
+        Optional<Annotation> annotation;
+
+        // owner
+        annotation = annotationRepository.findById(owner, 4L, owner.getGroups());
+        assertTrue(annotation.isPresent());
+
+        // non-owner
+        annotation = annotationRepository.findById(viewer, 4L, viewer.getGroups());
+        assertFalse(annotation.isPresent());
     }
 
     @Test
@@ -85,7 +112,19 @@ public class AnnotationRepositoryTest {
 
         // does not have annotations
         final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, viewer.getUsername(), null, null, null, null, null, null, false), pageable);
-        assertTrue(annotations.getTotalElements() == 0);
+        assertTrue(empty.getTotalElements() == 0);
+    }
+
+    @Test
+    public void filterGroup() {
+        // has annotations
+        final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, "scientists", null, null, null, null, null, false), pageable);
+        System.out.println("*****\nGROUP FILTER ELEMENTS "+annotations.getTotalElements()+"\n*****");
+        assertTrue(annotations.getTotalElements() == 1);
+
+        // does not have annotations
+        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, "Does Not Exist", null, null, null, null, null, false), pageable);
+        assertTrue(empty.getTotalElements() == 0);
     }
 
     @Test
@@ -96,7 +135,7 @@ public class AnnotationRepositoryTest {
 
         // does not have annotations
         final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, null, 100L, null, null, null, null, false), pageable);
-        assertTrue(annotations.getTotalElements() == 0);
+        assertTrue(empty.getTotalElements() == 0);
     }
 
     @Test
@@ -114,7 +153,8 @@ public class AnnotationRepositoryTest {
     public void filterAttributeName() {
         // has annotations
         final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, null, null, null, null, "text", null, false), pageable);
-        assertTrue(annotations.getTotalElements() == 3);
+        System.out.println("*****\n ATTRIBUTE TEST ELEMENTS\n" + annotations.getTotalElements() + "\n***");
+        assertTrue(annotations.getTotalElements() == 4);
 
         // does not have annotations
         final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, null, null, null, null, "text", null, false), pageable);
@@ -126,7 +166,7 @@ public class AnnotationRepositoryTest {
         // matches
         final Set<String> search = new HashSet<>(Arrays.asList("annotation"));
         Page<Annotation> annotations = annotationRepository.findAll(searchSpec(owner, null, null, null, null, null, null, null, false, search, emptySet), pageable);
-        assertTrue(annotations.getTotalElements() == 3);
+        assertTrue(annotations.getTotalElements() == 4);
 
         // nots
         final Set<String> nots = search;

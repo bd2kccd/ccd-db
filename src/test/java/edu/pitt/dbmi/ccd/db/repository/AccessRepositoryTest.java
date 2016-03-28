@@ -26,8 +26,6 @@ public class AccessRepositoryTest {
     @Autowired(required=true)
     private AccessRepository accessRepository;
 
-    private Access access;
-
     @Test
     public void saveAndDelete() {
         // save
@@ -54,8 +52,8 @@ public class AccessRepositoryTest {
 
     @Test
     public void findAll() {
-        final Pageable pageable = new PageRequest(0, 1000);
+        final Pageable pageable = new PageRequest(0, 3);
         final Page<Access> page = accessRepository.findAll(pageable);
-        assertTrue(page.getTotalElements() == 2);
+        assertTrue(page.getTotalElements() == 3);
     }
 }

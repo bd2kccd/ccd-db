@@ -72,7 +72,7 @@ public class Annotation implements Serializable {
     @JoinColumn(name="uploadId", nullable=false)
     private Upload target;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(nullable=true)
     private Annotation parent;
 
