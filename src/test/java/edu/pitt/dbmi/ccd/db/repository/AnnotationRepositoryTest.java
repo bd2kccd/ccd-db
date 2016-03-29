@@ -1,12 +1,12 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
-import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.filterSpec;
-import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.searchSpec;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.*;
+import static org.junit.Assert.*;
 
-import java.util.*;
-import java.util.stream.StreamSupport;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +16,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
@@ -47,47 +48,57 @@ public class AnnotationRepositoryTest {
 
     @Test
     public void findByIdPublic() {
-        Optional<Annotation> annotation;
+        Annotation annotation;
 
         // owner
-        annotation = annotationRepository.findById(owner, 1L, owner.getGroups());
-        assertTrue(annotation.isPresent());
+        Specification<Annotation> spec = idSpec(owner, 1L);
+        annotation = annotationRepository.findOne(spec);
+        assertNotNull(annotation);
 
         // non-owner
-        annotation = annotationRepository.findById(viewer, 1L, viewer.getGroups());
-        assertTrue(annotation.isPresent());
+        spec = idSpec(viewer, 1L);
+        annotation = annotationRepository.findOne(spec);
+        assertNotNull(annotation);
     }
 
     @Test
     public void findByIdGroup() {
-        Optional<Annotation> annotation;
+        Annotation annotation;
 
         // member
-        annotation = annotationRepository.findById(owner, 3L, owner.getGroups());
-        assertTrue(annotation.isPresent());
+        Specification<Annotation> spec = idSpec(owner, 3L);
+
+        annotation = annotationRepository.findOne(spec);
+        assertNotNull(annotation);
 
         // non-member
-        annotation = annotationRepository.findById(viewer, 3L, viewer.getGroups());
-        assertFalse(annotation.isPresent());
+        spec = idSpec(viewer, 3L);
+        annotation = annotationRepository.findOne(spec);
+        assertNull(annotation);
     }
 
     @Test
     public void findByIdPrivate()  {
-        Optional<Annotation> annotation;
+        Annotation annotation;
 
         // owner
-        annotation = annotationRepository.findById(owner, 4L, owner.getGroups());
-        assertTrue(annotation.isPresent());
+        Specification<Annotation> spec = idSpec(owner, 4L);
+        annotation = annotationRepository.findOne(spec);
+        assertNotNull(annotation);
 
         // non-owner
-        annotation = annotationRepository.findById(viewer, 4L, viewer.getGroups());
-        assertFalse(annotation.isPresent());
+        spec = idSpec(viewer, 4L);
+        annotation = annotationRepository.findOne(spec);
+        assertNull(annotation);
     }
 
     @Test
     public void findByParent() {
-        final Annotation parent = annotationRepository.findById(owner, 1L, owner.getGroups()).get();
-        final Page<Annotation> annotations = annotationRepository.findByParent(owner, parent.getId(), owner.getGroups(), false, pageable);
+        Specification<Annotation> one = idSpec(owner, 1L);
+        final Annotation parent = annotationRepository.findOne(one);
+
+        Specification<Annotation> spec = parentSpec(owner, 1L, false);
+        final Page<Annotation> annotations = annotationRepository.findAll(spec, pageable);
         assertTrue(annotations.getTotalElements() == 1);
 
         // make sure parent is actually parent
@@ -96,19 +107,10 @@ public class AnnotationRepositoryTest {
     }
 
     @Test
-    public void findAllPublic() {
-        final Page<Annotation> annotations = annotationRepository.findAllPublic(false, pageable);
-        assertTrue(annotations.getTotalElements() == 2);
-
-        // make sure all are public
-        assertTrue(StreamSupport.stream(annotations.spliterator(), false).allMatch(a -> a.getAccess().getName().equals("PUBLIC")));
-    }
-
-    @Test
     public void filterUser() {
         // has annotations
         final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, owner.getUsername(), null, null, null, null, null, null, false), pageable);
-        assertTrue(annotations.getTotalElements() == 3);
+        assertTrue(annotations.getTotalElements() == 4);
 
         // does not have annotations
         final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, viewer.getUsername(), null, null, null, null, null, null, false), pageable);
@@ -119,7 +121,6 @@ public class AnnotationRepositoryTest {
     public void filterGroup() {
         // has annotations
         final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, "scientists", null, null, null, null, null, false), pageable);
-        System.out.println("*****\nGROUP FILTER ELEMENTS "+annotations.getTotalElements()+"\n*****");
         assertTrue(annotations.getTotalElements() == 1);
 
         // does not have annotations
@@ -131,7 +132,7 @@ public class AnnotationRepositoryTest {
     public void filterUpload() {
         // has annotations
         final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, null, 1L, null, null, null, null, false), pageable);
-        assertTrue(annotations.getTotalElements() == 3);
+        assertTrue(annotations.getTotalElements() == 4);
 
         // does not have annotations
         final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, null, 100L, null, null, null, null, false), pageable);
@@ -142,7 +143,7 @@ public class AnnotationRepositoryTest {
     public void filterVocabulary() {
         // has annotations
         final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, null, null, "Plaintext", null, null, null, false), pageable);
-        assertTrue(annotations.getTotalElements() == 3);
+        assertTrue(annotations.getTotalElements() == 4);
 
         // does not have annotations
         final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, null, null, "Does Not Exist", null, null, null, false), pageable);
@@ -153,11 +154,10 @@ public class AnnotationRepositoryTest {
     public void filterAttributeName() {
         // has annotations
         final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, null, null, null, null, "text", null, false), pageable);
-        System.out.println("*****\n ATTRIBUTE TEST ELEMENTS\n" + annotations.getTotalElements() + "\n***");
         assertTrue(annotations.getTotalElements() == 4);
 
         // does not have annotations
-        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, null, null, null, null, "text", null, false), pageable);
+        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, null, null, null, null, "Does Not Exist", null, false), pageable);
         assertTrue(empty.getTotalElements() == 0);
     }
 
@@ -176,10 +176,12 @@ public class AnnotationRepositoryTest {
 
     @Test
     public void findAll() {
-        Page<Annotation> annotations = annotationRepository.findAll(owner, owner.getGroups(), false, pageable);
-        assertTrue(annotations.getTotalElements() == 3);
+        Specification<Annotation> spec = authSpec(owner);
+        Page<Annotation> annotations = annotationRepository.findAll(spec, pageable);
+        assertTrue(annotations.getTotalElements() == 4);
 
-        annotations = annotationRepository.findAll(viewer, viewer.getGroups(), false, pageable);
+        spec = authSpec(viewer);
+        annotations = annotationRepository.findAll(spec, pageable);
         assertTrue(annotations.getTotalElements() == 2);
     }
 }

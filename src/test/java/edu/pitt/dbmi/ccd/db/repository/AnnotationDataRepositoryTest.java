@@ -42,7 +42,7 @@ public class AnnotationDataRepositoryTest {
 
         // delete
         annotationDataRepository.delete(data);
-        final Optional<AnnotationData> found = annotationDataRepository.findById(annotation.getId());
+        final Optional<AnnotationData> found = annotationDataRepository.findById(data.getId());
         assertFalse(found.isPresent());
     }
 
@@ -54,9 +54,9 @@ public class AnnotationDataRepositoryTest {
 
     @Test
     public void findByAnnotation() {
-        final Annotation annotation = annotationRepository.findOne(1L);
+        final Annotation annotation = annotationRepository.findOne(4L);
         final Pageable pageable = new PageRequest(0, 100);
         final Page<AnnotationData> data = annotationDataRepository.findByAnnotation(annotation, pageable);
-        assertTrue(data.getTotalElements() == 3);
+        assertTrue(data.getTotalElements() == 2);
     }
 }

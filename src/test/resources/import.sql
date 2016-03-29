@@ -37,9 +37,9 @@ INSERT INTO annotation (id, redacted, version, access_control, parent_id, upload
 INSERT INTO annotation_data (id, value, annotation_id, attribute_id) VALUES (1, 'Public annotation', 1, 1), (2, 'Child annotation', 2, 1);
 
 -- Group
-INSERT INTO annotation (id, redacted, version, access_control, parent_id, upload_id, user_account_id, vocab_id) VALUES (3, b'0', 0, 2, NULL, 1, 1, 1);
+INSERT INTO annotation (id, redacted, version, access_control, group_id, parent_id, upload_id, user_account_id, vocab_id) VALUES (3, b'0', 0, 2, 1, NULL, 1, 1, 1);
 INSERT INTO annotation_data (id, value, annotation_id, attribute_id) VALUES(3, 'Scientists group annotation', 3, 1);
 
 -- Private
 INSERT INTO annotation (id, redacted, version, access_control, parent_id, upload_id, user_account_id, vocab_id) VALUES (4, b'0', 0, 3, NULL, 1, 1, 1);
-INSERT INTO annotation_data (id, value, annotation_id, attribute_id) VALUES (4, 'Private annotation', 4, 1), (5, 'Private annotation with additional');
+INSERT INTO annotation_data (id, value, annotation_id, attribute_id) VALUES (4, 'Private annotation', 4, 1), (5, 'Private annotation with additional data', 4, 1);

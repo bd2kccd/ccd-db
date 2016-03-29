@@ -1,17 +1,13 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import static edu.pitt.dbmi.ccd.db.specification.VocabularySpecification.searchSpec;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.StreamSupport;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,52 +30,46 @@ public class VocabularyRepositoryTest {
     @Autowired(required=true)
     private VocabularyRepository vocabularyRepository;
 
-    private Vocabulary vocabulary;
-
-    @Before
-    public void setUp() {
-        vocabulary = new Vocabulary("TEST", "Test description");
-        vocabulary = vocabularyRepository.save(vocabulary);
+    @Test
+    public void saveAndDelete() {
+        // save
+        final Vocabulary vocabulary = vocabularyRepository.save(new Vocabulary("TEST", "Test vocabulary"));
         assertNotNull(vocabulary.getId());
-    }
 
-    @After
-    public void tearDown() {
+        // delete
         vocabularyRepository.delete(vocabulary);
+        Optional<Vocabulary> found = vocabularyRepository.findById(vocabulary.getId());
+        assertFalse(found.isPresent());
     }
 
     @Test
     public void findById() {
-        final Long id = vocabulary.getId();
-        final Optional<Vocabulary> found = vocabularyRepository.findById(id);
+        final Optional<Vocabulary> found = vocabularyRepository.findById(1L);
         assertTrue(found.isPresent());
     }
 
     @Test
     public void findByName() {
-        final String name = vocabulary.getName();
-        final Optional<Vocabulary> found = vocabularyRepository.findByName(name);
+        final Optional<Vocabulary> found = vocabularyRepository.findByName("Plaintext");
         assertTrue(found.isPresent());
     }
 
     @Test
     public void search() {
-        final Long id = vocabulary.getId();
-        final Set<String> searches = new HashSet<>(Arrays.asList("test"));
+        final Set<String> searches = new HashSet<>(Arrays.asList("text"));
         final Pageable pageable = new PageRequest(0, 1000);
         final Page<Vocabulary> vocabularies = vocabularyRepository.findAll(searchSpec(searches, null), pageable);
-        assertTrue(vocabularies.hasNext());
-        assertTrue(StreamSupport.stream(vocabularies.spliterator(), false)
-                                .anyMatch(v -> v.getId().equals(id)));
+        assertTrue(vocabularies.getTotalElements() == 1);
+
+        final Set<String> nots = searches;
+        final Page<Vocabulary> empty = vocabularyRepository.findAll(searchSpec(null, nots), pageable);
+        assertTrue(empty.getTotalElements() == 0);
     }
 
     @Test
     public void findAll() {
-        final Long id = vocabulary.getId();
         final Pageable pageable = new PageRequest(0, 1000);
         final Page<Vocabulary> vocabularies = vocabularyRepository.findAll(pageable);
-        assertTrue(vocabularies.hasNext());
-        assertTrue(StreamSupport.stream(vocabularies.spliterator(), false)
-                                .anyMatch(v -> v.getId().equals(id)));
+        assertTrue(vocabularies.getTotalElements() == 1);
     }
 }
