@@ -21,20 +21,14 @@ package edu.pitt.dbmi.ccd.db.specification;
 
 import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
 
-import java.util.Set;
-import java.util.List;
-import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.stream.StreamSupport;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Subquery;
+import javax.persistence.criteria.*;
+
 import org.springframework.data.jpa.domain.Specification;
+
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
@@ -51,6 +45,7 @@ public final class AnnotationSpecification {
     public static final String VOCAB = "vocab";
     public static final String ANNO = "annotation";
     public static final String ATTRIB = "attribute";
+    public static final String PARENT = "parent";
     public static final String ID = "id";
     public static final String NAME = "name";
     public static final String USERNAME = "username";
@@ -63,6 +58,19 @@ public final class AnnotationSpecification {
     public static final String REDACTED = "redacted";
 
     private AnnotationSpecification() { }
+
+
+    public static Specification<Annotation> idSpec(UserAccount requester, Long id) {
+        return (root, query, cb) -> {
+            return buildIdSpec(root, cb, requester, id);
+        };
+    }
+
+    public static Specification<Annotation> parentSpec(UserAccount requester, Long id, boolean showRedacted) {
+        return (root, query, cb) -> {
+            return buildParentSpec(root, cb, requester, id, showRedacted);
+        };
+    }
 
     public static Specification<Annotation> authSpec(UserAccount requester) {
         return (root, query, cb) -> {
@@ -99,7 +107,26 @@ public final class AnnotationSpecification {
             return buildSearchSpec(root, query, cb, requester, username, group, upload, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted, matches, nots);
         };
     }
-  
+
+    private static Predicate buildIdSpec(Root<Annotation> root, CriteriaBuilder cb, UserAccount requester, Long id) {
+        final Predicate authPredicate = authFilter(root, cb, requester);
+        final Predicate idPredicate = cb.equal(root.get(ID), id);
+        final Predicate[] predicates = new Predicate[]{authPredicate, idPredicate};
+        return cb.and(predicates);
+    }
+
+    private static Predicate buildParentSpec(Root<Annotation> root, CriteriaBuilder cb, UserAccount requester, Long id, Boolean showRedacted) {
+        final Predicate authPredicate = authFilter(root, cb, requester);
+        final Predicate idPredicate = cb.equal(root.get(PARENT).get(ID), id);
+        Predicate[] predicates;
+        if (showRedacted) {
+            predicates = new Predicate[]{authPredicate, idPredicate};
+        } else {
+            predicates = new Predicate[]{authPredicate, idPredicate, notRedacted(root, cb)};
+        }
+        return cb.and(predicates);
+    }
+
    private static Predicate buildFilterSpec(Root<Annotation> root,
                                                CriteriaQuery query,
                                                CriteriaBuilder cb,
@@ -115,10 +142,10 @@ public final class AnnotationSpecification {
         final List<Predicate> predicates = new ArrayList<>(0);
         final Predicate authPredicate = authFilter(root, cb, requester);
         final List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, upload, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted);
-        
+
         predicates.add(authPredicate);
         predicates.addAll(filterPredicates);
-        
+
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
@@ -140,24 +167,24 @@ public final class AnnotationSpecification {
         final Predicate authPredicate = authFilter(root, cb, requester);
         final List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, upload, vocab, attributeName, attributeLevel, attributeReqLevel, showRedacted);
         final List<Predicate> searchPredicates = buildSearchPredicates(root, query, cb, matches, nots);
-        
+
         predicates.add(authPredicate);
         predicates.addAll(filterPredicates);
         predicates.addAll(searchPredicates);
-        
+
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
     /**
      * Requester access predicate
-     * 
+     *
      * annotation has public access
      * OR annotation has private access AND annotation belongs to requester
      * OR annotation has group access AND requester is in group
      */
     private static Predicate authFilter(Root<Annotation> root, CriteriaBuilder cb, UserAccount requester) {
         final List<Predicate> predicates = new ArrayList<>(0);
-        
+
         // public access
         predicates.add(cb.like(root.get(ACCESS).get(NAME), PUBLIC_ACCESS));
 
@@ -166,7 +193,7 @@ public final class AnnotationSpecification {
                               cb.equal(root.get(USER), requester)));
 
         // group access AND requester in group
-        // criteriabuilder's in clause causes
+        // criteriabuilder's in clause throws
         // sql error if collection has no elements
         if (requester.getGroups().size() > 0) {
             predicates.add(cb.and(cb.like(root.get(ACCESS).get(NAME), GROUP_ACCESS),
@@ -187,7 +214,7 @@ public final class AnnotationSpecification {
                                                          String attributeName,
                                                          String attributeReqLevel,
                                                          Boolean showRedacted) {
-        
+
         final List<Predicate> predicates = new ArrayList<>(0);
         if (!isNullOrEmpty(username)) {
             predicates.add(belongsToUser(root, cb, username));
@@ -202,13 +229,13 @@ public final class AnnotationSpecification {
             predicates.add(hasVocabulary(root, cb, vocab));
         }
         if (!isNullOrEmpty(attributeLevel)) {
-            predicates.add(hasAttributeLevel(root, query, cb, attributeLevel));            
+            predicates.add(hasAttributeLevel(root, query, cb, attributeLevel));
         }
         if (!isNullOrEmpty(attributeName)) {
-            predicates.add(hasAttributeName(root, query, cb, attributeName));            
+            predicates.add(hasAttributeName(root, query, cb, attributeName));
         }
         if (!isNullOrEmpty(attributeReqLevel)) {
-            predicates.add(hasAttributeReqLevel(root, query, cb, attributeReqLevel));            
+            predicates.add(hasAttributeReqLevel(root, query, cb, attributeReqLevel));
         }
         if (!showRedacted) {
             predicates.add(notRedacted(root, cb));
@@ -223,7 +250,7 @@ public final class AnnotationSpecification {
                                                          CriteriaBuilder cb,
                                                          Set<String> matches,
                                                          Set<String> nots) {
-        
+
         final List<Predicate> predicates = new ArrayList<>(0);
         if (!isNullOrEmpty(matches)) {
             predicates.addAll(containsTerms(root, query, cb, matches));

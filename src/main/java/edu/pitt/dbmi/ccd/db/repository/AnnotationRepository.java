@@ -19,22 +19,15 @@
 
 package edu.pitt.dbmi.ccd.db.repository;
 
-import java.util.Optional;
-import java.util.Set;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
 
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
-import edu.pitt.dbmi.ccd.db.entity.Group;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -44,56 +37,18 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 public interface AnnotationRepository extends JpaRepository<Annotation, Long>, JpaSpecificationExecutor<Annotation> {
 
     /**
-     * Find annotation by id if viewable by requester
-     * @param requester requester
-     * @param id        annotation id
-     * @return          Optional<Annotation>
+     * Find single annotation by id
+     * Uses idSpec(UserAccount requester, Long id)
+     *
+     * @return annotation, or null if not found
      */
-    @Query(value="SELECT DISTINCT a FROM Annotation AS a " +
-                 "WHERE a.id = :id " +                                             // WHERE     annotation has specified id
-                 "AND (a.user = :requester " +                                     // AND       [annotation belongs to the requester
-                   "OR (a.accessControl.name = 'PUBLIC') " +                       // OR         annotation has public access
-                   "OR (a.accessControl.name = 'GROUP' AND a.group IN :groups))")  // OR         annotation has group access and requester belongs to group]
-    public Optional<Annotation> findById(@Param("requester") UserAccount requester, @Param("id") Long id, @Param("groups") Set<Group> groups);
+    public Annotation findOne(Specification<Annotation> spec);
 
     /**
-     * Find annotations by parent annotation
-     * @param requester requester
-     * @param id        annotation id
+     * Find page of annotations by specification
+     * @param spec      specification request
      * @param pageable  page request
-     * @return          page of annotations
+     * @return          page of matching annotations
      */
-    @Query(value="SELECT a FROM Annotation AS a " +
-                 "WHERE a.parent.id = :id " +
-                 "AND (a.redacted = false OR a.redacted = :showRedacted) " +
-                 "AND (a.user = :requester " +
-                   "OR (a.accessControl.name = 'PUBLIC') " +
-                   "OR (a.accessControl.name = 'GROUP' AND a.group IN :groups))")
-    public Page<Annotation> findByParent(@Param("requester") UserAccount requester, @Param("id") Long id, @Param("groups") Set<Group> groups, @Param("showRedacted") boolean showRedacted, Pageable pageable);
-
-    /**
-     * Find publicly viewable annotations, does not require requester information
-     * @param pageable page request
-     * @return         page of annotations
-     */
-    @Query(value="SELECT a FROM Annotation AS a " +
-                 "WHERE a.accessControl.name = 'PUBLIC' " +                   // WHERE annotation has public access
-                 "AND (a.redacted = false OR a.redacted = ?1)")
-    public Page<Annotation> findAllPublic(boolean showRedacted, Pageable pageable);
-
-    // spec (search or filter)
     public Page<Annotation> findAll(Specification<Annotation> spec, Pageable pageable);
-
-    /**
-     * Find all annotations viewable by requester
-     * @param requester requester
-     * @param pageable  page request
-     * @return          page of annotations
-     */
-    @Query(value="SELECT DISTINCT a FROM Annotation AS a " +
-                 "WHERE (a.redacted = false OR a.redacted = :showRedacted) " +
-                 "AND (a.user = :requester " +                                  // WHERE     annotation belongs to the user
-                 "OR (a.accessControl.name LIKE 'PUBLIC') " +                         // OR        annotation has public access
-                 "OR (a.accessControl.name LIKE 'GROUP' AND a.group IN :groups))")          // OR        annotation has group access and requester belong to group
-    public Page<Annotation> findAll(@Param("requester") UserAccount requester, @Param("groups") Set<Group> groups, @Param("showRedacted") boolean showRedacted, Pageable pageable);
 }
