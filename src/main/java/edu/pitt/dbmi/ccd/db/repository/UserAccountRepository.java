@@ -19,14 +19,15 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import java.util.Optional;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
-import edu.pitt.dbmi.ccd.db.entity.Group;
+
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  *
@@ -65,12 +66,6 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     @Query("SELECT ua FROM UserAccount ua WHERE ua.person.firstName = ?1 AND ua.person.lastName = ?2")
     public Optional<UserAccount> findByFirstNameAndLastName(String first, String last);
-
-    @Query("SELECT ua FROM UserAccount ua WHERE ?1 IN ua.groups")
-    public Page<UserAccount> findByGroup(Group group, Pageable pageable);
-
-    @Query("SELECT ua FROM UserAccount ua WHERE ?1 IN ua.moderates")
-    public Page<UserAccount> findByGroupMod(Group group, Pageable pageable);
 
     public Page<UserAccount> findAll(Pageable pageable);
 }

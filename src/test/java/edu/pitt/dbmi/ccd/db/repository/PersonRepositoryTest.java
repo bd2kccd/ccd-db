@@ -18,14 +18,19 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Person;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Optional;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
+import edu.pitt.dbmi.ccd.db.entity.Person;
 
 /**
  *
@@ -40,7 +45,10 @@ public class PersonRepositoryTest {
     @Autowired
     private PersonRepository personRepository;
 
-    public PersonRepositoryTest() {
+    @Test
+    public void findByEmail() {
+        final Optional<Person> person = personRepository.findByEmail("alan@example.com");
+        assertTrue(person.isPresent());
     }
 
     @Test
