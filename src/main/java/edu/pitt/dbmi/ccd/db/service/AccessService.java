@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.pitt.dbmi.ccd.db.entity.Access;
-import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 import edu.pitt.dbmi.ccd.db.repository.AccessRepository;
 
 /**
@@ -54,21 +53,19 @@ public class AccessService {
         return accessRepository.save(access);
     }
 
-    public Access findOne(Long id) {
-        Optional<Access> access = accessRepository.findById(id);
-        return access.orElseThrow(() -> new NotFoundException("Access", "id", id));
+    public Optional<Access> findById(Long id) {
+        return accessRepository.findById(id);
     }
 
-    public Access findByName(String name) {
-        Optional<Access> access = accessRepository.findByName(name);
-        return access.orElseThrow(() -> new NotFoundException("Access", "name", name));
+    public Optional<Access> findByName(String name) {
+        return accessRepository.findByName(name);
     }
 
     public Page<Access> findAll(Pageable pageable) {
         return accessRepository.findAll(pageable);
     }
 
-    protected void delete(Access access) {
+    public void delete(Access access) {
         accessRepository.delete(access);
     }
 }

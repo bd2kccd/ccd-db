@@ -43,6 +43,7 @@ public interface UploadRepository extends JpaRepository<Upload, Long> , JpaSpeci
 
     public Page<Upload> findByUser(UserAccount user, Pageable pageable);
 
+    // search and filter
     public Page<Upload> findAll(Specification<Upload> spec, Pageable pageable);
 
     public Page<Upload> findAll(Pageable pageable);

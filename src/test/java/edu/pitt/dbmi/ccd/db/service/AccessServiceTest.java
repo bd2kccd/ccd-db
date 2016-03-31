@@ -21,7 +21,12 @@ package edu.pitt.dbmi.ccd.db.service;
 
 import static org.junit.Assert.*;
 
+import java.util.Optional;
+
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.runner.RunWith;
@@ -42,31 +47,34 @@ public class AccessServiceTest {
     @Autowired(required=true)
     private AccessService accessService;
 
-    private static final String name = "TEST";
-    private static final String description = "Test description";
-    private static final String none = "Does Not Exist";
-
     @Test
-    public void testCrud() {
+    public void createAndDelete() {
         // create
-        final Access access = accessService.save(new Access(name, description));
+        Access access = accessService.create("TEST", "Test access");
         assertNotNull(access.getId());
 
-        // findByName
-        try {
-            final Access found = accessService.findByName(name);
-            assertEquals(access.getId(), found.getId());
-        } catch (NotFoundException ex) {
-            accessService.delete(access);
-            fail(ex.getMessage());
-        }
-
         // delete
-        accessService.delete(access);        
+        accessService.delete(access);
+        Optional<Access> found = accessService.findById(access.getId());
+        assertFalse(found.isPresent());
     }
 
-    @Test(expected=NotFoundException.class)
-    public void testNotFound() {
-        accessService.findByName(none);
+    @Test
+    public void findById() {
+        Optional<Access> access = accessService.findById(1L);
+        assertTrue(access.isPresent());
+    }
+
+    @Test
+    public void findByName() {
+        Optional<Access> access = accessService.findByName("PUBLIC");
+        assertTrue(access.isPresent());
+    }
+
+    @Test
+    public void findAll() {
+        Pageable pageable = new PageRequest(0, 10);
+        Page<Access> accesses = accessService.findAll(pageable);
+        assertTrue(accesses.getTotalElements() == 3);
     }
 }

@@ -57,8 +57,11 @@ public final class UploadSpecification {
 
     /**
      * find uploads that contain search terms
-     * @param  terms search terms
-     * @return       specification
+     * @param  username  user
+     * @param  type      upload type (url or file)
+     * @param  matches   contains terms
+     * @param  nots      does not contain terms
+     * @return           specification
      */
     public static Specification<Upload> searchSpec(String username,
                                                    String type,
