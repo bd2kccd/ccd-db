@@ -18,9 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,9 +37,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
+import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
@@ -58,6 +60,11 @@ public class UserAccountServiceTest {
 
     @Autowired
     private UserAccountService userAccountService;
+
+    @Autowired
+    private GroupService groupService;
+
+    private final Pageable pageable = new PageRequest(0, 10);
 
     @Test
     public void createAndDelete() {
@@ -90,7 +97,54 @@ public class UserAccountServiceTest {
         assertTrue(userAccount.isPresent());
     }
 
+    @Test
+    public void updatePassword() {
+        Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace");
+        UserAccount userAccount = userAccountService.create(person, "einstein", "einstein");
 
+        // matching passwords
+        boolean changed = userAccountService.updatePassword(userAccount, "einstein", "einstein123");
+        assertTrue(changed);
+
+        // non-matching passwords
+        changed = userAccountService.updatePassword(userAccount, "einstein", "einstein123");
+        assertFalse(changed);
+
+        userAccountService.delete(userAccount);
+    }
+
+    @Test
+    public void findByGroupMembership() {
+        Group group = groupService.findById(1L).get();
+        Page<UserAccount> users = userAccountService.findByGroupMembership(group, pageable);
+        assertEquals(1, users.getTotalElements());
+        UserAccount user = users.iterator().next();
+        assertEquals("isaac", user.getUsername());
+    }
+
+    @Test
+    public void findByGroupModeration() {
+        Group group = groupService.findById(1L).get();
+        Page<UserAccount> users = userAccountService.findByGroupModeration(group, pageable);
+        assertEquals(1, users.getTotalElements());
+        UserAccount user = users.iterator().next();
+        assertEquals("isaac", user.getUsername());
+    }
+
+    @Test
+    public void findByGroupRequests() {
+        Group group = groupService.findById(1L).get();
+        Page<UserAccount> users = userAccountService.findByGroupRequests(group, pageable);
+        assertEquals(1, users.getTotalElements());
+        UserAccount user = users.iterator().next();
+        assertEquals("alan", user.getUsername());
+    }
+
+    @Test
+    public void findAll() {
+        Page<UserAccount> users = userAccountService.findAll(pageable);
+        assertEquals(2, users.getTotalElements());
+    }
 
     @Ignore
     @Test

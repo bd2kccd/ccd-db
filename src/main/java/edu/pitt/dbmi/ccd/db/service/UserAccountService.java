@@ -18,23 +18,25 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import java.util.Optional;
 import java.util.Date;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
 
 // logging
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -52,7 +54,7 @@ public class UserAccountService {
     private final UserAccountRepository userAccountRepository;
 
     private final PersonRepository personRepository;
-    
+
     private final BCryptPasswordEncoder passwordEncoder;
 
     // Number of rounds when performing BCrypt on passwords (Default is 10)
@@ -78,10 +80,6 @@ public class UserAccountService {
         return save(userAccount);
     }
 
-    private boolean matchesPassword(UserAccount principal, String password) {
-        return passwordEncoder.matches(password, principal.getPassword());
-    }
-
     public boolean updatePassword(UserAccount principal, String currPass, String newPass) {
         if (passwordEncoder.matches(currPass, principal.getPassword())) {
             final String encodedPassword = passwordEncoder.encode(newPass);
@@ -105,7 +103,7 @@ public class UserAccountService {
     public Optional<UserAccount> findByEmail(String email) {
         return userAccountRepository.findByEmail(email);
     }
-    
+
     public Page<UserAccount> findByGroupMembership(Group group, Pageable pageable) {
         return userAccountRepository.findByGroupMembership(group.getName(), pageable);
     }

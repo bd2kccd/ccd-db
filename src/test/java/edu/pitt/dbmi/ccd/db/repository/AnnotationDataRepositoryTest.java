@@ -57,6 +57,6 @@ public class AnnotationDataRepositoryTest {
         final Annotation annotation = annotationRepository.findOne(4L);
         final Pageable pageable = new PageRequest(0, 100);
         final Page<AnnotationData> data = annotationDataRepository.findByAnnotation(annotation, pageable);
-        assertTrue(data.getTotalElements() == 2);
+        assertEquals(2, data.getTotalElements());
     }
 }

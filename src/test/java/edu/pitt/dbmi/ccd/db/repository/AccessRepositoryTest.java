@@ -54,6 +54,6 @@ public class AccessRepositoryTest {
     public void findAll() {
         final Pageable pageable = new PageRequest(0, 3);
         final Page<Access> page = accessRepository.findAll(pageable);
-        assertTrue(page.getTotalElements() == 3);
+        assertEquals(3, page.getTotalElements());
     }
 }
