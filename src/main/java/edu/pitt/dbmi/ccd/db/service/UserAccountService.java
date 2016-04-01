@@ -31,7 +31,6 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
-import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 // logging
 import org.slf4j.Logger;
@@ -59,7 +58,7 @@ public class UserAccountService {
     // Number of rounds when performing BCrypt on passwords (Default is 10)
     private static final int BCRYPT_ROUNDS = 10;
 
-    @Autowired(required = true)
+    @Autowired
     public UserAccountService(UserAccountRepository userAccountRepository, PersonRepository personRepository) {
         this.userAccountRepository = userAccountRepository;
         this.personRepository = personRepository;
@@ -71,6 +70,16 @@ public class UserAccountService {
         final String encodedPassword = passwordEncoder.encode(password);
         final UserAccount account = new UserAccount(person, username, encodedPassword, true, new Date());
         return saveUserAccount(account);
+    }
+
+    public UserAccount create(Person person, String username, String password, String activationKey) {
+        UserAccount userAccount = create(person, username, password);
+        userAccount.setActivationKey(activationKey);
+        return save(userAccount);
+    }
+
+    private boolean matchesPassword(UserAccount principal, String password) {
+        return passwordEncoder.matches(password, principal.getPassword());
     }
 
     public boolean updatePassword(UserAccount principal, String currPass, String newPass) {
@@ -85,19 +94,16 @@ public class UserAccountService {
         }
     }
 
-    public UserAccount findOne(Long id) {
-        Optional<UserAccount> user = userAccountRepository.findById(id);
-        return user.orElseThrow(() -> new NotFoundException("User", "id", id));
+    public Optional<UserAccount> findById(Long id) {
+        return userAccountRepository.findById(id);
     }
 
-    public UserAccount findByUsername(String username) {
-        Optional<UserAccount> user = userAccountRepository.findByUsername(username);
-        return user.orElseThrow(() -> new NotFoundException("User", "username", username));
+    public Optional<UserAccount> findByUsername(String username) {
+        return userAccountRepository.findByUsername(username);
     }
 
-    public UserAccount findByEmail(String email) {
-        Optional<UserAccount> user = userAccountRepository.findByEmail(email);
-        return user.orElseThrow(() -> new NotFoundException("User", "email", email));
+    public Optional<UserAccount> findByEmail(String email) {
+        return userAccountRepository.findByEmail(email);
     }
     
     public Page<UserAccount> findByGroupMembership(Group group, Pageable pageable) {

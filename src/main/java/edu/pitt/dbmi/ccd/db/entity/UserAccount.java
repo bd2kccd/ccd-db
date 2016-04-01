@@ -127,6 +127,11 @@ public class UserAccount implements Serializable {
         this.password = password;
     }
 
+    public UserAccount(Person person, String username, String password, String activationKey) {
+        this(person, username, password);
+        this.activationKey = activationKey;
+    }
+
     public UserAccount(Person person, String username, String password, boolean active, Date createdDate) {
         this(person, username, password);
         this.active = active;

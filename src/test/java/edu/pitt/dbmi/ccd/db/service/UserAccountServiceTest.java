@@ -18,12 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Person;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -34,12 +32,18 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
+import edu.pitt.dbmi.ccd.db.entity.Person;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  *
@@ -55,45 +59,38 @@ public class UserAccountServiceTest {
     @Autowired
     private UserAccountService userAccountService;
 
-    public UserAccountServiceTest() { }
-
-    private static final String firstName = "Isaac";
-    private static final String lastName = "Newton";
-    private static final String email = "test@example.com";
-    private static final String workspace = "~/.test_workspace";
-    private static final String username = "test";
-    private static final String password = "test";
-    private static final boolean active = true;
-    private static final Date created = new Date();
-
-    private static final String none = "No Such Username";
-
     @Test
-    public void testCrud() {
-        // depencencies
-        final Person person = new Person(firstName, lastName, email, workspace);
-
+    public void createAndDelete() {
         // create
-        final UserAccount user = userAccountService.create(person, username, password);
-        assertNotNull(user.getId());
-
-        // findByUsername
-        try {
-            final UserAccount found = userAccountService.findByUsername(username);
-            assertEquals(user.getId(), found.getId());
-        } catch (NotFoundException ex) {
-            userAccountService.delete(user);
-            fail(ex.getMessage());
-        }
+        Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace");
+        UserAccount userAccount = userAccountService.create(person, "einstein", "einstien");
+        assertNotNull(userAccount.getId());
 
         // delete
-        userAccountService.delete(user);
+        userAccountService.delete(userAccount);
+        Optional<UserAccount> found = userAccountService.findById(userAccount.getId());
+        assertFalse(found.isPresent());
     }
 
-    @Test(expected=NotFoundException.class)
-    public void testNotFound() {
-        userAccountService.findByUsername(none);
+    @Test
+    public void findById() {
+        Optional<UserAccount> userAccount = userAccountService.findById(1L);
+        assertTrue(userAccount.isPresent());
     }
+
+    @Test
+    public void findByUsername() {
+        Optional<UserAccount> userAccount = userAccountService.findByUsername("alan");
+        assertTrue(userAccount.isPresent());
+    }
+
+    @Test
+    public void findByEmail() {
+        Optional<UserAccount> userAccount = userAccountService.findByEmail("alan@example.com");
+        assertTrue(userAccount.isPresent());
+    }
+
+
 
     @Ignore
     @Test

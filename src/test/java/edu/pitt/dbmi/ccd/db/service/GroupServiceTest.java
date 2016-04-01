@@ -21,22 +21,23 @@ package edu.pitt.dbmi.ccd.db.service;
 
 import static org.junit.Assert.*;
 
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Arrays;
 import java.util.Iterator;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
-import org.junit.runner.RunWith;
+import java.util.Optional;
+
 import org.junit.Test;
-import org.junit.Before;
-import org.junit.After;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.entity.Group;
-import edu.pitt.dbmi.ccd.db.repository.GroupRepository;
-import edu.pitt.dbmi.ccd.db.service.GroupService;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
@@ -46,73 +47,98 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 @SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
 public class GroupServiceTest {
 
-    @Autowired(required=true)
+    @Autowired
     private GroupService groupService;
 
-    private static final String name = "TEST_GROUP";
-    private static final String description = "Test description";
-    private static final String nameUpdated = "TEST_GROUP_UPDATED";
-    private static final String descriptionUpdated = "Test description updated";
-    private static final String none = "Does Not Exist";
-    private static final Set<String> searchTerms = new HashSet<>(0);
-    private Group group;
+    @Autowired
+    private UserAccountService userAccountService;
 
-    @Before
-    public void setup() {
-        group = groupService.create(new Group(name, description));
-        // assert that group was created
-        assertNotNull(group.getId());
-    }
-
-    @After
-    public void cleanup() {
-        final Long id = group.getId();
-        groupService.delete(group);
-        // assert that group was deleted
-        try {
-            group = groupService.findOne(id);
-            fail("Group not deleted");
-        } catch (NotFoundException ex) { }
-    }
+    private final Pageable pageable = new PageRequest(0, 10);
 
     @Test
-    public void findByNameTest() {
+    public void dupeTest() {
         try {
-            final Group found = groupService.findByName(name);
-            assertEquals(group.getId(), found.getId());
-        } catch (NotFoundException ex) {
-            fail(ex.getMessage());
+            groupService.create();
+        } catch (Exception ex) {
+            System.out.println("MESSAGE"+ex.getMessage());
+            System.out.println("MESSAGE"+ex.getLocalizedMessage());
         }
     }
 
+   @Test
+   public void createAndDelete() {
+       // create
+       Group group = groupService.create("TEST", "Test group");
+       assertNotNull(group.getId());
+
+       // delete
+       groupService.delete(group);
+       Optional<Group> found = groupService.findById(group.getId());
+       assertFalse(found.isPresent());
+   }
+
     @Test
-    public void updateTest() {
-        final Group updated = groupService.update(group, nameUpdated, descriptionUpdated);
-        assertNotEquals(name, updated.getName());
-        assertEquals(group.getId(), updated.getId());
+    public void findById() {
+        Optional<Group> group = groupService.findById(1L);
+        assertTrue(group.isPresent());
     }
 
     @Test
-    public void searchTest() {
-        searchTerms.addAll(Arrays.asList("TEST"));
-        final Iterable<Group> page = groupService.search(searchTerms, null, null);
-        final Iterator<Group> iter = page.iterator();
-
-        // assert that a single, correct, group was found
-        assertTrue(iter.hasNext());
-        assertTrue(iter.next().getName().contains("TEST"));
-        assertFalse(iter.hasNext());
+    public void findByName() {
+        Optional<Group> group = groupService.findByName("Scientists");
+        assertTrue(group.isPresent());
     }
 
-    /* Exception tests */
+    @Test
+    public void findByMember() {
+        UserAccount newton = userAccountService.findById(1L).get();
+        Page<Group> groups = groupService.findByMember(newton, pageable);
+        assertEquals(1, groups.getTotalElements());
 
-    @Test(expected=NotFoundException.class)
-    public void notFoundTest() {
-        groupService.findByName(none);
+        UserAccount turing = userAccountService.findById(2L).get();
+        groups = groupService.findByMember(turing, pageable);
+        assertEquals(0, groups.getTotalElements());
+    }
+
+    @Test
+    public void findByModerator() {
+        UserAccount newton = userAccountService.findById(1L).get();
+        Page<Group> groups = groupService.findByModerator(newton, pageable);
+        assertEquals(1, groups.getTotalElements());
+
+        UserAccount turing = userAccountService.findById(2L).get();
+        groups = groupService.findByModerator(turing, pageable);
+        assertEquals(0, groups.getTotalElements());
+    }
+
+    @Test
+    public void findByRequester() {
+        UserAccount turing = userAccountService.findById(2L).get();
+        Page<Group> groups = groupService.findByRequester(turing, pageable);
+        assertEquals(1, groups.getTotalElements());
+
+        UserAccount newton = userAccountService.findById(1L).get();
+        groups = groupService.findByRequester(newton, pageable);
+        assertEquals(0, groups.getTotalElements());
+    }
+
+    @Test
+    public void findAll() {
+        Page<Group> groups = groupService.findAll(pageable);
+        assertEquals(1, groups.getTotalElements());
+    }
+
+    @Test
+    public void update() {
+        final String updatedDescription = "Group of famous mathematicians";
+        Group group = groupService.findById(1L).get();
+        group = groupService.update(group, "", updatedDescription);
+        Group updated = groupService.findById(1L).get();
+        assertEquals(updatedDescription, updated.getDescription());
     }
 
     @Test(expected=DuplicateKeyException.class)
-    public void duplicateTest() {
-        groupService.create(group);
+    public void createDuplicate() {
+        Group group = groupService.create("Scientists", "Duplicate group");
     }
 }

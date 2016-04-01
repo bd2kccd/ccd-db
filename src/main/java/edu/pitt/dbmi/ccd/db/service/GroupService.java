@@ -22,21 +22,22 @@ package edu.pitt.dbmi.ccd.db.service;
 import static edu.pitt.dbmi.ccd.db.specification.GroupSpecification.searchSpec;
 import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
 
-import java.util.Set;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
+import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.stream.StreamSupport;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.GroupRepository;
-import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -46,64 +47,42 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 public class GroupService {
 
     private static final String DUPLICATE = "Group already exists with name: %s";
-    private static final String DUPLICATES = "Groups already exist with names: ";
+//    private static final String DUPLICATES = "Groups already exist with names: ";
 
     private final GroupRepository groupRepository;
 
-    @Autowired(required=true)
+    @Autowired
     public GroupService(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
-
-        // // default group
-        // List<Group> groups = groupRepository.findAll();
-        // if (groups.isEmpty()) {
-        //     groups.add(
-        //         new Group("global", "Group of all users")
-        //     );
-        //     save(groups);
-        // }
     }
 
-    public Group create(Group group) {
-        groupRepository.findByName(group.getName())
+    public Group create(String name, String description) {
+        groupRepository.findByName(name)
                        .ifPresent(g -> {throw new DuplicateKeyException(String.format(DUPLICATE, g.getName()));});
+        Group group = new Group(name, description);
         return save(group);
     }
 
-    public List<Group> create(Set<Group> groups) {
-        final Set<String> found = groups.stream()
-                                        .filter(g -> groupRepository.findByName(g.getName()).isPresent())
-                                        .map(Group::getName)
-                                        .collect(Collectors.toSet());
-        if (found.size() > 0) {
-            throw new DuplicateKeyException(DUPLICATES + String.join(", ", found));
-        } else {
-            return save(groups);
-        }
+    public Group create() {
+        Group group = new Group("Scientists", "test");
+        return groupRepository.save(group);
     }
+
+//    public List<Group> create(Set<Group> groups) {
+//        final Set<String> found = groups.stream()
+//                                        .filter(g -> groupRepository.findByName(g.getName()).isPresent())
+//                                        .map(Group::getName)
+//                                        .collect(Collectors.toSet());
+//        if (found.size() > 0) {
+//            throw new DuplicateKeyException(DUPLICATES + String.join(", ", found));
+//        } else {
+//            return save(groups);
+//        }
+//    }
 
     private Group save(Group group) {
         return groupRepository.save(group);
     }
-
-    private List<Group> save(Iterable<Group> groups) {
-        return groupRepository.save(groups);
-    }
-
-    private Group saveAndFlush(Group group) {
-        return groupRepository.saveAndFlush(group);
-    }
-
-    // public Group update(Group group, Group changes) {
-    //     final String name = changes.getName();
-    //     final String description = changes.getDescription();
-
-    //     return patch(group, name, description);
-    // }
-
-    // public Group patch(Group group) {f
-    //     return patch(group, null, null);
-    // }
 
     public Group update(Group group, String name, String description) {
         // update name
@@ -120,31 +99,24 @@ public class GroupService {
         if (!isNullOrEmpty(description)) {
             group.setDescription(description);
         }
-        return saveAndFlush(group);
+        return save(group);
     }
 
     public void delete(Group group) {
         groupRepository.delete(group);
     }
 
-    protected void delete(Long id) {
-        final Group group = findOne(id);
-        groupRepository.delete(group);
+    public Optional<Group> findById(Long id) {
+        return groupRepository.findById(id);
     }
 
-    public Group findOne(Long id) {
-        Optional<Group> group = groupRepository.findById(id);
-        return group.orElseThrow(() -> new NotFoundException("Group", "id", id));
+    public Optional<Group> findByName(String name) {
+        return groupRepository.findByName(name);
     }
 
-    public Group findByName(String name) {
-        Optional<Group> group = groupRepository.findByName(name);
-        return group.orElseThrow(() -> new NotFoundException("Group", "name", name));
-    }
-
-    public List<Group> findByNames(Iterable<String> names) {
+    public List<Optional<Group>> findByNames(Iterable<String> names) {
         return StreamSupport.stream(names.spliterator(), false)
-	                        .map(n -> findByName(n))
+	                        .map(this::findByName)
                             .collect(Collectors.toList());
     }
 
