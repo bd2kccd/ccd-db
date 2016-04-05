@@ -54,7 +54,7 @@ public class Attribute implements Serializable {
     private Long id;
 
     @NotNull
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="vocabId", nullable=false)
     private Vocabulary vocab;
 

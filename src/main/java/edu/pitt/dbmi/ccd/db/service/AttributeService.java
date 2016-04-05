@@ -55,7 +55,7 @@ public class AttributeService {
         return attributeRepository.findById(id);
     }
 
-    public Optional<Attribute> findByVocabularyAndLevelAndName(Vocabulary vocabulary, String level, String name) {
+    public Optional<Attribute> findByVocabAndLevelAndName(Vocabulary vocabulary, String level, String name) {
         return attributeRepository.findByVocabAndLevelAndName(vocabulary, level, name);
     }
 

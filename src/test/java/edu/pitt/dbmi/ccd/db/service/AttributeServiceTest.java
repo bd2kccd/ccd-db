@@ -52,13 +52,6 @@ public class AttributeServiceTest {
     }
 
     @Test
-    public void findByVocabAndLevelAndName() {
-        final Vocabulary vocabulary = vocabularyService.findById(1L).get();
-        Optional<Attribute> attribute = attributeService.findByVocabularyAndLevelAndName(vocabulary, null, "TEXT");
-        assertTrue(attribute.isPresent());
-    }
-
-    @Test
     public void findByVocab() {
         final Vocabulary vocabulary = vocabularyService.findById(1L).get();
         Page<Attribute> attributes = attributeService.findByVocab(vocabulary, pageable);
