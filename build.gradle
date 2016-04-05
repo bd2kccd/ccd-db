@@ -13,7 +13,6 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'spring-boot'
-apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 jar {
@@ -32,21 +31,19 @@ repositories {
 
 dependencies {
     // compile time
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('org.springframework.boot:spring-boot-starter-data-rest')
-    compile('org.springframework.security:spring-security-crypto')
-    compile('org.hibernate:hibernate-entitymanager:5.1.0.Final')
-    compile('org.hibernate:hibernate-validator')
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-rest:${springBootVersion}")
+    compile("org.hibernate:hibernate-validator:5.2.4.Final")
 
     // run time
-    runtime('org.hsqldb:hsqldb')
-    runtime('mysql:mysql-connector-java')
+    runtime("org.hsqldb:hsqldb:2.3.3")
+    runtime("mysql:mysql-connector-java:5.1.38")
 
     // testing
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
 }
 
 // gradle wrapper (./gradlew)
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.9'
+    gradleVersion = '2.12'
 }
