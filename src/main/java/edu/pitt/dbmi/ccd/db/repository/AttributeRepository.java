@@ -21,15 +21,17 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import java.util.Optional;
 import java.util.Set;
-import org.springframework.stereotype.Repository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
+
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 
 /**
  *
@@ -42,10 +44,10 @@ public interface AttributeRepository extends JpaRepository<Attribute, Long> {
     public Optional<Attribute> findById(Long id);
 
     @Query(value="SELECT a FROM Attribute AS a " +
-                 "WHERE a.vocab.name = ?1 " +
+                 "WHERE a.vocab = ?1 " +
                  "AND a.level LIKE ?2 " +
                  "AND a.name LIKE ?3")
-    public Optional<Attribute> findByVocabAndLevelAndName(String vocabName, String level, String name);
+    public Optional<Attribute> findByVocabAndLevelAndName(Vocabulary vocabulary, String level, String name);
 
     @Query(value="SELECT a FROM Attribute AS a " +
                  "WHERE a.vocab.name = ?1")
@@ -57,14 +59,14 @@ public interface AttributeRepository extends JpaRepository<Attribute, Long> {
     public Page<Attribute> findByVocabAndParent(String vocabName, Long parent, Pageable pageable);
 
     @Query(value="SELECT a FROM Attribute AS a " +
-                 "WHERE a.vocab.name = ?1 " +
+                 "WHERE a.vocab = ?1 " +
                  "AND a.parent = ?2")
-    public Page<Attribute> findByVocabAndParent(String vocabName, Attribute parent, Pageable pageable);
+    public Page<Attribute> findByVocabAndParent(Vocabulary vocabulary, Attribute parent, Pageable pageable);
 
     @Query(value="SELECT a FROM Attribute AS a " +
-                 "WHERE a.vocab.name = ?1 " +
+                 "WHERE a.vocab = ?1 " +
                  "AND a.parent IS NULL")
-    public Page<Attribute> findByVocabAndParentIsNull(String vocabName, Pageable pageable);
+    public Page<Attribute> findByVocabAndParentIsNull(Vocabulary vocabulary, Pageable pageable);
 
     @Query(value="SELECT a FROM Attribute AS a " +
                  "WHERE (:vocab IS NULL OR a.vocab.name = :vocab) " +
@@ -82,11 +84,11 @@ public interface AttributeRepository extends JpaRepository<Attribute, Long> {
     public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevelAndParentIsNull(@Param("vocab") String vocabName, @Param("level") String level, @Param("name") String name, @Param("requirement") String requirementLevel, Pageable pageable);
 
     @Query(value="SELECT a FROM Attribute AS a " +
-                 "WHERE (:vocab IS NULL OR a.vocab.name = :vocab) " +
+                 "WHERE (:vocab IS NULL OR a.vocab = :vocab) " +
                  "AND (:level IS NULL OR a.level LIKE CONCAT('%', :level, '%')) " +
                  "AND (:name IS NULL OR a.name LIKE CONCAT('%', :name, '%')) " +
                  "AND (:requirement IS NULL OR a.requirementLevel LIKE CONCAT('%', :requirement, '%'))")
-    public Page<Attribute> findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains(@Param("vocab") String vocabName, @Param("level") String level, @Param("name") String name, @Param("requirement") String requirementLevel, Pageable pageable);
+    public Page<Attribute> findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains(@Param("vocab") Vocabulary vocabulary, @Param("level") String level, @Param("name") String name, @Param("requirement") String requirementLevel, Pageable pageable);
 
     public Page<Attribute> findByParent(Attribute parent, Pageable pageable);
 

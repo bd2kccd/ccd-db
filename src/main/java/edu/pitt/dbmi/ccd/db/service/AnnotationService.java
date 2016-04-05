@@ -1,90 +1,55 @@
-///*
-// * Copyright (C) 2015 University of Pittsburgh.
-// *
-// * This library is free software; you can redistribute it and/or
-// * modify it under the terms of the GNU Lesser General Public
-// * License as published by the Free Software Foundation; either
-// * version 2.1 of the License, or (at your option) any later version.
-// *
-// * This library is distributed in the hope that it will be useful,
-// * but WITHOUT ANY WARRANTY; without even the implied warranty of
-// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// * Lesser General Public License for more details.
-// *
-// * You should have received a copy of the GNU Lesser General Public
-// * License along with this library; if not, write to the Free Software
-// * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-// * MA 02110-1301  USA
-// */
-//
-//package edu.pitt.dbmi.ccd.db.service;
-//
-//import edu.pitt.dbmi.ccd.db.entity.*;
-//import edu.pitt.dbmi.ccd.db.error.AccessUpdateException;
-//import edu.pitt.dbmi.ccd.db.error.NotFoundException;
-//import edu.pitt.dbmi.ccd.db.repository.AnnotationRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.Pageable;
-//import org.springframework.data.jpa.domain.Specification;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.util.Optional;
-//import java.util.Set;
-//
-//import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.filterSpec;
-//import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.searchSpec;
-//
-///**
-// * @author Mark Silvis (marksilvis@pitt.edu)
-// */
-//@Service
-//@Transactional
-//public class AnnotationService {
-//
-//    private final AnnotationRepository annotationRepository;
-//    private final UploadService uploadService;
-//    private final AccessService accessService;
-//    private final GroupService groupService;
-//    private final VocabularyService vocabularyService;
-//
+/*
+ * Copyright (C) 2015 University of Pittsburgh.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
+ */
+
+package edu.pitt.dbmi.ccd.db.service;
+
+import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.*;
+
+import java.util.Optional;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import edu.pitt.dbmi.ccd.db.entity.Annotation;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.repository.AnnotationRepository;
+
+/**
+ * @author Mark Silvis (marksilvis@pitt.edu)
+ */
+@Service
+@Transactional
+public class AnnotationService {
+
+    @Autowired
+    private AnnotationRepository annotationRepository;
+
 //    @Autowired(required=true)
-//    public AnnotationService(
-//            AnnotationRepository annotationRepository,
-//            UploadService uploadService,
-//            AccessService accessService,
-//            GroupService groupService,
-//            VocabularyService vocabularyService) {
+//    public AnnotationService(AnnotationRepository annotationRepository) {
 //        this.annotationRepository = annotationRepository;
-//        this.uploadService = uploadService;
-//        this.accessService = accessService;
-//        this.groupService = groupService;
-//        this.vocabularyService = vocabularyService;
 //    }
-//
-//    public Annotation create(
-//            UserAccount user,
-//            Long targetId,
-//            Long parentId,
-//            String accessName,
-//            String groupName,
-//            String vocababularyName) {
-//        final Upload upload = uploadService.findOne(targetId);
-//        final Annotation anno = (parentId != null)
-//                              ? findOne(user, parentId)
-//                              : null;
-//        final Access access = (groupName != null)
-//                            ? accessService.findByName(accessName)
-//                            : accessService.findByName("GROUP");
-//        final Group group = (groupName != null)
-//                          ? groupService.findByName(groupName)
-//                          : null;
-//        final Vocabulary vocab = vocabularyService.findByName(vocababularyName);
-//        final Annotation annotation = new Annotation(user, upload, anno, access, group, vocab);
-//        return save(annotation);
-//    }
-//
+
 //    public Annotation update(Annotation annotation, String accessName, String groupName) {
 //        final Access access = accessService.findByName(accessName);
 //        final Group group = (groupName != null)
@@ -119,61 +84,59 @@
 //            throw new AccessUpdateException(annotation.getAccess(), access);
 //        }
 //    }
-//
-//    public Annotation save(Annotation annotation) {
-//        return annotationRepository.save(annotation);
-//    }
-//
-//    public Annotation saveAndFlush(Annotation annotation) {
-//      return annotationRepository.saveAndFlush(annotation);
-//    }
-//
-//    public Annotation findOne(UserAccount requester, Long id) {
-//        Optional<Annotation> annotation = annotationRepository.findById(requester, id);
-//        return annotation.orElseThrow(() -> new NotFoundException("Annotation", "id", id));
-//    }
-//
-//    public Page<Annotation> findByParent(UserAccount requester, Long id, Pageable pageable) {
-//      return annotationRepository.findByParent(requester, id, pageable);
-//    }
-//
-//    public Page<Annotation> findAllPublic(Pageable pageable) {
-//        return annotationRepository.findAllPublic(pageable);
-//    }
-//
-//    public Page<Annotation> filter(
-//            UserAccount requester,
-//            String username,
-//            String group,
-//            Long upload,
-//            String vocab,
-//            String attributeLevel,
-//            String attributeName,
-//            String attributeRequirementLevel,
-//            Boolean showRedacted,
-//            Pageable pageable) {
-//        Specification<Annotation> spec = filterSpec(requester, username, group, upload, vocab, attributeLevel, attributeName, attributeRequirementLevel, showRedacted);
-//        return annotationRepository.findAll(spec, pageable);
-//    }
-//
-//    public Page<Annotation> search(
-//            UserAccount requester,
-//            String username,
-//            String group,
-//            Long upload,
-//            String vocab,
-//            String attributeLevel,
-//            String attributeName,
-//            String attributeRequirementLevel,
-//            Boolean showRedacted,
-//            Set<String> matches,
-//            Set<String> nots,
-//            Pageable pageable) {
-//        Specification<Annotation> spec = searchSpec(requester, username, group, upload, vocab, attributeLevel, attributeName, attributeRequirementLevel, showRedacted, matches, nots);
-//        return annotationRepository.findAll(spec, pageable);
-//    }
-//
-//    public Page<Annotation> findAll(UserAccount requester, Pageable pageable) {
-//        return annotationRepository.findAll(requester, pageable);
-//    }
-//}
+
+    public Annotation save(Annotation annotation) {
+        return annotationRepository.save(annotation);
+    }
+
+    public Optional<Annotation> findById(UserAccount requester, Long id) {
+        Specification<Annotation> spec = idSpec(requester, id);
+        return Optional.ofNullable(annotationRepository.findOne(spec));
+    }
+
+    public Page<Annotation> findByParent(UserAccount requester, Annotation annotation, boolean showRedacted, Pageable pageable) {
+        Specification<Annotation> spec = parentSpec(requester, annotation.getId(), showRedacted);
+        return annotationRepository.findAll(spec, pageable);
+    }
+
+    public Page<Annotation> filter(
+            UserAccount requester,
+            String username,
+            String group,
+            Long upload,
+            String vocab,
+            String attributeLevel,
+            String attributeName,
+            String attributeRequirementLevel,
+            Boolean showRedacted,
+            Pageable pageable) {
+        Specification<Annotation> spec = filterSpec(requester, username, group, upload, vocab, attributeLevel, attributeName, attributeRequirementLevel, showRedacted);
+        return annotationRepository.findAll(spec, pageable);
+    }
+
+    public Page<Annotation> search(
+            UserAccount requester,
+            String username,
+            String group,
+            Long upload,
+            String vocab,
+            String attributeLevel,
+            String attributeName,
+            String attributeRequirementLevel,
+            Boolean showRedacted,
+            Set<String> matches,
+            Set<String> nots,
+            Pageable pageable) {
+        Specification<Annotation> spec = searchSpec(requester, username, group, upload, vocab, attributeLevel, attributeName, attributeRequirementLevel, showRedacted, matches, nots);
+        return annotationRepository.findAll(spec, pageable);
+    }
+
+    public Page<Annotation> findAll(UserAccount requester, Pageable pageable) {
+        Specification<Annotation> spec = authSpec(requester);
+        return annotationRepository.findAll(spec, pageable);
+    }
+
+    protected void delete(Annotation annotation) {
+        annotationRepository.delete(annotation);
+    }
+}

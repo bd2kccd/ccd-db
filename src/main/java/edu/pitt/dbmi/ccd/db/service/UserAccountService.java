@@ -18,15 +18,15 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,45 +51,46 @@ public class UserAccountService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserAccountService.class);
 
-    private final UserAccountRepository userAccountRepository;
-
-    private final PersonRepository personRepository;
-
-    private final BCryptPasswordEncoder passwordEncoder;
-
-    // Number of rounds when performing BCrypt on passwords (Default is 10)
-    private static final int BCRYPT_ROUNDS = 10;
-
     @Autowired
-    public UserAccountService(UserAccountRepository userAccountRepository, PersonRepository personRepository) {
-        this.userAccountRepository = userAccountRepository;
-        this.personRepository = personRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder(BCRYPT_ROUNDS);
+    private UserAccountRepository userAccountRepository;
+    @Autowired
+    private PersonRepository personRepository;
+
+//    public UserAccount create(Person person, String username, String password) {
+//        // encode password
+//        final String encodedPassword = passwordEncoder.encode(password);
+//        final UserAccount account = new UserAccount(person, username, encodedPassword, true, new Date());
+//        return saveUserAccount(account);
+//    }
+//
+//    public UserAccount create(Person person, String username, String password, String activationKey) {
+//        UserAccount userAccount = create(person, username, password);
+//        userAccount.setActivationKey(activationKey);
+//        return save(userAccount);
+//    }
+//
+//    public boolean updatePassword(UserAccount principal, String currPass, String newPass) {
+//        if (passwordEncoder.matches(currPass, principal.getPassword())) {
+//            final String encodedPassword = passwordEncoder.encode(newPass);
+//            principal.setPassword(encodedPassword);
+//            save(principal);
+//            return true;
+//        } else {
+//            LOGGER.info("Failed password change by user: " + principal.getId());
+//            return false;
+//        }
+//    }
+
+
+    public UserAccount saveUserAccount(UserAccount userAccount) {
+        Person person = personRepository.save(userAccount.getPerson());
+        userAccount.setPerson(person);
+
+        return userAccountRepository.save(userAccount);
     }
 
-    public UserAccount create(Person person, String username, String password) {
-        // encode password
-        final String encodedPassword = passwordEncoder.encode(password);
-        final UserAccount account = new UserAccount(person, username, encodedPassword, true, new Date());
-        return saveUserAccount(account);
-    }
-
-    public UserAccount create(Person person, String username, String password, String activationKey) {
-        UserAccount userAccount = create(person, username, password);
-        userAccount.setActivationKey(activationKey);
-        return save(userAccount);
-    }
-
-    public boolean updatePassword(UserAccount principal, String currPass, String newPass) {
-        if (passwordEncoder.matches(currPass, principal.getPassword())) {
-            final String encodedPassword = passwordEncoder.encode(newPass);
-            principal.setPassword(encodedPassword);
-            save(principal);
-            return true;
-        } else {
-            LOGGER.info("Failed password change by user: " + principal.getId());
-            return false;
-        }
+    public List<UserAccount> saveUserAccounts(Set<UserAccount> userAccounts) {
+        return userAccountRepository.save(userAccounts);
     }
 
     public Optional<UserAccount> findById(Long id) {
@@ -120,18 +121,11 @@ public class UserAccountService {
         return userAccountRepository.findAll(pageable);
     }
 
-    public UserAccount save(UserAccount account) {
-        return userAccountRepository.save(account);
-    }
-
-    public UserAccount saveUserAccount(UserAccount userAccount) {
-        Person person = personRepository.save(userAccount.getPerson());
-        userAccount.setPerson(person);
-
-        return userAccountRepository.save(userAccount);
-    }
-
     public void delete(UserAccount account) {
         userAccountRepository.delete(account);
+    }
+
+    public void delete(Set<UserAccount> userAccounts) {
+        userAccountRepository.delete(userAccounts);
     }
 }

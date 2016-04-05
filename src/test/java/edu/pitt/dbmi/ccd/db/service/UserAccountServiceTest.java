@@ -67,10 +67,11 @@ public class UserAccountServiceTest {
     private final Pageable pageable = new PageRequest(0, 10);
 
     @Test
-    public void createAndDelete() {
-        // create
+    public void saveAndDelete() {
+        // save
         Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace");
-        UserAccount userAccount = userAccountService.create(person, "einstein", "einstien");
+        UserAccount userAccount = new UserAccount(person, "einstein", "$2a$10$MSi.zsnU.TAHocBApb5BN.G.3Cyp/t0WLd6/76u87Lp8qIINkUy0i");
+        userAccount = userAccountService.saveUserAccount(userAccount);
         assertNotNull(userAccount.getId());
 
         // delete
@@ -95,22 +96,6 @@ public class UserAccountServiceTest {
     public void findByEmail() {
         Optional<UserAccount> userAccount = userAccountService.findByEmail("alan@example.com");
         assertTrue(userAccount.isPresent());
-    }
-
-    @Test
-    public void updatePassword() {
-        Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace");
-        UserAccount userAccount = userAccountService.create(person, "einstein", "einstein");
-
-        // matching passwords
-        boolean changed = userAccountService.updatePassword(userAccount, "einstein", "einstein123");
-        assertTrue(changed);
-
-        // non-matching passwords
-        changed = userAccountService.updatePassword(userAccount, "einstein", "einstein123");
-        assertFalse(changed);
-
-        userAccountService.delete(userAccount);
     }
 
     @Test

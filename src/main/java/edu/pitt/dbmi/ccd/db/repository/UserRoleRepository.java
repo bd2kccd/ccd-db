@@ -20,9 +20,13 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import java.util.Optional;
 import java.util.Set;
-import org.springframework.stereotype.Repository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
+
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.entity.UserRole;
 
@@ -41,5 +45,7 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     public Optional<UserRole> findByName(String name);
 
     public Optional<UserRole> findByUserAccounts(Set<UserAccount> userAccounts);
+
+    public Page<UserRole> findAll(Pageable pageable);
 
 }

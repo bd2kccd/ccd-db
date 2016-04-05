@@ -20,13 +20,14 @@ package edu.pitt.dbmi.ccd.db.service;
 
 import java.util.Optional;
 import java.util.List;
-import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import edu.pitt.dbmi.ccd.db.entity.UserRole;
 import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
-import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  *
@@ -39,39 +40,41 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 @Transactional
 public class UserRoleService {
 
-    private final UserRoleRepository userRoleRepository;
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
-    @Autowired(required = true)
-    public UserRoleService(UserRoleRepository userRoleRepository) {
-        this.userRoleRepository = userRoleRepository;
+//    public UserRoleService(UserRoleRepository userRoleRepository) {
+//        this.userRoleRepository = userRoleRepository;
+//
+//        List<UserRole> roles = userRoleRepository.findAll();
+//        if (roles.isEmpty()) {
+//            List<UserRole> defaultRoles = Arrays.asList(
+//                new UserRole("USER",  "Standard user"),
+//                new UserRole("ADMIN", "Administrator"));
+//            roles.addAll(defaultRoles);
+//
+//            userRoleRepository.save(roles);
+//        }
+//    }
 
-        List<UserRole> roles = userRoleRepository.findAll();
-        if (roles.isEmpty()) {
-            List<UserRole> defaultRoles = Arrays.asList(
-                new UserRole("USER",  "Standard user"),
-                new UserRole("ADMIN", "Administrator"));
-            roles.addAll(defaultRoles);
+    public UserRole save(UserRole UserRole) {
+        return userRoleRepository.save(UserRole);
+    }
 
-            userRoleRepository.save(roles);
-        }
+    public Optional<UserRole> findById(Long id) {
+        return userRoleRepository.findById(id);
+    }
+
+    public Optional<UserRole> findByName(String name) {
+        return userRoleRepository.findByName(name);
     }
 
     public List<UserRole> findAll() {
         return userRoleRepository.findAll();
     }
 
-    public UserRole findOne(Long id) {
-        Optional<UserRole> role = userRoleRepository.findById(id);
-        return role.orElseThrow(() -> new NotFoundException("UserRole", "id", id));
-    }
-
-    public UserRole findByName(String name) {
-        Optional<UserRole> role = userRoleRepository.findByName(name);
-        return role.orElseThrow(() -> new NotFoundException("UserRole", "name", name));
-    }
-
-    public UserRole save(UserRole UserRole) {
-        return userRoleRepository.save(UserRole);
+    public Page<UserRole> findAll(Pageable pageable) {
+        return userRoleRepository.findAll(pageable);
     }
 
     public void delete(UserRole UserRole) {

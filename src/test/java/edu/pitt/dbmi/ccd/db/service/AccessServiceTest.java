@@ -44,13 +44,14 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 @SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
 public class AccessServiceTest {
 
-    @Autowired(required=true)
+    @Autowired
     private AccessService accessService;
 
     @Test
-    public void createAndDelete() {
-        // create
-        Access access = accessService.create("TEST", "Test access");
+    public void saveAndDelete() {
+        // save
+        Access access = new Access("TEST", "Test access");
+        access = accessService.save(access);
         assertNotNull(access.getId());
 
         // delete
@@ -75,6 +76,6 @@ public class AccessServiceTest {
     public void findAll() {
         Pageable pageable = new PageRequest(0, 10);
         Page<Access> accesses = accessService.findAll(pageable);
-        assertTrue(accesses.getTotalElements() == 3);
+        assertEquals(3, accesses.getTotalElements());
     }
 }

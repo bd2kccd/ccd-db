@@ -21,8 +21,8 @@ package edu.pitt.dbmi.ccd.db.service;
 import static edu.pitt.dbmi.ccd.db.specification.UploadSpecification.filterSpec;
 import static edu.pitt.dbmi.ccd.db.specification.UploadSpecification.searchSpec;
 
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +32,6 @@ import org.springframework.data.domain.Pageable;
 import edu.pitt.dbmi.ccd.db.entity.Upload;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.UploadRepository;
-import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -41,28 +40,23 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 @Transactional
 public class UploadService {
 
-    private final UploadRepository uploadRepository;
-
-    @Autowired(required=true)
-    public UploadService(UploadRepository uploadRepository) {
-        this.uploadRepository = uploadRepository;
-    }
-
-    public Upload create(UserAccount uploader, String title, String address) {
-        return save(new Upload(uploader, title, address));
-    }
+    @Autowired
+    private UploadRepository uploadRepository;
 
     public Upload save(Upload upload) {
         return uploadRepository.save(upload);
     }
 
-    public Upload findUpload(Long id) {
-        return uploadRepository.findOne(id);
+    public List<Upload> save(Set<Upload> uploads) {
+        return uploadRepository.save(uploads);
     }
 
-    public Upload findOne(Long id) {
-        Optional<Upload> upload = uploadRepository.findById(id);
-        return upload.orElseThrow(() -> new NotFoundException("Upload", "id", id));
+//    public Upload findUpload(Long id) {
+//        return uploadRepository.findOne(id);
+//    }
+
+    public Optional<Upload> findById(Long id) {
+        return uploadRepository.findById(id);
     }
 
     public Page<Upload> filter(String username, String type, Pageable pageable) {
@@ -75,5 +69,13 @@ public class UploadService {
 
     public Page<Upload> findAll(Pageable pageable) {
         return uploadRepository.findAll(pageable);
+    }
+
+    public void delete(Upload upload) {
+        uploadRepository.delete(upload);
+    }
+
+    public void delete(Set<Upload> uploads) {
+        uploadRepository.delete(uploads);
     }
 }

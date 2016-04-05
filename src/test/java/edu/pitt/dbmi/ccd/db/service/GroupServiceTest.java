@@ -56,26 +56,17 @@ public class GroupServiceTest {
     private final Pageable pageable = new PageRequest(0, 10);
 
     @Test
-    public void dupeTest() {
-        try {
-            groupService.create();
-        } catch (Exception ex) {
-            System.out.println("MESSAGE"+ex.getMessage());
-            System.out.println("MESSAGE"+ex.getLocalizedMessage());
-        }
+    public void saveAndDelete() {
+        // save
+        Group group = new Group("TEST", "Test group");
+        group = groupService.save(group);
+        assertNotNull(group.getId());
+
+        // delete
+        groupService.delete(group);
+        Optional<Group> found = groupService.findById(group.getId());
+        assertFalse(found.isPresent());
     }
-
-   @Test
-   public void createAndDelete() {
-       // create
-       Group group = groupService.create("TEST", "Test group");
-       assertNotNull(group.getId());
-
-       // delete
-       groupService.delete(group);
-       Optional<Group> found = groupService.findById(group.getId());
-       assertFalse(found.isPresent());
-   }
 
     @Test
     public void findById() {
@@ -91,10 +82,12 @@ public class GroupServiceTest {
 
     @Test
     public void findByMember() {
+        // is member
         UserAccount newton = userAccountService.findById(1L).get();
         Page<Group> groups = groupService.findByMember(newton, pageable);
         assertEquals(1, groups.getTotalElements());
 
+        // is not member
         UserAccount turing = userAccountService.findById(2L).get();
         groups = groupService.findByMember(turing, pageable);
         assertEquals(0, groups.getTotalElements());
@@ -102,10 +95,12 @@ public class GroupServiceTest {
 
     @Test
     public void findByModerator() {
+        // is moderator
         UserAccount newton = userAccountService.findById(1L).get();
         Page<Group> groups = groupService.findByModerator(newton, pageable);
         assertEquals(1, groups.getTotalElements());
 
+        // is not moderator
         UserAccount turing = userAccountService.findById(2L).get();
         groups = groupService.findByModerator(turing, pageable);
         assertEquals(0, groups.getTotalElements());
@@ -113,10 +108,12 @@ public class GroupServiceTest {
 
     @Test
     public void findByRequester() {
+        // is requester
         UserAccount turing = userAccountService.findById(2L).get();
         Page<Group> groups = groupService.findByRequester(turing, pageable);
         assertEquals(1, groups.getTotalElements());
 
+        // is not requester
         UserAccount newton = userAccountService.findById(1L).get();
         groups = groupService.findByRequester(newton, pageable);
         assertEquals(0, groups.getTotalElements());
@@ -126,19 +123,5 @@ public class GroupServiceTest {
     public void findAll() {
         Page<Group> groups = groupService.findAll(pageable);
         assertEquals(1, groups.getTotalElements());
-    }
-
-    @Test
-    public void update() {
-        final String updatedDescription = "Group of famous mathematicians";
-        Group group = groupService.findById(1L).get();
-        group = groupService.update(group, "", updatedDescription);
-        Group updated = groupService.findById(1L).get();
-        assertEquals(updatedDescription, updated.getDescription());
-    }
-
-    @Test(expected=DuplicateKeyException.class)
-    public void createDuplicate() {
-        Group group = groupService.create("Scientists", "Duplicate group");
     }
 }

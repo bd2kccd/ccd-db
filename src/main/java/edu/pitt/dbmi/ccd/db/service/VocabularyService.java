@@ -22,21 +22,18 @@ package edu.pitt.dbmi.ccd.db.service;
 import static edu.pitt.dbmi.ccd.db.specification.VocabularySpecification.searchSpec;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
-import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.dao.DuplicateKeyException;
+
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
 import edu.pitt.dbmi.ccd.db.repository.VocabularyRepository;
-import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -84,34 +81,19 @@ public class VocabularyService {
     }
 
     public Vocabulary save(Vocabulary vocab) {
-        vocabRepository.findByName(vocab.getName())
-                       .ifPresent(v -> {
-                         throw new DuplicateKeyException(String.format(DUPLICATE, v.getName()));
-                       });
         return vocabRepository.save(vocab);
     }
 
-    public List<Vocabulary> save(Iterable<Vocabulary> vocabs) {
-        final List<String> found = StreamSupport.stream(vocabs.spliterator(), false)
-                                                .distinct()
-                                                .filter(v -> vocabRepository.findByName(v.getName()).isPresent())
-                                                .map(Vocabulary::getName)
-                                                .collect(Collectors.toList());
-        if (found.size() > 0) {
-            throw new DuplicateKeyException(DUPLICATES + String.join(", ", found));
-        } else {
-            return vocabRepository.save(vocabs);
-        }
+    public List<Vocabulary> save(Set<Vocabulary> vocabs) {
+        return vocabRepository.save(vocabs);
     }
 
-    public Vocabulary findById(Long id) {
-        Optional<Vocabulary> vocab = vocabRepository.findById(id);
-        return vocab.orElseThrow(() -> new NotFoundException("Vocabulary", "id", id));
+    public Optional<Vocabulary> findById(Long id) {
+        return vocabRepository.findById(id);
     }
 
-    public Vocabulary findByName(String name) {
-        Optional<Vocabulary> vocab = vocabRepository.findByName(name);
-        return vocab.orElseThrow(() -> new NotFoundException("Vocabulary", "name", name));
+    public Optional<Vocabulary> findByName(String name) {
+        return vocabRepository.findByName(name);
     }
 
     public Page<Vocabulary> search(Set<String> matches, Set<String> nots, Pageable pageable) {
@@ -122,7 +104,11 @@ public class VocabularyService {
         return vocabRepository.findAll(pageable);
     }
 
-    protected void delete(Vocabulary vocab) {
-        vocabRepository.delete(vocab);
+    protected void delete(Vocabulary vocabularies) {
+        vocabRepository.delete(vocabularies);
+    }
+
+    protected void delete(Set<Vocabulary> vocabularies) {
+        vocabRepository.delete(vocabularies);
     }
 }

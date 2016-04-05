@@ -19,17 +19,19 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import edu.pitt.dbmi.ccd.db.repository.AttributeRepository;
-import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -38,88 +40,88 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 @Transactional
 public class AttributeService {
 
-    private final AttributeRepository attributeRepository;
-
     @Autowired(required=true)
-    public AttributeService(AttributeRepository attributeRepository) {
-        this.attributeRepository = attributeRepository;
-    }
+    private AttributeRepository attributeRepository;
 
     public Attribute save(Attribute attribute) {
         return attributeRepository.save(attribute);
     }
 
-    public Attribute findOne(Long id) {
-        Optional<Attribute> attribute = attributeRepository.findById(id);
-        return attribute.orElseThrow(() -> new NotFoundException("Attribute", "id", id));
+    public List<Attribute> save(Set<Attribute> attributes) {
+        return attributeRepository.save(attributes);
     }
 
-    public Attribute findByVocabAndLevelAndName(String vocabName, String level, String name) {
-        Optional<Attribute> attribute = attributeRepository.findByVocabAndLevelAndName(vocabName, level, name);
-        return attribute.orElseThrow(() -> new NotFoundException("Attribute",
-                                                                 new String[]{"vocab", "level", "name"},
-                                                                 new Object[]{vocabName, level, name}));
+    public Optional<Attribute> findById(Long id) {
+        return attributeRepository.findById(id);
+    }
+
+    public Optional<Attribute> findByVocabularyAndLevelAndName(Vocabulary vocabulary, String level, String name) {
+        return attributeRepository.findByVocabAndLevelAndName(vocabulary, level, name);
     }
 
     public Page<Attribute> findByVocab(Vocabulary vocab, Pageable pageable) {
         return attributeRepository.findByVocab(vocab.getName(), pageable);
     }
 
-    public Page<Attribute> findByVocabAndParent(String vocabName, Long parent, Pageable pageable) {
-        return attributeRepository.findByVocabAndParent(vocabName, parent, pageable);
+    public Page<Attribute> findByVocabAndParentIsNull(Vocabulary vocabulary, Pageable pageable) {
+        return attributeRepository.findByVocabAndParentIsNull(vocabulary, pageable);
     }
 
-    public Page<Attribute> findByVocabAndParent(String vocabName, Attribute parent, Pageable pageable) {
-        return attributeRepository.findByVocabAndParent(vocabName, parent, pageable);
+    public Page<Attribute> findByVocabAndParent(Vocabulary vocabulary, Attribute parent, Pageable pageable) {
+        return attributeRepository.findByVocabAndParent(vocabulary, parent, pageable);
     }
-
-    public Page<Attribute> findByVocabAndParentIsNull(String vocabName, Pageable pageable) {
-        return attributeRepository.findByVocabAndParentIsNull(vocabName, pageable);
-    }
-
-    /**
-     * Find Attributes matching non-null parameters
-     * @param  vocab            vocabulary (nullable)
-     * @param  level            level (nullable)
-     * @param  name             name (nullable)
-     * @param  requirementLevel requirement level (nullable)
-     * @param  pageable         page request
-     * @return                  matching attributes
-     */
-    public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevel(Vocabulary vocab, String level, String name, String requirementLevel, Pageable pageable) {
-        return attributeRepository.findByVocabAndLevelAndNameAndRequirementLevel(vocab.getName(), level, name, requirementLevel, pageable);
-    }
-
-    public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevelAndParentIsNull(Vocabulary vocab, String level, String name, String requirementLevel, Pageable pageable) {
-        return attributeRepository.findByVocabAndLevelAndNameAndRequirementLevelAndParentIsNull(vocab.getName(), level, name, requirementLevel, pageable);
-    }
+//
+//    /**
+//     * Find Attributes matching non-null parameters
+//     * @param  vocab            vocabulary (nullable)
+//     * @param  level            level (nullable)
+//     * @param  name             name (nullable)
+//     * @param  requirementLevel requirement level (nullable)
+//     * @param  pageable         page request
+//     * @return                  matching attributes
+//     */
+//    public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevel(Vocabulary vocab, String level, String name, String requirementLevel, Pageable pageable) {
+//        return attributeRepository.findByVocabAndLevelAndNameAndRequirementLevel(vocab.getName(), level, name, requirementLevel, pageable);
+//    }
+//
+//    public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevelAndParentIsNull(Vocabulary vocab, String level, String name, String requirementLevel, Pageable pageable) {
+//        return attributeRepository.findByVocabAndLevelAndNameAndRequirementLevelAndParentIsNull(vocab.getName(), level, name, requirementLevel, pageable);
+//    }
 
     /**
      * Find Attributes containing non-null parameters
-     * @param  vocab            vocabulary (nullable)
+     * @param  vocabulary       vocabulary (nullable)
      * @param  level            level contains (nullable)
      * @param  name             name contains (nullable)
      * @param  requirementLevel requirement level contains (nullable)
      * @param  pageable         page request
      * @return                  matching attributes
      */
-    public Page<Attribute> findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains(String vocabName, String level, String name, String requirementLevel, Pageable pageable) {
-        return attributeRepository.findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains(vocabName, level, name, requirementLevel, pageable);
+    public Page<Attribute> findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains(Vocabulary vocabulary, String level, String name, String requirementLevel, Pageable pageable) {
+        return attributeRepository.findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains(vocabulary, level, name, requirementLevel, pageable);
     }
 
     public Page<Attribute> findByParent(Attribute parent, Pageable pageable) {
         return attributeRepository.findByParent(parent, pageable);
     }
 
-    public Page<Attribute> findByChildrenIn(Set<Attribute> children, Pageable pageable) {
-        return attributeRepository.findByChildrenIn(children, pageable);
-    }
+//    public Page<Attribute> findByChildrenIn(Set<Attribute> children, Pageable pageable) {
+//        return attributeRepository.findByChildrenIn(children, pageable);
+//    }
 
-    public Page<Attribute> findAllByParentIsNull(Pageable pageable) {
-        return attributeRepository.findAllByParentIsNull(pageable);
-    }
+//    public Page<Attribute> findAllByParentIsNull(Pageable pageable) {
+//        return attributeRepository.findAllByParentIsNull(pageable);
+//    }
 
     public Page<Attribute> findAll(Pageable pageable) {
         return attributeRepository.findAll(pageable);
+    }
+
+    public void delete(Attribute attribute) {
+        attributeRepository.delete(attribute);
+    }
+
+    public void delete(Set<Attribute> attributes) {
+        attributeRepository.delete(attributes);
     }
 }

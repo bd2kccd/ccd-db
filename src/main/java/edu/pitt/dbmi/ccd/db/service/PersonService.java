@@ -18,7 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 
 /**
  *
@@ -38,33 +40,30 @@ import edu.pitt.dbmi.ccd.db.error.NotFoundException;
 @Transactional
 public class PersonService {
 
-    private final PersonRepository personRepository;
-
-    @Autowired(required = true)
-    public PersonService(PersonRepository personRepository) {
-        this.personRepository = personRepository;
-    }
-
-    // public Person findPerson(Long id) {
-    //     return personRepository.findOne(id);
-    // }
-
-    public Person findOne(Long id) {
-        Optional<Person> person = personRepository.findById(id);
-        return person.orElseThrow(() -> new NotFoundException("User", "id", id));
-    }
+    @Autowired
+    private PersonRepository personRepository;
 
     public Person save(Person person) {
         return personRepository.save(person);
     }
 
-    public Person findPersonByEmail(String email) {
-        Optional<Person> person = personRepository.findByEmail(email);
-        return person.orElseThrow(() -> new NotFoundException("User", "email", email));
+    public List<Person> save(Set<Person> persons) {
+        return personRepository.save(persons);
+    }
+
+    public Optional<Person> findById(Long id) {
+        return personRepository.findById(id);
+    }
+
+    public Optional<Person> findPersonByEmail(String email) {
+        return personRepository.findByEmail(email);
     }
 
     public Page<Person> findPersonByDescriptionContains(String terms, Pageable pageable) {
         return personRepository.findByDescriptionContains(terms, pageable);
     }
 
+    public void delete(Person person) {
+        personRepository.delete(person);
+    }
 }

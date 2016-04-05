@@ -1,4 +1,4 @@
-package edu.pitt.dbmi.ccd.db.repository;
+package edu.pitt.dbmi.ccd.db.service;
 
 import static edu.pitt.dbmi.ccd.db.specification.UploadSpecification.filterSpec;
 import static edu.pitt.dbmi.ccd.db.specification.UploadSpecification.searchSpec;
@@ -28,74 +28,66 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
-public class UploadRepositoryTest {
+public class UploadServiceTest {
 
     @Autowired
-    private UploadRepository uploadRepository;
+    private UploadService uploadService;
     @Autowired
-    private UserAccountRepository userAccountRepository;
+    private UserAccountService userAccountService;
 
-    Pageable pageable = new PageRequest(0, 10);
+    private final Pageable pageable = new PageRequest(0, 1);
 
     @Test
     public void saveAndDelete() {
         // save
-        UserAccount user = userAccountRepository.findOne(1L);
-        Upload upload = uploadRepository.save(new Upload(user, "TEST", "http://www.google.com"));
+        final UserAccount userAccount = userAccountService.findById(1L).get();
+        Upload upload = new Upload(userAccount, "Test upload", "https://google.com");
+        upload = uploadService.save(upload);
         assertNotNull(upload.getId());
 
         // delete
-        uploadRepository.delete(upload);
-        Optional<Upload> found = uploadRepository.findById(upload.getId());
+        uploadService.delete(upload);
+        Optional<Upload> found = uploadService.findById(upload.getId());
         assertFalse(found.isPresent());
     }
 
     @Test
     public void findById() {
-        Optional<Upload> upload = uploadRepository.findById(1L);
+        Optional<Upload> upload = uploadService.findById(1L);
         assertTrue(upload.isPresent());
     }
 
     @Test
-    public void findByTitleContains() {
-        Page<Upload> uploads = uploadRepository.findByTitleContains("Biomedical", pageable);
+    public void filterUser() {
+        Page<Upload> uploads = uploadService.filter("isaac", null, pageable);
         assertEquals(1, uploads.getTotalElements());
-    }
 
-    @Test
-    public void findByUser() {
-        UserAccount user = userAccountRepository.findOne(1L);
-        Page<Upload> uploads = uploadRepository.findByUser(user, pageable);
-        assertEquals(1, uploads.getTotalElements());
+        uploads = uploadService.filter("alan", null, pageable);
+        assertEquals(0, uploads.getTotalElements());
     }
 
     @Test
     public void filterType() {
-        Specification<Upload> spec = filterSpec(null, "url");
-        Page<Upload> uploads = uploadRepository.findAll(spec, pageable);
+        Page<Upload> uploads = uploadService.filter(null, "url", pageable);
         assertEquals(1, uploads.getTotalElements());
 
-        spec = filterSpec(null, "file");
-        uploads = uploadRepository.findAll(spec, pageable);
+        uploads = uploadService.filter(null, "file", pageable);
         assertEquals(0, uploads.getTotalElements());
     }
 
     @Test
     public void search() {
         Set<String> searches = new HashSet<>(Arrays.asList("Biomedical"));
-        Specification<Upload> spec = searchSpec(null, null, searches, null);
-        Page<Upload> uploads = uploadRepository.findAll(spec, pageable);
+        Page<Upload> uploads = uploadService.search(null, null, searches, new HashSet<String>(0), pageable);
         assertEquals(1, uploads.getTotalElements());
 
-        Set<String> nots = searches;
-        spec = searchSpec(null, null, null, nots);
-        uploads = uploadRepository.findAll(spec, pageable);
+        uploads = uploadService.search(null, null, new HashSet<String>(0), searches, pageable);
         assertEquals(0, uploads.getTotalElements());
     }
 
     @Test
     public void findAll() {
-        Page<Upload> uploads = uploadRepository.findAll(pageable);
+        Page<Upload> uploads = uploadService.findAll(pageable);
         assertEquals(1, uploads.getTotalElements());
     }
 }

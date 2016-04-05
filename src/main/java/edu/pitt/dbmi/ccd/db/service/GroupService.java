@@ -46,68 +46,43 @@ import edu.pitt.dbmi.ccd.db.repository.GroupRepository;
 @Transactional
 public class GroupService {
 
-    private static final String DUPLICATE = "Group already exists with name: %s";
-//    private static final String DUPLICATES = "Groups already exist with names: ";
-
-    private final GroupRepository groupRepository;
-
     @Autowired
-    public GroupService(GroupRepository groupRepository) {
-        this.groupRepository = groupRepository;
-    }
+    private  GroupRepository groupRepository;
 
-    public Group create(String name, String description) {
-        groupRepository.findByName(name)
-                       .ifPresent(g -> {throw new DuplicateKeyException(String.format(DUPLICATE, g.getName()));});
-        Group group = new Group(name, description);
-        return save(group);
-    }
-
-    public Group create() {
-        Group group = new Group("Scientists", "test");
+    public Group save(Group group) {
         return groupRepository.save(group);
     }
 
-//    public List<Group> create(Set<Group> groups) {
-//        final Set<String> found = groups.stream()
-//                                        .filter(g -> groupRepository.findByName(g.getName()).isPresent())
-//                                        .map(Group::getName)
-//                                        .collect(Collectors.toSet());
-//        if (found.size() > 0) {
-//            throw new DuplicateKeyException(DUPLICATES + String.join(", ", found));
-//        } else {
-//            return save(groups);
+    public List<Group> save(Set<Group> groups) {
+        return groupRepository.save(groups);
+    }
+
+//    public Group update(Group group, String name, String description) {
+//        // update name
+//        if (!(isNullOrEmpty(name) || group.getName().equals(name))) {
+//            // check if name isn't just case change
+//            if (!group.getName().equalsIgnoreCase(name)) {
+//                // check that name doesn't already exist
+//                groupRepository.findByName(name)
+//                               .ifPresent(g -> {throw new DuplicateKeyException(String.format(DUPLICATE, name));});
+//            }
+//            group.setName(name);
 //        }
+//        // update description
+//        if (!isNullOrEmpty(description)) {
+//            group.setDescription(description);
+//        }
+//        return save(group);
 //    }
-
-    private Group save(Group group) {
-        return groupRepository.save(group);
-    }
-
-    public Group update(Group group, String name, String description) {
-        // update name
-        if (!(isNullOrEmpty(name) || group.getName().equals(name))) {
-            // check if name isn't just case change
-            if (!group.getName().equalsIgnoreCase(name)) {            
-                // check that name doesn't already exist
-                groupRepository.findByName(name)
-                               .ifPresent(g -> {throw new DuplicateKeyException(String.format(DUPLICATE, name));});
-            }
-            group.setName(name);
-        }
-        // update description
-        if (!isNullOrEmpty(description)) {
-            group.setDescription(description);
-        }
-        return save(group);
-    }
-
-    public void delete(Group group) {
-        groupRepository.delete(group);
-    }
 
     public Optional<Group> findById(Long id) {
         return groupRepository.findById(id);
+    }
+
+    public List<Optional<Group>> findByIds(Iterable<Long> ids) {
+        return StreamSupport.stream(ids.spliterator(), false)
+                            .map(this::findById)
+                            .collect(Collectors.toList());
     }
 
     public Optional<Group> findByName(String name) {
@@ -138,5 +113,13 @@ public class GroupService {
 
     public Page<Group> findAll(Pageable pageable) {
         return groupRepository.findAll(pageable);
+    }
+
+    public void delete(Group group) {
+        groupRepository.delete(group);
+    }
+
+    public void delete(Set<Group> groups) {
+        groupRepository.delete(groups);
     }
 }

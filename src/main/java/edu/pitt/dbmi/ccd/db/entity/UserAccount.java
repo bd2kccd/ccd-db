@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -63,7 +64,7 @@ public class UserAccount implements Serializable {
     private String password;
 
     @Column(name = "active", nullable = false)
-    private Boolean active;
+    private Boolean active = true;
 
     @Column(name = "activationKey")
     private String activationKey;
@@ -118,6 +119,11 @@ public class UserAccount implements Serializable {
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
     @OrderBy("created")
     private Set<Annotation> annotations = new HashSet<>(0);
+
+    @PrePersist
+    private void onCreate() {
+        createdDate = new Date();
+    }
 
     protected UserAccount() { }
 

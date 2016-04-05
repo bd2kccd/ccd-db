@@ -37,17 +37,8 @@ import edu.pitt.dbmi.ccd.db.repository.AccessRepository;
 @Transactional
 public class AccessService {
 
-    private final AccessRepository accessRepository;
-
-    @Autowired(required=true)
-    public AccessService(AccessRepository accessRepository) {
-        this.accessRepository = accessRepository;
-    }
-
-    public Access create(String name, String description) {
-        final Access access = new Access(name, description);
-        return accessRepository.save(access);
-    }
+    @Autowired
+    private AccessRepository accessRepository;
 
     public Access save(Access access) {
         return accessRepository.save(access);
