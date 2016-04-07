@@ -59,8 +59,7 @@ public class UserAccount implements Serializable {
     private String username;
 
     @NotNull
-    @Size(max=60)
-    @Column(name = "password", columnDefinition="CHAR(60)", length=60, nullable=false)
+    @Column(nullable=false)
     private String password;
 
     @Column(name = "active", nullable = false)
