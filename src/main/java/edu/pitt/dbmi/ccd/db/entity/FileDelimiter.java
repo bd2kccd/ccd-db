@@ -58,11 +58,6 @@ public class FileDelimiter implements Serializable {
         this.value = value;
     }
 
-    @Override
-    public String toString() {
-        return "FileDelimiter{" + "id=" + id + ", name=" + name + ", value=" + value + ", description=" + description + '}';
-    }
-
     public Long getId() {
         return id;
     }

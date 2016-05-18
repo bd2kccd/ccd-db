@@ -75,11 +75,6 @@ public class SecurityAnswer implements Serializable {
         this.userAccounts = userAccounts;
     }
 
-    @Override
-    public String toString() {
-        return "SecurityAnswer{" + "id=" + id + ", securityQuestion=" + securityQuestion + ", answer=" + answer + ", userAccounts=" + userAccounts + '}';
-    }
-
     public Long getId() {
         return id;
     }

@@ -54,11 +54,6 @@ public class VariableType implements Serializable {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "VariableType{" + "id=" + id + ", name=" + name + ", description=" + description + '}';
-    }
-
     public Long getId() {
         return id;
     }
