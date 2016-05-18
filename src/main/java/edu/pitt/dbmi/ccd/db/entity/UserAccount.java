@@ -63,7 +63,7 @@ public class UserAccount implements Serializable {
     private String password;
 
     @Column(name = "active", nullable = false)
-    private Boolean active = true;
+    private Boolean active = false;
 
     @Column(name = "activationKey")
     private String activationKey;
@@ -122,6 +122,7 @@ public class UserAccount implements Serializable {
     @PrePersist
     private void onCreate() {
         createdDate = new Date();
+        lastLoginDate = new Date();
     }
 
     protected UserAccount() { }
@@ -130,6 +131,11 @@ public class UserAccount implements Serializable {
         this.person = person;
         this.username = username;
         this.password = password;
+    }
+
+    public UserAccount(Person person, String username, String password, boolean active) {
+        this(person, username, password);
+        this.active = active;
     }
 
     public UserAccount(Person person, String username, String password, String activationKey) {
