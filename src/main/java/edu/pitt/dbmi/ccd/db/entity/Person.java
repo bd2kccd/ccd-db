@@ -66,6 +66,11 @@ public class Person implements Serializable {
         this.workspace = workspace;
     }
 
+    @Override
+    public String toString() {
+        return "Person{" + "id=" + id + ", firstName=" + firstName + ", middleName=" + middleName + ", lastName=" + lastName + ", email=" + email + ", workspace=" + workspace + '}';
+    }
+
     public Long getId() {
         return id;
     }

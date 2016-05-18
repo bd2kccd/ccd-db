@@ -133,6 +133,11 @@ public class UserAccount implements Serializable {
         this.securityAnswers = securityAnswers;
     }
 
+    @Override
+    public String toString() {
+        return "UserAccount{" + "id=" + id + ", person=" + person + ", username=" + username + ", password=" + password + ", publicKey=" + publicKey + ", privateKey=" + privateKey + ", active=" + active + ", accountId=" + accountId + ", createdDate=" + createdDate + ", lastLoginDate=" + lastLoginDate + ", dataFiles=" + dataFiles + ", userRoles=" + userRoles + ", jobQueueInfos=" + jobQueueInfos + ", securityAnswers=" + securityAnswers + '}';
+    }
+
     public Long getId() {
         return id;
     }

@@ -106,6 +106,11 @@ public class JobQueueInfo implements Serializable {
         this.userAccounts = userAccounts;
     }
 
+    @Override
+    public String toString() {
+        return "JobQueueInfo{" + "id=" + id + ", pid=" + pid + ", algorName=" + algorName + ", commands=" + commands + ", fileName=" + fileName + ", tmpDirectory=" + tmpDirectory + ", outputDirectory=" + outputDirectory + ", status=" + status + ", addedTime=" + addedTime + ", userAccounts=" + userAccounts + '}';
+    }
+
     public Long getId() {
         return id;
     }

@@ -89,6 +89,11 @@ public class DataFile implements Serializable {
         this.fileSize = fileSize;
     }
 
+    @Override
+    public String toString() {
+        return "DataFile{" + "id=" + id + ", dataFileInfo=" + dataFileInfo + ", name=" + name + ", absolutePath=" + absolutePath + ", creationTime=" + creationTime + ", lastModifiedTime=" + lastModifiedTime + ", fileSize=" + fileSize + ", userAccounts=" + userAccounts + '}';
+    }
+
     public Long getId() {
         return id;
     }

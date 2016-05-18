@@ -67,6 +67,11 @@ public class DataFileInfo implements Serializable {
     public DataFileInfo() {
     }
 
+    @Override
+    public String toString() {
+        return "DataFileInfo{" + "id=" + id + ", fileDelimiter=" + fileDelimiter + ", variableType=" + variableType + ", md5checkSum=" + md5checkSum + ", numOfRows=" + numOfRows + ", numOfColumns=" + numOfColumns + ", missingValue=" + missingValue + '}';
+    }
+
     public Long getId() {
         return id;
     }

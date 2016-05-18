@@ -72,6 +72,11 @@ public class RolePermission implements Serializable {
         this.userRoles = userRoles;
     }
 
+    @Override
+    public String toString() {
+        return "RolePermission{" + "id=" + id + ", name=" + name + ", description=" + description + ", userRoles=" + userRoles + '}';
+    }
+
     public Long getId() {
         return id;
     }

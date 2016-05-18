@@ -51,6 +51,11 @@ public class SecurityQuestion implements Serializable {
         this.question = question;
     }
 
+    @Override
+    public String toString() {
+        return "SecurityQuestion{" + "id=" + id + ", question=" + question + '}';
+    }
+
     public Long getId() {
         return id;
     }
