@@ -19,7 +19,7 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Person;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,29 +29,53 @@ import org.springframework.util.Assert;
 
 /**
  *
- * May 18, 2016 3:20:40 PM
+ * May 18, 2016 3:41:02 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
-public class PersonRepositoryTest {
-    
-    @Autowired
-    private PersonRepository personRepository;
+public class UserAccountRepositoryTest {
 
-    public PersonRepositoryTest() {
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+
+    public UserAccountRepositoryTest() {
     }
 
     /**
-     * Test of findByEmail method, of class PersonRepository.
+     * Test of findByUsername method, of class UserAccountRepository.
+     */
+    @Test
+    public void testFindByUsername() {
+        System.out.println("findByUsername");
+
+        String username = "bspears";
+        UserAccount userAccount = userAccountRepository.findByUsername(username);
+        Assert.notNull(userAccount);
+
+    }
+
+    /**
+     * Test of findByAccountId method, of class UserAccountRepository.
+     */
+    @Test
+    public void testFindByAccountId() {
+        System.out.println("findByAccountId");
+        String accountId = "123456789";
+        UserAccount userAccount = userAccountRepository.findByAccountId(accountId);
+        Assert.notNull(userAccount);
+    }
+
+    /**
+     * Test of findByEmail method, of class UserAccountRepository.
      */
     @Test
     public void testFindByEmail() {
         System.out.println("findByEmail");
         String email = "bspears@localhost";
-        Person person = personRepository.findByEmail(email);
-        Assert.notNull(person);
+        UserAccount userAccount = userAccountRepository.findByEmail(email);
+        Assert.notNull(userAccount);
     }
 
 }

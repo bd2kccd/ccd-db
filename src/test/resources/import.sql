@@ -1,0 +1,5 @@
+insert into person (id,first_name,middle_name,last_name,email,workspace) values (1,'britney',null,'spears','bspears@localhost','/home/bspears')
+insert into role_permission (id,name,description) values (1,'read','Read permission.')
+insert into user_role (id,name,description) values (1,'user','User role.')
+insert into user_role_role_permission_rel (user_role_id,role_permission_id) values (1,1)
+insert into user_account (id,username,password,public_key,private_key,active,account_id,created_date,last_login_date,person_id) values (1,'bspears','hello',null,null,true,'123456789',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,1)

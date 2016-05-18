@@ -19,7 +19,7 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Person;
+import edu.pitt.dbmi.ccd.db.entity.RolePermission;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,29 +29,29 @@ import org.springframework.util.Assert;
 
 /**
  *
- * May 18, 2016 3:20:40 PM
+ * May 18, 2016 3:50:18 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
-public class PersonRepositoryTest {
-    
-    @Autowired
-    private PersonRepository personRepository;
+public class RolePermissionRepositoryTest {
 
-    public PersonRepositoryTest() {
+    @Autowired
+    private RolePermissionRepository rolePermissionRepository;
+
+    public RolePermissionRepositoryTest() {
     }
 
     /**
-     * Test of findByEmail method, of class PersonRepository.
+     * Test of findByName method, of class RolePermissionRepository.
      */
     @Test
-    public void testFindByEmail() {
-        System.out.println("findByEmail");
-        String email = "bspears@localhost";
-        Person person = personRepository.findByEmail(email);
-        Assert.notNull(person);
+    public void testFindByName() {
+        System.out.println("findByName");
+        String name = "read";
+        RolePermission rolePermission = rolePermissionRepository.findByName(name);
+        Assert.notNull(rolePermission);
     }
 
 }
