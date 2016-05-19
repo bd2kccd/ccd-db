@@ -56,7 +56,7 @@ public class JobQueueInfo implements Serializable {
     @Column(name = "algorName", nullable = false)
     private String algorName;
 
-    @Column(name = "commands", nullable = false, columnDefinition = "text")
+    @Column(name = "commands", nullable = false, length = 65535)
     private String commands;
 
     @Column(name = "fileName", nullable = false)
