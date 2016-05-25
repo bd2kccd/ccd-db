@@ -47,8 +47,10 @@ public @interface Username {
     Class<? extends Payload>[] payload() default {};
 
     public class UsernameConstraintValidator implements ConstraintValidator<Username, String> {
-    
-        private static final String USERNAME_PATTERN = "[a-zA-Z0-9\\-_]+";
+
+        // May contain alphanumeric, dashes, and underscores
+        // At least four characters
+        private static final String USERNAME_PATTERN = "[a-zA-Z0-9\\-_]{4,}";
     
         @Override
         public void initialize(Username String) { }

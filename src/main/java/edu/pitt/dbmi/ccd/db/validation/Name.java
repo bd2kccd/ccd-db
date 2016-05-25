@@ -47,8 +47,11 @@ public @interface Name {
     Class<? extends Payload>[] payload() default {};
 
     public class NameConstraintValidator implements ConstraintValidator<Name, String> {
-    
-        private static final String NAME_PATTERN = "[a-zA-Z][a-zA-Z0-9\\-_]+[a-zA-Z0-9]";
+
+        // Starts and ends with alphanumeric
+        // May contain dashes and spaces
+        // At least four characters
+        private static final String NAME_PATTERN = "[a-zA-Z][a-zA-Z0-9\\- ]{2,}[a-zA-Z0-9]";
     
         @Override
         public void initialize(Name String) { }
