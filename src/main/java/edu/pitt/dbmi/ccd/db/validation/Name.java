@@ -19,15 +19,14 @@
 
 package edu.pitt.dbmi.ccd.db.validation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
+
+import java.lang.annotation.*;
+
 import javax.validation.Constraint;
-import javax.validation.Payload;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.Payload;
 
 /**
  * Name constraint
@@ -40,7 +39,7 @@ import javax.validation.ConstraintValidatorContext;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Name {
 
-    String message() default "Valid characters: letters, numbers, dash (-), and space";
+    String message() default "Must be at least 4 characters\nValid characters: letters, numbers, dash (-), and space";
 
     Class<?>[] groups() default {};
 
@@ -58,7 +57,7 @@ public @interface Name {
     
         @Override
         public boolean isValid(String name, ConstraintValidatorContext ctx) {
-            if (name == null) {
+            if (isNullOrEmpty(name)) {
                 return false;
             } else {
                 return name.matches(NAME_PATTERN);
