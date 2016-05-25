@@ -76,7 +76,7 @@ public class Vocabulary implements Serializable {
     public Vocabulary() { }
 
     public Vocabulary(String name, String description) {
-        this.name = formatName(name);
+        this.name = name;
         this.description = description;
     }
 
@@ -105,7 +105,7 @@ public class Vocabulary implements Serializable {
     }
 
     public void setName(String name) {
-        this.name = formatName(name);
+        this.name = name;
     }
 
     public String getDescription() {
@@ -160,14 +160,4 @@ public class Vocabulary implements Serializable {
         this.attributes.removeAll(attributes);
     }
 
-    /**
-     * Format name for database
-     * Replace multiple spaces with a single underscore
-     * Replace multiple underscores with a single underscore
-     * @param  name group name
-     * @return      formatted group name
-     */
-    private String formatName(String name) {
-        return name.trim().replaceAll("\\s+", "_").replaceAll("_+", "_");
-    }
 }
