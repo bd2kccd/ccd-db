@@ -25,11 +25,20 @@ package edu.pitt.dbmi.ccd.db.util;
 public abstract class StringUtils {
     
     /**
-     * Returns true for any Object that is either null or the empty string
-     * False for any Object that is neither null nor the empty string
-     * @param  str object
+     * Returns true if str is either null or the empty string
+     * False if str is neither null nor the empty string
+     * @param str object
      */
     public static boolean isNullOrEmpty(Object str) {
         return (str == null || str.equals(""));
+    }
+
+    /**
+     * Returns true if str is neither null nor the empty string
+     * False if str is either null or the empty string
+     * @param str object
+     */
+    public static boolean notNullOrEmpty(Object str) {
+        return !isNullOrEmpty(str);
     }
 }
