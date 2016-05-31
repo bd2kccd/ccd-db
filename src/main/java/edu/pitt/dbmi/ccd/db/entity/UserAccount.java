@@ -82,6 +82,9 @@ public class UserAccount implements Serializable {
     @Column(name = "account", nullable = false)
     private String account;
 
+    @Column(name = "activation_key")
+    private String activationKey;
+
     public UserAccount() {
     }
 
@@ -97,7 +100,7 @@ public class UserAccount implements Serializable {
         this.account = account;
     }
 
-    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account) {
+    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account, String activationKey) {
         this.person = person;
         this.userLogin = userLogin;
         this.userLoginAttempt = userLoginAttempt;
@@ -108,6 +111,7 @@ public class UserAccount implements Serializable {
         this.registrationDate = registrationDate;
         this.registrationLocation = registrationLocation;
         this.account = account;
+        this.activationKey = activationKey;
     }
 
     public Long getId() {
@@ -196,6 +200,14 @@ public class UserAccount implements Serializable {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public String getActivationKey() {
+        return activationKey;
+    }
+
+    public void setActivationKey(String activationKey) {
+        this.activationKey = activationKey;
     }
 
 }

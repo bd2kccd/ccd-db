@@ -58,6 +58,7 @@ CREATE TABLE `UserAccount` (
   `registration_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `registration_location` bigint(20) DEFAULT NULL,
   `account` varchar(255) NOT NULL,
+  `activation_key` varchar(255) DEFAULT NULL,
   `user_login_id` bigint(20) NOT NULL,
   `user_login_attempt_id` bigint(20) NOT NULL,
   `person_id` bigint(20) NOT NULL,
@@ -141,4 +142,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-02-24 13:01:24
+-- Dump completed on 2016-05-31 16:23:06
