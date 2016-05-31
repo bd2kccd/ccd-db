@@ -66,6 +66,10 @@ public class UserAccountService {
         return userAccountRepository.findByAccount(account);
     }
 
+    public UserAccount findByActivationKey(String activationKey) {
+        return userAccountRepository.findByActivationKey(activationKey);
+    }
+
     public UserAccount findByEmail(String email) {
         return userAccountRepository.findByEmail(email);
     }
