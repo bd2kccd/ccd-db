@@ -37,6 +37,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     public UserAccount findByAccount(String account);
 
+    public UserAccount findByActivationKey(String activationKey);
+
     @Query("SELECT ua FROM UserAccount ua WHERE ua.person.email = ?1")
     public UserAccount findByEmail(String email);
 
