@@ -20,6 +20,8 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,6 +29,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -85,6 +89,18 @@ public class UserAccount implements Serializable {
     @Column(name = "activation_key")
     private String activationKey;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
+    private Set<UserRole> userRoles = new HashSet<>(0);
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "UserAccountFileRel", joinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "fileId", nullable = false, updatable = false)})
+    private Set<File> files = new HashSet<>(0);
+
     public UserAccount() {
     }
 
@@ -100,7 +116,7 @@ public class UserAccount implements Serializable {
         this.account = account;
     }
 
-    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account, String activationKey) {
+    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account, String activationKey, Set<UserRole> userRoles, Set<File> files) {
         this.person = person;
         this.userLogin = userLogin;
         this.userLoginAttempt = userLoginAttempt;
@@ -112,6 +128,8 @@ public class UserAccount implements Serializable {
         this.registrationLocation = registrationLocation;
         this.account = account;
         this.activationKey = activationKey;
+        this.userRoles = userRoles;
+        this.files = files;
     }
 
     public Long getId() {
@@ -208,6 +226,22 @@ public class UserAccount implements Serializable {
 
     public void setActivationKey(String activationKey) {
         this.activationKey = activationKey;
+    }
+
+    public Set<UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(Set<UserRole> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public Set<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(Set<File> files) {
+        this.files = files;
     }
 
 }

@@ -23,6 +23,7 @@ import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserLoginAttemptRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserLoginRepository;
+import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,16 +47,15 @@ public class UserAccountService {
 
     private final PersonRepository personRepository;
 
+    private final UserRoleRepository userRoleRepository;
+
     @Autowired
-    public UserAccountService(
-            UserAccountRepository userAccountRepository,
-            UserLoginAttemptRepository userLoginAttemptRepository,
-            UserLoginRepository userLoginRepository,
-            PersonRepository personRepository) {
+    public UserAccountService(UserAccountRepository userAccountRepository, UserLoginAttemptRepository userLoginAttemptRepository, UserLoginRepository userLoginRepository, PersonRepository personRepository, UserRoleRepository userRoleRepository) {
         this.userAccountRepository = userAccountRepository;
         this.userLoginAttemptRepository = userLoginAttemptRepository;
         this.userLoginRepository = userLoginRepository;
         this.personRepository = personRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     public UserAccount findByUsername(String username) {
@@ -78,6 +78,7 @@ public class UserAccountService {
         userLoginRepository.save(userAccount.getUserLogin());
         userLoginAttemptRepository.save(userAccount.getUserLoginAttempt());
         personRepository.save(userAccount.getPerson());
+        userRoleRepository.save(userAccount.getUserRoles());
 
         return userAccountRepository.save(userAccount);
     }

@@ -20,7 +20,6 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 /**
  *
@@ -29,7 +28,6 @@ import org.springframework.stereotype.Repository;
  * @since v0.4.0
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
     public Person findByEmail(String email);

@@ -16,6 +16,60 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `File`
+--
+
+DROP TABLE IF EXISTS `File`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `File` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `absolutePath` varchar(255) NOT NULL,
+  `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fileSize` bigint(20) NOT NULL,
+  `md5CheckSum` varchar(32) DEFAULT NULL,
+  `fileTypeId` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fileTypeId` (`fileTypeId`),
+  CONSTRAINT `File_ibfk_1` FOREIGN KEY (`fileTypeId`) REFERENCES `FileType` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `File`
+--
+
+LOCK TABLES `File` WRITE;
+/*!40000 ALTER TABLE `File` DISABLE KEYS */;
+/*!40000 ALTER TABLE `File` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `FileType`
+--
+
+DROP TABLE IF EXISTS `FileType`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `FileType` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `FileType`
+--
+
+LOCK TABLES `FileType` WRITE;
+/*!40000 ALTER TABLE `FileType` DISABLE KEYS */;
+/*!40000 ALTER TABLE `FileType` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Person`
 --
 
@@ -83,6 +137,60 @@ LOCK TABLES `UserAccount` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `UserAccountFileRel`
+--
+
+DROP TABLE IF EXISTS `UserAccountFileRel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserAccountFileRel` (
+  `userAccountId` bigint(20) NOT NULL,
+  `fileId` bigint(20) NOT NULL,
+  PRIMARY KEY (`userAccountId`,`fileId`),
+  KEY `userAccountId` (`userAccountId`),
+  KEY `fileId` (`fileId`),
+  CONSTRAINT `UserAccountFileRel_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`),
+  CONSTRAINT `UserAccountFileRel_ibfk_2` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserAccountFileRel`
+--
+
+LOCK TABLES `UserAccountFileRel` WRITE;
+/*!40000 ALTER TABLE `UserAccountFileRel` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserAccountFileRel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `UserAccountUserRoleRel`
+--
+
+DROP TABLE IF EXISTS `UserAccountUserRoleRel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserAccountUserRoleRel` (
+  `userAccountId` bigint(20) NOT NULL,
+  `userRoleId` bigint(20) NOT NULL,
+  PRIMARY KEY (`userAccountId`,`userRoleId`),
+  KEY `userAccountId` (`userAccountId`),
+  KEY `userRoleId` (`userRoleId`),
+  CONSTRAINT `UserAccountUserRoleRel_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`),
+  CONSTRAINT `UserAccountUserRoleRel_ibfk_2` FOREIGN KEY (`userRoleId`) REFERENCES `UserRole` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserAccountUserRoleRel`
+--
+
+LOCK TABLES `UserAccountUserRoleRel` WRITE;
+/*!40000 ALTER TABLE `UserAccountUserRoleRel` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserAccountUserRoleRel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `UserLogin`
 --
 
@@ -132,6 +240,30 @@ LOCK TABLES `UserLoginAttempt` WRITE;
 /*!40000 ALTER TABLE `UserLoginAttempt` DISABLE KEYS */;
 /*!40000 ALTER TABLE `UserLoginAttempt` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `UserRole`
+--
+
+DROP TABLE IF EXISTS `UserRole`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserRole` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserRole`
+--
+
+LOCK TABLES `UserRole` WRITE;
+/*!40000 ALTER TABLE `UserRole` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserRole` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -142,4 +274,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-31 16:23:06
+-- Dump completed on 2016-06-09 15:35:27
