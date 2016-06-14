@@ -29,6 +29,12 @@ def compatibilityVersion = 1.8
 sourceCompatibility = compatibilityVersion
 targetCompatibility = compatibilityVersion
 
+ext {
+    hibernateValidatorVersion = '5.2.4.Final'
+    hsqldbVersion = '2.3.4'
+    mysqlConnectorVersion = '5.1.39'
+}
+
 repositories {
     jcenter()
     mavenCentral()
@@ -39,11 +45,11 @@ dependencies {
     // compile time
     compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-data-rest:${springBootVersion}")
-    compile("org.hibernate:hibernate-validator:5.2.4.Final")
+    compile("org.hibernate:hibernate-validator:${hibernateValidatorVersion}")
 
     // run time
-    runtime("org.hsqldb:hsqldb:2.3.3")
-    runtime("mysql:mysql-connector-java:5.1.38")
+    runtime("org.hsqldb:hsqldb:${hsqldbVersion}")
+    runtime("mysql:mysql-connector-java:${mysqlConnectorVersion}")
 
     // testing
     testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
