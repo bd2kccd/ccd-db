@@ -76,6 +76,9 @@ public class UserAccount implements Serializable {
     @Column(name = "lastLoginDate", length = 19)
     private Date lastLoginDate;
 
+    @Column(name = "account", nullable = false)
+    private String account;
+
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name="UserAccountUserRoleRel", joinColumns = {
         @JoinColumn(name="userAccountId", nullable=false)}, inverseJoinColumns = {
@@ -127,30 +130,31 @@ public class UserAccount implements Serializable {
 
     protected UserAccount() { }
 
-    public UserAccount(Person person, String username, String password) {
+    public UserAccount(Person person, String username, String password, String account) {
         this.person = person;
         this.username = username;
         this.password = password;
+        this.account = account;
     }
 
-    public UserAccount(Person person, String username, String password, boolean active) {
-        this(person, username, password);
+    public UserAccount(Person person, String username, String password, String account, boolean active) {
+        this(person, username, password, account);
         this.active = active;
     }
 
-    public UserAccount(Person person, String username, String password, String activationKey) {
-        this(person, username, password);
+    public UserAccount(Person person, String username, String password, String account, String activationKey) {
+        this(person, username, password, account);
         this.activationKey = activationKey;
     }
 
-    public UserAccount(Person person, String username, String password, boolean active, Date createdDate) {
-        this(person, username, password);
+    public UserAccount(Person person, String username, String password, String account, boolean active, Date createdDate) {
+        this(person, username, password, account);
         this.active = active;
         this.createdDate = createdDate;
     }
 
-    public UserAccount(Long id, Person person, String username, String password, Boolean active, String activationKey, Date createdDate, Date lastLoginDate) {
-        this(person, username, password, active, createdDate);
+    public UserAccount(Long id, Person person, String username, String password, String account, Boolean active, String activationKey, Date createdDate, Date lastLoginDate) {
+        this(person, username, password, account, active, createdDate);
         this.id = id;
         this.activationKey = activationKey;
         this.lastLoginDate = lastLoginDate;
@@ -165,6 +169,7 @@ public class UserAccount implements Serializable {
         this.activationKey = account.getActivationKey();
         this.createdDate = account.getCreatedDate();
         this.lastLoginDate = account.getLastLoginDate();
+        this.account = account.getAccount();
         this.roles = account.getRoles();
         this.dataFiles = account.getDataFiles();
         this.jobQueueInfos = account.getJobQueueInfos();
@@ -236,6 +241,14 @@ public class UserAccount implements Serializable {
 
     public void setLastLoginDate(Date lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public Set<UserRole> getRoles() {
