@@ -31,6 +31,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -70,7 +71,7 @@ public class UserAccountServiceTest {
     public void saveAndDelete() {
         // save
         Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace");
-        UserAccount userAccount = new UserAccount(person, "einstein", "$2a$10$MSi.zsnU.TAHocBApb5BN.G.3Cyp/t0WLd6/76u87Lp8qIINkUy0i");
+        UserAccount userAccount = new UserAccount(person, "einstein", "$2a$10$MSi.zsnU.TAHocBApb5BN.G.3Cyp/t0WLd6/76u87Lp8qIINkUy0i", UUID.randomUUID().toString());
         userAccount = userAccountService.saveUserAccount(userAccount);
         assertNotNull(userAccount.getId());
 
@@ -154,7 +155,7 @@ public class UserAccountServiceTest {
                 String workspace = fields[7].trim();
 
                 Person person = new Person(firstName, lastName, email, workspace);
-                UserAccount userAccount = new UserAccount(person, username, password, true, createdDate);
+                UserAccount userAccount = new UserAccount(person, username, password, UUID.randomUUID().toString(), true, createdDate);
                 userAccount.setLastLoginDate(lastLoginDate);
                 userAccountService.saveUserAccount(userAccount);
             }

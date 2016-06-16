@@ -8,7 +8,7 @@ INSERT INTO access (id, name, description) VALUES (1, 'PUBLIC','Visable to all u
 INSERT INTO person (id, description, email, first_name, last_name, middle_name, workspace) VALUES (1, 'Physicist', 'isaac@example.com', 'Isaac', 'Newton', NULL, '~/ccd_workspace/'), (2, 'Computer Scientist', 'alan@example.com', 'Alan', 'Turing', NULL, '~/ccd_workspace/');
 
 -- Create User Accounts
-INSERT INTO user_account (id, activation_key, active, created_date, password, username, person_id) VALUES (1, 'abcd', b'1', '2016-03-24 15:37:06', '$2a$10$LTFYDfz3oBc96cKgaOkz2OIy8OYlT5o5TTYaJCRXr0s2.ahXAuAvK', 'isaac', 1), (2, 'efgh', b'1', '2016-03-24 15:37:06', '$2a$10$ad0/roYTf7qhQlAjXl5m5.duYGtMw4dHgN.bauA/mi5eZV67937WS', 'alan', 2);
+INSERT INTO user_account (id, activation_key, active, created_date, password, username, person_id, account) VALUES (1, 'abcd', b'1', '2016-03-24 15:37:06', '$2a$10$LTFYDfz3oBc96cKgaOkz2OIy8OYlT5o5TTYaJCRXr0s2.ahXAuAvK', 'isaac', 1, 'f0e4d573-e85a-4c52-8426-89fa55f36c7c'), (2, 'efgh', b'1', '2016-03-24 15:37:06', '$2a$10$ad0/roYTf7qhQlAjXl5m5.duYGtMw4dHgN.bauA/mi5eZV67937WS', 'alan', 2, '2a7dc1f4-a95c-42e1-a694-792acdc2e2c5');
 
 -- Create User Role
 INSERT INTO user_role (id, name, description) VALUES (1, 'USER', 'Standard user'), (2, 'ADMIN', 'Administrator');

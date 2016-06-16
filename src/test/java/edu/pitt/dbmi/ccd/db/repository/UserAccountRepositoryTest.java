@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +34,7 @@ public class UserAccountRepositoryTest {
     public void saveAndDelete() {
         // save
         Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace/");
-        UserAccount user = new UserAccount(person, "einstein", "$2a$10$mTPRrCa1THQJyk60QrhIQOgvQAnSpDkcm1QK5zwKc6m9xBu87hKqG", true, new Date());
+        UserAccount user = new UserAccount(person, "einstein", "$2a$10$mTPRrCa1THQJyk60QrhIQOgvQAnSpDkcm1QK5zwKc6m9xBu87hKqG", UUID.randomUUID().toString(), true, new Date());
         user = userAccountRepository.save(user);
         assertNotNull(user.getId());
 
