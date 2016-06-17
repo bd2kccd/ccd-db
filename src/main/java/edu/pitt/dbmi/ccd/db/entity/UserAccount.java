@@ -76,7 +76,7 @@ public class UserAccount implements Serializable {
     @Column(name = "lastLoginDate", length = 19)
     private Date lastLoginDate;
 
-    @Column(name = "account", nullable = false)
+    @Column(name = "account", unique = true, nullable = false)
     private String account;
 
     @ManyToMany(fetch=FetchType.EAGER)
