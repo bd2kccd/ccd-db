@@ -129,7 +129,7 @@ public class AnnotationRepositoryTest {
     }
 
     @Test
-    public void filterUpload() {
+    public void filterTarget() {
         // has annotations
         final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, null, 1L, null, null, null, null, false), pageable);
         assertEquals(4, annotations.getTotalElements());

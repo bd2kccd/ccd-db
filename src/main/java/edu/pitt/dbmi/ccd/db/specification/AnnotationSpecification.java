@@ -81,21 +81,21 @@ public final class AnnotationSpecification {
     public static Specification<Annotation> filterSpec(UserAccount requester,
                                                        String username,
                                                        String group,
-                                                       Long upload,
+                                                       Long target,
                                                        String vocab,
                                                        String attributeLevel,
                                                        String attributeName,
                                                        String attributeReqLevel,
                                                        Boolean showRedacted) {
         return (root, query, cb) -> {
-            return buildFilterSpec(root, query, cb, requester, username, group, upload, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted);
+            return buildFilterSpec(root, query, cb, requester, username, group, target, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted);
         };
     }
 
     public static Specification<Annotation> searchSpec(UserAccount requester,
                                                        String username,
                                                        String group,
-                                                       Long upload,
+                                                       Long target,
                                                        String vocab,
                                                        String attributeLevel,
                                                        String attributeName,
@@ -104,7 +104,7 @@ public final class AnnotationSpecification {
                                                        Set<String> matches,
                                                        Set<String> nots) {
         return (root, query, cb) -> {
-            return buildSearchSpec(root, query, cb, requester, username, group, upload, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted, matches, nots);
+            return buildSearchSpec(root, query, cb, requester, username, group, target, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted, matches, nots);
         };
     }
 
@@ -133,7 +133,7 @@ public final class AnnotationSpecification {
                                                UserAccount requester,
                                                String username,
                                                String group,
-                                               Long upload,
+                                               Long target,
                                                String vocab,
                                                String attributeLevel,
                                                String attributeName,
@@ -141,7 +141,7 @@ public final class AnnotationSpecification {
                                                Boolean showRedacted) {
         final List<Predicate> predicates = new ArrayList<>(0);
         final Predicate authPredicate = authFilter(root, cb, requester);
-        final List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, upload, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted);
+        final List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, target, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted);
 
         predicates.add(authPredicate);
         predicates.addAll(filterPredicates);
@@ -155,7 +155,7 @@ public final class AnnotationSpecification {
                                                UserAccount requester,
                                                String username,
                                                String group,
-                                               Long upload,
+                                               Long target,
                                                String vocab,
                                                String attributeLevel,
                                                String attributeName,
@@ -165,7 +165,7 @@ public final class AnnotationSpecification {
                                                Set<String> nots) {
         final List<Predicate> predicates = new ArrayList<>(0);
         final Predicate authPredicate = authFilter(root, cb, requester);
-        final List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, upload, vocab, attributeName, attributeLevel, attributeReqLevel, showRedacted);
+        final List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, target, vocab, attributeName, attributeLevel, attributeReqLevel, showRedacted);
         final List<Predicate> searchPredicates = buildSearchPredicates(root, query, cb, matches, nots);
 
         predicates.add(authPredicate);
@@ -208,7 +208,7 @@ public final class AnnotationSpecification {
                                                          CriteriaBuilder cb,
                                                          String username,
                                                          String group,
-                                                         Long upload,
+                                                         Long target,
                                                          String vocab,
                                                          String attributeLevel,
                                                          String attributeName,
@@ -222,8 +222,8 @@ public final class AnnotationSpecification {
         if (!isNullOrEmpty(group)) {
             predicates.add(belongsToGroup(root, cb, group));
         }
-        if (!isNullOrEmpty(upload)) {
-            predicates.add(targetsUpload(root, cb, upload));
+        if (!isNullOrEmpty(target)) {
+            predicates.add(targetstarget(root, cb, target));
         }
         if (!isNullOrEmpty(vocab)) {
             predicates.add(hasVocabulary(root, cb, vocab));
@@ -272,9 +272,9 @@ public final class AnnotationSpecification {
         return cb.like(cb.lower(root.get(GROUP).get(NAME)), group.toLowerCase());
     }
 
-    // targets upload predicate
-    private static Predicate targetsUpload(Root<Annotation> root, CriteriaBuilder cb, Long upload) {
-        return cb.equal(root.get(TARGET).get(ID), upload);
+    // targets target predicate
+    private static Predicate targetstarget(Root<Annotation> root, CriteriaBuilder cb, Long target) {
+        return cb.equal(root.get(TARGET).get(ID), target);
     }
 
     // has vocabulary predicate

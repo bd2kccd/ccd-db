@@ -50,41 +50,41 @@ public class AnnotationTargetServiceTest {
 
     @Test
     public void findById() {
-        Optional<AnnotationTarget> upload = annotationTargetService.findById(1L);
-        assertTrue(upload.isPresent());
+        Optional<AnnotationTarget> target = annotationTargetService.findById(1L);
+        assertTrue(target.isPresent());
     }
 
     @Test
     public void filterUser() {
-        Page<AnnotationTarget> uploads = annotationTargetService.filter("isaac", null, pageable);
-        assertEquals(1, uploads.getTotalElements());
+        Page<AnnotationTarget> targets = annotationTargetService.filter("isaac", null, pageable);
+        assertEquals(1, targets.getTotalElements());
 
-        uploads = annotationTargetService.filter("alan", null, pageable);
-        assertEquals(0, uploads.getTotalElements());
+        targets = annotationTargetService.filter("alan", null, pageable);
+        assertEquals(0, targets.getTotalElements());
     }
 
     @Test
     public void filterType() {
-        Page<AnnotationTarget> uploads = annotationTargetService.filter(null, "url", pageable);
-        assertEquals(1, uploads.getTotalElements());
+        Page<AnnotationTarget> targets = annotationTargetService.filter(null, "url", pageable);
+        assertEquals(1, targets.getTotalElements());
 
-        uploads = annotationTargetService.filter(null, "file", pageable);
-        assertEquals(0, uploads.getTotalElements());
+        targets = annotationTargetService.filter(null, "file", pageable);
+        assertEquals(0, targets.getTotalElements());
     }
 
     @Test
     public void search() {
         Set<String> searches = new HashSet<>(Arrays.asList("Biomedical"));
-        Page<AnnotationTarget> uploads = annotationTargetService.search(null, null, searches, new HashSet<String>(0), pageable);
-        assertEquals(1, uploads.getTotalElements());
+        Page<AnnotationTarget> targets = annotationTargetService.search(null, null, searches, new HashSet<String>(0), pageable);
+        assertEquals(1, targets.getTotalElements());
 
-        uploads = annotationTargetService.search(null, null, new HashSet<String>(0), searches, pageable);
-        assertEquals(0, uploads.getTotalElements());
+        targets = annotationTargetService.search(null, null, new HashSet<String>(0), searches, pageable);
+        assertEquals(0, targets.getTotalElements());
     }
 
     @Test
     public void findAll() {
-        Page<AnnotationTarget> uploads = annotationTargetService.findAll(pageable);
-        assertEquals(1, uploads.getTotalElements());
+        Page<AnnotationTarget> targets = annotationTargetService.findAll(pageable);
+        assertEquals(1, targets.getTotalElements());
     }
 }

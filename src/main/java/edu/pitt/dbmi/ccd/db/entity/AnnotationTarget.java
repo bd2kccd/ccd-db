@@ -117,11 +117,11 @@ public class AnnotationTarget implements Serializable {
         return modified;
     }
 
-    public UserAccount getUploader() {
+    public UserAccount getUser() {
         return user;
     }
 
-    public void setUploader(UserAccount user) {
+    public void setUser(UserAccount user) {
         this.user = user;
     }
 

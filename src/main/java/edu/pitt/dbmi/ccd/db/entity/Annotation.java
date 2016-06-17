@@ -80,9 +80,9 @@ public class Annotation implements Serializable {
     private Set<Annotation> children = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "AnnotationUploadReferences", joinColumns = {
+    @JoinTable(name = "AnnotationTargetReferences", joinColumns = {
             @JoinColumn(name = "annotationId", nullable = false)}, inverseJoinColumns = {
-            @JoinColumn(name = "uploadId", nullable = false)})
+            @JoinColumn(name = "targetId", nullable = false)})
     private Set<AnnotationTarget> references = new HashSet<>(0);
 
     @OneToMany(mappedBy = "annotation", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
