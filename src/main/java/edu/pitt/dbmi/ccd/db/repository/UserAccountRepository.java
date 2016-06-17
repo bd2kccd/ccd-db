@@ -42,6 +42,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     public Optional<UserAccount> findById(Long id);
 
+    public Optional<UserAccount> findByAccount(String accountID);
+
     public Optional<UserAccount> findByUsername(String username);
 
     public Optional<UserAccount> findByUsernameAndActivationKey(String username, String activationKey);

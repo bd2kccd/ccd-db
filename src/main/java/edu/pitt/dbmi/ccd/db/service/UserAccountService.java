@@ -97,6 +97,10 @@ public class UserAccountService {
         return userAccountRepository.findById(id);
     }
 
+    public Optional<UserAccount> findByAccount(String accountID) {
+        return userAccountRepository.findByAccount(accountID);
+    }
+
     public Optional<UserAccount> findByUsername(String username) {
         return userAccountRepository.findByUsername(username);
     }

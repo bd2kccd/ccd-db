@@ -46,33 +46,43 @@ public class UserAccount implements Serializable {
             @JoinColumn(name = "userAccountId", nullable = false)}, inverseJoinColumns = {
             @JoinColumn(name = "userRoleId", nullable = false)})
     Set<UserRole> roles = new HashSet<>(0);
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
+
     @Username
     @NotNull
     @Size(max = 255)
     @Column(name = "username", unique = true, nullable = false)
     private String username;
+
     @NotNull
     @Column(nullable = false)
     private String password;
+
     @Column(name = "active", nullable = false)
     private Boolean active = false;
+
     @Column(name = "activationKey")
     private String activationKey;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdDate", nullable = false, length = 19)
     private Date createdDate;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "lastLoginDate", length = 19)
     private Date lastLoginDate;
+
     @Column(name = "account", unique = true, nullable = false)
     private String account;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountDataFileRel", joinColumns = {
             @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
