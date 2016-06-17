@@ -116,7 +116,7 @@ public class UserAccount implements Serializable {
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
     @OrderBy("created")
-    private Set<Upload> uploads = new HashSet<>(0);
+    private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
     @OrderBy("created")
@@ -175,7 +175,7 @@ public class UserAccount implements Serializable {
         this.jobQueueInfos = account.getJobQueueInfos();
         this.securityAnswers = account.getSecurityAnswers();
         this.groups = account.getGroups();
-        this.uploads = account.getUploads();
+        this.annotationTargets = account.getAnnotationTargets();
         this.annotations = account.getAnnotations();
     }
 
@@ -399,8 +399,8 @@ public class UserAccount implements Serializable {
         return requesting;
     }
 
-    public Set<Upload> getUploads() {
-        return uploads;
+    public Set<AnnotationTarget> getAnnotationTargets() {
+        return annotationTargets;
     }
 
     public Set<Annotation> getAnnotations() {

@@ -1,8 +1,5 @@
 package edu.pitt.dbmi.ccd.db.service;
 
-import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.*;
-import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.authSpec;
-import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.searchSpec;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -20,7 +17,6 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
@@ -38,7 +34,7 @@ public class AnnotationServiceTest {
     @Autowired
     private UserAccountService userAccountService;
     @Autowired
-    private UploadService uploadService;
+    private AnnotationTargetService annotationTargetService;
     @Autowired
     private AccessService accessService;
     @Autowired
@@ -57,10 +53,10 @@ public class AnnotationServiceTest {
     @Test
     public void saveAndDelete() {
         // save
-        final Upload upload = uploadService.findById(1L).get();
+        final AnnotationTarget annotationTarget = annotationTargetService.findById(1L).get();
         final Access access = accessService.findById(1L).get();
         final Vocabulary vocabulary = vocabularyService.findById(1L).get();
-        Annotation annotation = new Annotation(owner, upload, null, access, null, vocabulary);
+        Annotation annotation = new Annotation(owner, annotationTarget, null, access, null, vocabulary);
         annotation = annotationService.save(annotation);
 
         // delete

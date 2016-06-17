@@ -34,7 +34,7 @@ import org.hibernate.validator.constraints.URL;
  * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Entity
-public class Upload implements Serializable {
+public class AnnotationTarget implements Serializable {
 
     private static final long serialVersionUID = 1143695321911902433L;
 
@@ -71,16 +71,16 @@ public class Upload implements Serializable {
     @OneToMany(mappedBy="target", fetch=FetchType.LAZY)
     private Set<Annotation> annotations = new HashSet<>(0);
 
-    public Upload() { }
+    public AnnotationTarget() { }
 
-    public Upload(UserAccount user, String title, DataFile file) {
+    public AnnotationTarget(UserAccount user, String title, DataFile file) {
         this.user = user;
         this.title = title;
         this.file = file;
         this.address = null;
     }
 
-    public Upload(UserAccount user, String title, String address) {
+    public AnnotationTarget(UserAccount user, String title, String address) {
         this.user = user;
         this.title = title;
         this.file = null;
