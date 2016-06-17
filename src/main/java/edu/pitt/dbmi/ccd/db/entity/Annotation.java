@@ -22,6 +22,7 @@ package edu.pitt.dbmi.ccd.db.entity;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -88,16 +89,6 @@ public class Annotation implements Serializable {
     @OneToMany(mappedBy = "annotation", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<AnnotationData> data = new HashSet<>(0);
 
-    @PrePersist
-    private void onCreate() {
-        created = new Timestamp((new Date()).getTime());
-    }
-
-    @PreUpdate
-    private void onUpdate() {
-        modified = new Timestamp((new Date()).getTime());
-    }
-
     public Annotation() {
     }
 
@@ -108,6 +99,16 @@ public class Annotation implements Serializable {
         this.accessControl = accessControl;
         this.group = group;
         this.vocab = vocab;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        created = new Timestamp((new Date()).getTime());
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        modified = new Timestamp((new Date()).getTime());
     }
 
     public Long getId() {

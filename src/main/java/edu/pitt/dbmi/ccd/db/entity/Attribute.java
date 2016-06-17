@@ -20,30 +20,20 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.Set;
 import java.util.HashSet;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.JoinColumn;
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
+import java.util.Set;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
 import org.hibernate.validator.constraints.NotBlank;
-import edu.pitt.dbmi.ccd.db.validation.Name;
 
 /**
  * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Entity
-@Table(uniqueConstraints={
-    @UniqueConstraint(columnNames={"vocabId", "level", "name"})
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"vocabId", "level", "name"})
 })
 public class Attribute implements Serializable {
 
@@ -54,34 +44,35 @@ public class Attribute implements Serializable {
     private Long id;
 
     @NotNull
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="vocabId", nullable=false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vocabId", nullable = false)
     private Vocabulary vocab;
 
-    @Column(unique=false, nullable=true)
+    @Column(unique = false, nullable = true)
     private String level;
 
-    @NotBlank(message="Name is required")
-    @Column(unique=false, nullable=false)
+    @NotBlank(message = "Name is required")
+    @Column(unique = false, nullable = false)
     private String name;
 
-    @Column(unique=false, nullable=true)
+    @Column(unique = false, nullable = true)
     private String requirementLevel;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="parent", nullable=true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent", nullable = true)
     private Attribute parent;
 
-    @OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private Set<Attribute> children = new HashSet<>(0);
 
-    public Attribute() { }
+    public Attribute() {
+    }
 
     public Attribute(Vocabulary vocab, String level, String name, String requirementLevel) {
         this.vocab = vocab;
         this.level = level;
         this.name = name;
-        this.requirementLevel = requirementLevel;        
+        this.requirementLevel = requirementLevel;
     }
 
     public Attribute(Vocabulary vocab, Attribute parent, String level, String name, String requirementLevel) {

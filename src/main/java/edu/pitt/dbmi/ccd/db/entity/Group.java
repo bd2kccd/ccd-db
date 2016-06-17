@@ -20,78 +20,69 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Arrays;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.ManyToMany;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OrderBy;
-import javax.validation.constraints.NotNull;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.*;
 import javax.validation.constraints.Size;
-import org.springframework.data.annotation.CreatedBy;
-import org.hibernate.validator.constraints.NotBlank;
+
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.NotBlank;
+
 import edu.pitt.dbmi.ccd.db.validation.Name;
 
-/** 
-* @author Mark Silvis  (marksilvis@pitt.edu)
-*/
+/**
+ * @author Mark Silvis  (marksilvis@pitt.edu)
+ */
 @Entity
-@Table(name="Groups")
+@Table(name = "Groups")
 public class Group implements Serializable {
-    
+
     private static final long serialVersionUID = 8879813170966961889L;
 
     @Id
     @GeneratedValue
     public Long id;
 
-    @NotBlank(message="Name cannot be empty")
-    @Size(min=4, max=128, message="Name must be between 4 and 128 characters")
+    @NotBlank(message = "Name cannot be empty")
+    @Size(min = 4, max = 128, message = "Name must be between 4 and 128 characters")
     @Name
-    @Column(length=128, unique=true, nullable=false)
-    @NaturalId(mutable=true)
+    @Column(length = 128, unique = true, nullable = false)
+    @NaturalId(mutable = true)
     private String name;
 
-    @NotBlank(message="Description cannot be empty")
-    @Size(max=500, message="Description must be no longer than 500 characters")
-    @Column(length=500, nullable=false)
+    @NotBlank(message = "Description cannot be empty")
+    @Size(max = 500, message = "Description must be no longer than 500 characters")
+    @Column(length = 500, nullable = false)
     private String description;
 
     // Group moderators
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupModeration",
-        joinColumns = { @JoinColumn(name="groupId") },
-        inverseJoinColumns = { @JoinColumn(name="userAccountId") })
+            joinColumns = {@JoinColumn(name = "groupId")},
+            inverseJoinColumns = {@JoinColumn(name = "userAccountId")})
     @OrderBy("username")
     private Set<UserAccount> mods = new HashSet<>(0);
 
     // Group members
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupMembership",
-        joinColumns = { @JoinColumn(name="groupId") },
-        inverseJoinColumns = { @JoinColumn(name="userAccountId") })
+            joinColumns = {@JoinColumn(name = "groupId")},
+            inverseJoinColumns = {@JoinColumn(name = "userAccountId")})
     @OrderBy("username")
     private Set<UserAccount> members = new HashSet<>(0);
 
     // Users requesting Group membership
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupRequests",
-        joinColumns = { @JoinColumn(name="groupId") },
-        inverseJoinColumns = { @JoinColumn(name="userAccountId") })
+            joinColumns = {@JoinColumn(name = "groupId")},
+            inverseJoinColumns = {@JoinColumn(name = "userAccountId")})
     private Set<UserAccount> requesters = new HashSet<>(0);
 
-    public Group() { }
+    public Group() {
+    }
 
     public Group(String name, String description) {
         this.name = name;

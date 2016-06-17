@@ -19,13 +19,14 @@
 
 package edu.pitt.dbmi.ccd.db.entity;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -47,36 +48,27 @@ public class AnnotationData implements Serializable {
     private Integer version;
 
     @NotNull
-    @ManyToOne(optional=false, fetch=FetchType.LAZY)
-    @JoinColumn(nullable=false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private Annotation annotation;
 
     @NotNull
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(nullable=false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false)
     private Attribute attribute;
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     private String value;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(nullable=true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = true)
     private AnnotationData parent;
 
-    @OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private Set<AnnotationData> subData = new HashSet<>(0);
 
-    @PrePersist
-    private void onCreate() {
-        created = new Timestamp((new Date()).getTime());
+    public AnnotationData() {
     }
-
-    @PreUpdate
-    private void onUpdate() {
-        modified = new Timestamp((new Date()).getTime());
-    }
-
-    public AnnotationData() { }
 
     public AnnotationData(Annotation annotation, Attribute attribute) {
         this.annotation = annotation;
@@ -96,6 +88,16 @@ public class AnnotationData implements Serializable {
     public AnnotationData(Annotation annotation, AnnotationData parent, Attribute attribute, String value) {
         this(annotation, parent, attribute);
         this.value = value;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        created = new Timestamp((new Date()).getTime());
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        modified = new Timestamp((new Date()).getTime());
     }
 
     public Long getId() {
@@ -154,11 +156,11 @@ public class AnnotationData implements Serializable {
         return subData;
     }
 
-    public boolean hasSubData(AnnotationData sub) {
-        return subData.contains(sub);
-    }
-
     public void setSubData(Set<AnnotationData> subData) {
         this.subData = subData;
+    }
+
+    public boolean hasSubData(AnnotationData sub) {
+        return subData.contains(sub);
     }
 }

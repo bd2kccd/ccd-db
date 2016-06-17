@@ -20,6 +20,7 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 

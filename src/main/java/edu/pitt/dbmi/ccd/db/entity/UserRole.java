@@ -22,20 +22,12 @@ package edu.pitt.dbmi.ccd.db.entity;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+
+import javax.persistence.*;
+
 import edu.pitt.dbmi.ccd.db.validation.Name;
 
 /**
- *
  * Oct 6, 2015 11:05:57 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
@@ -63,13 +55,13 @@ public class UserRole implements Serializable {
     //     @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     // private Set<UserAccount> userAccounts = new HashSet<>(0);
 
-    @ManyToMany(mappedBy="roles", fetch=FetchType.EAGER)
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "UserRoleRolePermissionRel", joinColumns = {
-        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "rolePermissionId", nullable = false, updatable = false)})
+            @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "rolePermissionId", nullable = false, updatable = false)})
     private Set<RolePermission> rolePermissions = new HashSet<>(0);
 
     public UserRole() {
@@ -144,7 +136,7 @@ public class UserRole implements Serializable {
         this.rolePermissions.addAll(permissions);
     }
 
-        public void removeRolePermission(RolePermission permission) {
+    public void removeRolePermission(RolePermission permission) {
         this.rolePermissions.remove(permission);
     }
 

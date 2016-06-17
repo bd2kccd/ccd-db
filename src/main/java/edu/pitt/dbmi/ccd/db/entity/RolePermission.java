@@ -22,19 +22,12 @@ package edu.pitt.dbmi.ccd.db.entity;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+
+import javax.persistence.*;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- *
  * Oct 6, 2015 11:05:11 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
@@ -58,8 +51,8 @@ public class RolePermission implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserRoleRolePermissionRel", joinColumns = {
-        @JoinColumn(name = "rolePermissionId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
+            @JoinColumn(name = "rolePermissionId", nullable = false, updatable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
     private Set<UserRole> userRoles = new HashSet<>(0);
 
     public RolePermission() {

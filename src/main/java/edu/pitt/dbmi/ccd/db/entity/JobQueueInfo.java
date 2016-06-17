@@ -23,20 +23,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import javax.persistence.*;
 
 /**
- *
  * Aug 3, 2015 10:36:57 AM
  *
  * @author Chirayu (Kong) Wongchokprasitti
@@ -78,8 +68,8 @@ public class JobQueueInfo implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountJobQueueInfoRel", joinColumns = {
-        @JoinColumn(name = "jobQueueInfoId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
+            @JoinColumn(name = "jobQueueInfoId", nullable = false, updatable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     public JobQueueInfo() {

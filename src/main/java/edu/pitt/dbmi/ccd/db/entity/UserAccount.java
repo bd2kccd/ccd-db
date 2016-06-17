@@ -32,7 +32,6 @@ import javax.validation.constraints.Size;
 import edu.pitt.dbmi.ccd.db.validation.Username;
 
 /**
- *
  * Oct 08, 2015 6:25:18 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
@@ -42,93 +41,77 @@ import edu.pitt.dbmi.ccd.db.validation.Username;
 public class UserAccount implements Serializable {
 
     private static final long serialVersionUID = 7491138787468687010L;
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
+            @JoinColumn(name = "userAccountId", nullable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "userRoleId", nullable = false)})
+    Set<UserRole> roles = new HashSet<>(0);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
-
-    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
-
     @Username
     @NotNull
-    @Size(max=255)
+    @Size(max = 255)
     @Column(name = "username", unique = true, nullable = false)
     private String username;
-
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String password;
-
     @Column(name = "active", nullable = false)
     private Boolean active = false;
-
     @Column(name = "activationKey")
     private String activationKey;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdDate", nullable = false, length = 19)
     private Date createdDate;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "lastLoginDate", length = 19)
     private Date lastLoginDate;
-
     @Column(name = "account", unique = true, nullable = false)
     private String account;
-
-    @ManyToMany(fetch=FetchType.EAGER)
-    @JoinTable(name="UserAccountUserRoleRel", joinColumns = {
-        @JoinColumn(name="userAccountId", nullable=false)}, inverseJoinColumns = {
-        @JoinColumn(name="userRoleId", nullable=false)})
-    Set<UserRole> roles = new HashSet<>(0);
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountDataFileRel", joinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "dataFileId", nullable = false, updatable = false)})
+            @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "dataFileId", nullable = false, updatable = false)})
     private Set<DataFile> dataFiles = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountJobQueueInfoRel", joinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "jobQueueInfoId", nullable = false, updatable = false)})
+            @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "jobQueueInfoId", nullable = false, updatable = false)})
     private Set<JobQueueInfo> jobQueueInfos = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountSecurityAnswerRel", joinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)})
+            @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)})
     private Set<SecurityAnswer> securityAnswers = new HashSet<>(0);
 
-    @ManyToMany(mappedBy="members", fetch=FetchType.EAGER)
+    @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
     @OrderBy("name")
     private Set<Group> groups = new HashSet<>(0);
 
-    @ManyToMany(mappedBy="mods", fetch=FetchType.EAGER)
+    @ManyToMany(mappedBy = "mods", fetch = FetchType.EAGER)
     @OrderBy("name")
     private Set<Group> moderates = new HashSet<>(0);
 
-    @ManyToMany(mappedBy="requesters", fetch=FetchType.LAZY)
+    @ManyToMany(mappedBy = "requesters", fetch = FetchType.LAZY)
     private Set<Group> requesting = new HashSet<>(0);
 
-    @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @OrderBy("created")
     private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
 
-    @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @OrderBy("created")
     private Set<Annotation> annotations = new HashSet<>(0);
 
-    @PrePersist
-    private void onCreate() {
-        createdDate = new Date();
-        lastLoginDate = new Date();
+    protected UserAccount() {
     }
-
-    protected UserAccount() { }
 
     public UserAccount(Person person, String username, String password, String account) {
         this.person = person;
@@ -177,6 +160,12 @@ public class UserAccount implements Serializable {
         this.groups = account.getGroups();
         this.annotationTargets = account.getAnnotationTargets();
         this.annotations = account.getAnnotations();
+    }
+
+    @PrePersist
+    private void onCreate() {
+        createdDate = new Date();
+        lastLoginDate = new Date();
     }
 
     public Long getId() {
@@ -336,7 +325,7 @@ public class UserAccount implements Serializable {
     }
 
     public void addMods(Group... groups) {
-        for (Group g: groups) {
+        for (Group g : groups) {
             addMod(g);
         }
     }
@@ -350,7 +339,7 @@ public class UserAccount implements Serializable {
     }
 
     public void removeMods(Group... groups) {
-        for (Group g: groups) {
+        for (Group g : groups) {
             removeMod(g);
         }
     }
@@ -376,7 +365,7 @@ public class UserAccount implements Serializable {
     }
 
     public void addGroups(Group... groups) {
-        for (Group g: groups) {
+        for (Group g : groups) {
             addGroup(g);
         }
     }
@@ -390,7 +379,7 @@ public class UserAccount implements Serializable {
     }
 
     public void removeGroups(Group... groups) {
-        for (Group g: groups) {
+        for (Group g : groups) {
             removeGroup(g);
         }
     }

@@ -21,19 +21,10 @@ package edu.pitt.dbmi.ccd.db.entity;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+
+import javax.persistence.*;
 
 /**
- *
  * Jul 27, 2015 3:18:30 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
@@ -57,8 +48,8 @@ public class SecurityAnswer implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountSecurityAnswerRel", joinColumns = {
-        @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
+            @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     public SecurityAnswer() {

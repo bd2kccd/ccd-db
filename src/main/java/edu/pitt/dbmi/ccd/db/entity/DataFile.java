@@ -23,21 +23,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import javax.persistence.*;
 
 /**
- *
  * Jul 23, 2015 3:21:54 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
@@ -75,8 +64,8 @@ public class DataFile implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountDataFileRel", joinColumns = {
-        @JoinColumn(name = "dataFileId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
+            @JoinColumn(name = "dataFileId", nullable = false, updatable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     public DataFile() {

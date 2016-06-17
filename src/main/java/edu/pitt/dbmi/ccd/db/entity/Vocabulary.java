@@ -19,15 +19,17 @@
 
 package edu.pitt.dbmi.ccd.db.entity;
 
-import edu.pitt.dbmi.ccd.db.validation.Name;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.NotBlank;
+
+import edu.pitt.dbmi.ccd.db.validation.Name;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -50,18 +52,26 @@ public class Vocabulary implements Serializable {
 
     @Name
     @NotBlank
-    @Size(min=4, max=255, message="Name must be between 4 and 255 characters")
-    @Column(length=255, unique=true, nullable=false)
-    @NaturalId(mutable=true)
+    @Size(min = 4, max = 255, message = "Name must be between 4 and 255 characters")
+    @Column(length = 255, unique = true, nullable = false)
+    @NaturalId(mutable = true)
     private String name;
 
     @NotBlank
-    @Size(max=500, message="Description must be no longer than 500 characters")
-    @Column(length=500, nullable=false)
+    @Size(max = 500, message = "Description must be no longer than 500 characters")
+    @Column(length = 500, nullable = false)
     private String description;
 
-    @OneToMany(mappedBy="vocab", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "vocab", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Attribute> attributes = new HashSet<>(0);
+
+    public Vocabulary() {
+    }
+
+    public Vocabulary(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -71,13 +81,6 @@ public class Vocabulary implements Serializable {
     @PreUpdate
     protected void onUpdate() {
         modified = new Timestamp((new Date()).getTime());
-    }
-
-    public Vocabulary() { }
-
-    public Vocabulary(String name, String description) {
-        this.name = name;
-        this.description = description;
     }
 
     public Long getId() {

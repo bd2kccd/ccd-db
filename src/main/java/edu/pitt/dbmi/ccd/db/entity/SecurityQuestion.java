@@ -19,14 +19,10 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 
 /**
- *
  * Jul 27, 2015 3:15:29 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)

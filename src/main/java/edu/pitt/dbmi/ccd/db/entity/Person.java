@@ -20,18 +20,15 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.NotBlank;
+
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
- *
  * Jul 23, 2015 1:37:42 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
@@ -51,7 +48,7 @@ public class Person implements Serializable {
     @Column(name = "firstName", nullable = false)
     private String firstName;
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     private String middleName;
 
     @NotBlank
@@ -67,11 +64,12 @@ public class Person implements Serializable {
     @Column(name = "workspace", nullable = false)
     private String workspace;
 
-    @Size(max=500, message="Description must be no longer than 500 characters")
-    @Column(length=500, nullable=true)
+    @Size(max = 500, message = "Description must be no longer than 500 characters")
+    @Column(length = 500, nullable = true)
     private String description;
 
-    public Person() { }
+    public Person() {
+    }
 
     public Person(String firstName, String lastName, String email, String workspace) {
         this.firstName = firstName;

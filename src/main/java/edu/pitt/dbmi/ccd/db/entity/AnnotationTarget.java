@@ -20,13 +20,15 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Date;
 import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 
@@ -50,28 +52,29 @@ public class AnnotationTarget implements Serializable {
     private Integer version;
 
     @NotNull
-    @ManyToOne(optional=false, fetch=FetchType.LAZY)
-    @JoinColumn(name="userAccountId", nullable=false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userAccountId", nullable = false)
     private UserAccount user;
 
     @NotBlank
-    @Size(max=255, message="Title cannot be longer than 255 characters")
-    @Column(length=255, unique=false, nullable=false)
+    @Size(max = 255, message = "Title cannot be longer than 255 characters")
+    @Column(length = 255, unique = false, nullable = false)
     private String title;
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="fileId", insertable=true, updatable=true, nullable=true)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fileId", insertable = true, updatable = true, nullable = true)
     private DataFile file;
 
     @URL
-    @Size(min=2, max=2083, message="Valid URLs are at least 2 characters and no more than 2083 characters")
-    @Column(length=2083, unique=true, nullable=true)
+    @Size(min = 2, max = 2083, message = "Valid URLs are at least 2 characters and no more than 2083 characters")
+    @Column(length = 2083, unique = true, nullable = true)
     private String address;
 
-    @OneToMany(mappedBy="target", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
     private Set<Annotation> annotations = new HashSet<>(0);
 
-    public AnnotationTarget() { }
+    public AnnotationTarget() {
+    }
 
     public AnnotationTarget(UserAccount user, String title, DataFile file) {
         this.user = user;
