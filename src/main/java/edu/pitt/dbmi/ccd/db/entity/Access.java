@@ -44,17 +44,18 @@ public class Access implements Serializable {
 
     @Name
     @NotBlank
-    @Size(max=20)
-    @Column(length=20, unique=true, nullable=false)
-    @NaturalId(mutable=false)
+    @Size(max = 20)
+    @Column(length = 20, unique = true, nullable = false)
+    @NaturalId(mutable = false)
     private String name;
 
     @NotBlank
-    @Size(max=255)
-    @Column(length=255, nullable=false)
+    @Size(max = 255)
+    @Column(length = 255, nullable = false)
     private String description;
 
-    public Access() { }
+    public Access() {
+    }
 
     public Access(String name, String description) {
         this.name = name;

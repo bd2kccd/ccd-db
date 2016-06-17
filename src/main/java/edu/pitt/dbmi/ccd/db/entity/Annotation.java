@@ -45,47 +45,47 @@ public class Annotation implements Serializable {
     private Integer version;
 
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private Boolean redacted = false;
 
     @NotNull
-    @ManyToOne(optional=false, fetch=FetchType.EAGER)
-    @JoinColumn(name="userAccountId", nullable=false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "userAccountId", nullable = false)
     private UserAccount user;
 
     @NotNull
-    @ManyToOne(optional=false, fetch=FetchType.EAGER)
-    @JoinColumn(name="accessControl", nullable=false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "accessControl", nullable = false)
     private Access accessControl;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="groupId", nullable=true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "groupId", nullable = true)
     private Group group;
 
     @NotNull
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(nullable=false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false)
     private Vocabulary vocab;
 
     @NotNull
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="uploadId", nullable=false)
-    private Upload target;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "targetId", nullable = false)
+    private AnnotationTarget target;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(nullable=true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = true)
     private Annotation parent;
 
-    @OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private Set<Annotation> children = new HashSet<>(0);
 
-    @ManyToMany(fetch=FetchType.LAZY)
-    @JoinTable(name="AnnotationUploadReferences", joinColumns = {
-        @JoinColumn(name="annotationId", nullable=false)}, inverseJoinColumns = {
-        @JoinColumn(name="uploadId", nullable=false)})
-    private Set<Upload> references = new HashSet<>(0);
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "AnnotationUploadReferences", joinColumns = {
+            @JoinColumn(name = "annotationId", nullable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "uploadId", nullable = false)})
+    private Set<AnnotationTarget> references = new HashSet<>(0);
 
-    @OneToMany(mappedBy="annotation", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "annotation", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<AnnotationData> data = new HashSet<>(0);
 
     @PrePersist
@@ -98,9 +98,10 @@ public class Annotation implements Serializable {
         modified = new Timestamp((new Date()).getTime());
     }
 
-    public Annotation() { }
+    public Annotation() {
+    }
 
-    public Annotation(UserAccount user, Upload target, Annotation parent, Access accessControl, Group group, Vocabulary vocab) {
+    public Annotation(UserAccount user, AnnotationTarget target, Annotation parent, Access accessControl, Group group, Vocabulary vocab) {
         this.user = user;
         this.target = target;
         this.parent = parent;
@@ -133,11 +134,11 @@ public class Annotation implements Serializable {
         this.version = version;
     }
 
-    public Upload getTarget() {
+    public AnnotationTarget getTarget() {
         return target;
     }
 
-    public void setTarget(Upload target) {
+    public void setTarget(AnnotationTarget target) {
         this.target = target;
     }
 
@@ -189,39 +190,39 @@ public class Annotation implements Serializable {
         return children;
     }
 
-    public Set<Upload> getReferences() {
+    public Set<AnnotationTarget> getReferences() {
         return references;
     }
 
-    public boolean hasReference(Upload ref) {
+    public boolean hasReference(AnnotationTarget ref) {
         return references.contains(ref);
     }
 
-    public boolean hasReferences(Collection<Upload> ref) {
+    public boolean hasReferences(Collection<AnnotationTarget> ref) {
         return references.containsAll(ref);
     }
 
-    public void addReference(Upload ref) {
+    public void addReference(AnnotationTarget ref) {
         references.add(ref);
     }
 
-    public void addReferences(Upload... refs) {
+    public void addReferences(AnnotationTarget... refs) {
         addReferences(Arrays.asList(refs));
     }
 
-    public void addReferences(Collection<Upload> refs) {
+    public void addReferences(Collection<AnnotationTarget> refs) {
         references.addAll(refs);
     }
 
-    public void removeReference(Upload ref) {
+    public void removeReference(AnnotationTarget ref) {
         references.remove(ref);
     }
 
-    public void removeReferences(Upload... refs) {
+    public void removeReferences(AnnotationTarget... refs) {
         removeReferences(Arrays.asList(refs));
     }
 
-    public void removeReferences(Collection<Upload> refs) {
+    public void removeReferences(Collection<AnnotationTarget> refs) {
         references.removeAll(refs);
     }
 

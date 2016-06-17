@@ -28,8 +28,8 @@ INSERT INTO group_moderation VALUES (1, 1);     -- User Isaac is a moderator
 -- Create Group_Requests mappings
 INSERT INTO group_requests VALUES (1, 2);       -- User Alan is requesting Group access
 
--- Create Uploads
-INSERT INTO upload (id, title, created, version, address, user_account_id) VALUES (1, 'Department of Biomedical Informatics', '2016-03-24 15:58:15', 0, 'http://dbmi.pitt.edu', 1);
+-- Create Annotation Target
+INSERT INTO annotation_target (id, title, created, version, address, user_account_id) VALUES (1, 'Department of Biomedical Informatics', '2016-03-24 15:58:15', 0, 'http://dbmi.pitt.edu', 1);
 
 -- Create Vocabularies
 INSERT INTO vocabulary (id, description, name, version) VALUES (1, 'Text with no required structure', 'Plaintext', 0);
@@ -39,13 +39,13 @@ INSERT INTO attribute (id, level, name, requirement_level, vocab_id) VALUES (1, 
 
 -- Create Annotations with AnnotationData
 -- Public
-INSERT INTO annotation (id, redacted, version, access_control, parent_id, upload_id, user_account_id, vocab_id) VALUES (1, b'0', 0, 1, NULL, 1, 1, 1), (2, b'0', 0, 1, 1, 1, 1, 1);
+INSERT INTO annotation (id, redacted, version, access_control, parent_id, target_id, user_account_id, vocab_id) VALUES (1, b'0', 0, 1, NULL, 1, 1, 1), (2, b'0', 0, 1, 1, 1, 1, 1);
 INSERT INTO annotation_data (id, value, annotation_id, attribute_id) VALUES (1, 'Public annotation', 1, 1), (2, 'Child annotation', 2, 1);
 
 -- Group
-INSERT INTO annotation (id, redacted, version, access_control, group_id, parent_id, upload_id, user_account_id, vocab_id) VALUES (3, b'0', 0, 2, 1, NULL, 1, 1, 1);
+INSERT INTO annotation (id, redacted, version, access_control, group_id, parent_id, target_id, user_account_id, vocab_id) VALUES (3, b'0', 0, 2, 1, NULL, 1, 1, 1);
 INSERT INTO annotation_data (id, value, annotation_id, attribute_id) VALUES(3, 'Scientists group annotation', 3, 1);
 
 -- Private
-INSERT INTO annotation (id, redacted, version, access_control, parent_id, upload_id, user_account_id, vocab_id) VALUES (4, b'0', 0, 3, NULL, 1, 1, 1);
+INSERT INTO annotation (id, redacted, version, access_control, parent_id, target_id, user_account_id, vocab_id) VALUES (4, b'0', 0, 3, NULL, 1, 1, 1);
 INSERT INTO annotation_data (id, value, annotation_id, attribute_id) VALUES (4, 'Private annotation', 4, 1), (5, 'Private annotation with additional data', 4, 1);

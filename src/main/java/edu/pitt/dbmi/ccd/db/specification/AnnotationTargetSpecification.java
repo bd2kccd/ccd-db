@@ -24,20 +24,18 @@ import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Stream;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
-import edu.pitt.dbmi.ccd.db.entity.Upload;
+
+import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-public final class UploadSpecification {
+public final class AnnotationTargetSpecification {
 
     private static final String USER = "user";
     private static final String USERNAME = "username";
@@ -47,9 +45,9 @@ public final class UploadSpecification {
     private static final String NAME = "name";
     private static final String URL = "url";
 
-    private UploadSpecification() { }
+    private AnnotationTargetSpecification() { }
 
-    public static Specification<Upload> filterSpec(String username, String type) {
+    public static Specification<AnnotationTarget> filterSpec(String username, String type) {
         return (root, query, cb) -> {
             return buildFilterSpec(root, cb, username, type);
         };
@@ -63,16 +61,16 @@ public final class UploadSpecification {
      * @param  nots      does not contain terms
      * @return           specification
      */
-    public static Specification<Upload> searchSpec(String username,
-                                                   String type,
-                                                   Set<String> matches,
-                                                   Set<String> nots) {
+    public static Specification<AnnotationTarget> searchSpec(String username,
+                                                             String type,
+                                                             Set<String> matches,
+                                                             Set<String> nots) {
         return (root, query, cb) -> {
             return buildSearchSpec(root, cb, username, type, matches, nots);
         };
     }
 
-    private static Predicate buildFilterSpec(Root<Upload> root, CriteriaBuilder cb, String username, String type) {
+    private static Predicate buildFilterSpec(Root<AnnotationTarget> root, CriteriaBuilder cb, String username, String type) {
         List<Predicate> predicates = new ArrayList<>(0);
         if (!isNullOrEmpty(username)) {
             predicates.add(belongsToUser(root, cb, username));
@@ -88,7 +86,7 @@ public final class UploadSpecification {
     }
 
     // build search predicates
-    private static Predicate buildSearchSpec(Root<Upload> root, CriteriaBuilder cb, String username, String type, Set<String> matches, Set<String> nots) {
+    private static Predicate buildSearchSpec(Root<AnnotationTarget> root, CriteriaBuilder cb, String username, String type, Set<String> matches, Set<String> nots) {
         List<Predicate> predicates = new ArrayList<>(0);
         predicates.add(buildFilterSpec(root, cb, username, type));
         if (!isNullOrEmpty(matches)) {
@@ -101,22 +99,22 @@ public final class UploadSpecification {
     }
 
     // belongs to user predicate
-    private static Predicate belongsToUser(Root<Upload> root, CriteriaBuilder cb, String username) {
+    private static Predicate belongsToUser(Root<AnnotationTarget> root, CriteriaBuilder cb, String username) {
         return cb.like(cb.lower(root.get(USER).get(USERNAME)), username.toLowerCase());
     }
 
     // is file predicate
-    private static Predicate isFile(Root<Upload> root, CriteriaBuilder cb) {
+    private static Predicate isFile(Root<AnnotationTarget> root, CriteriaBuilder cb) {
         return cb.isNull(root.get(ADDRESS));
     }
 
     // is url predicate
-    private static Predicate isURL(Root<Upload> root, CriteriaBuilder cb) {
+    private static Predicate isURL(Root<AnnotationTarget> root, CriteriaBuilder cb) {
         return cb.isNotNull(root.get(ADDRESS));
     }
 
     // build (title or address or file name contains term) predicate for each search term
-    private static List<Predicate> inTitleOrAddressOrName(Root<Upload> root, CriteriaBuilder cb, Set<String> terms) {
+    private static List<Predicate> inTitleOrAddressOrName(Root<AnnotationTarget> root, CriteriaBuilder cb, Set<String> terms) {
         return terms.stream()
                     .map(t -> containsLike(t))
                     .map(t -> cb.or(titleContains(root, cb, t),
@@ -126,7 +124,7 @@ public final class UploadSpecification {
     }
 
     // build (neither name or description contains term) predicate for each search term
-    private static List<Predicate> notInTitleOrAddressOrName(Root<Upload> root, CriteriaBuilder cb, Set<String> terms) {
+    private static List<Predicate> notInTitleOrAddressOrName(Root<AnnotationTarget> root, CriteriaBuilder cb, Set<String> terms) {
         return terms.stream()
                     .map(t -> containsLike(t))
                     .map(t -> cb.not(cb.or(titleContains(root, cb, t),
@@ -136,17 +134,17 @@ public final class UploadSpecification {
     }
 
     // build title contains term predicate
-    private static Predicate titleContains(Root<Upload> root, CriteriaBuilder cb, String term) {
+    private static Predicate titleContains(Root<AnnotationTarget> root, CriteriaBuilder cb, String term) {
         return cb.like(cb.lower(root.get(TITLE)), term);
     }
 
     // build address contains term predicate
-    private static Predicate addressContains(Root<Upload> root, CriteriaBuilder cb, String term) {
+    private static Predicate addressContains(Root<AnnotationTarget> root, CriteriaBuilder cb, String term) {
         return cb.like(cb.lower(root.get(ADDRESS)), term);
     }
 
     // build file name contains term predicate
-    private static Predicate fileNameContains(Root<Upload> root, CriteriaBuilder cb, String term) {
+    private static Predicate fileNameContains(Root<AnnotationTarget> root, CriteriaBuilder cb, String term) {
         return cb.like(cb.lower(root.get(FILE).get(NAME)), term);
     }
 
