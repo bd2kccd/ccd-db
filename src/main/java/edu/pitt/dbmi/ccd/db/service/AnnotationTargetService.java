@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
+import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationTargetRepository;
 
 /**
@@ -52,12 +53,12 @@ public class AnnotationTargetService {
         return annotationTargetRepository.save(annotationTargets);
     }
 
-//    public AnnotationTarget findUpload(Long id) {
-//        return annotationTargetRepository.findOne(id);
-//    }
-
     public Optional<AnnotationTarget> findById(Long id) {
         return annotationTargetRepository.findById(id);
+    }
+
+    public Optional<AnnotationTarget> findByDataFile(DataFile file) {
+        return annotationTargetRepository.findByFile(file);
     }
 
     public Page<AnnotationTarget> filter(String username, String type, Pageable pageable) {

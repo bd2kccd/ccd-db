@@ -28,7 +28,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import edu.pitt.dbmi.ccd.db.entity.Annotation;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
+import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
@@ -39,6 +41,8 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 public interface AnnotationTargetRepository extends JpaRepository<AnnotationTarget, Long> , JpaSpecificationExecutor<AnnotationTarget> {
 
     public Optional<AnnotationTarget> findById(Long id);
+
+    public Optional<AnnotationTarget> findByFile(DataFile file);
 
     public Page<AnnotationTarget> findByTitleContains(String terms, Pageable pageable);
 
