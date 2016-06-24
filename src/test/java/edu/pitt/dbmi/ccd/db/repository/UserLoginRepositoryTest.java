@@ -39,20 +39,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class UserLoginRepositoryTest {
 
     @Autowired
-    private UserLoginRepository userLoginRepository;
+    private UserLoginJpaRepository userLoginJpaRepository;
 
     public UserLoginRepositoryTest() {
     }
 
     /**
-     * Test of getOne method, of class UserLoginRepository.
+     * Test of getOne method, of class UserLoginJpaRepository.
      */
     @Test
     public void testGetOne() {
         System.out.println("getOne");
 
         Long id = 1L;
-        UserLogin userLogin = userLoginRepository.findOne(id);
+        UserLogin userLogin = userLoginJpaRepository.findOne(id);
         Assert.assertNotNull(userLogin);
     }
 
@@ -60,7 +60,7 @@ public class UserLoginRepositoryTest {
     public void testFindAll() {
         System.out.println("findAll");
 
-        List<UserLogin> userLogins = userLoginRepository.findAll();
+        List<UserLogin> userLogins = userLoginJpaRepository.findAll();
         Assert.assertNotNull(userLogins);
         Assert.assertTrue(!userLogins.isEmpty());
     }
