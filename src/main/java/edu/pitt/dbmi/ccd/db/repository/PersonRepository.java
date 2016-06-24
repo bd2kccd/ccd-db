@@ -28,6 +28,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since v0.4.0
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public interface PersonJpaRepository extends JpaRepository<Person, Long> {
+public interface PersonRepository extends JpaRepository<Person, Long> {
 
 }

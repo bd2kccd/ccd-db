@@ -18,15 +18,16 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.UserLogin;
+import edu.pitt.dbmi.ccd.db.entity.UserLoginAttempt;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
- * Feb 21, 2016 8:26:28 PM
+ * Feb 21, 2016 8:27:29 PM
  *
+ * @since v0.4.0
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public interface UserLoginJpaRepository extends JpaRepository<UserLogin, Long> {
+public interface UserLoginAttemptRepository extends JpaRepository<UserLoginAttempt, Long> {
 
 }

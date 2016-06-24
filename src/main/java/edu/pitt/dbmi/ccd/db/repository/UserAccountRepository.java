@@ -18,15 +18,16 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.UserRole;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
- * Jun 9, 2016 4:11:12 PM
+ * Jul 23, 2015 5:33:37 PM
  *
+ * @since v0.4.0
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public interface UserRoleJpaRepository extends JpaRepository<UserRole, Long> {
+public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 
 }
