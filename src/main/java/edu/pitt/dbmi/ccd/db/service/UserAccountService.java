@@ -65,6 +65,10 @@ public class UserAccountService {
         return userAccountRepository.findByActivationKey(activationKey);
     }
 
+    public UserAccount findByEmail(String email) {
+        return userAccountRepository.findByEmail(email);
+    }
+
     public UserAccount saveUserAccount(UserAccount userAccount) {
         userLoginRepository.save(userAccount.getUserLogin());
         userLoginAttemptRepository.save(userAccount.getUserLoginAttempt());
