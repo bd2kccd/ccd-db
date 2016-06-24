@@ -18,7 +18,14 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
+import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
+import edu.pitt.dbmi.ccd.db.repository.UserLoginAttemptRepository;
+import edu.pitt.dbmi.ccd.db.repository.UserLoginRepository;
+import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
 import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,5 +37,41 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 public class UserAccountService {
+
+    private final UserAccountRepository userAccountRepository;
+    private final PersonRepository personRepository;
+    private final UserLoginAttemptRepository userLoginAttemptRepository;
+    private final UserLoginRepository userLoginRepository;
+    private final UserRoleRepository userRoleRepository;
+
+    @Autowired
+    public UserAccountService(UserAccountRepository userAccountRepository, PersonRepository personRepository, UserLoginAttemptRepository userLoginAttemptRepository, UserLoginRepository userLoginRepository, UserRoleRepository userRoleRepository) {
+        this.userAccountRepository = userAccountRepository;
+        this.personRepository = personRepository;
+        this.userLoginAttemptRepository = userLoginAttemptRepository;
+        this.userLoginRepository = userLoginRepository;
+        this.userRoleRepository = userRoleRepository;
+    }
+
+    public UserAccount findByUsername(String username) {
+        return userAccountRepository.findByUsername(username);
+    }
+
+    public UserAccount findByAccount(String account) {
+        return userAccountRepository.findByAccount(account);
+    }
+
+    public UserAccount findByActivationKey(String activationKey) {
+        return userAccountRepository.findByActivationKey(activationKey);
+    }
+
+    public UserAccount saveUserAccount(UserAccount userAccount) {
+        userLoginRepository.save(userAccount.getUserLogin());
+        userLoginAttemptRepository.save(userAccount.getUserLoginAttempt());
+        personRepository.save(userAccount.getPerson());
+        userRoleRepository.save(userAccount.getUserRoles());
+
+        return userAccountRepository.save(userAccount);
+    }
 
 }
