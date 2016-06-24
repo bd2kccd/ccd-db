@@ -20,6 +20,7 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.UserLogin;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
@@ -27,6 +28,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
+@Repository
 public interface UserLoginRepository extends JpaRepository<UserLogin, Long> {
 
 }

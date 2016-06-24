@@ -20,6 +20,7 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.UserLoginAttempt;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
@@ -28,6 +29,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @since v0.4.0
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
+@Repository
 public interface UserLoginAttemptRepository extends JpaRepository<UserLoginAttempt, Long> {
 
 }
