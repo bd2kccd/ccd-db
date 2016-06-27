@@ -68,6 +68,9 @@ public class DataFile implements Serializable {
             @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     private Set<UserAccount> userAccounts = new HashSet<>(0);
 
+    @OneToOne(mappedBy = "file", fetch = FetchType.LAZY)
+    private AnnotationTarget annotationTarget;
+
     public DataFile() {
     }
 
@@ -143,4 +146,11 @@ public class DataFile implements Serializable {
         this.userAccounts = userAccounts;
     }
 
+    public AnnotationTarget getAnnotationTarget() {
+        return annotationTarget;
+    }
+
+    public void setAnnotationTarget(AnnotationTarget annotationTarget) {
+        this.annotationTarget = annotationTarget;
+    }
 }
