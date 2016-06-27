@@ -109,55 +109,55 @@ public class AnnotationRepositoryTest {
     @Test
     public void filterUser() {
         // has annotations
-        final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, owner.getUsername(), null, null, null, null, null, null, false), pageable);
+        final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, owner.getUsername(), null, null, null, null, null, null, false, false), pageable);
         assertEquals(4, annotations.getTotalElements());
 
         // does not have annotations
-        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, viewer.getUsername(), null, null, null, null, null, null, false), pageable);
+        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, viewer.getUsername(), null, null, null, null, null, null, false, false), pageable);
         assertEquals(0, empty.getTotalElements());
     }
 
     @Test
     public void filterGroup() {
         // has annotations
-        final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, "scientists", null, null, null, null, null, false), pageable);
+        final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, "scientists", null, null, null, null, null, false, false), pageable);
         assertEquals(1, annotations.getTotalElements());
 
         // does not have annotations
-        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, "Does Not Exist", null, null, null, null, null, false), pageable);
+        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, "Does Not Exist", null, null, null, null, null, false, false), pageable);
         assertEquals(0, empty.getTotalElements());
     }
 
     @Test
     public void filterTarget() {
         // has annotations
-        final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, null, 1L, null, null, null, null, false), pageable);
+        final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, null, 1L, null, null, null, null, false, false), pageable);
         assertEquals(4, annotations.getTotalElements());
 
         // does not have annotations
-        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, null, 100L, null, null, null, null, false), pageable);
+        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, null, 100L, null, null, null, null, false, false), pageable);
         assertEquals(0, empty.getTotalElements());
     }
 
     @Test
     public void filterVocabulary() {
         // has annotations
-        final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, null, null, "Plaintext", null, null, null, false), pageable);
+        final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, null, null, "Plaintext", null, null, null, false, false), pageable);
         assertEquals(4, annotations.getTotalElements());
 
         // does not have annotations
-        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, null, null, "Does Not Exist", null, null, null, false), pageable);
+        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, null, null, "Does Not Exist", null, null, null, false, false), pageable);
         assertEquals(0, empty.getTotalElements());
     }
 
     @Test
     public void filterAttributeName() {
         // has annotations
-        final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, null, null, null, null, "text", null, false), pageable);
+        final Page<Annotation> annotations = annotationRepository.findAll(filterSpec(owner, null, null, null, null, null, "text", null, false, false), pageable);
         assertEquals(4, annotations.getTotalElements());
 
         // does not have annotations
-        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, null, null, null, null, "Does Not Exist", null, false), pageable);
+        final Page<Annotation> empty = annotationRepository.findAll(filterSpec(owner, null, null, null, null, null, "Does Not Exist", null, false, false), pageable);
         assertEquals(0, empty.getTotalElements());
     }
 
@@ -165,12 +165,12 @@ public class AnnotationRepositoryTest {
     public void search() {
         // matches
         final Set<String> search = new HashSet<>(Arrays.asList("annotation"));
-        Page<Annotation> annotations = annotationRepository.findAll(searchSpec(owner, null, null, null, null, null, null, null, false, search, emptySet), pageable);
+        Page<Annotation> annotations = annotationRepository.findAll(searchSpec(owner, null, null, null, null, null, null, null, false, false, search, emptySet), pageable);
         assertEquals(4, annotations.getTotalElements());
 
         // nots
         final Set<String> nots = search;
-        annotations = annotationRepository.findAll(searchSpec(owner, null, null, null, null, null, null, null, false, emptySet, nots), pageable);
+        annotations = annotationRepository.findAll(searchSpec(owner, null, null, null, null, null, null, null, false, false, emptySet, nots), pageable);
         assertEquals(0, annotations.getTotalElements());
     }
 
