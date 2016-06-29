@@ -41,11 +41,6 @@ import edu.pitt.dbmi.ccd.db.validation.Username;
 public class UserAccount implements Serializable {
 
     private static final long serialVersionUID = 7491138787468687010L;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
-            @JoinColumn(name = "userAccountId", nullable = false)}, inverseJoinColumns = {
-            @JoinColumn(name = "userRoleId", nullable = false)})
-    Set<UserRole> roles = new HashSet<>(0);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -119,6 +114,12 @@ public class UserAccount implements Serializable {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @OrderBy("created")
     private Set<Annotation> annotations = new HashSet<>(0);
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
+            @JoinColumn(name = "userAccountId", nullable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "userRoleId", nullable = false)})
+    Set<UserRole> roles = new HashSet<>(0);
 
     protected UserAccount() {
     }
