@@ -25,6 +25,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * Jul 23, 2015 3:21:54 PM
@@ -47,6 +50,11 @@ public class DataFile implements Serializable {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @NotBlank
+    @Size(max = 255, message = "Title cannot be longer than 255 characters")
+    @Column(length = 255, unique = false, nullable = false)
+    private String title;
 
     @Column(name = "absolutePath", nullable = false)
     private String absolutePath;
@@ -104,6 +112,14 @@ public class DataFile implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getAbsolutePath() {
