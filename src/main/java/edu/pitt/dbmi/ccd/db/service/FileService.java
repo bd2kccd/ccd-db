@@ -20,9 +20,15 @@ package edu.pitt.dbmi.ccd.db.service;
 
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.FileType;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.FileRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import javax.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +41,8 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 public class FileService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileService.class);
 
     private final FileRepository fileRepository;
 
@@ -53,6 +61,30 @@ public class FileService {
         }
 
         return fileRepository.save(file);
+    }
+
+    public List<File> save(List<File> files) {
+        if (files == null || files.isEmpty()) {
+            return new LinkedList<>();
+        }
+
+        return fileRepository.save(files);
+    }
+
+    public List<File> findByUserAccounts(Set<UserAccount> userAccounts) {
+        return fileRepository.findByUserAccounts(userAccounts);
+    }
+
+    public void deleteFiles(List<File> files) {
+        if (files == null) {
+            return;
+        }
+
+        try {
+            fileRepository.delete(files);
+        } catch (Exception exception) {
+            LOGGER.error(exception.getMessage());
+        }
     }
 
 }
