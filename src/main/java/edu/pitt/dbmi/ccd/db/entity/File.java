@@ -51,7 +51,7 @@ public class File implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fileTypeId")
     private FileType fileType;
 
