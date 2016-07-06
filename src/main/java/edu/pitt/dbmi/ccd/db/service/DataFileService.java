@@ -73,6 +73,10 @@ public class DataFileService {
         return dataFileRepository.findByIdAndUserAccounts(id, Collections.singleton(userAccount));
     }
 
+    public List<DataFile> findByUserAccount(UserAccount userAccount) {
+        return dataFileRepository.findByUserAccounts(Collections.singleton(userAccount));
+    }
+
     public DataFile findByAbsolutePathAndName(String absolutePath, String name) {
         return dataFileRepository.findByAbsolutePathAndName(absolutePath, name);
     }
