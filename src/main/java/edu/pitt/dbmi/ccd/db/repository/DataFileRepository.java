@@ -46,4 +46,6 @@ public interface DataFileRepository extends JpaRepository<DataFile, Long> {
 
     public List<DataFile> findByUserAccounts(Set<UserAccount> userAccounts);
 
+    public DataFile findByIdAndUserAccounts(Long id, Set<UserAccount> userAccounts);
+
 }
