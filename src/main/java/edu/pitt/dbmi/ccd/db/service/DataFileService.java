@@ -23,6 +23,7 @@ import edu.pitt.dbmi.ccd.db.entity.DataFileInfo;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.DataFileInfoRepository;
 import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -66,6 +67,10 @@ public class DataFileService {
 
     public List<DataFile> findByUserAccounts(Set<UserAccount> userAccounts) {
         return dataFileRepository.findByUserAccounts(userAccounts);
+    }
+
+    public DataFile findByIdAndUserAccount(Long id, UserAccount userAccount) {
+        return dataFileRepository.findByIdAndUserAccounts(id, Collections.singleton(userAccount));
     }
 
     public DataFile findByAbsolutePathAndName(String absolutePath, String name) {
