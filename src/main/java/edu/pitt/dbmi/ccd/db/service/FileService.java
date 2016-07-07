@@ -71,20 +71,28 @@ public class FileService {
         return fileRepository.save(files);
     }
 
+    public File findById(Long id) {
+        return fileRepository.findOne(id);
+    }
+
     public List<File> findByUserAccounts(Set<UserAccount> userAccounts) {
         return fileRepository.findByUserAccounts(userAccounts);
     }
 
-    public void deleteFiles(List<File> files) {
-        if (files == null) {
-            return;
-        }
+    public File findByIdAndUserAccounts(Long id, Set<UserAccount> userAccounts) {
+        return fileRepository.findByIdAndUserAccounts(id, userAccounts);
+    }
 
-        try {
-            fileRepository.delete(files);
-        } catch (Exception exception) {
-            LOGGER.error(exception.getMessage());
-        }
+    public void delete(Long id) {
+        fileRepository.delete(id);
+    }
+
+    public void delete(File file) {
+        fileRepository.delete(file);
+    }
+
+    public void delete(List<File> files) {
+        fileRepository.delete(files);
     }
 
 }

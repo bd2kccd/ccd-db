@@ -42,4 +42,6 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     public List<File> findByUserAccounts(Set<UserAccount> userAccounts);
 
+    public File findByIdAndUserAccounts(Long id, Set<UserAccount> userAccounts);
+
 }
