@@ -18,44 +18,44 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.FileType;
-import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
+import edu.pitt.dbmi.ccd.db.entity.VariableType;
+import edu.pitt.dbmi.ccd.db.repository.VariableTypeRepository;
 import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Jul 5, 2016 1:41:01 PM
+ * Jul 24, 2015 1:24:35 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-public class FileTypeService {
+@Transactional
+public class VariableTypeService {
 
-    private final FileTypeRepository fileTypeRepository;
+    private final VariableTypeRepository variableTypeRepository;
 
-    @Autowired
-    public FileTypeService(FileTypeRepository fileTypeRepository) {
-        this.fileTypeRepository = fileTypeRepository;
+    @Autowired(required = true)
+    public VariableTypeService(VariableTypeRepository variableTypeRepository) {
+        this.variableTypeRepository = variableTypeRepository;
 
-        List<FileType> fileTypes = fileTypeRepository.findAll();
-        if (fileTypes.isEmpty()) {
-            fileTypes.add(new FileType("dataset"));
-            fileTypes.add(new FileType("algorithm result"));
-            fileTypes.add(new FileType("prior knowledge"));
-            fileTypes.add(new FileType("variable"));
+        List<VariableType> variableTypes = variableTypeRepository.findAll();
+        if (variableTypes.isEmpty()) {
+            variableTypes.add(new VariableType("continuous"));
+            variableTypes.add(new VariableType("discrete"));
 
-            fileTypeRepository.save(fileTypes);
+            variableTypeRepository.save(variableTypes);
         }
     }
 
-    public List<FileType> findAll() {
-        return fileTypeRepository.findAll();
+    public List<VariableType> findAll() {
+        return variableTypeRepository.findAll();
     }
 
-    public FileType findByName(String name) {
-        return fileTypeRepository.findByName(name);
+    public VariableType findByName(String name) {
+        return variableTypeRepository.findByName(name);
     }
 
 }

@@ -18,44 +18,46 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.FileType;
-import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
+import edu.pitt.dbmi.ccd.db.entity.FileDelimiter;
+import edu.pitt.dbmi.ccd.db.repository.FileDelimiterRepository;
 import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Jul 5, 2016 1:41:01 PM
+ * Jul 24, 2015 1:26:38 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-public class FileTypeService {
+@Transactional
+public class FileDelimiterService {
 
-    private final FileTypeRepository fileTypeRepository;
+    private final FileDelimiterRepository fileDelimiterRepository;
 
-    @Autowired
-    public FileTypeService(FileTypeRepository fileTypeRepository) {
-        this.fileTypeRepository = fileTypeRepository;
+    @Autowired(required = true)
+    public FileDelimiterService(FileDelimiterRepository fileDelimiterRepository) {
+        this.fileDelimiterRepository = fileDelimiterRepository;
 
-        List<FileType> fileTypes = fileTypeRepository.findAll();
-        if (fileTypes.isEmpty()) {
-            fileTypes.add(new FileType("dataset"));
-            fileTypes.add(new FileType("algorithm result"));
-            fileTypes.add(new FileType("prior knowledge"));
-            fileTypes.add(new FileType("variable"));
+        List<FileDelimiter> delimiters = fileDelimiterRepository.findAll();
+        if (delimiters.isEmpty()) {
+            delimiters.add(new FileDelimiter("tab", "\t"));
+            delimiters.add(new FileDelimiter("comma", ","));
 
-            fileTypeRepository.save(fileTypes);
+            fileDelimiterRepository.save(delimiters);
         }
     }
 
-    public List<FileType> findAll() {
-        return fileTypeRepository.findAll();
+    public List<FileDelimiter> findAll() {
+        List<FileDelimiter> delimiters = fileDelimiterRepository.findAll();
+
+        return delimiters;
     }
 
-    public FileType findByName(String name) {
-        return fileTypeRepository.findByName(name);
+    public FileDelimiterRepository getFileDelimiterRepository() {
+        return fileDelimiterRepository;
     }
 
 }
