@@ -18,9 +18,11 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
 import java.util.LinkedList;
@@ -48,10 +50,13 @@ public class FileService {
 
     private final FileTypeRepository fileTypeRepository;
 
+    private final DataFileRepository dataFileRepository;
+
     @Autowired
-    public FileService(FileRepository fileRepository, FileTypeRepository fileTypeRepository) {
+    public FileService(FileRepository fileRepository, FileTypeRepository fileTypeRepository, DataFileRepository dataFileRepository) {
         this.fileRepository = fileRepository;
         this.fileTypeRepository = fileTypeRepository;
+        this.dataFileRepository = dataFileRepository;
     }
 
     public File save(File file) {
@@ -84,14 +89,33 @@ public class FileService {
     }
 
     public void delete(Long id) {
-        fileRepository.delete(id);
+        File file = fileRepository.findOne(id);
+        if (file != null) {
+            delete(file);
+        }
     }
 
     public void delete(File file) {
+        DataFile dataFile = dataFileRepository.findByFile(file);
+        if (dataFile != null) {
+            dataFileRepository.delete(dataFile);
+        }
+
         fileRepository.delete(file);
     }
 
     public void delete(List<File> files) {
+        List<DataFile> dataFiles = new LinkedList<>();
+        files.forEach(file -> {
+            DataFile dataFile = dataFileRepository.findByFile(file);
+            if (dataFile != null) {
+                dataFiles.add(dataFile);
+            }
+        });
+        if (!dataFiles.isEmpty()) {
+            dataFileRepository.delete(dataFiles);
+        }
+
         fileRepository.delete(files);
     }
 

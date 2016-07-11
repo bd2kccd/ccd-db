@@ -1,8 +1,8 @@
--- MySQL dump 10.15  Distrib 10.0.23-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.15  Distrib 10.0.25-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: ccd
 -- ------------------------------------------------------
--- Server version	10.0.23-MariaDB
+-- Server version	10.0.25-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,6 +14,39 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `DataFile`
+--
+
+DROP TABLE IF EXISTS `DataFile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `DataFile` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `numOfRows` int(11) DEFAULT NULL,
+  `numOfColumns` int(11) DEFAULT NULL,
+  `fileId` bigint(20) NOT NULL,
+  `fileDelimiterId` bigint(20) NOT NULL,
+  `variableTypeId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fileId` (`fileId`),
+  KEY `fileDelimiterId` (`fileDelimiterId`),
+  KEY `variableTypeId` (`variableTypeId`),
+  CONSTRAINT `DataFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`),
+  CONSTRAINT `DataFile_ibfk_2` FOREIGN KEY (`fileDelimiterId`) REFERENCES `FileDelimiter` (`id`),
+  CONSTRAINT `DataFile_ibfk_3` FOREIGN KEY (`variableTypeId`) REFERENCES `VariableType` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `DataFile`
+--
+
+LOCK TABLES `DataFile` WRITE;
+/*!40000 ALTER TABLE `DataFile` DISABLE KEYS */;
+/*!40000 ALTER TABLE `DataFile` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `File`
@@ -43,6 +76,31 @@ CREATE TABLE `File` (
 LOCK TABLES `File` WRITE;
 /*!40000 ALTER TABLE `File` DISABLE KEYS */;
 /*!40000 ALTER TABLE `File` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `FileDelimiter`
+--
+
+DROP TABLE IF EXISTS `FileDelimiter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `FileDelimiter` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(16) NOT NULL,
+  `value` varchar(8) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `FileDelimiter`
+--
+
+LOCK TABLES `FileDelimiter` WRITE;
+/*!40000 ALTER TABLE `FileDelimiter` DISABLE KEYS */;
+/*!40000 ALTER TABLE `FileDelimiter` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -264,6 +322,30 @@ LOCK TABLES `UserRole` WRITE;
 /*!40000 ALTER TABLE `UserRole` DISABLE KEYS */;
 /*!40000 ALTER TABLE `UserRole` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `VariableType`
+--
+
+DROP TABLE IF EXISTS `VariableType`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `VariableType` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(16) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `VariableType`
+--
+
+LOCK TABLES `VariableType` WRITE;
+/*!40000 ALTER TABLE `VariableType` DISABLE KEYS */;
+/*!40000 ALTER TABLE `VariableType` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -274,4 +356,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-09 15:35:27
+-- Dump completed on 2016-07-11 14:11:24

@@ -32,6 +32,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -71,6 +72,9 @@ public class File implements Serializable {
     @Column(name = "md5CheckSum", length = 32)
     private String md5checkSum;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file")
+    private Set<DataFile> dataFiles = new HashSet<>(0);
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountFileRel", joinColumns = {
         @JoinColumn(name = "fileId", nullable = false, updatable = false)}, inverseJoinColumns = {
@@ -87,13 +91,14 @@ public class File implements Serializable {
         this.fileSize = fileSize;
     }
 
-    public File(FileType fileType, String name, String absolutePath, Date creationTime, long fileSize, String md5checkSum, Set<UserAccount> userAccounts) {
+    public File(FileType fileType, String name, String absolutePath, Date creationTime, long fileSize, String md5checkSum, Set<DataFile> dataFiles, Set<UserAccount> userAccounts) {
         this.fileType = fileType;
         this.name = name;
         this.absolutePath = absolutePath;
         this.creationTime = creationTime;
         this.fileSize = fileSize;
         this.md5checkSum = md5checkSum;
+        this.dataFiles = dataFiles;
         this.userAccounts = userAccounts;
     }
 
@@ -151,6 +156,14 @@ public class File implements Serializable {
 
     public void setMd5checkSum(String md5checkSum) {
         this.md5checkSum = md5checkSum;
+    }
+
+    public Set<DataFile> getDataFiles() {
+        return dataFiles;
+    }
+
+    public void setDataFiles(Set<DataFile> dataFiles) {
+        this.dataFiles = dataFiles;
     }
 
     public Set<UserAccount> getUserAccounts() {

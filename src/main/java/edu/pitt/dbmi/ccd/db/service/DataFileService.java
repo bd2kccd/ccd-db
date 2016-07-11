@@ -18,46 +18,41 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.FileDelimiter;
-import edu.pitt.dbmi.ccd.db.repository.FileDelimiterRepository;
-import java.util.List;
+import edu.pitt.dbmi.ccd.db.entity.DataFile;
+import edu.pitt.dbmi.ccd.db.entity.File;
+import edu.pitt.dbmi.ccd.db.entity.VariableType;
+import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Jul 24, 2015 1:26:38 PM
+ * Jul 11, 2016 2:49:27 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
 @Transactional
-public class FileDelimiterService {
+public class DataFileService {
 
-    private final FileDelimiterRepository fileDelimiterRepository;
+    private final DataFileRepository dataFileRepository;
 
-    @Autowired(required = true)
-    public FileDelimiterService(FileDelimiterRepository fileDelimiterRepository) {
-        this.fileDelimiterRepository = fileDelimiterRepository;
-
-        List<FileDelimiter> delimiters = fileDelimiterRepository.findAll();
-        if (delimiters.isEmpty()) {
-            delimiters.add(new FileDelimiter("tab", "\t"));
-            delimiters.add(new FileDelimiter("comma", ","));
-
-            fileDelimiterRepository.save(delimiters);
-        }
+    @Autowired
+    public DataFileService(DataFileRepository dataFileRepository) {
+        this.dataFileRepository = dataFileRepository;
     }
 
-    public List<FileDelimiter> findAll() {
-        List<FileDelimiter> delimiters = fileDelimiterRepository.findAll();
-
-        return delimiters;
+    public DataFile findByFile(File file) {
+        return dataFileRepository.findByFile(file);
     }
 
-    public FileDelimiter findByName(String name) {
-        return fileDelimiterRepository.findByName(name);
+    public DataFile findByVariableType(VariableType variableType) {
+        return dataFileRepository.findByVariableType(variableType);
+    }
+
+    public DataFile save(DataFile dataFile) {
+        return dataFileRepository.save(dataFile);
     }
 
 }
