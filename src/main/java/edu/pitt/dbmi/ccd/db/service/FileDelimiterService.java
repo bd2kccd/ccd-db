@@ -37,7 +37,7 @@ public class FileDelimiterService {
 
     private final FileDelimiterRepository fileDelimiterRepository;
 
-    @Autowired(required = true)
+    @Autowired
     public FileDelimiterService(FileDelimiterRepository fileDelimiterRepository) {
         this.fileDelimiterRepository = fileDelimiterRepository;
 

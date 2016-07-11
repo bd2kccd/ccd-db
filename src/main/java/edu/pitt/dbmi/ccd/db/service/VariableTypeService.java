@@ -37,7 +37,7 @@ public class VariableTypeService {
 
     private final VariableTypeRepository variableTypeRepository;
 
-    @Autowired(required = true)
+    @Autowired
     public VariableTypeService(VariableTypeRepository variableTypeRepository) {
         this.variableTypeRepository = variableTypeRepository;
 
