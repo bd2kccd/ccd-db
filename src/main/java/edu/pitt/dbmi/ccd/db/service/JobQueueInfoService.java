@@ -21,6 +21,7 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.JobQueueInfo;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.JobQueueInfoRepository;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -106,6 +107,10 @@ public class JobQueueInfoService {
 
     public JobQueueInfo findOne(Long id) {
         return jobQueueInfoRepository.findOne(id);
+    }
+
+    public JobQueueInfo findByIdAndUseraccount(Long id, UserAccount userAccount) {
+        return jobQueueInfoRepository.findByIdAndUserAccounts(id, Collections.singleton(userAccount));
     }
 
     public List<JobQueueInfo> findByUserAccounts(Set<UserAccount> userAccounts) {
