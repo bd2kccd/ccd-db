@@ -18,6 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.UserRole;
+import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,5 +32,28 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserRoleService {
+
+    private final UserRoleRepository userRoleRepository;
+
+    @Autowired
+    public UserRoleService(UserRoleRepository userRoleRepository) {
+        this.userRoleRepository = userRoleRepository;
+
+        List<UserRole> userRoles = userRoleRepository.findAll();
+        if (userRoles.isEmpty()) {
+            userRoles.add(new UserRole("user", "Regular user."));
+            userRoles.add(new UserRole("admin", "Administrator."));
+
+            userRoleRepository.save(userRoles);
+        }
+    }
+
+    public UserRole findByName(String name) {
+        return userRoleRepository.findByName(name);
+    }
+
+    public List<UserRole> findAll() {
+        return userRoleRepository.findAll();
+    }
 
 }

@@ -22,7 +22,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 
 /**
@@ -34,10 +34,10 @@ import javax.persistence.Id;
 @Entity
 public class FileDelimiter implements Serializable {
 
-    private static final long serialVersionUID = 3557946732110729506L;
+    private static final long serialVersionUID = -4574772817571231748L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
@@ -56,6 +56,12 @@ public class FileDelimiter implements Serializable {
     public FileDelimiter(String name, String value) {
         this.name = name;
         this.value = value;
+    }
+
+    public FileDelimiter(String name, String value, String description) {
+        this.name = name;
+        this.value = value;
+        this.description = description;
     }
 
     public Long getId() {

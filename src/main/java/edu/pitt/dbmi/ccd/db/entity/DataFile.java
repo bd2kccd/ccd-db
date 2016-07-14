@@ -37,7 +37,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class DataFile implements Serializable {
 
-    private static final long serialVersionUID = 3907404589794031396L;
+    private static final long serialVersionUID = 7331766490037513813L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

@@ -21,7 +21,6 @@ package edu.pitt.dbmi.ccd.db.repository;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.List;
-import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -40,8 +39,8 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     public File findByAbsolutePathAndName(String absolutePath, String name);
 
-    public List<File> findByUserAccounts(Set<UserAccount> userAccounts);
+    public List<File> findByUserAccount(UserAccount userAccount);
 
-    public File findByIdAndUserAccounts(Long id, Set<UserAccount> userAccounts);
+    public File findByIdAndUserAccount(Long id, UserAccount userAccount);
 
 }

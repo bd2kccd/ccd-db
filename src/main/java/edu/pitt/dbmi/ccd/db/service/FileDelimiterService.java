@@ -56,6 +56,10 @@ public class FileDelimiterService {
         return delimiters;
     }
 
+    public FileDelimiter findById(Long id) {
+        return fileDelimiterRepository.getOne(id);
+    }
+
     public FileDelimiter findByName(String name) {
         return fileDelimiterRepository.findByName(name);
     }

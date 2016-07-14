@@ -27,7 +27,6 @@ import edu.pitt.dbmi.ccd.db.repository.FileRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,12 +75,12 @@ public class FileService {
         return fileRepository.findOne(id);
     }
 
-    public List<File> findByUserAccounts(Set<UserAccount> userAccounts) {
-        return fileRepository.findByUserAccounts(userAccounts);
+    public List<File> findByUserAccount(UserAccount userAccount) {
+        return fileRepository.findByUserAccount(userAccount);
     }
 
-    public File findByIdAndUserAccounts(Long id, Set<UserAccount> userAccounts) {
-        return fileRepository.findByIdAndUserAccounts(id, userAccounts);
+    public File findByIdAndUserAccount(Long id, UserAccount userAccount) {
+        return fileRepository.findByIdAndUserAccount(id, userAccount);
     }
 
     public void delete(Long id) {

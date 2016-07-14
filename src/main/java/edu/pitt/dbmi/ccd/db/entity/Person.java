@@ -19,15 +19,11 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 /**
  *
@@ -39,10 +35,10 @@ import javax.persistence.OneToMany;
 @Entity
 public class Person implements Serializable {
 
-    private static final long serialVersionUID = -3930588006064801674L;
+    private static final long serialVersionUID = -2807315042169945476L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
@@ -61,14 +57,12 @@ public class Person implements Serializable {
     @Column(name = "workspace", nullable = false)
     private String workspace;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person")
-    private Set<UserAccount> userAccounts = new HashSet<>(0);
-
     public Person() {
     }
 
-    public Person(String firstName, String lastName, String email, String workspace) {
+    public Person(String firstName, String middleName, String lastName, String email, String workspace) {
         this.firstName = firstName;
+        this.middleName = middleName;
         this.lastName = lastName;
         this.email = email;
         this.workspace = workspace;
@@ -120,14 +114,6 @@ public class Person implements Serializable {
 
     public void setWorkspace(String workspace) {
         this.workspace = workspace;
-    }
-
-    public Set<UserAccount> getUserAccounts() {
-        return userAccounts;
-    }
-
-    public void setUserAccounts(Set<UserAccount> userAccounts) {
-        this.userAccounts = userAccounts;
     }
 
 }

@@ -20,15 +20,11 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -44,22 +40,19 @@ public class UserLoginAttempt implements Serializable {
     private static final long serialVersionUID = -1971864276255876577L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "attempt_date", length = 19)
+    @Column(name = "attemptDate", length = 19)
     private Date attemptDate;
 
-    @Column(name = "attempt_location")
+    @Column(name = "attemptLocation")
     private Long attemptLocation;
 
-    @Column(name = "attempt_count")
+    @Column(name = "attemptCount")
     private Byte attemptCount;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userLoginAttempt")
-    private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     public UserLoginAttempt() {
     }
@@ -101,14 +94,6 @@ public class UserLoginAttempt implements Serializable {
 
     public void setAttemptCount(Byte attemptCount) {
         this.attemptCount = attemptCount;
-    }
-
-    public Set<UserAccount> getUserAccounts() {
-        return userAccounts;
-    }
-
-    public void setUserAccounts(Set<UserAccount> userAccounts) {
-        this.userAccounts = userAccounts;
     }
 
 }

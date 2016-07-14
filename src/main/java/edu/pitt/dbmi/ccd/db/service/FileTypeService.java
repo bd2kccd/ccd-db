@@ -54,6 +54,10 @@ public class FileTypeService {
         return fileTypeRepository.findAll();
     }
 
+    public FileType findById(Long id) {
+        return fileTypeRepository.findOne(id);
+    }
+
     public FileType findByName(String name) {
         return fileTypeRepository.findByName(name);
     }

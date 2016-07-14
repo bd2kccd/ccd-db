@@ -20,15 +20,11 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -44,26 +40,23 @@ public class UserLogin implements Serializable {
     private static final long serialVersionUID = 2852673190168508153L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "login_date", length = 19)
+    @Column(name = "loginDate", length = 19)
     private Date loginDate;
 
-    @Column(name = "login_location")
+    @Column(name = "loginLocation")
     private Long loginLocation;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "last_login_date", length = 19)
+    @Column(name = "lastLoginDate", length = 19)
     private Date lastLoginDate;
 
-    @Column(name = "last_login_location")
+    @Column(name = "lastLoginLocation")
     private Long lastLoginLocation;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userLogin")
-    private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     public UserLogin() {
     }
@@ -114,14 +107,6 @@ public class UserLogin implements Serializable {
 
     public void setLastLoginLocation(Long lastLoginLocation) {
         this.lastLoginLocation = lastLoginLocation;
-    }
-
-    public Set<UserAccount> getUserAccounts() {
-        return userAccounts;
-    }
-
-    public void setUserAccounts(Set<UserAccount> userAccounts) {
-        this.userAccounts = userAccounts;
     }
 
 }

@@ -54,6 +54,10 @@ public class VariableTypeService {
         return variableTypeRepository.findAll();
     }
 
+    public VariableType findById(Long id) {
+        return variableTypeRepository.findOne(id);
+    }
+
     public VariableType findByName(String name) {
         return variableTypeRepository.findByName(name);
     }
