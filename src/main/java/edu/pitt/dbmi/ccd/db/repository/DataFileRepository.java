@@ -35,6 +35,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DataFileRepository extends JpaRepository<DataFile, Long> {
 
+    public DataFile findById(Long id);
+
     public DataFile findByName(String name);
 
     public List<DataFile> findByAbsolutePath(String absolutePath);

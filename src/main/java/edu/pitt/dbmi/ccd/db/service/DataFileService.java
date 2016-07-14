@@ -57,6 +57,10 @@ public class DataFileService {
         this.dataFileInfoRepository = dataFileInfoRepository;
     }
 
+    public DataFile findById(Long id) {
+        return dataFileRepository.findById(id);
+    }
+
     public DataFile findByName(String name) {
         return dataFileRepository.findByName(name);
     }
