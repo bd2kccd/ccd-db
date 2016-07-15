@@ -33,6 +33,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class FileTypeService {
 
+    public static final String DATA_TYPE_NAME = "dataset";
+    public static final String ALGO_RESULT_TYPE_NAME = "algorithm result";
+    public static final String PRIOR_TYPE_NAME = "prior knowledge";
+    public static final String VAR_TYPE_NAME = "variable";
+
     private final FileTypeRepository fileTypeRepository;
 
     @Autowired
@@ -41,10 +46,10 @@ public class FileTypeService {
 
         List<FileType> fileTypes = fileTypeRepository.findAll();
         if (fileTypes.isEmpty()) {
-            fileTypes.add(new FileType("dataset"));
-            fileTypes.add(new FileType("algorithm result"));
-            fileTypes.add(new FileType("prior knowledge"));
-            fileTypes.add(new FileType("variable"));
+            fileTypes.add(new FileType(DATA_TYPE_NAME));
+            fileTypes.add(new FileType(ALGO_RESULT_TYPE_NAME));
+            fileTypes.add(new FileType(PRIOR_TYPE_NAME));
+            fileTypes.add(new FileType(VAR_TYPE_NAME));
 
             fileTypeRepository.save(fileTypes);
         }
