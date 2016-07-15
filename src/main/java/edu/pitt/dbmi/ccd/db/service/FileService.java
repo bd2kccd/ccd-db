@@ -81,8 +81,16 @@ public class FileService {
         return fileRepository.findByUserAccount(userAccount);
     }
 
+    public List<File> findUntypedFileByUserAccount(UserAccount userAccount) {
+        return fileRepository.findUntypedFileByUserAccount(userAccount);
+    }
+
     public File findByIdAndUserAccount(Long id, UserAccount userAccount) {
         return fileRepository.findByIdAndUserAccount(id, userAccount);
+    }
+
+    public List<File> findByFileTypeAndUserAccount(FileType fileType, UserAccount userAccount) {
+        return fileRepository.findByFileTypeAndUserAccount(fileType, userAccount);
     }
 
     public void delete(Long id) {

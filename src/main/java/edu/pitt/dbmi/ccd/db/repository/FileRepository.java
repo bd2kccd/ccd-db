@@ -19,9 +19,11 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.File;
+import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -40,6 +42,11 @@ public interface FileRepository extends JpaRepository<File, Long> {
     public File findByAbsolutePathAndName(String absolutePath, String name);
 
     public List<File> findByUserAccount(UserAccount userAccount);
+
+    @Query("SELECT f FROM File f WHERE f.userAccount = ?1 AND f.fileType IS NULL")
+    public List<File> findUntypedFileByUserAccount(UserAccount userAccount);
+
+    public List<File> findByFileTypeAndUserAccount(FileType fileType, UserAccount userAccount);
 
     public File findByIdAndUserAccount(Long id, UserAccount userAccount);
 
