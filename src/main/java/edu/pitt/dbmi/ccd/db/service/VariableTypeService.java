@@ -35,6 +35,9 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class VariableTypeService {
 
+    public static final String CONTINUOUS_VAR_NAME = "continuous";
+    public static final String DISCRETE_VAR_NAME = "discrete";
+
     private final VariableTypeRepository variableTypeRepository;
 
     @Autowired
@@ -43,8 +46,8 @@ public class VariableTypeService {
 
         List<VariableType> variableTypes = variableTypeRepository.findAll();
         if (variableTypes.isEmpty()) {
-            variableTypes.add(new VariableType("continuous"));
-            variableTypes.add(new VariableType("discrete"));
+            variableTypes.add(new VariableType(CONTINUOUS_VAR_NAME));
+            variableTypes.add(new VariableType(DISCRETE_VAR_NAME));
 
             variableTypeRepository.save(variableTypes);
         }

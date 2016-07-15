@@ -35,6 +35,9 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class FileDelimiterService {
 
+    public static final String TAB_DELIM_NAME = "tab";
+    public static final String COMMA_DELIM_NAME = "comma";
+
     private final FileDelimiterRepository fileDelimiterRepository;
 
     @Autowired
@@ -43,8 +46,8 @@ public class FileDelimiterService {
 
         List<FileDelimiter> delimiters = fileDelimiterRepository.findAll();
         if (delimiters.isEmpty()) {
-            delimiters.add(new FileDelimiter("tab", "\t"));
-            delimiters.add(new FileDelimiter("comma", ","));
+            delimiters.add(new FileDelimiter(TAB_DELIM_NAME, "\t"));
+            delimiters.add(new FileDelimiter(COMMA_DELIM_NAME, ","));
 
             fileDelimiterRepository.save(delimiters);
         }
