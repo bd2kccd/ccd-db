@@ -36,6 +36,8 @@ public interface JobQueueInfoRepository extends JpaRepository<JobQueueInfo, Long
 
     public JobQueueInfo findByPid(Long pid);
 
+    public JobQueueInfo findByIdAndUserAccounts(Long id, Set<UserAccount> userAccounts);
+
     public List<JobQueueInfo> findByStatus(int status);
 
     public List<JobQueueInfo> findByUserAccounts(Set<UserAccount> userAccounts);
