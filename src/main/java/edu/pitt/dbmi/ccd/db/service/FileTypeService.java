@@ -47,7 +47,7 @@ public class FileTypeService {
         List<FileType> fileTypes = fileTypeRepository.findAll();
         if (fileTypes.isEmpty()) {
             fileTypes.add(new FileType(DATA_TYPE_NAME));
-            fileTypes.add(new FileType(ALGO_RESULT_TYPE_NAME));
+//            fileTypes.add(new FileType(ALGO_RESULT_TYPE_NAME));
             fileTypes.add(new FileType(PRIOR_TYPE_NAME));
             fileTypes.add(new FileType(VAR_TYPE_NAME));
 

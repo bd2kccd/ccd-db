@@ -20,10 +20,8 @@ package edu.pitt.dbmi.ccd.db.service;
 
 import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.File;
-import edu.pitt.dbmi.ccd.db.entity.FileDelimiter;
 import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.entity.VariableType;
 import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
@@ -77,16 +75,20 @@ public class FileService {
         return fileRepository.findOne(id);
     }
 
+    public File findByAbsolutePathAndName(String absolutePath, String name) {
+        return fileRepository.findByAbsolutePathAndName(absolutePath, name);
+    }
+
+    public File findByIdAndUserAccount(Long id, UserAccount userAccount) {
+        return fileRepository.findByIdAndUserAccount(id, userAccount);
+    }
+
     public List<File> findByUserAccount(UserAccount userAccount) {
         return fileRepository.findByUserAccount(userAccount);
     }
 
     public List<File> findUntypedFileByUserAccount(UserAccount userAccount) {
         return fileRepository.findUntypedFileByUserAccount(userAccount);
-    }
-
-    public File findByIdAndUserAccount(Long id, UserAccount userAccount) {
-        return fileRepository.findByIdAndUserAccount(id, userAccount);
     }
 
     public List<File> findByFileTypeAndUserAccount(FileType fileType, UserAccount userAccount) {
@@ -135,23 +137,6 @@ public class FileService {
                 dataFileRepository.delete(dataFile);
             }
         }
-
-        return file;
-    }
-
-    public File changeToDataFileType(File file, FileDelimiter fileDelimiter, VariableType variableType) {
-        FileType fileType = fileTypeRepository.findByName(FileTypeService.DATA_TYPE_NAME);
-        file.setFileType(fileType);
-        file = fileRepository.save(file);
-
-        DataFile dataFile = dataFileRepository.findByFile(file);
-        if (dataFile == null) {
-            dataFile = new DataFile(file, fileDelimiter, variableType);
-        } else {
-            dataFile.setFileDelimiter(fileDelimiter);
-            dataFile.setVariableType(variableType);
-        }
-        dataFileRepository.save(dataFile);
 
         return file;
     }

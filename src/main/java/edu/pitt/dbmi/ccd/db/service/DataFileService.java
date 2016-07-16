@@ -22,6 +22,8 @@ import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.VariableType;
 import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
+import edu.pitt.dbmi.ccd.db.repository.FileRepository;
+import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,9 +40,15 @@ public class DataFileService {
 
     private final DataFileRepository dataFileRepository;
 
+    private final FileRepository fileRepository;
+
+    private final FileTypeRepository fileTypeRepository;
+
     @Autowired
-    public DataFileService(DataFileRepository dataFileRepository) {
+    public DataFileService(DataFileRepository dataFileRepository, FileRepository fileRepository, FileTypeRepository fileTypeRepository) {
         this.dataFileRepository = dataFileRepository;
+        this.fileRepository = fileRepository;
+        this.fileTypeRepository = fileTypeRepository;
     }
 
     public DataFile findByFile(File file) {
@@ -52,7 +60,22 @@ public class DataFileService {
     }
 
     public DataFile save(DataFile dataFile) {
-        return dataFileRepository.save(dataFile);
+        File file = dataFile.getFile();
+        file.setFileType(fileTypeRepository.findByName(FileTypeService.DATA_TYPE_NAME));
+        file = fileRepository.save(file);
+
+        DataFile currentDataFile = dataFileRepository.findByFile(file);
+        if (currentDataFile == null) {
+            currentDataFile = dataFile;
+        } else {
+            currentDataFile.setFileDelimiter(dataFile.getFileDelimiter());
+            currentDataFile.setNumOfColumns(dataFile.getNumOfColumns());
+            currentDataFile.setNumOfRows(dataFile.getNumOfRows());
+            currentDataFile.setVariableType(dataFile.getVariableType());
+        }
+        currentDataFile.setFile(file);
+
+        return dataFileRepository.save(currentDataFile);
     }
 
 }
