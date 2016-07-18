@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 University of Pittsburgh.
+ * Copyright (C) 2015 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,53 +16,51 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.NotBlank;
+
+import edu.pitt.dbmi.ccd.db.validation.Name;
 
 /**
+ * Annotation access control
  *
- * Jun 9, 2016 3:58:42 PM
- *
- * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
-public class UserRole implements Serializable {
+public class Access implements Serializable {
 
-    private static final long serialVersionUID = 1230761484283602053L;
+    private static final Long serialVersionUID = 7788384757549817895L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Name
+    @NotBlank
+    @Size(max = 20)
+    @Column(length = 20, unique = true, nullable = false)
+    @NaturalId(mutable = false)
     private String name;
 
-    @Column(name = "description")
+    @NotBlank
+    @Size(max = 255)
+    @Column(length = 255, nullable = false)
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
-        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
-    private Set<UserAccount> userAccounts = new HashSet<>(0);
-
-    public UserRole() {
+    public Access() {
     }
 
-    public UserRole(String name) {
-        this.name = name;
-    }
-
-    public UserRole(String name, String description, Set<UserAccount> userAccounts) {
+    public Access(String name, String description) {
         this.name = name;
         this.description = description;
-        this.userAccounts = userAccounts;
     }
 
     public Long getId() {
@@ -88,13 +86,4 @@ public class UserRole implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public Set<UserAccount> getUserAccounts() {
-        return userAccounts;
-    }
-
-    public void setUserAccounts(Set<UserAccount> userAccounts) {
-        this.userAccounts = userAccounts;
-    }
-
 }

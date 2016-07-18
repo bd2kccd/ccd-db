@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 University of Pittsburgh.
+ * Copyright (C) 2015 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,6 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
@@ -24,45 +25,47 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
- *
- * Jun 9, 2016 3:58:42 PM
+ * Oct 6, 2015 11:05:11 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-public class UserRole implements Serializable {
+public class RolePermission implements Serializable {
 
-    private static final long serialVersionUID = 1230761484283602053L;
+    private static final long serialVersionUID = -6084711369378791479L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @NotBlank
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @Column(name = "description")
     private String description;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
-        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
-    private Set<UserAccount> userAccounts = new HashSet<>(0);
+    @JoinTable(name = "UserRoleRolePermissionRel", joinColumns = {
+            @JoinColumn(name = "rolePermissionId", nullable = false, updatable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
+    private Set<UserRole> userRoles = new HashSet<>(0);
 
-    public UserRole() {
+    public RolePermission() {
     }
 
-    public UserRole(String name) {
+    public RolePermission(String name) {
         this.name = name;
     }
 
-    public UserRole(String name, String description, Set<UserAccount> userAccounts) {
+    public RolePermission(String name, String description, Set<UserRole> userRoles) {
         this.name = name;
         this.description = description;
-        this.userAccounts = userAccounts;
+        this.userRoles = userRoles;
     }
 
     public Long getId() {
@@ -89,12 +92,12 @@ public class UserRole implements Serializable {
         this.description = description;
     }
 
-    public Set<UserAccount> getUserAccounts() {
-        return userAccounts;
+    public Set<UserRole> getUserRoles() {
+        return userRoles;
     }
 
-    public void setUserAccounts(Set<UserAccount> userAccounts) {
-        this.userAccounts = userAccounts;
+    public void setUserRoles(Set<UserRole> userRoles) {
+        this.userRoles = userRoles;
     }
 
 }

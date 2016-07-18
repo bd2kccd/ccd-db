@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 University of Pittsburgh.
+ * Copyright (C) 2015 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,22 +17,28 @@
  * MA 02110-1301  USA
  */
 
-package edu.pitt.dbmi.ccd.db.repository;
-
-import edu.pitt.dbmi.ccd.db.entity.UserRole;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+package edu.pitt.dbmi.ccd.db.util;
 
 /**
- *
- * Jun 9, 2016 4:11:12 PM
- *
- * @author Kevin V. Bui (kvb2@pitt.edu)
- * @author Mark Silvis  (marksilvis@pitt.edu)
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
-@Repository
-@RepositoryRestResource(exported=false)
-public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
+public abstract class StringUtils {
+    
+    /**
+     * Returns true if str is either null or the empty string
+     * False if str is neither null nor the empty string
+     * @param str object
+     */
+    public static boolean isNullOrEmpty(Object str) {
+        return (str == null || str.equals(""));
+    }
 
+    /**
+     * Returns true if str is neither null nor the empty string
+     * False if str is either null or the empty string
+     * @param str object
+     */
+    public static boolean notNullOrEmpty(Object str) {
+        return !isNullOrEmpty(str);
+    }
 }

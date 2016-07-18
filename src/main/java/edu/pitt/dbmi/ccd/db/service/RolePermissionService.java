@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 University of Pittsburgh.
+ * Copyright (C) 2015 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,51 +18,44 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.RolePermission;
+import edu.pitt.dbmi.ccd.db.repository.RolePermissionRepository;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import edu.pitt.dbmi.ccd.db.entity.Person;
-import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 /**
  *
- * Jun 24, 2016 4:31:29 PM
+ * Oct 6, 2015 11:37:22 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-public class PersonService {
+@Transactional
+public class RolePermissionService {
 
-    @Autowired
-    private PersonRepository personRepository;
+    private final RolePermissionRepository rolePermissionRepository;
 
-    public Person save(Person person) {
-        return personRepository.save(person);
+    @Autowired(required = true)
+    public RolePermissionService(RolePermissionRepository rolePermissionRepository) {
+        this.rolePermissionRepository = rolePermissionRepository;
     }
 
-    public List<Person> save(Set<Person> persons) {
-        return personRepository.save(persons);
+    public List<RolePermission> findAll() {
+        return rolePermissionRepository.findAll();
     }
 
-    public Optional<Person> findById(Long id) {
-        return personRepository.findById(id);
+    public RolePermission findByName(String name) {
+        return rolePermissionRepository.findByName(name);
     }
 
-    public Optional<Person> findPersonByEmail(String email) {
-        return personRepository.findByEmail(email);
+    public RolePermission save(RolePermission rolePermission) {
+        return rolePermissionRepository.save(rolePermission);
     }
 
-    public Page<Person> findPersonByDescriptionContains(String terms, Pageable pageable) {
-        return personRepository.findByDescriptionContains(terms, pageable);
+    public void delete(RolePermission rolePermission) {
+        rolePermissionRepository.delete(rolePermission);
     }
 
-    public void delete(Person person) {
-        personRepository.delete(person);
-    }
 }

@@ -16,31 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import edu.pitt.dbmi.ccd.db.validation.Username;
 
 /**
  *
- * Jul 23, 2015 3:00:57 PM
+ * Oct 08, 2015 6:25:18 PM
  *
  * @since v0.4.0
  * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Entity
 public class UserAccount implements Serializable {
@@ -52,10 +49,13 @@ public class UserAccount implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "person_id", nullable = false)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "personId", nullable = false)
     private Person person;
 
+    @Username
+    @NotNull
+    @Size(max = 255)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_login_id", nullable = false)
     private UserLogin userLogin;
@@ -67,7 +67,8 @@ public class UserAccount implements Serializable {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password", nullable = false)
+    @NotNull
+    @Column(nullable = false)
     private String password;
 
     @Column(name = "active", nullable = false)
@@ -101,7 +102,26 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "fileId", nullable = false, updatable = false)})
     private Set<File> files = new HashSet<>(0);
 
-    public UserAccount() {
+    @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
+    @OrderBy("name")
+    private Set<Group> groups = new HashSet<>(0);
+
+    @ManyToMany(mappedBy = "mods", fetch = FetchType.EAGER)
+    @OrderBy("name")
+    private Set<Group> moderates = new HashSet<>(0);
+
+    @ManyToMany(mappedBy = "requesters", fetch = FetchType.LAZY)
+    private Set<Group> requesting = new HashSet<>(0);
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OrderBy("created")
+    private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OrderBy("created")
+    private Set<Annotation> annotations = new HashSet<>(0);
+
+    protected UserAccount() {
     }
 
     public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, String username, String password, boolean active, boolean disabled, Date registrationDate, String account) {
@@ -130,6 +150,11 @@ public class UserAccount implements Serializable {
         this.activationKey = activationKey;
         this.userRoles = userRoles;
         this.files = files;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        registrationDate = new Date();
     }
 
     public Long getId() {
@@ -244,4 +269,95 @@ public class UserAccount implements Serializable {
         this.files = files;
     }
 
+    public Set<Group> getMods() {
+        return moderates;
+    }
+
+    public boolean isMod(Group group) {
+        return moderates.contains(group);
+    }
+
+    public boolean isMod(Collection<Group> groups) {
+        return this.moderates.containsAll(groups);
+    }
+
+    public void addMod(Group group) {
+        moderates.add(group);
+    }
+
+    public void addMods(Collection<Group> groups) {
+        this.moderates.addAll(groups);
+    }
+
+    public void addMods(Group... groups) {
+        for (Group g : groups) {
+            addMod(g);
+        }
+    }
+
+    public void removeMod(Group group) {
+        moderates.remove(group);
+    }
+
+    public void removeMods(Collection<Group> groups) {
+        this.moderates.removeAll(groups);
+    }
+
+    public void removeMods(Group... groups) {
+        for (Group g : groups) {
+            removeMod(g);
+        }
+    }
+
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public boolean isMember(Group group) {
+        return groups.contains(group);
+    }
+
+    public boolean isMember(Collection<Group> groups) {
+        return this.groups.containsAll(groups);
+    }
+
+    public void addGroup(Group group) {
+        groups.add(group);
+    }
+
+    public void addGroups(Collection<Group> groups) {
+        this.groups.addAll(groups);
+    }
+
+    public void addGroups(Group... groups) {
+        for (Group g : groups) {
+            addGroup(g);
+        }
+    }
+
+    public void removeGroup(Group group) {
+        groups.remove(group);
+    }
+
+    public void removeGroups(Collection<Group> groups) {
+        this.groups.removeAll(groups);
+    }
+
+    public void removeGroups(Group... groups) {
+        for (Group g : groups) {
+            removeGroup(g);
+        }
+    }
+
+    public Set<Group> getRequesting() {
+        return requesting;
+    }
+
+    public Set<AnnotationTarget> getAnnotationTargets() {
+        return annotationTargets;
+    }
+
+    public Set<Annotation> getAnnotations() {
+        return annotations;
+    }
 }
