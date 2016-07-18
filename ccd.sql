@@ -276,6 +276,32 @@ LOCK TABLES `UserRole` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `VariableFile`
+--
+
+DROP TABLE IF EXISTS `VariableFile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `VariableFile` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `numOfVars` int(11) DEFAULT NULL,
+  `fileId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fileId` (`fileId`),
+  CONSTRAINT `VariableFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `VariableFile`
+--
+
+LOCK TABLES `VariableFile` WRITE;
+/*!40000 ALTER TABLE `VariableFile` DISABLE KEYS */;
+/*!40000 ALTER TABLE `VariableFile` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `VariableType`
 --
 
@@ -308,4 +334,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-14 12:07:29
+-- Dump completed on 2016-07-18 14:34:01

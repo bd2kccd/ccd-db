@@ -25,6 +25,7 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
+import edu.pitt.dbmi.ccd.db.repository.VariableFileRepository;
 import java.util.LinkedList;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -39,19 +40,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Transactional
-public class FileService {
-
-    private final FileRepository fileRepository;
-
-    private final FileTypeRepository fileTypeRepository;
-
-    private final DataFileRepository dataFileRepository;
+public class FileService extends AbstractFileService {
 
     @Autowired
-    public FileService(FileRepository fileRepository, FileTypeRepository fileTypeRepository, DataFileRepository dataFileRepository) {
-        this.fileRepository = fileRepository;
-        this.fileTypeRepository = fileTypeRepository;
-        this.dataFileRepository = dataFileRepository;
+    public FileService(
+            FileRepository fileRepository,
+            FileTypeRepository fileTypeRepository,
+            DataFileRepository dataFileRepository,
+            VariableFileRepository variableFileRepository) {
+        super(fileRepository, fileTypeRepository, dataFileRepository, variableFileRepository);
     }
 
     public File save(File file) {
@@ -130,13 +127,7 @@ public class FileService {
         file.setFileType(fileType);
         file = fileRepository.save(file);
 
-        boolean isDatasetType = FileTypeService.DATA_TYPE_NAME.equalsIgnoreCase(fileType.getName());
-        if (!isDatasetType) {
-            DataFile dataFile = dataFileRepository.findByFile(file);
-            if (dataFile != null) {
-                dataFileRepository.delete(dataFile);
-            }
-        }
+        removeNonFileType(file);
 
         return file;
     }

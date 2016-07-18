@@ -18,9 +18,8 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.File;
-import edu.pitt.dbmi.ccd.db.entity.VariableType;
+import edu.pitt.dbmi.ccd.db.entity.VariableFile;
 import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
@@ -31,49 +30,42 @@ import org.springframework.stereotype.Service;
 
 /**
  *
- * Jul 11, 2016 2:49:27 PM
+ * Jul 18, 2016 2:54:31 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
 @Transactional
-public class DataFileService extends AbstractFileService {
+public class VariableFileService extends AbstractFileService {
 
     @Autowired
-    public DataFileService(FileRepository fileRepository,
+    public VariableFileService(FileRepository fileRepository,
             FileTypeRepository fileTypeRepository,
             DataFileRepository dataFileRepository,
             VariableFileRepository variableFileRepository) {
         super(fileRepository, fileTypeRepository, dataFileRepository, variableFileRepository);
     }
 
-    public DataFile findByFile(File file) {
-        return dataFileRepository.findByFile(file);
+    public VariableFile findByFile(File file) {
+        return variableFileRepository.findByFile(file);
     }
 
-    public DataFile findByVariableType(VariableType variableType) {
-        return dataFileRepository.findByVariableType(variableType);
-    }
-
-    public DataFile save(DataFile dataFile) {
-        File file = dataFile.getFile();
-        file.setFileType(fileTypeRepository.findByName(FileTypeService.DATA_TYPE_NAME));
+    public VariableFile save(VariableFile variableFile) {
+        File file = variableFile.getFile();
+        file.setFileType(fileTypeRepository.findByName(FileTypeService.VAR_TYPE_NAME));
         file = fileRepository.save(file);
 
         removeNonFileType(file);
 
-        DataFile currentDataFile = dataFileRepository.findByFile(file);
-        if (currentDataFile == null) {
-            currentDataFile = dataFile;
+        VariableFile currentVariableFile = variableFileRepository.findByFile(file);
+        if (currentVariableFile == null) {
+            currentVariableFile = variableFile;
         } else {
-            currentDataFile.setFileDelimiter(dataFile.getFileDelimiter());
-            currentDataFile.setNumOfColumns(dataFile.getNumOfColumns());
-            currentDataFile.setNumOfRows(dataFile.getNumOfRows());
-            currentDataFile.setVariableType(dataFile.getVariableType());
+            currentVariableFile.setNumOfVars(variableFile.getNumOfVars());
         }
-        currentDataFile.setFile(file);
+        currentVariableFile.setFile(file);
 
-        return dataFileRepository.save(currentDataFile);
+        return variableFileRepository.save(currentVariableFile);
     }
 
 }

@@ -21,6 +21,7 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
 import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Service;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
+@Transactional
 public class FileTypeService {
 
     public static final String DATA_TYPE_NAME = "dataset";
@@ -47,7 +49,7 @@ public class FileTypeService {
         List<FileType> fileTypes = fileTypeRepository.findAll();
         if (fileTypes.isEmpty()) {
             fileTypes.add(new FileType(DATA_TYPE_NAME));
-//            fileTypes.add(new FileType(ALGO_RESULT_TYPE_NAME));
+            fileTypes.add(new FileType(ALGO_RESULT_TYPE_NAME));
             fileTypes.add(new FileType(PRIOR_TYPE_NAME));
             fileTypes.add(new FileType(VAR_TYPE_NAME));
 
