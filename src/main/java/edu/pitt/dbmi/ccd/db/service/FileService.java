@@ -22,6 +22,7 @@ import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.VariableFile;
 import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
@@ -100,26 +101,12 @@ public class FileService extends AbstractFileService {
     }
 
     public void delete(File file) {
-        DataFile dataFile = dataFileRepository.findByFile(file);
-        if (dataFile != null) {
-            dataFileRepository.delete(dataFile);
-        }
-
+        deleteAssociatedFiles(file);
         fileRepository.delete(file);
     }
 
     public void delete(List<File> files) {
-        List<DataFile> dataFiles = new LinkedList<>();
-        files.forEach(file -> {
-            DataFile dataFile = dataFileRepository.findByFile(file);
-            if (dataFile != null) {
-                dataFiles.add(dataFile);
-            }
-        });
-        if (!dataFiles.isEmpty()) {
-            dataFileRepository.delete(dataFiles);
-        }
-
+        deleteAssociatedFiles(files);
         fileRepository.delete(files);
     }
 
@@ -130,6 +117,49 @@ public class FileService extends AbstractFileService {
         removeNonFileType(file);
 
         return file;
+    }
+
+    public void deleteAssociatedFiles(File file) {
+        DataFile dataFile = dataFileRepository.findByFile(file);
+        if (dataFile != null) {
+            dataFileRepository.delete(dataFile);
+        }
+
+        VariableFile variableFile = variableFileRepository.findByFile(file);
+        if (variableFile != null) {
+            variableFileRepository.delete(variableFile);
+        }
+    }
+
+    public void deleteAssociatedFiles(List<File> files) {
+        deleteAssociatedVarFiles(files);
+        deleteAssociatedDataFiles(files);
+    }
+
+    public void deleteAssociatedVarFiles(List<File> files) {
+        List<VariableFile> fileList = new LinkedList<>();
+        files.forEach(file -> {
+            VariableFile variableFile = variableFileRepository.findByFile(file);
+            if (variableFile != null) {
+                fileList.add(variableFile);
+            }
+        });
+        if (!fileList.isEmpty()) {
+            variableFileRepository.delete(fileList);
+        }
+    }
+
+    public void deleteAssociatedDataFiles(List<File> files) {
+        List<DataFile> fileList = new LinkedList<>();
+        files.forEach(file -> {
+            DataFile dataFile = dataFileRepository.findByFile(file);
+            if (dataFile != null) {
+                fileList.add(dataFile);
+            }
+        });
+        if (!fileList.isEmpty()) {
+            dataFileRepository.delete(fileList);
+        }
     }
 
 }
