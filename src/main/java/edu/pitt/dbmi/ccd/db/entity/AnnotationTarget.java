@@ -24,12 +24,10 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 
 /**
@@ -56,19 +54,17 @@ public class AnnotationTarget implements Serializable {
     @JoinColumn(name = "userAccountId", nullable = false)
     private UserAccount user;
 
-    @NotBlank
-    @Size(max = 255, message = "Title cannot be longer than 255 characters")
-    @Column(length = 255, unique = false, nullable = false)
-    private String title;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fileId", insertable = true, updatable = true, nullable = true)
-    private DataFile file;
+    private File file;
 
     @URL
     @Size(min = 2, max = 2083, message = "Valid URLs are at least 2 characters and no more than 2083 characters")
     @Column(length = 2083, unique = true, nullable = true)
     private String address;
+
+    @Transient
+    private String type;
 
     @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
     private Set<Annotation> annotations = new HashSet<>(0);
@@ -76,18 +72,18 @@ public class AnnotationTarget implements Serializable {
     public AnnotationTarget() {
     }
 
-    public AnnotationTarget(UserAccount user, String title, DataFile file) {
+    public AnnotationTarget(UserAccount user, File file) {
         this.user = user;
-        this.title = title;
         this.file = file;
         this.address = null;
+        this.type = "file";
     }
 
-    public AnnotationTarget(UserAccount user, String title, String address) {
+    public AnnotationTarget(UserAccount user, String address) {
         this.user = user;
-        this.title = title;
         this.file = null;
         this.address = address;
+        this.type = "url";
     }
 
     @PrePersist
@@ -128,20 +124,16 @@ public class AnnotationTarget implements Serializable {
         this.user = user;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public DataFile getFile() {
+    public File getFile() {
         return file;
     }
 
-    public void setFile(DataFile file) {
+    public void setFile(File file) {
         this.file = file;
+        if (file != null) {
+            this.address = null;
+            this.type = "file";
+        }
     }
 
     public String getAddress() {
@@ -150,5 +142,9 @@ public class AnnotationTarget implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+        if (address != null) {
+            this.file = null;
+            this.type = "url";
+        }
     }
 }

@@ -21,13 +21,14 @@ package edu.pitt.dbmi.ccd.db.specification;
 
 import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
 
-import java.util.Set;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.springframework.data.jpa.domain.Specification;
 
 import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
@@ -135,7 +136,7 @@ public final class AnnotationTargetSpecification {
 
     // build title contains term predicate
     private static Predicate titleContains(Root<AnnotationTarget> root, CriteriaBuilder cb, String term) {
-        return cb.like(cb.lower(root.get(TITLE)), term);
+        return cb.like(cb.lower(root.get(FILE).get(TITLE)), term);
     }
 
     // build address contains term predicate
