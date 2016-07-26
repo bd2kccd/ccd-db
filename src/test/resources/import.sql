@@ -7,8 +7,14 @@ INSERT INTO access (id, name, description) VALUES (1, 'PUBLIC','Visable to all u
 -- Create Persons
 INSERT INTO person (id, description, email, first_name, last_name, middle_name, workspace) VALUES (1, 'Physicist', 'isaac@example.com', 'Isaac', 'Newton', NULL, '~/ccd_workspace/'), (2, 'Computer Scientist', 'alan@example.com', 'Alan', 'Turing', NULL, '~/ccd_workspace/');
 
+-- Create User Login
+INSERT INTO user_login (id, login_date, login_location, last_login_date, last_login_location) VALUES (1, CURRENT_DATE, 3232235521, CURRENT_DATE, 3232235521), (2, CURRENT_DATE, 3232235521, CURRENT_DATE, 3232235521);
+
+-- Create User Login Attempt
+INSERT INTO user_login_attempt (id, attempt_date, attempt_location, attempt_count) VALUES (1, CURRENT_DATE, 3232235521, 1), (2, CURRENT_DATE, 3232235521, 1);
+
 -- Create User Accounts
-INSERT INTO user_account (id, activation_key, active, created_date, password, username, person_id, account) VALUES (1, 'abcd', b'1', '2016-03-24 15:37:06', '$2a$10$LTFYDfz3oBc96cKgaOkz2OIy8OYlT5o5TTYaJCRXr0s2.ahXAuAvK', 'isaac', 1, 'f0e4d573-e85a-4c52-8426-89fa55f36c7c'), (2, 'efgh', b'1', '2016-03-24 15:37:06', '$2a$10$ad0/roYTf7qhQlAjXl5m5.duYGtMw4dHgN.bauA/mi5eZV67937WS', 'alan', 2, '2a7dc1f4-a95c-42e1-a694-792acdc2e2c5');
+INSERT INTO user_account (id, person_id, user_login_id, user_login_attempt_id, username, password, active, disabled, registration_date, registration_location, account, activation_key) VALUES (1, 1, 1, 1, 'isaac', '$2a$10$LTFYDfz3oBc96cKgaOkz2OIy8OYlT5o5TTYaJCRXr0s2.ahXAuAvK', b'1', b'0', CURRENT_DATE, 3232235521, 'f0e4d573-e85a-4c52-8426-89fa55f36c7c', 'abcde'), (2, 2, 2, 2, 'alan', '$2a$10$ad0/roYTf7qhQlAjXl5m5.duYGtMw4dHgN.bauA/mi5eZV67937WS', b'1', b'0', CURRENT_DATE, 3232235521, '2a7dc1f4-a95c-42e1-a694-792acdc2e2c5', 'vwxyz');
 
 -- Create User Role
 INSERT INTO user_role (id, name, description) VALUES (1, 'USER', 'Standard user'), (2, 'ADMIN', 'Administrator');
@@ -29,7 +35,7 @@ INSERT INTO group_moderation VALUES (1, 1);     -- User Isaac is a moderator
 INSERT INTO group_requests VALUES (1, 2);       -- User Alan is requesting Group access
 
 -- Create Annotation Target
-INSERT INTO annotation_target (id, title, created, version, address, user_account_id) VALUES (1, 'Department of Biomedical Informatics', '2016-03-24 15:58:15', 0, 'http://dbmi.pitt.edu', 1);
+INSERT INTO annotation_target (id, title, created, modified, version, address, user_account_id) VALUES (1, 'Department of Biomedical Informatics', '2016-03-24 15:58:15', NULL, 0, 'http://dbmi.pitt.edu', 1);
 
 -- Create Vocabularies
 INSERT INTO vocabulary (id, description, name, version) VALUES (1, 'Text with no required structure', 'Plaintext', 0);
