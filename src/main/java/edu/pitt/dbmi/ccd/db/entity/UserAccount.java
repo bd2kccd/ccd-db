@@ -53,14 +53,12 @@ public class UserAccount implements Serializable {
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
 
-    @Username
     @NotNull
-    @Size(max = 255)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_login_id", nullable = false)
     private UserLogin userLogin;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_login_attempt_id", nullable = false)
     private UserLoginAttempt userLoginAttempt;
 

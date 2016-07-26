@@ -44,9 +44,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Group;
-import edu.pitt.dbmi.ccd.db.entity.Person;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.*;
 
 /**
  *
@@ -71,7 +69,7 @@ public class UserAccountServiceTest {
     public void saveAndDelete() {
         // save
         Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace");
-        UserAccount userAccount = new UserAccount(person, "einstein", "$2a$10$MSi.zsnU.TAHocBApb5BN.G.3Cyp/t0WLd6/76u87Lp8qIINkUy0i", UUID.randomUUID().toString());
+        UserAccount userAccount = new UserAccount(person, new UserLogin(), new UserLoginAttempt(), "einstein", "$2a$10$MSi.zsnU.TAHocBApb5BN.G.3Cyp/t0WLd6/76u87Lp8qIINkUy0i", true, false, new Date(), UUID.randomUUID().toString());
         userAccount = userAccountService.saveUserAccount(userAccount);
         assertNotNull(userAccount.getId());
 
@@ -155,8 +153,7 @@ public class UserAccountServiceTest {
                 String workspace = fields[7].trim();
 
                 Person person = new Person(firstName, lastName, email, workspace);
-                UserAccount userAccount = new UserAccount(person, username, password, UUID.randomUUID().toString(), true, createdDate);
-                userAccount.setLastLoginDate(lastLoginDate);
+                UserAccount userAccount = new UserAccount(person, new UserLogin(), new UserLoginAttempt(), username, password, true, false, new Date(), UUID.randomUUID().toString());
                 userAccountService.saveUserAccount(userAccount);
             }
         } catch (IOException exception) {

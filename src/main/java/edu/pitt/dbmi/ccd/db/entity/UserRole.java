@@ -29,6 +29,7 @@ import javax.persistence.*;
  * Jun 9, 2016 3:58:42 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Entity
 public class UserRole implements Serializable {
@@ -40,7 +41,7 @@ public class UserRole implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @Column(name = "description")
@@ -59,9 +60,13 @@ public class UserRole implements Serializable {
         this.name = name;
     }
 
-    public UserRole(String name, String description, Set<UserAccount> userAccounts) {
-        this.name = name;
+    public UserRole(String name, String description) {
+        this(name);
         this.description = description;
+    }
+
+    public UserRole(String name, String description, Set<UserAccount> userAccounts) {
+        this(name, description);
         this.userAccounts = userAccounts;
     }
 

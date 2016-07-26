@@ -28,6 +28,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 
 /**
@@ -54,6 +55,11 @@ public class AnnotationTarget implements Serializable {
     @JoinColumn(name = "userAccountId", nullable = false)
     private UserAccount user;
 
+    @NotBlank
+    @Size(max = 255, message = "Title cannot be longer than 255 characters")
+    @Column(length = 255, unique = false, nullable = true)
+    private String title;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fileId", insertable = true, updatable = true, nullable = true)
     private File file;
@@ -72,15 +78,17 @@ public class AnnotationTarget implements Serializable {
     public AnnotationTarget() {
     }
 
-    public AnnotationTarget(UserAccount user, File file) {
+    public AnnotationTarget(UserAccount user, String title, File file) {
         this.user = user;
+        this.title = title;
         this.file = file;
         this.address = null;
         this.type = "file";
     }
 
-    public AnnotationTarget(UserAccount user, String address) {
+    public AnnotationTarget(UserAccount user, String title, String address) {
         this.user = user;
+        this.title = title;
         this.file = null;
         this.address = address;
         this.type = "url";

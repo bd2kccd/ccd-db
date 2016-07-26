@@ -18,15 +18,50 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import edu.pitt.dbmi.ccd.db.entity.UserRole;
+import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
 
 /**
  *
  * Jun 24, 2016 4:32:17 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Service
 public class UserRoleService {
 
+    private final UserRoleRepository userRoleRepository;
+
+    @Autowired
+    public UserRoleService(UserRoleRepository userRoleRepository) {
+        this.userRoleRepository = userRoleRepository;
+    }
+
+    UserRole save(UserRole userRole) {
+        return userRoleRepository.save(userRole);
+    }
+
+    void delete(UserRole userRole) {
+        userRoleRepository.delete(userRole);
+    }
+
+    Optional<UserRole> findById(Long id) {
+        return userRoleRepository.findById(id);
+    }
+
+    Optional<UserRole> findByName(String name) {
+        return userRoleRepository.findByName(name);
+    }
+
+    Page<UserRole> findAll(Pageable pageable) {
+        return userRoleRepository.findAll(pageable);
+    }
 }

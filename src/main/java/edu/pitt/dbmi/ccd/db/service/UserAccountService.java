@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,16 +29,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.pitt.dbmi.ccd.db.entity.Group;
-import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
-import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
-import edu.pitt.dbmi.ccd.db.repository.UserLoginAttemptRepository;
-import edu.pitt.dbmi.ccd.db.repository.UserLoginRepository;
-import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
-import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import edu.pitt.dbmi.ccd.db.repository.*;
 
 /**
  *
@@ -68,21 +58,21 @@ public class UserAccountService {
         this.userRoleRepository = userRoleRepository;
     }
 
-    public UserAccount findByUsername(String username) {
-        return userAccountRepository.findByUsername(username);
-    }
-
-    public UserAccount findByAccount(String account) {
-        return userAccountRepository.findByAccount(account);
-    }
-
-    public UserAccount findByActivationKey(String activationKey) {
-        return userAccountRepository.findByActivationKey(activationKey);
-    }
-
-    public UserAccount findByEmail(String email) {
-        return userAccountRepository.findByEmail(email);
-    }
+//    public UserAccount findByUsername(String username) {
+//        return userAccountRepository.findByUsername(username);
+//    }
+//
+//    public UserAccount findByAccount(String account) {
+//        return userAccountRepository.findByAccount(account);
+//    }
+//
+//    public UserAccount findByActivationKey(String activationKey) {
+//        return userAccountRepository.findByActivationKey(activationKey);
+//    }
+//
+//    public UserAccount findByEmail(String email) {
+//        return userAccountRepository.findByEmail(email);
+//    }
 
     public UserAccount saveUserAccount(UserAccount userAccount) {
         userLoginRepository.save(userAccount.getUserLogin());
@@ -101,8 +91,8 @@ public class UserAccountService {
         return userAccountRepository.findById(id);
     }
 
-    public Optional<UserAccount> findByAccount(String accountID) {
-        return userAccountRepository.findByAccount(accountID);
+    public Optional<UserAccount> findByAccount(String account) {
+        return userAccountRepository.findByAccount(account);
     }
 
     public Optional<UserAccount> findByUsername(String username) {

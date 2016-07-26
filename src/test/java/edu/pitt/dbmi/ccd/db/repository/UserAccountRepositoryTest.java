@@ -18,6 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.UserLogin;
+import edu.pitt.dbmi.ccd.db.entity.UserLoginAttempt;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -34,7 +36,7 @@ public class UserAccountRepositoryTest {
     public void saveAndDelete() {
         // save
         Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace/");
-        UserAccount user = new UserAccount(person, "einstein", "$2a$10$mTPRrCa1THQJyk60QrhIQOgvQAnSpDkcm1QK5zwKc6m9xBu87hKqG", UUID.randomUUID().toString(), true, new Date());
+        UserAccount user = new UserAccount(person, new UserLogin(), new UserLoginAttempt(), "einstein", "$2a$10$mTPRrCa1THQJyk60QrhIQOgvQAnSpDkcm1QK5zwKc6m9xBu87hKqG", true, false, new Date(), UUID.randomUUID().toString());
         user = userAccountRepository.save(user);
         assertNotNull(user.getId());
 
@@ -58,7 +60,7 @@ public class UserAccountRepositoryTest {
 
     @Test
     public void findByUsernameAndActivationKey() {
-        Optional<UserAccount> user = userAccountRepository.findByUsernameAndActivationKey("isaac", "abcd");
+        Optional<UserAccount> user = userAccountRepository.findByUsernameAndActivationKey("isaac", "abcde");
         assertTrue(user.isPresent());
     }
 
@@ -86,12 +88,6 @@ public class UserAccountRepositoryTest {
     @Test
     public void findByEmail() {
         Optional<UserAccount> user = userAccountRepository.findByEmail("isaac@example.com");
-        assertTrue(user.isPresent());
-    }
-
-    @Test
-    public void findByFirstNameAndLastName() {
-        Optional<UserAccount> user = userAccountRepository.findByFirstNameAndLastName("Alan", "Turing");
         assertTrue(user.isPresent());
     }
 

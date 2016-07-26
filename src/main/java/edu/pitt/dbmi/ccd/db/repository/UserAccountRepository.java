@@ -43,7 +43,7 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     public Optional<UserAccount> findById(Long id);
 
-    public Optional<UserAccount> findByAccount(String accountID);
+    public Optional<UserAccount> findByAccount(String account);
 
     public Optional<UserAccount> findByUsername(String username);
 
@@ -63,15 +63,11 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
                  "LEFT JOIN ua.requesting AS r " +
                  "WHERE r.name = ?1")
     public Page<UserAccount> findByGroupRequests(String group, Pageable pageable);
-    public UserAccount findByAccount(String account);
 
     public UserAccount findByActivationKey(String activationKey);
 
     @Query("SELECT ua FROM UserAccount ua WHERE ua.person.email = ?1")
     public Optional<UserAccount> findByEmail(String email);
-
-    @Query("SELECT ua FROM UserAccount ua WHERE ua.person.firstName = ?1 AND ua.person.lastName = ?2")
-    public Optional<UserAccount> findByFirstNameAndLastName(String first, String last);
 
     public Page<UserAccount> findAll(Pageable pageable);
 }

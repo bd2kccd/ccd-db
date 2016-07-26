@@ -32,7 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
-import edu.pitt.dbmi.ccd.db.entity.DataFile;
+import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationTargetRepository;
 
 /**
@@ -57,7 +57,7 @@ public class AnnotationTargetService {
         return annotationTargetRepository.findById(id);
     }
 
-    public Optional<AnnotationTarget> findByDataFile(DataFile file) {
+    public Optional<AnnotationTarget> findByDataFile(File file) {
         return annotationTargetRepository.findByFile(file);
     }
 
