@@ -52,6 +52,18 @@ public class FileService extends AbstractFileService {
         super(fileRepository, fileTypeRepository, dataFileRepository, variableFileRepository);
     }
 
+    public Long countByUserAccount(UserAccount userAccount) {
+        return fileRepository.countByUserAccount(userAccount);
+    }
+
+    public Long countByFileTypeAndUserAccount(FileType fileType, UserAccount userAccount) {
+        return fileRepository.countByFileTypeAndUserAccount(fileType, userAccount);
+    }
+
+    public Long countUntypedFileByUserAccount(UserAccount userAccount) {
+        return fileRepository.countUntypedFileByUserAccount(userAccount);
+    }
+
     public File save(File file) {
         FileType fileType = file.getFileType();
         if (fileType != null) {
