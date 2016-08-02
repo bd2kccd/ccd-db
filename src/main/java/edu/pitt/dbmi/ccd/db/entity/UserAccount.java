@@ -16,8 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-
 package edu.pitt.dbmi.ccd.db.entity;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -25,11 +26,22 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import edu.pitt.dbmi.ccd.db.validation.Username;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.PrePersist;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -42,10 +54,10 @@ import edu.pitt.dbmi.ccd.db.validation.Username;
 @Entity
 public class UserAccount implements Serializable {
 
-    private static final long serialVersionUID = 1515341631013388861L;
+    private static final long serialVersionUID = -7488372819059058929L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
@@ -53,20 +65,22 @@ public class UserAccount implements Serializable {
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_login_id", nullable = false)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "userLoginId", nullable = false)
     private UserLogin userLogin;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_login_attempt_id", nullable = false)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "userLoginAttemptId", nullable = false)
     private UserLoginAttempt userLoginAttempt;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "userRoleId", nullable = false)
+    private UserRole userRole;
 
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @NotNull
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "active", nullable = false)
@@ -76,23 +90,17 @@ public class UserAccount implements Serializable {
     private boolean disabled;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "registration_date", nullable = false, length = 19)
+    @Column(name = "registrationDate", nullable = false, length = 19)
     private Date registrationDate;
 
-    @Column(name = "registration_location")
+    @Column(name = "registrationLocation")
     private Long registrationLocation;
 
     @Column(name = "account", nullable = false)
     private String account;
 
-    @Column(name = "activation_key")
+    @Column(name = "activationKey")
     private String activationKey;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
-    private Set<UserRole> userRoles = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "UserAccountFileRel", joinColumns = {
@@ -119,25 +127,14 @@ public class UserAccount implements Serializable {
     @OrderBy("created")
     private Set<Annotation> annotations = new HashSet<>(0);
 
-    protected UserAccount() {
+    public UserAccount() {
     }
 
-    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, String username, String password, boolean active, boolean disabled, Date registrationDate, String account) {
+    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, UserRole userRole, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account, String activationKey) {
         this.person = person;
         this.userLogin = userLogin;
         this.userLoginAttempt = userLoginAttempt;
-        this.username = username;
-        this.password = password;
-        this.active = active;
-        this.disabled = disabled;
-        this.registrationDate = registrationDate;
-        this.account = account;
-    }
-
-    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account, String activationKey, Set<UserRole> userRoles, Set<File> files) {
-        this.person = person;
-        this.userLogin = userLogin;
-        this.userLoginAttempt = userLoginAttempt;
+        this.userRole = userRole;
         this.username = username;
         this.password = password;
         this.active = active;
@@ -146,8 +143,6 @@ public class UserAccount implements Serializable {
         this.registrationLocation = registrationLocation;
         this.account = account;
         this.activationKey = activationKey;
-        this.userRoles = userRoles;
-        this.files = files;
     }
 
     @PrePersist
@@ -185,6 +180,14 @@ public class UserAccount implements Serializable {
 
     public void setUserLoginAttempt(UserLoginAttempt userLoginAttempt) {
         this.userLoginAttempt = userLoginAttempt;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 
     public String getUsername() {
@@ -249,14 +252,6 @@ public class UserAccount implements Serializable {
 
     public void setActivationKey(String activationKey) {
         this.activationKey = activationKey;
-    }
-
-    public Set<UserRole> getUserRoles() {
-        return userRoles;
-    }
-
-    public void setUserRoles(Set<UserRole> userRoles) {
-        this.userRoles = userRoles;
     }
 
     public Set<File> getFiles() {

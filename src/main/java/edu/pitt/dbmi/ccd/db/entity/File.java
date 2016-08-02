@@ -18,11 +18,20 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -36,16 +45,20 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 public class File implements Serializable {
 
-    private static final long serialVersionUID = 2772020223622509764L;
+    private static final long serialVersionUID = 6534837967736800011L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fileTypeId")
     private FileType fileType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userAccountId", nullable = false)
+    private UserAccount userAccount;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -68,30 +81,25 @@ public class File implements Serializable {
     @Column(name = "md5CheckSum", length = 32)
     private String md5checkSum;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserAccountFileRel", joinColumns = {
-        @JoinColumn(name = "fileId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
-    private Set<UserAccount> userAccounts = new HashSet<>(0);
-
     public File() {
     }
 
-    public File(String name, String absolutePath, Date creationTime, long fileSize) {
+    public File(UserAccount userAccount, String name, String absolutePath, Date creationTime, long fileSize) {
+        this.userAccount = userAccount;
         this.name = name;
         this.absolutePath = absolutePath;
         this.creationTime = creationTime;
         this.fileSize = fileSize;
     }
 
-    public File(FileType fileType, String name, String absolutePath, Date creationTime, long fileSize, String md5checkSum, Set<UserAccount> userAccounts) {
+    public File(FileType fileType, UserAccount userAccount, String name, String absolutePath, Date creationTime, long fileSize, String md5checkSum) {
         this.fileType = fileType;
+        this.userAccount = userAccount;
         this.name = name;
         this.absolutePath = absolutePath;
         this.creationTime = creationTime;
         this.fileSize = fileSize;
         this.md5checkSum = md5checkSum;
-        this.userAccounts = userAccounts;
     }
 
     public Long getId() {
@@ -108,6 +116,14 @@ public class File implements Serializable {
 
     public void setFileType(FileType fileType) {
         this.fileType = fileType;
+    }
+
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 
     public String getName() {
@@ -156,14 +172,6 @@ public class File implements Serializable {
 
     public void setMd5checkSum(String md5checkSum) {
         this.md5checkSum = md5checkSum;
-    }
-
-    public Set<UserAccount> getUserAccounts() {
-        return userAccounts;
-    }
-
-    public void setUserAccounts(Set<UserAccount> userAccounts) {
-        this.userAccounts = userAccounts;
     }
 
 }

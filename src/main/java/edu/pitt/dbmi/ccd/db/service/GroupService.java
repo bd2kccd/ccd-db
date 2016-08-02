@@ -20,7 +20,6 @@
 package edu.pitt.dbmi.ccd.db.service;
 
 import static edu.pitt.dbmi.ccd.db.specification.GroupSpecification.searchSpec;
-import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

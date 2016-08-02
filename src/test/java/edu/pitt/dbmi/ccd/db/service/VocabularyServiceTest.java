@@ -19,7 +19,6 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
-import static edu.pitt.dbmi.ccd.db.specification.VocabularySpecification.searchSpec;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -32,11 +31,10 @@ import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
@@ -46,7 +44,7 @@ import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
+@SpringBootTest(classes = CCDDatabaseApplication.class)
 public class VocabularyServiceTest {
 
     @Autowired

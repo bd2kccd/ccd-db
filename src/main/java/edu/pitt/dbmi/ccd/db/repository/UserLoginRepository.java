@@ -18,9 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.UserLogin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import edu.pitt.dbmi.ccd.db.entity.UserLogin;
 
 /**
  *

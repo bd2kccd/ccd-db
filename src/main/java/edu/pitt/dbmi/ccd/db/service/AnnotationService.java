@@ -19,7 +19,11 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
-import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.*;
+import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.authSpec;
+import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.filterSpec;
+import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.idSpec;
+import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.parentSpec;
+import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.searchSpec;
 
 import java.util.Optional;
 import java.util.Set;

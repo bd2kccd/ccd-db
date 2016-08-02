@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,14 @@ public class UserRoleService {
     @Autowired
     public UserRoleService(UserRoleRepository userRoleRepository) {
         this.userRoleRepository = userRoleRepository;
+
+        List<UserRole> userRoles = userRoleRepository.findAll();
+        if (userRoles.isEmpty()) {
+            userRoles.add(new UserRole("user", "Regular user."));
+            userRoles.add(new UserRole("admin", "Administrator."));
+
+            userRoleRepository.save(userRoles);
+        }
     }
 
     UserRole save(UserRole userRole) {

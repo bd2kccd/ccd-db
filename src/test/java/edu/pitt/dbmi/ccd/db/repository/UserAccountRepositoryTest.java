@@ -1,6 +1,9 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.Optional;
@@ -9,7 +12,7 @@ import java.util.UUID;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,23 +23,30 @@ import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.entity.UserLogin;
 import edu.pitt.dbmi.ccd.db.entity.UserLoginAttempt;
+import edu.pitt.dbmi.ccd.db.entity.UserRole;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
+@SpringBootTest(classes = CCDDatabaseApplication.class)
 public class UserAccountRepositoryTest {
 
     @Autowired
     private UserAccountRepository userAccountRepository;
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
     private final Pageable pageable = new PageRequest(0, 10);
 
     @Test
     public void saveAndDelete() {
+        final UserRole userRole = userRoleRepository.findByName("ADMIN").get();
+        final Long registrationLocation = new Long(323223552);
+
         // save
-        Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace/");
-        UserAccount user = new UserAccount(person, new UserLogin(), new UserLoginAttempt(), "einstein", "$2a$10$mTPRrCa1THQJyk60QrhIQOgvQAnSpDkcm1QK5zwKc6m9xBu87hKqG", true, false, new Date(), UUID.randomUUID().toString());
+        Person person = new Person("Albert", null, "Einstein", "einstein@example.com", "~/ccd_workspace/", "Physicist");
+        UserAccount user = new UserAccount(person, new UserLogin(), new UserLoginAttempt(), userRole, "einstein", "$2a$10$mTPRrCa1THQJyk60QrhIQOgvQAnSpDkcm1QK5zwKc6m9xBu87hKqG", true, false, new Date(), registrationLocation, UUID.randomUUID().toString(), "abcde");
         user = userAccountRepository.save(user);
         assertNotNull(user.getId());
 

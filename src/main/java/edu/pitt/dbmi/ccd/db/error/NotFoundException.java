@@ -20,6 +20,7 @@
 package edu.pitt.dbmi.ccd.db.error;
 
 import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
+
 import java.util.stream.IntStream;
 
 /**

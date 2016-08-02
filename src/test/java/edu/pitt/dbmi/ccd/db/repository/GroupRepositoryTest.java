@@ -1,14 +1,20 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import static edu.pitt.dbmi.ccd.db.specification.GroupSpecification.searchSpec;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +28,7 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
+@SpringBootTest(classes = CCDDatabaseApplication.class)
 public class GroupRepositoryTest {
 
     @Autowired

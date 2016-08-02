@@ -18,15 +18,17 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.UserLogin;
 import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
+import edu.pitt.dbmi.ccd.db.entity.UserLogin;
 
 /**
  *
@@ -35,7 +37,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
+@SpringBootTest(classes = CCDDatabaseApplication.class)
 public class UserLoginRepositoryTest {
 
     @Autowired

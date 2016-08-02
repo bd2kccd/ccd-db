@@ -20,13 +20,15 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.jpa.repository.JpaRepository;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
+
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
+import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)

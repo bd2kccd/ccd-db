@@ -1,6 +1,8 @@
 package edu.pitt.dbmi.ccd.db.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
@@ -8,7 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +24,7 @@ import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
  * Mark Silvis (marksilvis@pitt.edu)
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
+@SpringBootTest(classes = CCDDatabaseApplication.class)
 public class AttributeServiceTest {
 
     @Autowired
@@ -63,17 +65,5 @@ public class AttributeServiceTest {
         final Vocabulary vocabulary = vocabularyService.findById(1L).get();
         Page<Attribute> attributes = attributeService.findByVocabAndParentIsNull(vocabulary, pageable);
         assertEquals(1, attributes.getTotalElements());
-    }
-
-    @Test
-    @Ignore
-    public void findByVocabAndLevelContainsAndNameContainsAndRequirementLevelContains() {
-
-    }
-
-    @Test
-    @Ignore
-    public void findAll() {
-
     }
 }

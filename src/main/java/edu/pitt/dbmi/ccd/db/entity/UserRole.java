@@ -18,11 +18,14 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import static javax.persistence.GenerationType.IDENTITY;
 
-import javax.persistence.*;
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  *
@@ -37,37 +40,22 @@ public class UserRole implements Serializable {
     private static final long serialVersionUID = 1230761484283602053L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
-        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
-    private Set<UserAccount> userAccounts = new HashSet<>(0);
-
     public UserRole() {
     }
 
-    public UserRole(String name) {
-        this.name = name;
-    }
-
     public UserRole(String name, String description) {
-        this(name);
+        this.name = name;
         this.description = description;
-    }
-
-    public UserRole(String name, String description, Set<UserAccount> userAccounts) {
-        this(name, description);
-        this.userAccounts = userAccounts;
     }
 
     public Long getId() {
@@ -92,14 +80,6 @@ public class UserRole implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Set<UserAccount> getUserAccounts() {
-        return userAccounts;
-    }
-
-    public void setUserAccounts(Set<UserAccount> userAccounts) {
-        this.userAccounts = userAccounts;
     }
 
 }

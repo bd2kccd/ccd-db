@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.3.5.RELEASE'
+        springBootVersion = '1.4.0.RELEASE'
     }
     repositories {
         jcenter()
@@ -23,6 +23,15 @@ version = '1.0.0'
 jar {
     baseName = 'ccd-db'
     version = version
+}
+
+// show warnings
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
 }
 
 def compatibilityVersion = 1.8
@@ -57,5 +66,5 @@ dependencies {
 
 // gradle wrapper (./gradlew)
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
+    gradleVersion = '2.14'
 }

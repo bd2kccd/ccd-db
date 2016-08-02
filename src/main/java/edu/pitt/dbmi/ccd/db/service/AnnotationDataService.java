@@ -19,8 +19,6 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
-import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
-import edu.pitt.dbmi.ccd.db.entity.Attribute;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationDataRepository;
 
 /**

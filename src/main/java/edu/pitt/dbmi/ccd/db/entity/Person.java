@@ -16,19 +16,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-
 package edu.pitt.dbmi.ccd.db.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
@@ -41,35 +42,31 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 public class Person implements Serializable {
 
-    private static final long serialVersionUID = -3930588006064801674L;
+    private static final long serialVersionUID = -2807315042169945476L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @NotBlank
     @Column(name = "firstName", nullable = false)
     private String firstName;
 
-    @Column(nullable = true)
+    @Column(name = "middleName")
     private String middleName;
 
-    @NotBlank
+    @Transient
+    private String fullName;
+
     @Column(name = "lastName", nullable = false)
     private String lastName;
 
-    @NotNull
     @Email
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @NotNull
     @Column(name = "workspace", nullable = false)
     private String workspace;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person")
-    private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     @Size(max = 500, message = "Description must be no longer than 500 characters")
     @Column(length = 500, nullable = true)
@@ -78,20 +75,12 @@ public class Person implements Serializable {
     public Person() {
     }
 
-    public Person(String firstName, String lastName, String email, String workspace) {
+    public Person(String firstName, String middleName, String lastName, String email, String workspace, String description) {
         this.firstName = firstName;
+        this.middleName = middleName;
         this.lastName = lastName;
         this.email = email;
         this.workspace = workspace;
-    }
-
-    public Person(String firstName, String middleName, String lastName, String email, String workspace) {
-        this(firstName, lastName, email, workspace);
-        this.middleName = middleName;
-    }
-
-    public Person(String firstName, String middleName, String lastName, String email, String workspace, String description) {
-        this(firstName, middleName, lastName, email, workspace);
         this.description = description;
     }
 
@@ -128,11 +117,14 @@ public class Person implements Serializable {
     }
 
     public String getFullName() {
-        if (middleName != null) {
-            return String.format("%s %s %s", firstName, middleName, lastName);
-        } else {
-            return String.format("%s %s", firstName, lastName);
+        if (fullName == null) {
+            if (middleName != null) {
+                fullName = String.format("%s %s %s", firstName, middleName, lastName);
+            } else {
+                fullName = String.format("%s %s", firstName, lastName);
+            }
         }
+        return fullName;
     }
 
     public String getEmail() {
@@ -149,14 +141,6 @@ public class Person implements Serializable {
 
     public void setWorkspace(String workspace) {
         this.workspace = workspace;
-    }
-
-    public Set<UserAccount> getUserAccounts() {
-        return userAccounts;
-    }
-
-    public void setUserAccounts(Set<UserAccount> userAccounts) {
-        this.userAccounts = userAccounts;
     }
 
     public String getDescription() {
