@@ -20,6 +20,8 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,10 +29,14 @@ import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
@@ -40,6 +46,7 @@ import javax.persistence.TemporalType;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
+@Table(name = "UserAccount", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class UserAccount implements Serializable {
 
     private static final long serialVersionUID = -7488372819059058929L;
@@ -49,15 +56,15 @@ public class UserAccount implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userLoginId", nullable = false)
     private UserLogin userLogin;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userLoginAttemptId", nullable = false)
     private UserLoginAttempt userLoginAttempt;
 
@@ -90,6 +97,30 @@ public class UserAccount implements Serializable {
     @Column(name = "activationKey")
     private String activationKey;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
+    private Set<ShareGroup> shareGroups = new HashSet<>(0);
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "ShareGroupMembership", joinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "shareGroupId", nullable = false, updatable = false)})
+    private Set<ShareGroup> shareGroupMemberships = new HashSet<>(0);
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
+    private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
+    private Set<File> files = new HashSet<>(0);
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "ShareGroupRequest", joinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "shareGroupId", nullable = false, updatable = false)})
+    private Set<ShareGroup> shareGroupRequests = new HashSet<>(0);
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
+    private Set<Annotation> annotations = new HashSet<>(0);
+
     public UserAccount() {
     }
 
@@ -106,7 +137,7 @@ public class UserAccount implements Serializable {
         this.account = account;
     }
 
-    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, UserRole userRole, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account, String activationKey) {
+    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, UserRole userRole, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account, String activationKey, Set<ShareGroup> shareGroups, Set<ShareGroup> shareGroups_1, Set<AnnotationTarget> annotationTargets, Set<File> files, Set<ShareGroup> shareGroups_2, Set<Annotation> annotations) {
         this.person = person;
         this.userLogin = userLogin;
         this.userLoginAttempt = userLoginAttempt;
@@ -119,6 +150,12 @@ public class UserAccount implements Serializable {
         this.registrationLocation = registrationLocation;
         this.account = account;
         this.activationKey = activationKey;
+        this.shareGroups = shareGroups;
+        this.shareGroupMemberships = shareGroups_1;
+        this.annotationTargets = annotationTargets;
+        this.files = files;
+        this.shareGroupRequests = shareGroups_2;
+        this.annotations = annotations;
     }
 
     public Long getId() {
@@ -223,6 +260,54 @@ public class UserAccount implements Serializable {
 
     public void setActivationKey(String activationKey) {
         this.activationKey = activationKey;
+    }
+
+    public Set<ShareGroup> getShareGroups() {
+        return shareGroups;
+    }
+
+    public void setShareGroups(Set<ShareGroup> shareGroups) {
+        this.shareGroups = shareGroups;
+    }
+
+    public Set<ShareGroup> getShareGroupMemberships() {
+        return shareGroupMemberships;
+    }
+
+    public void setShareGroupMemberships(Set<ShareGroup> shareGroupMemberships) {
+        this.shareGroupMemberships = shareGroupMemberships;
+    }
+
+    public Set<AnnotationTarget> getAnnotationTargets() {
+        return annotationTargets;
+    }
+
+    public void setAnnotationTargets(Set<AnnotationTarget> annotationTargets) {
+        this.annotationTargets = annotationTargets;
+    }
+
+    public Set<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(Set<File> files) {
+        this.files = files;
+    }
+
+    public Set<ShareGroup> getShareGroupRequests() {
+        return shareGroupRequests;
+    }
+
+    public void setShareGroupRequests(Set<ShareGroup> shareGroupRequests) {
+        this.shareGroupRequests = shareGroupRequests;
+    }
+
+    public Set<Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(Set<Annotation> annotations) {
+        this.annotations = annotations;
     }
 
 }

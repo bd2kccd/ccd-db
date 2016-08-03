@@ -27,6 +27,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  *
@@ -35,6 +36,7 @@ import javax.persistence.ManyToOne;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
+@Table(name = "VariableFile")
 public class VariableFile implements Serializable {
 
     private static final long serialVersionUID = -2848985981108384222L;

@@ -24,6 +24,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
@@ -33,6 +34,7 @@ import javax.persistence.Id;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
+@Table(name = "Person")
 public class Person implements Serializable {
 
     private static final long serialVersionUID = -2807315042169945476L;
