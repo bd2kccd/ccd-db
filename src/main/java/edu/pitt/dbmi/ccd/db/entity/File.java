@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -83,13 +84,13 @@ public class File implements Serializable {
     @Column(name = "md5CheckSum", length = 32)
     private String md5checkSum;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
     private Set<VariableFile> variableFiles = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "file")
     private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
     private Set<DataFile> dataFiles = new HashSet<>(0);
 
     public File() {
