@@ -22,6 +22,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 /**
@@ -40,9 +41,11 @@ public class OauthRefreshToken implements Serializable {
     @Column(name = "tokenId", unique = true, nullable = false)
     private String tokenId;
 
+    @Lob
     @Column(name = "token", nullable = false)
     private byte[] token;
 
+    @Lob
     @Column(name = "authentication", nullable = false)
     private byte[] authentication;
 

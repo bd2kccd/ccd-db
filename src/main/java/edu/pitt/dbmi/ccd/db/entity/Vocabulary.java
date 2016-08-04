@@ -33,7 +33,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-import javax.persistence.Version;
 
 /**
  *
@@ -52,7 +51,6 @@ public class Vocabulary implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Version
     @Column(name = "version", nullable = false, length = 63)
     private String version;
 

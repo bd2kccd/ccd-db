@@ -90,7 +90,7 @@ public class Annotation implements Serializable {
     @Column(name = "modifyCount", nullable = false)
     private int modifyCount;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "annotation")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentAnnotation")
     private Set<Annotation> annotations = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "annotation")
