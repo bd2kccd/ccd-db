@@ -68,7 +68,7 @@ public class Vocabulary implements Serializable {
     @Column(name = "modifiedDate", length = 19)
     private Date modifiedDate;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "vocabulary")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "vocabulary")
     private Set<Attribute> attributes = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "vocabulary")

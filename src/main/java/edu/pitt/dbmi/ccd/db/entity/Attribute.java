@@ -52,7 +52,7 @@ public class Attribute implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parentAttributeId", nullable = false)
-    private Attribute attribute;
+    private Attribute parentAttribute;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attributeLevelId", nullable = false)
@@ -71,14 +71,14 @@ public class Attribute implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")
     private Set<AnnotationData> annotationData = new HashSet<>(0);
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")
-    private Set<Attribute> attributes = new HashSet<>(0);
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentAttribute")
+    private Set<Attribute> childrenAttributes = new HashSet<>(0);
 
     public Attribute() {
     }
 
     public Attribute(Attribute attribute, AttributeLevel attributeLevel, Vocabulary vocabulary, String name, boolean required) {
-        this.attribute = attribute;
+        this.parentAttribute = attribute;
         this.attributeLevel = attributeLevel;
         this.vocabulary = vocabulary;
         this.name = name;
@@ -86,13 +86,13 @@ public class Attribute implements Serializable {
     }
 
     public Attribute(Attribute attribute, AttributeLevel attributeLevel, Vocabulary vocabulary, String name, boolean required, Set<AnnotationData> annotationDatas, Set<Attribute> attributes) {
-        this.attribute = attribute;
+        this.parentAttribute = attribute;
         this.attributeLevel = attributeLevel;
         this.vocabulary = vocabulary;
         this.name = name;
         this.required = required;
         this.annotationData = annotationDatas;
-        this.attributes = attributes;
+        this.childrenAttributes = attributes;
     }
 
     public Long getId() {
@@ -103,12 +103,12 @@ public class Attribute implements Serializable {
         this.id = id;
     }
 
-    public Attribute getAttribute() {
-        return attribute;
+    public Attribute getParentAttribute() {
+        return parentAttribute;
     }
 
-    public void setAttribute(Attribute attribute) {
-        this.attribute = attribute;
+    public void setParentAttribute(Attribute parentAttribute) {
+        this.parentAttribute = parentAttribute;
     }
 
     public AttributeLevel getAttributeLevel() {
@@ -151,12 +151,12 @@ public class Attribute implements Serializable {
         this.annotationData = annotationData;
     }
 
-    public Set<Attribute> getAttributes() {
-        return attributes;
+    public Set<Attribute> getChildrenAttributes() {
+        return childrenAttributes;
     }
 
-    public void setAttributes(Set<Attribute> attributes) {
-        this.attributes = attributes;
+    public void setChildrenAttributes(Set<Attribute> childrenAttributes) {
+        this.childrenAttributes = childrenAttributes;
     }
 
 }

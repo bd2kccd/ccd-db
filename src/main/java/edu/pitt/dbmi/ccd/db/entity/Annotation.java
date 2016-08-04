@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -52,32 +53,32 @@ public class Annotation implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parentAnnotationId")
     private Annotation parentAnnotation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "annotationTargetId", nullable = false)
     private AnnotationTarget annotationTarget;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shareAccessId", nullable = false)
     private ShareAccess shareAccess;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shareGroupId")
     private ShareGroup shareGroup;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userAccountId", nullable = false)
     private UserAccount userAccount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "vocabularyId", nullable = false)
     private Vocabulary vocabulary;
 
     @Column(name = "redacted", nullable = false)
-    private boolean redacted;
+    private Boolean redacted;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createddate", nullable = false, length = 19)
@@ -93,13 +94,13 @@ public class Annotation implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentAnnotation")
     private Set<Annotation> annotations = new HashSet<>(0);
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "annotation")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "annotation", cascade = CascadeType.ALL)
     private Set<AnnotationData> annotationData = new HashSet<>(0);
 
     public Annotation() {
     }
 
-    public Annotation(AnnotationTarget annotationTarget, ShareAccess shareAccess, UserAccount userAccount, Vocabulary vocabulary, boolean redacted, Date createddate, int modifyCount) {
+    public Annotation(AnnotationTarget annotationTarget, ShareAccess shareAccess, UserAccount userAccount, Vocabulary vocabulary, Boolean redacted, Date createddate, int modifyCount) {
         this.annotationTarget = annotationTarget;
         this.shareAccess = shareAccess;
         this.userAccount = userAccount;
@@ -109,7 +110,7 @@ public class Annotation implements Serializable {
         this.modifyCount = modifyCount;
     }
 
-    public Annotation(Annotation parentAnnotation, AnnotationTarget annotationTarget, ShareAccess shareAccess, ShareGroup shareGroup, UserAccount userAccount, Vocabulary vocabulary, boolean redacted, Date createddate, Date modifiedDate, int modifyCount, Set<Annotation> annotations, Set<AnnotationData> annotationDatas) {
+    public Annotation(Annotation parentAnnotation, AnnotationTarget annotationTarget, ShareAccess shareAccess, ShareGroup shareGroup, UserAccount userAccount, Vocabulary vocabulary, Boolean redacted, Date createddate, Date modifiedDate, int modifyCount, Set<Annotation> annotations, Set<AnnotationData> annotationDatas) {
         this.parentAnnotation = parentAnnotation;
         this.annotationTarget = annotationTarget;
         this.shareAccess = shareAccess;
@@ -180,11 +181,11 @@ public class Annotation implements Serializable {
         this.vocabulary = vocabulary;
     }
 
-    public boolean isRedacted() {
+    public Boolean isRedacted() {
         return redacted;
     }
 
-    public void setRedacted(boolean redacted) {
+    public void setRedacted(Boolean redacted) {
         this.redacted = redacted;
     }
 

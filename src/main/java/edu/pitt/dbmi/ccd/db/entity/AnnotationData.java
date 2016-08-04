@@ -56,11 +56,11 @@ public class AnnotationData implements Serializable {
     @JoinColumn(name = "annotationId", nullable = false)
     private Annotation annotation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parentAnnotationDataId", nullable = false)
     private AnnotationData parentAnnotationData;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "attributeId", nullable = false)
     private Attribute attribute;
 
