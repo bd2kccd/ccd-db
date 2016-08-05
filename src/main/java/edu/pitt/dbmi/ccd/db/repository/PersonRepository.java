@@ -24,9 +24,8 @@ import org.springframework.stereotype.Repository;
 
 /**
  *
- * Jul 23, 2015 1:44:13 PM
+ * Aug 5, 2016 5:15:51 PM
  *
- * @since v0.4.0
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository

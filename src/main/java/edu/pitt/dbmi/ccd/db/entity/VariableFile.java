@@ -23,48 +23,47 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Jul 18, 2016 2:36:28 PM
+ * Aug 5, 2016 4:51:26 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "VariableFile")
+@Table(name = "VariableFile", uniqueConstraints = @UniqueConstraint(columnNames = "fileId"))
 public class VariableFile implements Serializable {
 
-    private static final long serialVersionUID = -2848985981108384222L;
+    private static final long serialVersionUID = 4478773569442558024L;
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "fileId", unique = true, nullable = false)
+    private File file;
 
     @Column(name = "numOfVars")
     private Integer numOfVars;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fileId", nullable = false)
-    private File file;
-
     public VariableFile() {
     }
 
-    public VariableFile(Long id, File file) {
-        this.id = id;
+    public VariableFile(File file) {
         this.file = file;
     }
 
-    public VariableFile(Long id, Integer numOfVars, File file) {
-        this.id = id;
-        this.numOfVars = numOfVars;
+    public VariableFile(File file, Integer numOfVars) {
         this.file = file;
+        this.numOfVars = numOfVars;
     }
 
     public Long getId() {
@@ -75,20 +74,20 @@ public class VariableFile implements Serializable {
         this.id = id;
     }
 
-    public Integer getNumOfVars() {
-        return numOfVars;
-    }
-
-    public void setNumOfVars(Integer numOfVars) {
-        this.numOfVars = numOfVars;
-    }
-
     public File getFile() {
         return file;
     }
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public Integer getNumOfVars() {
+        return numOfVars;
+    }
+
+    public void setNumOfVars(Integer numOfVars) {
+        this.numOfVars = numOfVars;
     }
 
 }

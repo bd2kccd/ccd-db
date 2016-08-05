@@ -19,28 +19,31 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  *
- * Jul 23, 2015 1:37:42 PM
+ * Aug 5, 2016 4:33:31 PM
  *
- * @since v0.4.0
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "Person")
+@Table(name = "Person", catalog = "ccd")
 public class Person implements Serializable {
 
-    private static final long serialVersionUID = -2807315042169945476L;
+    private static final long serialVersionUID = 8865535316029474574L;
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
@@ -53,21 +56,32 @@ public class Person implements Serializable {
     @Column(name = "lastName", nullable = false)
     private String lastName;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "workspace", nullable = false)
+    @Column(name = "workspace", nullable = false, length = 512)
     private String workspace;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person")
+    private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     public Person() {
     }
 
-    public Person(String firstName, String middleName, String lastName, String email, String workspace) {
+    public Person(String firstName, String lastName, String email, String workspace) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.workspace = workspace;
+    }
+
+    public Person(String firstName, String middleName, String lastName, String email, String workspace, Set<UserAccount> userAccounts) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
         this.email = email;
         this.workspace = workspace;
+        this.userAccounts = userAccounts;
     }
 
     public Long getId() {
@@ -116,6 +130,14 @@ public class Person implements Serializable {
 
     public void setWorkspace(String workspace) {
         this.workspace = workspace;
+    }
+
+    public Set<UserAccount> getUserAccounts() {
+        return userAccounts;
+    }
+
+    public void setUserAccounts(Set<UserAccount> userAccounts) {
+        this.userAccounts = userAccounts;
     }
 
 }

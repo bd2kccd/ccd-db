@@ -23,31 +23,32 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Jul 11, 2016 2:25:29 PM
+ * Aug 5, 2016 4:28:12 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "DataFile")
+@Table(name = "DataFile", uniqueConstraints = @UniqueConstraint(columnNames = "fileId"))
 public class DataFile implements Serializable {
 
-    private static final long serialVersionUID = 7331766490037513813L;
+    private static final long serialVersionUID = 3907404589794031396L;
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fileId", nullable = false)
+    @JoinColumn(name = "fileId", unique = true, nullable = false)
     private File file;
 
     @ManyToOne(fetch = FetchType.EAGER)

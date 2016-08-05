@@ -25,9 +25,8 @@ import org.springframework.stereotype.Repository;
 
 /**
  *
- * Jul 23, 2015 5:33:37 PM
+ * Aug 5, 2016 5:16:20 PM
  *
- * @since v0.4.0
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
@@ -37,7 +36,7 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     public UserAccount findByAccount(String account);
 
-    public UserAccount findByActivationKey(String activationKey);
+    public UserAccount findByActionKey(String actionKey);
 
     @Query("SELECT ua FROM UserAccount ua WHERE ua.person.email = ?1")
     public UserAccount findByEmail(String email);

@@ -18,26 +18,41 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.repository.AttributeRepository;
+import edu.pitt.dbmi.ccd.db.entity.EventType;
+import edu.pitt.dbmi.ccd.db.repository.EventTypeRepository;
+import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Aug 3, 2016 4:27:46 PM
+ * Aug 5, 2016 5:29:21 PM
  *
- * @author Mark Silvis (marksilvis@pitt.edu)
+ * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
 @Transactional
-public class AttributeService {
+public class EventTypeService {
 
-    private final AttributeRepository attributeRepository;
+    public static final String LOGIN_EVENT = "login";
+    public static final String LOGIN_FAILED_EVENT = "login failed";
+    public static final String LOGOUT_EVENT = "logout";
+
+    private final EventTypeRepository eventTypeRepository;
 
     @Autowired
-    public AttributeService(AttributeRepository attributeRepository) {
-        this.attributeRepository = attributeRepository;
+    public EventTypeService(EventTypeRepository eventTypeRepository) {
+        this.eventTypeRepository = eventTypeRepository;
+
+        List<EventType> eventTypes = eventTypeRepository.findAll();
+        if (eventTypes.isEmpty()) {
+            eventTypes.add(new EventType(LOGIN_EVENT));
+            eventTypes.add(new EventType(LOGIN_FAILED_EVENT));
+            eventTypes.add(new EventType(LOGOUT_EVENT));
+
+            eventTypeRepository.save(eventTypes);
+        }
     }
 
 }

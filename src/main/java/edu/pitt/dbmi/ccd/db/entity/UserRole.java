@@ -19,35 +19,48 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Jun 9, 2016 3:58:42 PM
+ * Aug 5, 2016 4:22:15 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "UserRole")
+@Table(name = "UserRole", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class UserRole implements Serializable {
 
-    private static final long serialVersionUID = 1230761484283602053L;
+    private static final long serialVersionUID = 7543174854846867790L;
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", unique = true, nullable = false, length = 64)
     private String name;
 
     @Column(name = "description")
     private String description;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
+        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
+    private Set<UserAccount> userAccounts = new HashSet<>(0);
 
     public UserRole() {
     }
@@ -56,9 +69,10 @@ public class UserRole implements Serializable {
         this.name = name;
     }
 
-    public UserRole(String name, String description) {
+    public UserRole(String name, String description, Set<UserAccount> userAccounts) {
         this.name = name;
         this.description = description;
+        this.userAccounts = userAccounts;
     }
 
     public Long getId() {
@@ -83,6 +97,14 @@ public class UserRole implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<UserAccount> getUserAccounts() {
+        return userAccounts;
+    }
+
+    public void setUserAccounts(Set<UserAccount> userAccounts) {
+        this.userAccounts = userAccounts;
     }
 
 }

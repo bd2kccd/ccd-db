@@ -22,12 +22,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -39,7 +38,7 @@ import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Jun 9, 2016 3:51:12 PM
+ * Aug 5, 2016 4:30:16 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -50,14 +49,14 @@ import javax.persistence.UniqueConstraint;
 )
 public class File implements Serializable {
 
-    private static final long serialVersionUID = 6534837967736800011L;
+    private static final long serialVersionUID = -4182042317680849137L;
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fileTypeId")
     private FileType fileType;
 
@@ -84,13 +83,10 @@ public class File implements Serializable {
     @Column(name = "md5CheckSum", length = 32)
     private String md5checkSum;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file")
     private Set<VariableFile> variableFiles = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "file")
-    private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
     private Set<DataFile> dataFiles = new HashSet<>(0);
 
     public File() {
@@ -105,7 +101,7 @@ public class File implements Serializable {
         this.fileSize = fileSize;
     }
 
-    public File(FileType fileType, UserAccount userAccount, String name, String title, String absolutePath, Date creationTime, long fileSize, String md5checkSum, Set<VariableFile> variableFiles, Set<AnnotationTarget> annotationTargets, Set<DataFile> dataFiles) {
+    public File(FileType fileType, UserAccount userAccount, String name, String title, String absolutePath, Date creationTime, long fileSize, String md5checkSum, Set<VariableFile> variableFiles, Set<DataFile> dataFiles) {
         this.fileType = fileType;
         this.userAccount = userAccount;
         this.name = name;
@@ -115,7 +111,6 @@ public class File implements Serializable {
         this.fileSize = fileSize;
         this.md5checkSum = md5checkSum;
         this.variableFiles = variableFiles;
-        this.annotationTargets = annotationTargets;
         this.dataFiles = dataFiles;
     }
 
@@ -197,14 +192,6 @@ public class File implements Serializable {
 
     public void setVariableFiles(Set<VariableFile> variableFiles) {
         this.variableFiles = variableFiles;
-    }
-
-    public Set<AnnotationTarget> getAnnotationTargets() {
-        return annotationTargets;
-    }
-
-    public void setAnnotationTargets(Set<AnnotationTarget> annotationTargets) {
-        this.annotationTargets = annotationTargets;
     }
 
     public Set<DataFile> getDataFiles() {

@@ -18,17 +18,17 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.Annotation;
+import edu.pitt.dbmi.ccd.db.entity.UserEventLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * Aug 3, 2016 3:52:51 PM
+ * Aug 5, 2016 5:16:42 PM
  *
- * @author Mark Silvis (marksilvis@pitt.edu)
+ * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
-public interface AnnotationRepository extends JpaRepository<Annotation, Long> {
+public interface UserEventLogRepository extends JpaRepository<UserEventLog, Long> {
 
 }

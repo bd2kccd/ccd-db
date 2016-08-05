@@ -25,7 +25,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -33,42 +33,41 @@ import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Aug 3, 2016 12:29:59 PM
+ * Aug 5, 2016 4:24:44 PM
  *
- * @author Mark Silvis (marksilvis@pitt.edu)
+ * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "ShareAccess", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-public class ShareAccess implements Serializable {
+@Table(name = "EventType", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+public class EventType implements Serializable {
 
-    private static final long serialVersionUID = -5156037101073899699L;
+    private static final long serialVersionUID = -6217282382191049581L;
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 31)
+    @Column(name = "name", unique = true, nullable = false, length = 64)
     private String name;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shareAccess")
-    private Set<Annotation> annotations = new HashSet<>(0);
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "eventType")
+    private Set<UserEventLog> userEventLogs = new HashSet<>(0);
 
-    public ShareAccess() {
+    public EventType() {
     }
 
-    public ShareAccess(String name, String description) {
+    public EventType(String name) {
         this.name = name;
-        this.description = description;
     }
 
-    public ShareAccess(String name, String description, Set<Annotation> annotations) {
+    public EventType(String name, String description, Set<UserEventLog> userEventLogs) {
         this.name = name;
         this.description = description;
-        this.annotations = annotations;
+        this.userEventLogs = userEventLogs;
     }
 
     public Long getId() {
@@ -95,12 +94,12 @@ public class ShareAccess implements Serializable {
         this.description = description;
     }
 
-    public Set<Annotation> getAnnotations() {
-        return annotations;
+    public Set<UserEventLog> getUserEventLogs() {
+        return userEventLogs;
     }
 
-    public void setAnnotations(Set<Annotation> annotations) {
-        this.annotations = annotations;
+    public void setUserEventLogs(Set<UserEventLog> userEventLogs) {
+        this.userEventLogs = userEventLogs;
     }
 
 }

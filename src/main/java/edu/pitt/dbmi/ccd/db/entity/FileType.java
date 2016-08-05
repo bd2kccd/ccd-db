@@ -19,35 +19,43 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Jun 9, 2016 3:53:01 PM
+ * Aug 5, 2016 3:03:28 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "FileType")
+@Table(name = "FileType", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class FileType implements Serializable {
 
     private static final long serialVersionUID = 2744819422384050358L;
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", unique = true, nullable = false, length = 64)
     private String name;
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "fileType")
+    private Set<File> files = new HashSet<>(0);
 
     public FileType() {
     }
@@ -56,9 +64,10 @@ public class FileType implements Serializable {
         this.name = name;
     }
 
-    public FileType(String name, String description) {
+    public FileType(String name, String description, Set<File> files) {
         this.name = name;
         this.description = description;
+        this.files = files;
     }
 
     public Long getId() {
@@ -83,6 +92,14 @@ public class FileType implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(Set<File> files) {
+        this.files = files;
     }
 
 }

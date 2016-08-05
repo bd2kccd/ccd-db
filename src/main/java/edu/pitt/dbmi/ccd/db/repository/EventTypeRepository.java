@@ -16,28 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.service;
+package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.repository.OauthAccessTokenRepository;
-import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import edu.pitt.dbmi.ccd.db.entity.EventType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
- * Aug 3, 2016 4:28:26 PM
+ * Aug 5, 2016 5:14:20 PM
  *
- * @author Mark Silvis (marksilvis@pitt.edu)
+ * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Service
-@Transactional
-public class OauthAccessTokenService {
-
-    private final OauthAccessTokenRepository oauthAccessTokenRepository;
-
-    @Autowired
-    public OauthAccessTokenService(OauthAccessTokenRepository oauthAccessTokenRepository) {
-        this.oauthAccessTokenRepository = oauthAccessTokenRepository;
-    }
+@Repository
+public interface EventTypeRepository extends JpaRepository<EventType, Long> {
 
 }

@@ -34,44 +34,50 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * Aug 5, 2016 4:32:37 PM
+ * Aug 5, 2016 4:31:22 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "UserLoginAttempt")
-public class UserLoginAttempt implements Serializable {
+@Table(name = "UserEventLog")
+public class UserEventLog implements Serializable {
 
-    private static final long serialVersionUID = 6063225398737899271L;
+    private static final long serialVersionUID = 8727268026204666346L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "eventTypeId", nullable = false)
+    private EventType eventType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userAccountId", nullable = false)
     private UserAccount userAccount;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "attemptDate", nullable = false, length = 19)
-    private Date attemptDate;
+    @Column(name = "eventDate", nullable = false, length = 19)
+    private Date eventDate;
 
-    @Column(name = "attemptLocation")
-    private Long attemptLocation;
+    @Column(name = "eventLocation")
+    private Long eventLocation;
 
-    public UserLoginAttempt() {
+    public UserEventLog() {
     }
 
-    public UserLoginAttempt(UserAccount userAccount, Date attemptDate) {
+    public UserEventLog(EventType eventType, UserAccount userAccount, Date eventDate) {
+        this.eventType = eventType;
         this.userAccount = userAccount;
-        this.attemptDate = attemptDate;
+        this.eventDate = eventDate;
     }
 
-    public UserLoginAttempt(UserAccount userAccount, Date attemptDate, Long attemptLocation) {
+    public UserEventLog(EventType eventType, UserAccount userAccount, Date eventDate, Long eventLocation) {
+        this.eventType = eventType;
         this.userAccount = userAccount;
-        this.attemptDate = attemptDate;
-        this.attemptLocation = attemptLocation;
+        this.eventDate = eventDate;
+        this.eventLocation = eventLocation;
     }
 
     public Long getId() {
@@ -82,6 +88,14 @@ public class UserLoginAttempt implements Serializable {
         this.id = id;
     }
 
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
+    }
+
     public UserAccount getUserAccount() {
         return userAccount;
     }
@@ -90,20 +104,20 @@ public class UserLoginAttempt implements Serializable {
         this.userAccount = userAccount;
     }
 
-    public Date getAttemptDate() {
-        return attemptDate;
+    public Date getEventDate() {
+        return eventDate;
     }
 
-    public void setAttemptDate(Date attemptDate) {
-        this.attemptDate = attemptDate;
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
     }
 
-    public Long getAttemptLocation() {
-        return attemptLocation;
+    public Long getEventLocation() {
+        return eventLocation;
     }
 
-    public void setAttemptLocation(Long attemptLocation) {
-        this.attemptLocation = attemptLocation;
+    public void setEventLocation(Long eventLocation) {
+        this.eventLocation = eventLocation;
     }
 
 }

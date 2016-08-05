@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2016 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,32 +22,33 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Jul 23, 2015 3:21:35 PM
+ * Aug 5, 2016 2:51:55 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "FileDelimiter")
+@Table(name = "FileDelimiter", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class FileDelimiter implements Serializable {
 
-    private static final long serialVersionUID = -4574772817571231748L;
+    private static final long serialVersionUID = 7885434017470983731L;
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 16)
+    @Column(name = "name", unique = true, nullable = false, length = 64)
     private String name;
 
-    @Column(name = "value", nullable = false, length = 8)
-    private String value;
+    @Column(name = "delimiterChar", nullable = false, length = 8)
+    private String delimiterChar;
 
     @Column(name = "description")
     private String description;
@@ -55,14 +56,14 @@ public class FileDelimiter implements Serializable {
     public FileDelimiter() {
     }
 
-    public FileDelimiter(String name, String value) {
+    public FileDelimiter(String name, String delimiterChar) {
         this.name = name;
-        this.value = value;
+        this.delimiterChar = delimiterChar;
     }
 
-    public FileDelimiter(String name, String value, String description) {
+    public FileDelimiter(String name, String delimiterChar, String description) {
         this.name = name;
-        this.value = value;
+        this.delimiterChar = delimiterChar;
         this.description = description;
     }
 
@@ -82,12 +83,12 @@ public class FileDelimiter implements Serializable {
         this.name = name;
     }
 
-    public String getValue() {
-        return value;
+    public String getDelimiterChar() {
+        return delimiterChar;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setDelimiterChar(String delimiterChar) {
+        this.delimiterChar = delimiterChar;
     }
 
     public String getDescription() {

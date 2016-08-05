@@ -27,14 +27,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -42,37 +41,27 @@ import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Jul 23, 2015 3:00:57 PM
+ * Aug 5, 2016 4:27:08 PM
  *
- * @since v0.4.0
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "UserAccount", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
+@Table(name = "UserAccount", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "account"),
+    @UniqueConstraint(columnNames = "username")}
+)
 public class UserAccount implements Serializable {
 
-    private static final long serialVersionUID = -7488372819059058929L;
+    private static final long serialVersionUID = 4214555957724453452L;
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
-
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "userLoginId", nullable = false)
-    private UserLogin userLogin;
-
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "userLoginAttemptId", nullable = false)
-    private UserLoginAttempt userLoginAttempt;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userRoleId", nullable = false)
-    private UserRole userRole;
 
     @Column(name = "username", unique = true, nullable = false)
     private String username;
@@ -80,8 +69,11 @@ public class UserAccount implements Serializable {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "active", nullable = false)
-    private boolean active;
+    @Column(name = "account", unique = true, nullable = false)
+    private String account;
+
+    @Column(name = "activated", nullable = false)
+    private boolean activated;
 
     @Column(name = "disabled", nullable = false)
     private boolean disabled;
@@ -93,71 +85,51 @@ public class UserAccount implements Serializable {
     @Column(name = "registrationLocation")
     private Long registrationLocation;
 
-    @Column(name = "account", nullable = false)
-    private String account;
+    @Column(name = "actionKey")
+    private String actionKey;
 
-    @Column(name = "activationKey")
-    private String activationKey;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount", cascade = CascadeType.ALL)
+    private Set<UserEventLog> userEventLogs = new HashSet<>(0);
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
-    private Set<ShareGroup> shareGroups = new HashSet<>(0);
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ShareGroupMembership", joinColumns = {
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "shareGroupId", nullable = false, updatable = false)})
-    private Set<ShareGroup> shareGroupMemberships = new HashSet<>(0);
+        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
+    private Set<UserRole> userRoles = new HashSet<>(0);
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
-    private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount", cascade = CascadeType.ALL)
+    private Set<UserLoginAttempt> userLoginAttempts = new HashSet<>(0);
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount", cascade = CascadeType.ALL)
     private Set<File> files = new HashSet<>(0);
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ShareGroupRequest", joinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "shareGroupId", nullable = false, updatable = false)})
-    private Set<ShareGroup> shareGroupRequests = new HashSet<>(0);
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
-    private Set<Annotation> annotations = new HashSet<>(0);
 
     public UserAccount() {
     }
 
-    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, UserRole userRole, String username, String password, boolean active, boolean disabled, Date registrationDate, String account) {
+    public UserAccount(Person person, String username, String password, String account, boolean activated, boolean disabled, Date registrationDate) {
         this.person = person;
-        this.userLogin = userLogin;
-        this.userLoginAttempt = userLoginAttempt;
-        this.userRole = userRole;
         this.username = username;
         this.password = password;
-        this.active = active;
+        this.account = account;
+        this.activated = activated;
         this.disabled = disabled;
         this.registrationDate = registrationDate;
-        this.account = account;
     }
 
-    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, UserRole userRole, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account, String activationKey, Set<ShareGroup> shareGroups, Set<ShareGroup> shareGroups_1, Set<AnnotationTarget> annotationTargets, Set<File> files, Set<ShareGroup> shareGroups_2, Set<Annotation> annotations) {
+    public UserAccount(Person person, String username, String password, String account, boolean activated, boolean disabled, Date registrationDate, Long registrationLocation, String actionKey, Set<UserEventLog> userEventLogs, Set<UserRole> userRoles, Set<UserLoginAttempt> userLoginAttempts, Set<File> files) {
         this.person = person;
-        this.userLogin = userLogin;
-        this.userLoginAttempt = userLoginAttempt;
-        this.userRole = userRole;
         this.username = username;
         this.password = password;
-        this.active = active;
+        this.account = account;
+        this.activated = activated;
         this.disabled = disabled;
         this.registrationDate = registrationDate;
         this.registrationLocation = registrationLocation;
-        this.account = account;
-        this.activationKey = activationKey;
-        this.shareGroups = shareGroups;
-        this.shareGroupMemberships = shareGroups_1;
-        this.annotationTargets = annotationTargets;
+        this.actionKey = actionKey;
+        this.userEventLogs = userEventLogs;
+        this.userRoles = userRoles;
+        this.userLoginAttempts = userLoginAttempts;
         this.files = files;
-        this.shareGroupRequests = shareGroups_2;
-        this.annotations = annotations;
     }
 
     public Long getId() {
@@ -176,30 +148,6 @@ public class UserAccount implements Serializable {
         this.person = person;
     }
 
-    public UserLogin getUserLogin() {
-        return userLogin;
-    }
-
-    public void setUserLogin(UserLogin userLogin) {
-        this.userLogin = userLogin;
-    }
-
-    public UserLoginAttempt getUserLoginAttempt() {
-        return userLoginAttempt;
-    }
-
-    public void setUserLoginAttempt(UserLoginAttempt userLoginAttempt) {
-        this.userLoginAttempt = userLoginAttempt;
-    }
-
-    public UserRole getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -216,12 +164,20 @@ public class UserAccount implements Serializable {
         this.password = password;
     }
 
-    public boolean isActive() {
-        return active;
+    public String getAccount() {
+        return account;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
     }
 
     public boolean isDisabled() {
@@ -248,44 +204,36 @@ public class UserAccount implements Serializable {
         this.registrationLocation = registrationLocation;
     }
 
-    public String getAccount() {
-        return account;
+    public String getActionKey() {
+        return actionKey;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setActionKey(String actionKey) {
+        this.actionKey = actionKey;
     }
 
-    public String getActivationKey() {
-        return activationKey;
+    public Set<UserEventLog> getUserEventLogs() {
+        return userEventLogs;
     }
 
-    public void setActivationKey(String activationKey) {
-        this.activationKey = activationKey;
+    public void setUserEventLogs(Set<UserEventLog> userEventLogs) {
+        this.userEventLogs = userEventLogs;
     }
 
-    public Set<ShareGroup> getShareGroups() {
-        return shareGroups;
+    public Set<UserRole> getUserRoles() {
+        return userRoles;
     }
 
-    public void setShareGroups(Set<ShareGroup> shareGroups) {
-        this.shareGroups = shareGroups;
+    public void setUserRoles(Set<UserRole> userRoles) {
+        this.userRoles = userRoles;
     }
 
-    public Set<ShareGroup> getShareGroupMemberships() {
-        return shareGroupMemberships;
+    public Set<UserLoginAttempt> getUserLoginAttempts() {
+        return userLoginAttempts;
     }
 
-    public void setShareGroupMemberships(Set<ShareGroup> shareGroupMemberships) {
-        this.shareGroupMemberships = shareGroupMemberships;
-    }
-
-    public Set<AnnotationTarget> getAnnotationTargets() {
-        return annotationTargets;
-    }
-
-    public void setAnnotationTargets(Set<AnnotationTarget> annotationTargets) {
-        this.annotationTargets = annotationTargets;
+    public void setUserLoginAttempts(Set<UserLoginAttempt> userLoginAttempts) {
+        this.userLoginAttempts = userLoginAttempts;
     }
 
     public Set<File> getFiles() {
@@ -294,22 +242,6 @@ public class UserAccount implements Serializable {
 
     public void setFiles(Set<File> files) {
         this.files = files;
-    }
-
-    public Set<ShareGroup> getShareGroupRequests() {
-        return shareGroupRequests;
-    }
-
-    public void setShareGroupRequests(Set<ShareGroup> shareGroupRequests) {
-        this.shareGroupRequests = shareGroupRequests;
-    }
-
-    public Set<Annotation> getAnnotations() {
-        return annotations;
-    }
-
-    public void setAnnotations(Set<Annotation> annotations) {
-        this.annotations = annotations;
     }
 
 }
