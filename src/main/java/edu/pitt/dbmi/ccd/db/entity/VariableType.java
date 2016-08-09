@@ -19,21 +19,17 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Aug 5, 2016 2:47:29 PM
+ * Aug 9, 2016 1:20:59 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -41,7 +37,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "VariableType", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class VariableType implements Serializable {
 
-    private static final long serialVersionUID = 6244230958234250768L;
+    private static final long serialVersionUID = 59524308283915942L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,9 +50,6 @@ public class VariableType implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "variableType")
-    private Set<DataFile> dataFiles = new HashSet<>(0);
-
     public VariableType() {
     }
 
@@ -64,10 +57,9 @@ public class VariableType implements Serializable {
         this.name = name;
     }
 
-    public VariableType(String name, String description, Set<DataFile> dataFiles) {
+    public VariableType(String name, String description) {
         this.name = name;
         this.description = description;
-        this.dataFiles = dataFiles;
     }
 
     public Long getId() {
@@ -92,14 +84,6 @@ public class VariableType implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Set<DataFile> getDataFiles() {
-        return dataFiles;
-    }
-
-    public void setDataFiles(Set<DataFile> dataFiles) {
-        this.dataFiles = dataFiles;
     }
 
 }

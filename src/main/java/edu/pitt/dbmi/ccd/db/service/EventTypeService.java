@@ -18,13 +18,21 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.domain.EventTypeName;
 import edu.pitt.dbmi.ccd.db.entity.EventType;
 import edu.pitt.dbmi.ccd.db.repository.EventTypeRepository;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+/**
+ *
+ * Aug 8, 2016 7:14:39 PM
+ *
+ * @author Kevin V. Bui (kvb2@pitt.edu)
+ */
 /**
  *
  * Aug 5, 2016 5:29:21 PM
@@ -35,10 +43,6 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class EventTypeService {
 
-    public static final String LOGIN_EVENT = "login";
-    public static final String LOGIN_FAILED_EVENT = "login failed";
-    public static final String LOGOUT_EVENT = "logout";
-
     private final EventTypeRepository eventTypeRepository;
 
     @Autowired
@@ -47,12 +51,19 @@ public class EventTypeService {
 
         List<EventType> eventTypes = eventTypeRepository.findAll();
         if (eventTypes.isEmpty()) {
-            eventTypes.add(new EventType(LOGIN_EVENT));
-            eventTypes.add(new EventType(LOGIN_FAILED_EVENT));
-            eventTypes.add(new EventType(LOGOUT_EVENT));
+            eventTypes.add(new EventType(EventTypeName.USER_ACTIVATION.name()));
+            eventTypes.add(new EventType(EventTypeName.USER_LOGIN.name()));
+            eventTypes.add(new EventType(EventTypeName.USER_LOGIN_FAILED.name()));
+            eventTypes.add(new EventType(EventTypeName.USER_LOGOUT.name()));
+            eventTypes.add(new EventType(EventTypeName.USER_REGISTRATION.name()));
 
             eventTypeRepository.save(eventTypes);
         }
+    }
+
+    @Cacheable("eventTypeByEventTypeName")
+    public EventType findByEventTypeName(EventTypeName eventTypeName) {
+        return eventTypeRepository.findByName(eventTypeName.name());
     }
 
 }

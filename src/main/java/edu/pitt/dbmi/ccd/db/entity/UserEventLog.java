@@ -34,7 +34,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * Aug 5, 2016 4:31:22 PM
+ * Aug 8, 2016 3:58:47 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -49,7 +49,7 @@ public class UserEventLog implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eventTypeId", nullable = false)
     private EventType eventType;
 

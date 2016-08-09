@@ -18,16 +18,18 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.domain.FileDelimiterName;
 import edu.pitt.dbmi.ccd.db.entity.FileDelimiter;
 import edu.pitt.dbmi.ccd.db.repository.FileDelimiterRepository;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Aug 5, 2016 4:12:53 PM
+ * Aug 9, 2016 1:38:02 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -35,21 +37,18 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class FileDelimiterService {
 
-    public static final String TAB_DELIM_NAME = "tab";
-    public static final String COMMA_DELIM_NAME = "comma";
-
     private final FileDelimiterRepository fileDelimiterRepository;
 
     @Autowired
     public FileDelimiterService(FileDelimiterRepository fileDelimiterRepository) {
         this.fileDelimiterRepository = fileDelimiterRepository;
 
-        List<FileDelimiter> delimiters = fileDelimiterRepository.findAll();
-        if (delimiters.isEmpty()) {
-            delimiters.add(new FileDelimiter(TAB_DELIM_NAME, "\t"));
-            delimiters.add(new FileDelimiter(COMMA_DELIM_NAME, ","));
+        List<FileDelimiter> fileDelimiters = fileDelimiterRepository.findAll();
+        if (fileDelimiters.isEmpty()) {
+            fileDelimiters.add(new FileDelimiter(FileDelimiterName.TAB.name(), "\t"));
+            fileDelimiters.add(new FileDelimiter(FileDelimiterName.COMMA.name(), ","));
 
-            fileDelimiterRepository.save(delimiters);
+            fileDelimiterRepository.save(fileDelimiters);
         }
     }
 
@@ -63,8 +62,9 @@ public class FileDelimiterService {
         return fileDelimiterRepository.getOne(id);
     }
 
-    public FileDelimiter findByName(String name) {
-        return fileDelimiterRepository.findByName(name);
+    @Cacheable("fileDelimiterByFileDelimiterName")
+    public FileDelimiter findByFileDelimiterName(FileDelimiterName fileDelimiterName) {
+        return fileDelimiterRepository.findByName(fileDelimiterName.name());
     }
 
 }

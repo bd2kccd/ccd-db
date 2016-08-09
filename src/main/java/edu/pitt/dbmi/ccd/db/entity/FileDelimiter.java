@@ -29,7 +29,7 @@ import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Aug 5, 2016 2:51:55 PM
+ * Aug 9, 2016 1:05:11 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -37,7 +37,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "FileDelimiter", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class FileDelimiter implements Serializable {
 
-    private static final long serialVersionUID = 7885434017470983731L;
+    private static final long serialVersionUID = 2734441590203774737L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,8 +47,8 @@ public class FileDelimiter implements Serializable {
     @Column(name = "name", unique = true, nullable = false, length = 64)
     private String name;
 
-    @Column(name = "delimiterChar", nullable = false, length = 8)
-    private String delimiterChar;
+    @Column(name = "delimiter", nullable = false, length = 8)
+    private String delimiter;
 
     @Column(name = "description")
     private String description;
@@ -56,14 +56,14 @@ public class FileDelimiter implements Serializable {
     public FileDelimiter() {
     }
 
-    public FileDelimiter(String name, String delimiterChar) {
+    public FileDelimiter(String name, String delimiter) {
         this.name = name;
-        this.delimiterChar = delimiterChar;
+        this.delimiter = delimiter;
     }
 
-    public FileDelimiter(String name, String delimiterChar, String description) {
+    public FileDelimiter(String name, String delimiter, String description) {
         this.name = name;
-        this.delimiterChar = delimiterChar;
+        this.delimiter = delimiter;
         this.description = description;
     }
 
@@ -83,12 +83,12 @@ public class FileDelimiter implements Serializable {
         this.name = name;
     }
 
-    public String getDelimiterChar() {
-        return delimiterChar;
+    public String getDelimiter() {
+        return delimiter;
     }
 
-    public void setDelimiterChar(String delimiterChar) {
-        this.delimiterChar = delimiterChar;
+    public void setDelimiter(String delimiter) {
+        this.delimiter = delimiter;
     }
 
     public String getDescription() {

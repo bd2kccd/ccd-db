@@ -29,18 +29,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Aug 5, 2016 4:33:31 PM
+ * Aug 8, 2016 4:08:09 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "Person", catalog = "ccd")
+@Table(name = "Person", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "email"),
+    @UniqueConstraint(columnNames = "workspace")}
+)
 public class Person implements Serializable {
 
-    private static final long serialVersionUID = 8865535316029474574L;
+    private static final long serialVersionUID = -3841663787176512753L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,10 +60,10 @@ public class Person implements Serializable {
     @Column(name = "lastName", nullable = false)
     private String lastName;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "workspace", nullable = false, length = 512)
+    @Column(name = "workspace", unique = true, nullable = false, length = 512)
     private String workspace;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "person")

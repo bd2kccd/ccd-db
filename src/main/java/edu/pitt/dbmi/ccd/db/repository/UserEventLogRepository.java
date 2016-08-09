@@ -18,7 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.entity.EventType;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.entity.UserEventLog;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -30,5 +33,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserEventLogRepository extends JpaRepository<UserEventLog, Long> {
+
+    public List<UserEventLog> findByUserAccount(UserAccount userAccount);
+
+    public List<UserEventLog> findByEventType(EventType eventType);
 
 }

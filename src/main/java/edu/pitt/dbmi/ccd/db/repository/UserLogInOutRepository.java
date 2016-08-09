@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2016 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,25 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db;
+package edu.pitt.dbmi.ccd.db.repository;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import edu.pitt.dbmi.ccd.db.entity.UserLogInOut;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
- * Jul 23, 2015 1:31:00 PM
+ * Aug 9, 2016 1:28:35 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@SpringBootApplication
-public class CCDDatabaseApplication {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        SpringApplication.run(CCDDatabaseApplication.class, args);
-    }
+@Repository
+public interface UserLogInOutRepository extends JpaRepository<UserLogInOut, Long> {
 
 }

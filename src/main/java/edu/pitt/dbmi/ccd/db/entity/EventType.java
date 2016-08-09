@@ -21,6 +21,7 @@ package edu.pitt.dbmi.ccd.db.entity;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,7 +34,7 @@ import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Aug 5, 2016 4:24:44 PM
+ * Aug 8, 2016 3:58:16 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -41,7 +42,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "EventType", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class EventType implements Serializable {
 
-    private static final long serialVersionUID = -6217282382191049581L;
+    private static final long serialVersionUID = -685378734370502526L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +55,7 @@ public class EventType implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "eventType")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "eventType", cascade = CascadeType.ALL)
     private Set<UserEventLog> userEventLogs = new HashSet<>(0);
 
     public EventType() {

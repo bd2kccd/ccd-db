@@ -34,7 +34,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * Aug 5, 2016 4:32:37 PM
+ * Aug 8, 2016 4:04:42 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -42,7 +42,7 @@ import javax.persistence.TemporalType;
 @Table(name = "UserLoginAttempt")
 public class UserLoginAttempt implements Serializable {
 
-    private static final long serialVersionUID = 6063225398737899271L;
+    private static final long serialVersionUID = -7160982423392643863L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

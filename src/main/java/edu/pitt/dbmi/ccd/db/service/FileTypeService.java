@@ -23,11 +23,12 @@ import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Aug 5, 2016 4:13:36 PM
+ * Aug 9, 2016 1:38:46 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -65,6 +66,7 @@ public class FileTypeService {
         return fileTypeRepository.findOne(id);
     }
 
+    @Cacheable("fileTypeByName")
     public FileType findByName(String name) {
         return fileTypeRepository.findByName(name);
     }

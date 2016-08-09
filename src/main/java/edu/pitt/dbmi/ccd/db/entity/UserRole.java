@@ -35,7 +35,7 @@ import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Aug 5, 2016 4:22:15 PM
+ * Aug 8, 2016 4:02:53 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -43,7 +43,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "UserRole", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class UserRole implements Serializable {
 
-    private static final long serialVersionUID = 7543174854846867790L;
+    private static final long serialVersionUID = 968015692913355140L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

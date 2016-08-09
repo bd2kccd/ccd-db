@@ -16,40 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `DataFile`
---
-
-DROP TABLE IF EXISTS `DataFile`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `DataFile` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `numOfRows` int(11) DEFAULT NULL,
-  `numOfColumns` int(11) DEFAULT NULL,
-  `fileId` bigint(20) NOT NULL,
-  `fileDelimiterId` bigint(20) NOT NULL,
-  `variableTypeId` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `fileId_2` (`fileId`),
-  KEY `fileId` (`fileId`),
-  KEY `fileDelimiterId` (`fileDelimiterId`),
-  KEY `variableTypeId` (`variableTypeId`),
-  CONSTRAINT `DataFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`),
-  CONSTRAINT `DataFile_ibfk_2` FOREIGN KEY (`fileDelimiterId`) REFERENCES `FileDelimiter` (`id`),
-  CONSTRAINT `DataFile_ibfk_3` FOREIGN KEY (`variableTypeId`) REFERENCES `VariableType` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `DataFile`
---
-
-LOCK TABLES `DataFile` WRITE;
-/*!40000 ALTER TABLE `DataFile` DISABLE KEYS */;
-/*!40000 ALTER TABLE `DataFile` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `EventType`
 --
 
@@ -120,7 +86,7 @@ DROP TABLE IF EXISTS `FileDelimiter`;
 CREATE TABLE `FileDelimiter` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
-  `delimiterChar` varchar(8) NOT NULL,
+  `delimiter` varchar(8) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
@@ -175,7 +141,9 @@ CREATE TABLE `Person` (
   `lastName` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `workspace` varchar(512) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `workspace` (`workspace`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -206,11 +174,14 @@ CREATE TABLE `UserAccount` (
   `registrationLocation` bigint(20) DEFAULT NULL,
   `actionKey` varchar(255) DEFAULT NULL,
   `personId` bigint(20) NOT NULL,
+  `userLogInOutId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `account` (`account`),
   KEY `personId` (`personId`),
-  CONSTRAINT `UserAccount_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `Person` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `userLogInOutId` (`userLogInOutId`),
+  CONSTRAINT `UserAccount_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `Person` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `UserAccount_ibfk_2` FOREIGN KEY (`userLogInOutId`) REFERENCES `UserLogInOut` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -281,6 +252,32 @@ LOCK TABLES `UserEventLog` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `UserLogInOut`
+--
+
+DROP TABLE IF EXISTS `UserLogInOut`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserLogInOut` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `logInDate` timestamp NULL DEFAULT NULL,
+  `logInLocation` bigint(20) DEFAULT NULL,
+  `logOutDate` timestamp NULL DEFAULT NULL,
+  `logOutLocation` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserLogInOut`
+--
+
+LOCK TABLES `UserLogInOut` WRITE;
+/*!40000 ALTER TABLE `UserLogInOut` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserLogInOut` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `UserLoginAttempt`
 --
 
@@ -333,33 +330,6 @@ LOCK TABLES `UserRole` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `VariableFile`
---
-
-DROP TABLE IF EXISTS `VariableFile`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `VariableFile` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `numOfVars` int(11) DEFAULT NULL,
-  `fileId` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `fileId_2` (`fileId`),
-  KEY `fileId` (`fileId`),
-  CONSTRAINT `VariableFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `VariableFile`
---
-
-LOCK TABLES `VariableFile` WRITE;
-/*!40000 ALTER TABLE `VariableFile` DISABLE KEYS */;
-/*!40000 ALTER TABLE `VariableFile` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `VariableType`
 --
 
@@ -371,7 +341,8 @@ CREATE TABLE `VariableType` (
   `name` varchar(64) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  UNIQUE KEY `name_2` (`name`),
+  KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -393,4 +364,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-05 14:34:40
+-- Dump completed on 2016-08-09 12:15:51

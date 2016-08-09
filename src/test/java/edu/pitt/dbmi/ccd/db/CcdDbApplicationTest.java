@@ -16,22 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
+package edu.pitt.dbmi.ccd.db;
 
-import edu.pitt.dbmi.ccd.db.entity.File;
-import edu.pitt.dbmi.ccd.db.entity.VariableFile;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  *
- * Aug 5, 2016 5:18:00 PM
+ * Aug 8, 2016 3:43:21 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
-public interface VariableFileRepository extends JpaRepository<VariableFile, Long> {
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = CcdDbApplication.class)
+public class CcdDbApplicationTest {
 
-    public VariableFile findByFile(File file);
+    /**
+     * Test of main method, of class CcdDbApplication.
+     */
+    @Test
+    public void contextLoads() {
+    }
 
 }

@@ -33,7 +33,7 @@ import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Aug 5, 2016 3:03:28 PM
+ * Aug 9, 2016 12:25:05 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -41,7 +41,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "FileType", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class FileType implements Serializable {
 
-    private static final long serialVersionUID = 2744819422384050358L;
+    private static final long serialVersionUID = -4383136289706465123L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

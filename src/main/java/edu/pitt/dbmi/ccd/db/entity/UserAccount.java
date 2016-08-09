@@ -41,7 +41,7 @@ import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Aug 5, 2016 4:27:08 PM
+ * Aug 8, 2016 4:01:12 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -52,7 +52,7 @@ import javax.persistence.UniqueConstraint;
 )
 public class UserAccount implements Serializable {
 
-    private static final long serialVersionUID = 4214555957724453452L;
+    private static final long serialVersionUID = 6845728261709936160L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,6 +62,10 @@ public class UserAccount implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "userLogInOutId", nullable = false)
+    private UserLogInOut userLogInOut;
 
     @Column(name = "username", unique = true, nullable = false)
     private String username;
@@ -91,23 +95,24 @@ public class UserAccount implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount", cascade = CascadeType.ALL)
     private Set<UserEventLog> userEventLogs = new HashSet<>(0);
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
     private Set<UserRole> userRoles = new HashSet<>(0);
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "userAccount", cascade = CascadeType.ALL)
     private Set<UserLoginAttempt> userLoginAttempts = new HashSet<>(0);
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
     private Set<File> files = new HashSet<>(0);
 
     public UserAccount() {
     }
 
-    public UserAccount(Person person, String username, String password, String account, boolean activated, boolean disabled, Date registrationDate) {
+    public UserAccount(Person person, UserLogInOut userLogInOut, String username, String password, String account, boolean activated, boolean disabled, Date registrationDate) {
         this.person = person;
+        this.userLogInOut = userLogInOut;
         this.username = username;
         this.password = password;
         this.account = account;
@@ -116,8 +121,9 @@ public class UserAccount implements Serializable {
         this.registrationDate = registrationDate;
     }
 
-    public UserAccount(Person person, String username, String password, String account, boolean activated, boolean disabled, Date registrationDate, Long registrationLocation, String actionKey, Set<UserEventLog> userEventLogs, Set<UserRole> userRoles, Set<UserLoginAttempt> userLoginAttempts, Set<File> files) {
+    public UserAccount(Person person, UserLogInOut userLogInOut, String username, String password, String account, boolean activated, boolean disabled, Date registrationDate, Long registrationLocation, String actionKey, Set<UserEventLog> userEventLogs, Set<UserRole> userRoles, Set<UserLoginAttempt> userLoginAttempts, Set<File> files) {
         this.person = person;
+        this.userLogInOut = userLogInOut;
         this.username = username;
         this.password = password;
         this.account = account;
@@ -146,6 +152,14 @@ public class UserAccount implements Serializable {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public UserLogInOut getUserLogInOut() {
+        return userLogInOut;
+    }
+
+    public void setUserLogInOut(UserLogInOut userLogInOut) {
+        this.userLogInOut = userLogInOut;
     }
 
     public String getUsername() {

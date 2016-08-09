@@ -18,25 +18,24 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.domain.VariableTypeName;
 import edu.pitt.dbmi.ccd.db.entity.VariableType;
 import edu.pitt.dbmi.ccd.db.repository.VariableTypeRepository;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Aug 5, 2016 3:23:32 PM
+ * Aug 9, 2016 1:43:45 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
 @Transactional
 public class VariableTypeService {
-
-    public static final String CONTINUOUS_VAR_NAME = "continuous";
-    public static final String DISCRETE_VAR_NAME = "discrete";
 
     private final VariableTypeRepository variableTypeRepository;
 
@@ -46,8 +45,8 @@ public class VariableTypeService {
 
         List<VariableType> variableTypes = variableTypeRepository.findAll();
         if (variableTypes.isEmpty()) {
-            variableTypes.add(new VariableType(CONTINUOUS_VAR_NAME));
-            variableTypes.add(new VariableType(DISCRETE_VAR_NAME));
+            variableTypes.add(new VariableType(VariableTypeName.CONTINUOUS.name()));
+            variableTypes.add(new VariableType(VariableTypeName.DISCRETE.name()));
 
             variableTypeRepository.save(variableTypes);
         }
@@ -61,8 +60,9 @@ public class VariableTypeService {
         return variableTypeRepository.findOne(id);
     }
 
-    public VariableType findByName(String name) {
-        return variableTypeRepository.findByName(name);
+    @Cacheable("variableTypeByVariableTypeName")
+    public VariableType findByVariableTypeName(VariableTypeName variableTypeName) {
+        return variableTypeRepository.findByName(variableTypeName.name());
     }
 
 }
