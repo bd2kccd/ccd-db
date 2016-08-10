@@ -61,13 +61,9 @@ public class UserAccountService {
         return userAccountRepository.findByEmail(email);
     }
 
-    public UserAccount saveNewUserAccount(UserAccount userAccount) {
+    public UserAccount save(UserAccount userAccount) {
         personRepository.save(userAccount.getPerson());
 
-        return userAccountRepository.save(userAccount);
-    }
-
-    public UserAccount save(UserAccount userAccount) {
         return userAccountRepository.save(userAccount);
     }
 

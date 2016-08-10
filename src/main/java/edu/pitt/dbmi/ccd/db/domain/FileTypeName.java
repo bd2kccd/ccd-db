@@ -18,20 +18,33 @@
  */
 package edu.pitt.dbmi.ccd.db.domain;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
- * Aug 9, 2016 4:17:35 PM
+ * Aug 10, 2016 12:20:04 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public enum EventTypeName {
+public enum FileTypeName {
 
-    USER_LOGIN,
-    USER_LOGIN_FAILED,
-    USER_LOGOUT,
-    USER_REGISTRATION,
-    USER_ACTIVATION,
-    USER_PASSWORD_CHANGE,
-    USER_PROFILE_CHANGE
+    DATASET,
+    ALGORITHM_RESULT,
+    PRIOR_KNOWLEDGE,
+    VARIABLE;
+
+    private static final Map<String, FileTypeName> FILE_TYPE_ENUM_MAP = new HashMap<>();
+
+    static {
+        FILE_TYPE_ENUM_MAP.put(DATASET.name(), DATASET);
+        FILE_TYPE_ENUM_MAP.put(ALGORITHM_RESULT.name(), ALGORITHM_RESULT);
+        FILE_TYPE_ENUM_MAP.put(PRIOR_KNOWLEDGE.name(), PRIOR_KNOWLEDGE);
+        FILE_TYPE_ENUM_MAP.put(VARIABLE.name(), VARIABLE);
+    }
+
+    public static FileTypeName getEnumByName(String name) {
+        return FILE_TYPE_ENUM_MAP.get(name);
+    }
 
 }

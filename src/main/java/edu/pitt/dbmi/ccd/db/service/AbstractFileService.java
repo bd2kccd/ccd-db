@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.domain.FileTypeName;
 import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.VariableFile;
@@ -55,12 +56,12 @@ public abstract class AbstractFileService {
 
     protected void removeNonFileType(File file) {
         String fileTypeName = file.getFileType().getName();
-        if (!FileTypeService.DATA_TYPE_NAME.equalsIgnoreCase(fileTypeName)) {
+        if (!FileTypeName.DATASET.name().equalsIgnoreCase(fileTypeName)) {
             DataFile dataFile = dataFileRepository.findByFile(file);
             if (dataFile != null) {
                 dataFileRepository.delete(dataFile);
             }
-        } else if (!FileTypeService.VAR_TYPE_NAME.equalsIgnoreCase(fileTypeName)) {
+        } else if (!FileTypeName.VARIABLE.name().equalsIgnoreCase(fileTypeName)) {
             VariableFile variableFile = variableFileRepository.findByFile(file);
             if (variableFile != null) {
                 variableFileRepository.delete(variableFile);

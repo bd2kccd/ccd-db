@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.domain.FileTypeName;
 import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.VariableType;
@@ -57,7 +58,7 @@ public class DataFileService extends AbstractFileService {
 
     public DataFile save(DataFile dataFile) {
         File file = dataFile.getFile();
-        file.setFileType(fileTypeRepository.findByName(FileTypeService.DATA_TYPE_NAME));
+        file.setFileType(fileTypeRepository.findByName(FileTypeName.DATASET.name()));
         file = fileRepository.save(file);
 
         removeNonFileType(file);

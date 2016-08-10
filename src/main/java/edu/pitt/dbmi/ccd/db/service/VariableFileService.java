@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.domain.FileTypeName;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.VariableFile;
 import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
@@ -52,7 +53,7 @@ public class VariableFileService extends AbstractFileService {
 
     public VariableFile save(VariableFile variableFile) {
         File file = variableFile.getFile();
-        file.setFileType(fileTypeRepository.findByName(FileTypeService.VAR_TYPE_NAME));
+        file.setFileType(fileTypeRepository.findByName(FileTypeName.VARIABLE.name()));
         file = fileRepository.save(file);
 
         removeNonFileType(file);

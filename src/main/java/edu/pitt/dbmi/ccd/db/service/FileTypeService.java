@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.domain.FileTypeName;
 import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
 import java.util.List;
@@ -36,11 +37,6 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class FileTypeService {
 
-    public static final String DATA_TYPE_NAME = "dataset";
-    public static final String ALGO_RESULT_TYPE_NAME = "algorithm result";
-    public static final String PRIOR_TYPE_NAME = "prior knowledge";
-    public static final String VAR_TYPE_NAME = "variable";
-
     private final FileTypeRepository fileTypeRepository;
 
     @Autowired
@@ -49,10 +45,10 @@ public class FileTypeService {
 
         List<FileType> fileTypes = fileTypeRepository.findAll();
         if (fileTypes.isEmpty()) {
-            fileTypes.add(new FileType(DATA_TYPE_NAME));
-            fileTypes.add(new FileType(ALGO_RESULT_TYPE_NAME));
-            fileTypes.add(new FileType(PRIOR_TYPE_NAME));
-            fileTypes.add(new FileType(VAR_TYPE_NAME));
+            fileTypes.add(new FileType(FileTypeName.ALGORITHM_RESULT.name()));
+            fileTypes.add(new FileType(FileTypeName.DATASET.name()));
+            fileTypes.add(new FileType(FileTypeName.PRIOR_KNOWLEDGE.name()));
+            fileTypes.add(new FileType(FileTypeName.VARIABLE.name()));
 
             fileTypeRepository.save(fileTypes);
         }
@@ -66,9 +62,9 @@ public class FileTypeService {
         return fileTypeRepository.findOne(id);
     }
 
-    @Cacheable("fileTypeByName")
-    public FileType findByName(String name) {
-        return fileTypeRepository.findByName(name);
+    @Cacheable("fileTypeByFileTypeName")
+    public FileType findByFileTypeName(FileTypeName fileTypeName) {
+        return fileTypeRepository.findByName(fileTypeName.name());
     }
 
 }
