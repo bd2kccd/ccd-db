@@ -1,8 +1,8 @@
--- MySQL dump 10.15  Distrib 10.0.25-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.1.16-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: ccd
 -- ------------------------------------------------------
--- Server version	10.0.25-MariaDB
+-- Server version	10.1.16-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,6 +14,40 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `DataFile`
+--
+
+DROP TABLE IF EXISTS `DataFile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `DataFile` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `numOfRows` int(11) DEFAULT NULL,
+  `numOfColumns` int(11) DEFAULT NULL,
+  `fileId` bigint(20) NOT NULL,
+  `fileDelimiterId` bigint(20) NOT NULL,
+  `variableTypeId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `fileId_2` (`fileId`),
+  KEY `fileId` (`fileId`),
+  KEY `fileDelimiterId` (`fileDelimiterId`),
+  KEY `variableTypeId` (`variableTypeId`),
+  CONSTRAINT `DataFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`),
+  CONSTRAINT `DataFile_ibfk_2` FOREIGN KEY (`fileDelimiterId`) REFERENCES `FileDelimiter` (`id`),
+  CONSTRAINT `DataFile_ibfk_3` FOREIGN KEY (`variableTypeId`) REFERENCES `VariableType` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `DataFile`
+--
+
+LOCK TABLES `DataFile` WRITE;
+/*!40000 ALTER TABLE `DataFile` DISABLE KEYS */;
+/*!40000 ALTER TABLE `DataFile` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `EventType`
@@ -330,6 +364,33 @@ LOCK TABLES `UserRole` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `VariableFile`
+--
+
+DROP TABLE IF EXISTS `VariableFile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `VariableFile` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `numOfVars` int(11) DEFAULT NULL,
+  `fileId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `fileId_2` (`fileId`),
+  KEY `fileId` (`fileId`),
+  CONSTRAINT `VariableFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `VariableFile`
+--
+
+LOCK TABLES `VariableFile` WRITE;
+/*!40000 ALTER TABLE `VariableFile` DISABLE KEYS */;
+/*!40000 ALTER TABLE `VariableFile` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `VariableType`
 --
 
@@ -364,4 +425,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-09 12:15:51
+-- Dump completed on 2016-08-09 19:36:05

@@ -20,6 +20,8 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,6 +30,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -80,6 +83,12 @@ public class File implements Serializable {
     @Column(name = "md5CheckSum", length = 32)
     private String md5checkSum;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file")
+    private Set<VariableFile> variableFiles = new HashSet<>(0);
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file")
+    private Set<DataFile> dataFiles = new HashSet<>(0);
+
     public File() {
     }
 
@@ -92,7 +101,7 @@ public class File implements Serializable {
         this.fileSize = fileSize;
     }
 
-    public File(FileType fileType, UserAccount userAccount, String name, String title, String absolutePath, Date creationTime, long fileSize, String md5checkSum) {
+    public File(FileType fileType, UserAccount userAccount, String name, String title, String absolutePath, Date creationTime, long fileSize, String md5checkSum, Set<VariableFile> variableFiles, Set<DataFile> dataFiles) {
         this.fileType = fileType;
         this.userAccount = userAccount;
         this.name = name;
@@ -101,6 +110,8 @@ public class File implements Serializable {
         this.creationTime = creationTime;
         this.fileSize = fileSize;
         this.md5checkSum = md5checkSum;
+        this.variableFiles = variableFiles;
+        this.dataFiles = dataFiles;
     }
 
     public Long getId() {
@@ -173,6 +184,22 @@ public class File implements Serializable {
 
     public void setMd5checkSum(String md5checkSum) {
         this.md5checkSum = md5checkSum;
+    }
+
+    public Set<VariableFile> getVariableFiles() {
+        return variableFiles;
+    }
+
+    public void setVariableFiles(Set<VariableFile> variableFiles) {
+        this.variableFiles = variableFiles;
+    }
+
+    public Set<DataFile> getDataFiles() {
+        return dataFiles;
+    }
+
+    public void setDataFiles(Set<DataFile> dataFiles) {
+        this.dataFiles = dataFiles;
     }
 
 }
