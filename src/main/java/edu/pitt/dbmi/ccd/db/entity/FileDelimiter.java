@@ -19,11 +19,15 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -47,24 +51,28 @@ public class FileDelimiter implements Serializable {
     @Column(name = "name", unique = true, nullable = false, length = 64)
     private String name;
 
-    @Column(name = "delimiter", nullable = false, length = 8)
-    private String delimiter;
+    @Column(name = "delimiter", nullable = false, length = 1)
+    private char delimiter;
 
     @Column(name = "description")
     private String description;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "fileDelimiter")
+    private Set<DataFile> dataFiles = new HashSet<>(0);
+
     public FileDelimiter() {
     }
 
-    public FileDelimiter(String name, String delimiter) {
+    public FileDelimiter(String name, char delimiter) {
         this.name = name;
         this.delimiter = delimiter;
     }
 
-    public FileDelimiter(String name, String delimiter, String description) {
+    public FileDelimiter(String name, char delimiter, String description, Set<DataFile> dataFiles) {
         this.name = name;
         this.delimiter = delimiter;
         this.description = description;
+        this.dataFiles = dataFiles;
     }
 
     public Long getId() {
@@ -83,11 +91,11 @@ public class FileDelimiter implements Serializable {
         this.name = name;
     }
 
-    public String getDelimiter() {
+    public char getDelimiter() {
         return delimiter;
     }
 
-    public void setDelimiter(String delimiter) {
+    public void setDelimiter(char delimiter) {
         this.delimiter = delimiter;
     }
 
@@ -97,6 +105,14 @@ public class FileDelimiter implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<DataFile> getDataFiles() {
+        return dataFiles;
+    }
+
+    public void setDataFiles(Set<DataFile> dataFiles) {
+        this.dataFiles = dataFiles;
     }
 
 }
