@@ -51,13 +51,13 @@ public class Person implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "firstName", nullable = false)
+    @Column(name = "firstName")
     private String firstName;
 
     @Column(name = "middleName")
     private String middleName;
 
-    @Column(name = "lastName", nullable = false)
+    @Column(name = "lastName")
     private String lastName;
 
     @Column(name = "email", unique = true, nullable = false)

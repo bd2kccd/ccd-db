@@ -18,9 +18,6 @@
  */
 package edu.pitt.dbmi.ccd.db.domain;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  *
  * Aug 10, 2016 12:20:04 PM
@@ -33,18 +30,5 @@ public enum FileTypeName {
     ALGORITHM_RESULT,
     PRIOR_KNOWLEDGE,
     VARIABLE;
-
-    private static final Map<String, FileTypeName> FILE_TYPE_ENUM_MAP = new HashMap<>();
-
-    static {
-        FILE_TYPE_ENUM_MAP.put(DATASET.name(), DATASET);
-        FILE_TYPE_ENUM_MAP.put(ALGORITHM_RESULT.name(), ALGORITHM_RESULT);
-        FILE_TYPE_ENUM_MAP.put(PRIOR_KNOWLEDGE.name(), PRIOR_KNOWLEDGE);
-        FILE_TYPE_ENUM_MAP.put(VARIABLE.name(), VARIABLE);
-    }
-
-    public static FileTypeName getEnumByName(String name) {
-        return FILE_TYPE_ENUM_MAP.get(name);
-    }
 
 }

@@ -45,9 +45,9 @@ public class FileDelimiterService {
 
         List<FileDelimiter> fileDelimiters = fileDelimiterRepository.findAll();
         if (fileDelimiters.isEmpty()) {
-            fileDelimiters.add(new FileDelimiter(FileDelimiterName.TAB.name(), '\t'));
-            fileDelimiters.add(new FileDelimiter(FileDelimiterName.COMMA.name(), ','));
-
+            for (FileDelimiterName delim : FileDelimiterName.values()) {
+                fileDelimiters.add(new FileDelimiter(delim.name(), delim.getDelimiter()));
+            }
             fileDelimiterRepository.save(fileDelimiters);
         }
     }

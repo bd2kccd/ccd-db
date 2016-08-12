@@ -45,11 +45,9 @@ public class FileTypeService {
 
         List<FileType> fileTypes = fileTypeRepository.findAll();
         if (fileTypes.isEmpty()) {
-            fileTypes.add(new FileType(FileTypeName.ALGORITHM_RESULT.name()));
-            fileTypes.add(new FileType(FileTypeName.DATASET.name()));
-            fileTypes.add(new FileType(FileTypeName.PRIOR_KNOWLEDGE.name()));
-            fileTypes.add(new FileType(FileTypeName.VARIABLE.name()));
-
+            for (FileTypeName typeName : FileTypeName.values()) {
+                fileTypes.add(new FileType(typeName.name()));
+            }
             fileTypeRepository.save(fileTypes);
         }
     }

@@ -51,12 +51,9 @@ public class EventTypeService {
 
         List<EventType> eventTypes = eventTypeRepository.findAll();
         if (eventTypes.isEmpty()) {
-            eventTypes.add(new EventType(EventTypeName.USER_ACTIVATION.name()));
-            eventTypes.add(new EventType(EventTypeName.USER_LOGIN.name()));
-            eventTypes.add(new EventType(EventTypeName.USER_LOGIN_FAILED.name()));
-            eventTypes.add(new EventType(EventTypeName.USER_LOGOUT.name()));
-            eventTypes.add(new EventType(EventTypeName.USER_REGISTRATION.name()));
-
+            for (EventTypeName typeName : EventTypeName.values()) {
+                eventTypes.add(new EventType(typeName.name()));
+            }
             eventTypeRepository.save(eventTypes);
         }
     }

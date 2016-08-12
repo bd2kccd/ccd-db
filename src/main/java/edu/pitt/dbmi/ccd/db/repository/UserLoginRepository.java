@@ -18,17 +18,20 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.UserLogInOut;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.UserLogin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * Aug 9, 2016 1:28:35 PM
+ * Feb 21, 2016 8:26:28 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
-public interface UserLogInOutRepository extends JpaRepository<UserLogInOut, Long> {
+public interface UserLoginRepository extends JpaRepository<UserLogin, Long> {
+
+    public UserLogin findByUserAccount(UserAccount userAccount);
 
 }

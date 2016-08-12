@@ -45,9 +45,9 @@ public class VariableTypeService {
 
         List<VariableType> variableTypes = variableTypeRepository.findAll();
         if (variableTypes.isEmpty()) {
-            variableTypes.add(new VariableType(VariableTypeName.CONTINUOUS.name()));
-            variableTypes.add(new VariableType(VariableTypeName.DISCRETE.name()));
-
+            for (VariableTypeName typeName : VariableTypeName.values()) {
+                variableTypes.add(new VariableType(typeName.name()));
+            }
             variableTypeRepository.save(variableTypes);
         }
     }

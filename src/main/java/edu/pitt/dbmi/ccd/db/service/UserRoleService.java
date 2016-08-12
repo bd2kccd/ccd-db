@@ -43,9 +43,9 @@ public class UserRoleService {
 
         List<UserRole> userRoles = userRoleRepository.findAll();
         if (userRoles.isEmpty()) {
-            userRoles.add(new UserRole(UserRoleName.ADMIN.name()));
-            userRoles.add(new UserRole(UserRoleName.USER.name()));
-
+            for (UserRoleName roleName : UserRoleName.values()) {
+                userRoles.add(new UserRole(roleName.name()));
+            }
             userRoleRepository.save(userRoles);
         }
     }

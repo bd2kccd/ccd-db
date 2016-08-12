@@ -18,9 +18,15 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.domain.AccountRegistration;
+import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.UserRole;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
+import java.nio.file.Paths;
+import java.util.Date;
+import java.util.UUID;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,8 +59,8 @@ public class UserAccountService {
         return userAccountRepository.findByAccount(account);
     }
 
-    public UserAccount findByActionKey(String actionKey) {
-        return userAccountRepository.findByActionKey(actionKey);
+    public UserAccount findByActivationKey(String activationKey) {
+        return userAccountRepository.findByActivationKey(activationKey);
     }
 
     public UserAccount findByEmail(String email) {
@@ -65,6 +71,63 @@ public class UserAccountService {
         personRepository.save(userAccount.getPerson());
 
         return userAccountRepository.save(userAccount);
+    }
+
+    public UserAccount updateAccount(UserAccount userAccount) {
+        return userAccountRepository.save(userAccount);
+    }
+
+    public Person updatePerson(UserAccount userAccount) {
+        return personRepository.save(userAccount.getPerson());
+    }
+
+    public UserAccount createNewAccount(AccountRegistration accountRegistration, UserRole userRole) {
+        UserAccount userAccount = createUserAccount(accountRegistration);
+        userAccount.getUserRoles().add(userRole);
+
+        return save(userAccount);
+    }
+
+    protected UserAccount createUserAccount(AccountRegistration accountRegistration) {
+        String username = accountRegistration.getUsername();
+        String password = accountRegistration.getPassword();
+        boolean activated = accountRegistration.isActivated();
+        Long location = accountRegistration.getLocation();
+
+        String activationKey = activated ? null : UUID.randomUUID().toString();
+        String account = UUID.randomUUID().toString();
+        Date registrationDate = new Date(System.currentTimeMillis());
+        Person person = createPerson(accountRegistration, account);
+
+        UserAccount userAccount = new UserAccount();
+        userAccount.setAccount(account);
+        userAccount.setActivated(activated);
+        userAccount.setActivationKey(activationKey);
+        userAccount.setPassword(password);
+        userAccount.setPerson(person);
+        userAccount.setRegistrationDate(registrationDate);
+        userAccount.setRegistrationLocation(location);
+        userAccount.setUsername(username);
+
+        return userAccount;
+    }
+
+    protected Person createPerson(AccountRegistration accountRegistration, String account) {
+        String firstName = accountRegistration.getFirstName();
+        String middleName = accountRegistration.getMiddleName();
+        String lastName = accountRegistration.getLastName();
+        String email = accountRegistration.getEmail();
+        String workspace = Paths.get(accountRegistration.getWorkspace(), account.replace("-", "_")).toAbsolutePath().toString();
+
+        Person person = new Person();
+        person.setEmail(email);
+        person.setFirstName(firstName);
+        person.setLastName(lastName);
+        person.setLastName(lastName);
+        person.setMiddleName(middleName);
+        person.setWorkspace(workspace);
+
+        return person;
     }
 
 }

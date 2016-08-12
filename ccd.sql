@@ -1,8 +1,8 @@
--- MySQL dump 10.15  Distrib 10.0.25-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.1.16-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: ccd
 -- ------------------------------------------------------
--- Server version	10.0.25-MariaDB
+-- Server version	10.1.16-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -170,9 +170,9 @@ DROP TABLE IF EXISTS `Person`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Person` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `firstName` varchar(255) NOT NULL,
+  `firstName` varchar(255) DEFAULT NULL,
   `middleName` varchar(255) DEFAULT NULL,
-  `lastName` varchar(255) NOT NULL,
+  `lastName` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `workspace` varchar(512) NOT NULL,
   PRIMARY KEY (`id`),
@@ -206,16 +206,13 @@ CREATE TABLE `UserAccount` (
   `disabled` tinyint(1) NOT NULL DEFAULT '0',
   `registrationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `registrationLocation` bigint(20) DEFAULT NULL,
-  `actionKey` varchar(255) DEFAULT NULL,
+  `activationKey` varchar(255) DEFAULT NULL,
   `personId` bigint(20) NOT NULL,
-  `userLogInOutId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `account` (`account`),
   KEY `personId` (`personId`),
-  KEY `userLogInOutId` (`userLogInOutId`),
-  CONSTRAINT `UserAccount_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `Person` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `UserAccount_ibfk_2` FOREIGN KEY (`userLogInOutId`) REFERENCES `UserLogInOut` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `UserAccount_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `Person` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -286,29 +283,33 @@ LOCK TABLES `UserEventLog` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `UserLogInOut`
+-- Table structure for table `UserLogin`
 --
 
-DROP TABLE IF EXISTS `UserLogInOut`;
+DROP TABLE IF EXISTS `UserLogin`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `UserLogInOut` (
+CREATE TABLE `UserLogin` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `logInDate` timestamp NULL DEFAULT NULL,
-  `logInLocation` bigint(20) DEFAULT NULL,
-  `logOutDate` timestamp NULL DEFAULT NULL,
-  `logOutLocation` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `loginDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `loginLocation` bigint(20) DEFAULT NULL,
+  `lastLoginDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `lastLoginLocation` bigint(20) DEFAULT NULL,
+  `userAccountId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `userAccountId_2` (`userAccountId`),
+  KEY `userAccountId` (`userAccountId`),
+  CONSTRAINT `UserLogin_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `UserLogInOut`
+-- Dumping data for table `UserLogin`
 --
 
-LOCK TABLES `UserLogInOut` WRITE;
-/*!40000 ALTER TABLE `UserLogInOut` DISABLE KEYS */;
-/*!40000 ALTER TABLE `UserLogInOut` ENABLE KEYS */;
+LOCK TABLES `UserLogin` WRITE;
+/*!40000 ALTER TABLE `UserLogin` DISABLE KEYS */;
+/*!40000 ALTER TABLE `UserLogin` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -425,4 +426,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-11 15:02:59
+-- Dump completed on 2016-08-12  0:23:44

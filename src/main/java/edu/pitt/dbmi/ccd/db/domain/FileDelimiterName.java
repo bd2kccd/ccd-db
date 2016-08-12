@@ -26,6 +26,16 @@ package edu.pitt.dbmi.ccd.db.domain;
  */
 public enum FileDelimiterName {
 
-    TAB, COMMA
+    TAB('\t'), COMMA(',');
+
+    private final char delimiter;
+
+    private FileDelimiterName(char delimiter) {
+        this.delimiter = delimiter;
+    }
+
+    public char getDelimiter() {
+        return delimiter;
+    }
 
 }

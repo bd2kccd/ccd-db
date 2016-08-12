@@ -63,10 +63,6 @@ public class UserAccount implements Serializable {
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "userLogInOutId", nullable = false)
-    private UserLogInOut userLogInOut;
-
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
@@ -89,8 +85,11 @@ public class UserAccount implements Serializable {
     @Column(name = "registrationLocation")
     private Long registrationLocation;
 
-    @Column(name = "actionKey")
-    private String actionKey;
+    @Column(name = "activationKey")
+    private String activationKey;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
+    private Set<UserLogin> userLogins = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount", cascade = CascadeType.ALL)
     private Set<UserEventLog> userEventLogs = new HashSet<>(0);
@@ -101,7 +100,7 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
     private Set<UserRole> userRoles = new HashSet<>(0);
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "userAccount", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount", cascade = CascadeType.ALL)
     private Set<UserLoginAttempt> userLoginAttempts = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
@@ -110,9 +109,8 @@ public class UserAccount implements Serializable {
     public UserAccount() {
     }
 
-    public UserAccount(Person person, UserLogInOut userLogInOut, String username, String password, String account, boolean activated, boolean disabled, Date registrationDate) {
+    public UserAccount(Person person, String username, String password, String account, boolean activated, boolean disabled, Date registrationDate) {
         this.person = person;
-        this.userLogInOut = userLogInOut;
         this.username = username;
         this.password = password;
         this.account = account;
@@ -121,9 +119,8 @@ public class UserAccount implements Serializable {
         this.registrationDate = registrationDate;
     }
 
-    public UserAccount(Person person, UserLogInOut userLogInOut, String username, String password, String account, boolean activated, boolean disabled, Date registrationDate, Long registrationLocation, String actionKey, Set<UserEventLog> userEventLogs, Set<UserRole> userRoles, Set<UserLoginAttempt> userLoginAttempts, Set<File> files) {
+    public UserAccount(Person person, String username, String password, String account, boolean activated, boolean disabled, Date registrationDate, Long registrationLocation, String activationKey, Set userLogins, Set userEventLogs, Set userRoles, Set userLoginAttempts, Set<File> files) {
         this.person = person;
-        this.userLogInOut = userLogInOut;
         this.username = username;
         this.password = password;
         this.account = account;
@@ -131,7 +128,8 @@ public class UserAccount implements Serializable {
         this.disabled = disabled;
         this.registrationDate = registrationDate;
         this.registrationLocation = registrationLocation;
-        this.actionKey = actionKey;
+        this.activationKey = activationKey;
+        this.userLogins = userLogins;
         this.userEventLogs = userEventLogs;
         this.userRoles = userRoles;
         this.userLoginAttempts = userLoginAttempts;
@@ -152,14 +150,6 @@ public class UserAccount implements Serializable {
 
     public void setPerson(Person person) {
         this.person = person;
-    }
-
-    public UserLogInOut getUserLogInOut() {
-        return userLogInOut;
-    }
-
-    public void setUserLogInOut(UserLogInOut userLogInOut) {
-        this.userLogInOut = userLogInOut;
     }
 
     public String getUsername() {
@@ -218,12 +208,20 @@ public class UserAccount implements Serializable {
         this.registrationLocation = registrationLocation;
     }
 
-    public String getActionKey() {
-        return actionKey;
+    public String getActivationKey() {
+        return activationKey;
     }
 
-    public void setActionKey(String actionKey) {
-        this.actionKey = actionKey;
+    public void setActivationKey(String activationKey) {
+        this.activationKey = activationKey;
+    }
+
+    public Set<UserLogin> getUserLogins() {
+        return userLogins;
+    }
+
+    public void setUserLogins(Set<UserLogin> userLogins) {
+        this.userLogins = userLogins;
     }
 
     public Set<UserEventLog> getUserEventLogs() {
