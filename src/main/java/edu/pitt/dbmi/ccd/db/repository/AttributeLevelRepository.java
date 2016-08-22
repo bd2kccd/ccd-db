@@ -16,28 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.service;
+package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.repository.AttributeRepository;
-import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import edu.pitt.dbmi.ccd.db.entity.AttributeLevel;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
- * Aug 3, 2016 4:27:46 PM
+ * Aug 3, 2016 3:53:50 PM
  *
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-@Service
-@Transactional
-public class AttributeService {
-
-    private final AttributeRepository attributeRepository;
-
-    @Autowired
-    public AttributeService(AttributeRepository attributeRepository) {
-        this.attributeRepository = attributeRepository;
-    }
+@Repository
+public interface AttributeLevelRepository extends JpaRepository<AttributeLevel, Long> {
 
 }

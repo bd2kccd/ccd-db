@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2016 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,33 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-
 package edu.pitt.dbmi.ccd.db.repository;
 
-import java.util.Optional;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
 
-import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
-
 /**
+ *
+ * Aug 3, 2016 3:58:54 PM
+ *
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
-@RepositoryRestResource(exported=false)
-public interface VocabularyRepository extends JpaRepository<Vocabulary, Long>, JpaSpecificationExecutor<Vocabulary> {
-    
-    public Optional<Vocabulary> findById(Long id);
+public interface VocabularyRepository extends JpaRepository<Vocabulary, Long> {
 
-    public Optional<Vocabulary> findByName(String name);
-
-    public Page<Vocabulary> findAll(Specification<Vocabulary> spec, Pageable pageable);
-
-    public Page<Vocabulary> findAll(Pageable pageable);
 }

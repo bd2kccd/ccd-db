@@ -26,6 +26,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
@@ -35,6 +36,7 @@ import javax.persistence.Id;
  * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Entity
+@Table(name = "UserRole")
 public class UserRole implements Serializable {
 
     private static final long serialVersionUID = 1230761484283602053L;

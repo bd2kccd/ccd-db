@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2016 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,35 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-
 package edu.pitt.dbmi.ccd.db.repository;
 
-import java.util.Optional;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
 
-import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
-import edu.pitt.dbmi.ccd.db.entity.File;
-
 /**
+ *
+ * Aug 3, 2016 3:53:14 PM
+ *
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
-@RepositoryRestResource(exported=false)
-public interface AnnotationTargetRepository extends JpaRepository<AnnotationTarget, Long> , JpaSpecificationExecutor<AnnotationTarget> {
+public interface AnnotationTargetRepository extends JpaRepository<AnnotationTarget, Long> {
 
-    public Optional<AnnotationTarget> findById(Long id);
-
-    public Optional<AnnotationTarget> findByFile(File file);
-
-    // search and filter
-    public Page<AnnotationTarget> findAll(Specification<AnnotationTarget> spec, Pageable pageable);
-
-    public Page<AnnotationTarget> findAll(Pageable pageable);
 }

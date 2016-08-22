@@ -18,26 +18,26 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.repository.AttributeRepository;
+import edu.pitt.dbmi.ccd.db.repository.ShareGroupRepository;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Aug 3, 2016 4:27:46 PM
+ * Aug 3, 2016 4:29:55 PM
  *
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Service
 @Transactional
-public class AttributeService {
+public class ShareGroupService {
 
-    private final AttributeRepository attributeRepository;
+    private final ShareGroupRepository shareGroupRepository;
 
     @Autowired
-    public AttributeService(AttributeRepository attributeRepository) {
-        this.attributeRepository = attributeRepository;
+    public ShareGroupService(ShareGroupRepository shareGroupRepository) {
+        this.shareGroupRepository = shareGroupRepository;
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2016 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,107 +16,86 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.URL;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
- * @author Mark Silvis  (marksilvis@pitt.edu)
+ *
+ * Aug 3, 2016 12:29:18 PM
+ *
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
+@Table(name = "AnnotationTarget")
 public class AnnotationTarget implements Serializable {
 
-    private static final long serialVersionUID = 1143695321911902433L;
+    private static final long serialVersionUID = -2275516486925004695L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    private Timestamp created;
-
-    private Timestamp modified;
-
-    @Version
-    private Integer version;
-
-    @NotNull
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "userAccountId", nullable = false)
-    private UserAccount user;
-
-    @NotBlank
-    @Size(max = 255, message = "Title cannot be longer than 255 characters")
-    @Column(length = 255, unique = false, nullable = true)
-    private String title;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fileId", insertable = true, updatable = true, nullable = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "fileId")
     private File file;
 
-    @URL
-    @Size(min = 2, max = 2083, message = "Valid URLs are at least 2 characters and no more than 2083 characters")
-    @Column(length = 2083, unique = true, nullable = true)
-    private String address;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userAccountId", nullable = false)
+    private UserAccount userAccount;
 
-    @Transient
-    private String type;
+    @Column(name = "url", length = 2083)
+    private String url;
 
-    @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "createdDate", nullable = false, length = 19)
+    private Date createdDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "modifiedDate", length = 19)
+    private Date modifiedDate;
+
+    @Column(name = "modifyCount", nullable = false)
+    private int modifyCount;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "annotationTarget")
     private Set<Annotation> annotations = new HashSet<>(0);
 
     public AnnotationTarget() {
     }
 
-    public AnnotationTarget(UserAccount user, String title, File file) {
-        this.user = user;
-        this.title = title;
+    public AnnotationTarget(UserAccount userAccount, Date createdDate, int modifyCount) {
+        this.userAccount = userAccount;
+        this.createdDate = createdDate;
+        this.modifyCount = modifyCount;
+    }
+
+    public AnnotationTarget(File file, UserAccount userAccount, String url, Date createdDate, Date modifiedDate, int modifyCount, Set<Annotation> annotations) {
         this.file = file;
-        this.address = null;
-        this.type = "file";
-    }
-
-    public AnnotationTarget(UserAccount user, String title, String address) {
-        this.user = user;
-        this.title = title;
-        this.file = null;
-        this.address = address;
-        this.type = "url";
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        created = new Timestamp((new Date()).getTime());
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        modified = new Timestamp((new Date()).getTime());
+        this.userAccount = userAccount;
+        this.url = url;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
+        this.modifyCount = modifyCount;
+        this.annotations = annotations;
     }
 
     public Long getId() {
@@ -127,47 +106,60 @@ public class AnnotationTarget implements Serializable {
         this.id = id;
     }
 
-    public Integer getVersion() {
-        return version;
-    }
-
-    public Timestamp getCreated() {
-        return created;
-    }
-
-    public Timestamp getModified() {
-        return modified;
-    }
-
-    public UserAccount getUser() {
-        return user;
-    }
-
-    public void setUser(UserAccount user) {
-        this.user = user;
-    }
-
     public File getFile() {
         return file;
     }
 
     public void setFile(File file) {
         this.file = file;
-        if (file != null) {
-            this.address = null;
-            this.type = "file";
-        }
     }
 
-    public String getAddress() {
-        return address;
+    public UserAccount getUserAccount() {
+        return userAccount;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-        if (address != null) {
-            this.file = null;
-            this.type = "url";
-        }
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public int getModifyCount() {
+        return modifyCount;
+    }
+
+    public void setModifyCount(int modifyCount) {
+        this.modifyCount = modifyCount;
+    }
+
+    public Set<Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(Set<Annotation> annotations) {
+        this.annotations = annotations;
+    }
+
 }

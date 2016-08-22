@@ -18,23 +18,24 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import java.io.Serializable;
 import java.util.Date;
-
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
@@ -43,6 +44,10 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
+@Table(name = "File", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name", "userAccountId"}),
+    @UniqueConstraint(columnNames = {"title", "userAccountId"})}
+)
 public class File implements Serializable {
 
     private static final long serialVersionUID = 6534837967736800011L;
@@ -52,7 +57,7 @@ public class File implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fileTypeId")
     private FileType fileType;
 
@@ -63,13 +68,11 @@ public class File implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "title", nullable = false)
+    private String title;
+
     @Column(name = "absolutePath", nullable = false)
     private String absolutePath;
-
-    @NotBlank
-    @Size(max = 255, message = "Title cannot be longer than 255 characters")
-    @Column(length = 255, unique = false, nullable = true)
-    private String title;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "creationTime", nullable = false, length = 19)
@@ -81,25 +84,39 @@ public class File implements Serializable {
     @Column(name = "md5CheckSum", length = 32)
     private String md5checkSum;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
+    private Set<VariableFile> variableFiles = new HashSet<>(0);
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file")
+    private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
+    private Set<DataFile> dataFiles = new HashSet<>(0);
+
     public File() {
     }
 
-    public File(UserAccount userAccount, String name, String absolutePath, Date creationTime, long fileSize) {
+    public File(UserAccount userAccount, String name, String title, String absolutePath, Date creationTime, long fileSize) {
         this.userAccount = userAccount;
         this.name = name;
+        this.title = title;
         this.absolutePath = absolutePath;
         this.creationTime = creationTime;
         this.fileSize = fileSize;
     }
 
-    public File(FileType fileType, UserAccount userAccount, String name, String absolutePath, Date creationTime, long fileSize, String md5checkSum) {
+    public File(FileType fileType, UserAccount userAccount, String name, String title, String absolutePath, Date creationTime, long fileSize, String md5checkSum, Set<VariableFile> variableFiles, Set<AnnotationTarget> annotationTargets, Set<DataFile> dataFiles) {
         this.fileType = fileType;
         this.userAccount = userAccount;
         this.name = name;
+        this.title = title;
         this.absolutePath = absolutePath;
         this.creationTime = creationTime;
         this.fileSize = fileSize;
         this.md5checkSum = md5checkSum;
+        this.variableFiles = variableFiles;
+        this.annotationTargets = annotationTargets;
+        this.dataFiles = dataFiles;
     }
 
     public Long getId() {
@@ -134,20 +151,20 @@ public class File implements Serializable {
         this.name = name;
     }
 
-    public String getAbsolutePath() {
-        return absolutePath;
-    }
-
-    public void setAbsolutePath(String absolutePath) {
-        this.absolutePath = absolutePath;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getAbsolutePath() {
+        return absolutePath;
+    }
+
+    public void setAbsolutePath(String absolutePath) {
+        this.absolutePath = absolutePath;
     }
 
     public Date getCreationTime() {
@@ -172,6 +189,30 @@ public class File implements Serializable {
 
     public void setMd5checkSum(String md5checkSum) {
         this.md5checkSum = md5checkSum;
+    }
+
+    public Set<VariableFile> getVariableFiles() {
+        return variableFiles;
+    }
+
+    public void setVariableFiles(Set<VariableFile> variableFiles) {
+        this.variableFiles = variableFiles;
+    }
+
+    public Set<AnnotationTarget> getAnnotationTargets() {
+        return annotationTargets;
+    }
+
+    public void setAnnotationTargets(Set<AnnotationTarget> annotationTargets) {
+        this.annotationTargets = annotationTargets;
+    }
+
+    public Set<DataFile> getDataFiles() {
+        return dataFiles;
+    }
+
+    public void setDataFiles(Set<DataFile> dataFiles) {
+        this.dataFiles = dataFiles;
     }
 
 }

@@ -18,18 +18,13 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.Transient;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.Email;
+import javax.persistence.Table;
 
 /**
  *
@@ -37,9 +32,9 @@ import org.hibernate.validator.constraints.Email;
  *
  * @since v0.4.0
  * @author Kevin V. Bui (kvb2@pitt.edu)
- * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Entity
+@Table(name = "Person")
 public class Person implements Serializable {
 
     private static final long serialVersionUID = -2807315042169945476L;
@@ -55,33 +50,24 @@ public class Person implements Serializable {
     @Column(name = "middleName")
     private String middleName;
 
-    @Transient
-    private String fullName;
-
     @Column(name = "lastName", nullable = false)
     private String lastName;
 
-    @Email
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "workspace", nullable = false)
     private String workspace;
 
-    @Size(max = 500, message = "Description must be no longer than 500 characters")
-    @Column(length = 500, nullable = true)
-    private String description;
-
     public Person() {
     }
 
-    public Person(String firstName, String middleName, String lastName, String email, String workspace, String description) {
+    public Person(String firstName, String middleName, String lastName, String email, String workspace) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
         this.email = email;
         this.workspace = workspace;
-        this.description = description;
     }
 
     public Long getId() {
@@ -116,17 +102,6 @@ public class Person implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getFullName() {
-        if (fullName == null) {
-            if (middleName != null) {
-                fullName = String.format("%s %s %s", firstName, middleName, lastName);
-            } else {
-                fullName = String.format("%s %s", firstName, lastName);
-            }
-        }
-        return fullName;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -143,11 +118,4 @@ public class Person implements Serializable {
         this.workspace = workspace;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

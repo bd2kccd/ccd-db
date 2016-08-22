@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2016 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,44 +18,56 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import java.io.Serializable;
-
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Jul 23, 2015 3:21:44 PM
+ * Aug 3, 2016 12:29:33 PM
  *
- * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
-@Table(name = "VariableType")
-public class VariableType implements Serializable {
+@Table(name = "AttributeLevel", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+public class AttributeLevel implements Serializable {
 
-    private static final long serialVersionUID = 4497385491404329401L;
+    private static final long serialVersionUID = -4415165492145609069L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 16)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 511)
     private String description;
 
-    public VariableType() {
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "attributeLevel")
+    private Set<Attribute> attributes = new HashSet<>(0);
+
+    public AttributeLevel() {
     }
 
-    public VariableType(String name) {
+    public AttributeLevel(String name) {
         this.name = name;
+    }
+
+    public AttributeLevel(String name, String description, Set<Attribute> attributes) {
+        this.name = name;
+        this.description = description;
+        this.attributes = attributes;
     }
 
     public Long getId() {
@@ -80,6 +92,14 @@ public class VariableType implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Attribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Set<Attribute> attributes) {
+        this.attributes = attributes;
     }
 
 }

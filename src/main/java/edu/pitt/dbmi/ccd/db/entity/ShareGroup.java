@@ -19,7 +19,6 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -28,31 +27,34 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Aug 3, 2016 12:31:18 PM
+ * Aug 3, 2016 12:30:59 PM
  *
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
-@Table(name = "Vocabulary", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-public class Vocabulary implements Serializable {
+@Table(name = "ShareGroup", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+public class ShareGroup implements Serializable {
 
-    private static final long serialVersionUID = 1890971510927278914L;
+    private static final long serialVersionUID = 2370827482314435777L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "version", nullable = false, length = 63)
-    private String version;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userAccountId", nullable = false)
+    private UserAccount userAccount;
 
     @Column(name = "name", unique = true, nullable = false, length = 127)
     private String name;
@@ -60,36 +62,37 @@ public class Vocabulary implements Serializable {
     @Column(name = "description", nullable = false, length = 511)
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "createdDate", nullable = false, length = 19)
-    private Date createdDate;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "ShareGroupMembership", joinColumns = {
+        @JoinColumn(name = "shareGroupId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
+    private Set<UserAccount> shareGroupMemberships = new HashSet<>(0);
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modifiedDate", length = 19)
-    private Date modifiedDate;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "vocabulary")
-    private Set<Attribute> attributes = new HashSet<>(0);
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "vocabulary")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shareGroup")
     private Set<Annotation> annotations = new HashSet<>(0);
 
-    public Vocabulary() {
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "ShareGroupRequest", joinColumns = {
+        @JoinColumn(name = "shareGroupId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
+    private Set<UserAccount> shareGroupRequests = new HashSet<>(0);
+
+    public ShareGroup() {
     }
 
-    public Vocabulary(String name, String description, Date createdDate) {
+    public ShareGroup(UserAccount userAccount, String name, String description) {
+        this.userAccount = userAccount;
         this.name = name;
         this.description = description;
-        this.createdDate = createdDate;
     }
 
-    public Vocabulary(String name, String description, Date createdDate, Date modifiedDate, Set<Attribute> attributes, Set<Annotation> annotations) {
+    public ShareGroup(UserAccount userAccount, String name, String description, Set<UserAccount> userAccounts, Set<Annotation> annotations, Set<UserAccount> userAccounts_1) {
+        this.userAccount = userAccount;
         this.name = name;
         this.description = description;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-        this.attributes = attributes;
+        this.shareGroupMemberships = userAccounts;
         this.annotations = annotations;
+        this.shareGroupRequests = userAccounts_1;
     }
 
     public Long getId() {
@@ -100,12 +103,12 @@ public class Vocabulary implements Serializable {
         this.id = id;
     }
 
-    public String getVersion() {
-        return version;
+    public UserAccount getUserAccount() {
+        return userAccount;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 
     public String getName() {
@@ -124,28 +127,12 @@ public class Vocabulary implements Serializable {
         this.description = description;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Set<UserAccount> getShareGroupMemberships() {
+        return shareGroupMemberships;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public Set<Attribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Set<Attribute> attributes) {
-        this.attributes = attributes;
+    public void setShareGroupMemberships(Set<UserAccount> shareGroupMemberships) {
+        this.shareGroupMemberships = shareGroupMemberships;
     }
 
     public Set<Annotation> getAnnotations() {
@@ -154,6 +141,14 @@ public class Vocabulary implements Serializable {
 
     public void setAnnotations(Set<Annotation> annotations) {
         this.annotations = annotations;
+    }
+
+    public Set<UserAccount> getShareGroupRequests() {
+        return shareGroupRequests;
+    }
+
+    public void setShareGroupRequests(Set<UserAccount> shareGroupRequests) {
+        this.shareGroupRequests = shareGroupRequests;
     }
 
 }

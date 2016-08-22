@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2016 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,117 +16,113 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
+ *
+ * Aug 3, 2016 12:29:09 PM
+ *
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
+@Table(name = "Annotation")
 public class Annotation implements Serializable {
 
-    private static final long serialVersionUID = 3156490985879126383L;
+    private static final long serialVersionUID = -1314418549562720324L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    private Timestamp created;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "parentAnnotationId")
+    private Annotation parentAnnotation;
 
-    private Timestamp modified;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "annotationTargetId", nullable = false)
+    private AnnotationTarget annotationTarget;
 
-    @Version
-    private Integer version;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "shareAccessId", nullable = false)
+    private ShareAccess shareAccess;
 
-    @NotNull
-    @Column(nullable = false)
-    private Boolean redacted = false;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "shareGroupId")
+    private ShareGroup shareGroup;
 
-    @NotNull
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userAccountId", nullable = false)
-    private UserAccount user;
-
-    @NotNull
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "accessControl", nullable = false)
-    private Access accessControl;
+    private UserAccount userAccount;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "groupId", nullable = true)
-    private Group group;
+    @JoinColumn(name = "vocabularyId", nullable = false)
+    private Vocabulary vocabulary;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false)
-    private Vocabulary vocab;
+    @Column(name = "redacted", nullable = false)
+    private Boolean redacted;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "targetId", nullable = false)
-    private AnnotationTarget target;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "createddate", nullable = false, length = 19)
+    private Date createddate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = true)
-    private Annotation parent;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "modifiedDate", length = 19)
+    private Date modifiedDate;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-    private Set<Annotation> children = new HashSet<>(0);
+    @Column(name = "modifyCount", nullable = false)
+    private int modifyCount;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "AnnotationTargetReferences", joinColumns = {
-            @JoinColumn(name = "annotationId", nullable = false)}, inverseJoinColumns = {
-            @JoinColumn(name = "targetId", nullable = false)})
-    private Set<AnnotationTarget> references = new HashSet<>(0);
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentAnnotation")
+    private Set<Annotation> annotations = new HashSet<>(0);
 
-    @OneToMany(mappedBy = "annotation", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<AnnotationData> data = new HashSet<>(0);
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "annotation", cascade = CascadeType.ALL)
+    private Set<AnnotationData> annotationData = new HashSet<>(0);
 
     public Annotation() {
     }
 
-    public Annotation(UserAccount user, AnnotationTarget target, Annotation parent, Access accessControl, Group group, Vocabulary vocab) {
-        this.user = user;
-        this.target = target;
-        this.parent = parent;
-        this.accessControl = accessControl;
-        this.group = group;
-        this.vocab = vocab;
+    public Annotation(AnnotationTarget annotationTarget, ShareAccess shareAccess, UserAccount userAccount, Vocabulary vocabulary, Boolean redacted, Date createddate, int modifyCount) {
+        this.annotationTarget = annotationTarget;
+        this.shareAccess = shareAccess;
+        this.userAccount = userAccount;
+        this.vocabulary = vocabulary;
+        this.redacted = redacted;
+        this.createddate = createddate;
+        this.modifyCount = modifyCount;
     }
 
-    @PrePersist
-    private void onCreate() {
-        created = new Timestamp((new Date()).getTime());
-    }
-
-    @PreUpdate
-    private void onUpdate() {
-        modified = new Timestamp((new Date()).getTime());
+    public Annotation(Annotation parentAnnotation, AnnotationTarget annotationTarget, ShareAccess shareAccess, ShareGroup shareGroup, UserAccount userAccount, Vocabulary vocabulary, Boolean redacted, Date createddate, Date modifiedDate, int modifyCount, Set<Annotation> annotations, Set<AnnotationData> annotationDatas) {
+        this.parentAnnotation = parentAnnotation;
+        this.annotationTarget = annotationTarget;
+        this.shareAccess = shareAccess;
+        this.shareGroup = shareGroup;
+        this.userAccount = userAccount;
+        this.vocabulary = vocabulary;
+        this.redacted = redacted;
+        this.createddate = createddate;
+        this.modifiedDate = modifiedDate;
+        this.modifyCount = modifyCount;
+        this.annotations = annotations;
+        this.annotationData = annotationDatas;
     }
 
     public Long getId() {
@@ -137,147 +133,100 @@ public class Annotation implements Serializable {
         this.id = id;
     }
 
-    public Timestamp getCreated() {
-        return created;
+    public Annotation getParentAnnotation() {
+        return parentAnnotation;
     }
 
-    public Timestamp getModified() {
-        return modified;
+    public void setParentAnnotation(Annotation parentAnnotation) {
+        this.parentAnnotation = parentAnnotation;
     }
 
-    public Integer getVersion() {
-        return version;
+    public AnnotationTarget getAnnotationTarget() {
+        return annotationTarget;
     }
 
-    protected void setVersion(Integer version) {
-        this.version = version;
+    public void setAnnotationTarget(AnnotationTarget annotationTarget) {
+        this.annotationTarget = annotationTarget;
     }
 
-    public AnnotationTarget getTarget() {
-        return target;
+    public ShareAccess getShareAccess() {
+        return shareAccess;
     }
 
-    public void setTarget(AnnotationTarget target) {
-        this.target = target;
+    public void setShareAccess(ShareAccess shareAccess) {
+        this.shareAccess = shareAccess;
     }
 
-    public UserAccount getUser() {
-        return user;
+    public ShareGroup getShareGroup() {
+        return shareGroup;
     }
 
-    public void setUser(UserAccount user) {
-        this.user = user;
+    public void setShareGroup(ShareGroup shareGroup) {
+        this.shareGroup = shareGroup;
+    }
+
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
+    }
+
+    public Vocabulary getVocabulary() {
+        return vocabulary;
+    }
+
+    public void setVocabulary(Vocabulary vocabulary) {
+        this.vocabulary = vocabulary;
     }
 
     public Boolean isRedacted() {
         return redacted;
     }
 
-    public void redact() {
-        redacted = true;
+    public void setRedacted(Boolean redacted) {
+        this.redacted = redacted;
     }
 
-    public Access getAccess() {
-        return accessControl;
+    public Date getCreateddate() {
+        return createddate;
     }
 
-    public void setAccess(Access accessControl) {
-        this.accessControl = accessControl;
+    public void setCreateddate(Date createddate) {
+        this.createddate = createddate;
     }
 
-    public Group getGroup() {
-        return group;
+    public Date getModifiedDate() {
+        return modifiedDate;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
-    public Vocabulary getVocabulary() {
-        return vocab;
+    public int getModifyCount() {
+        return modifyCount;
     }
 
-    public void setVocabulary(Vocabulary vocab) {
-        this.vocab = vocab;
+    public void setModifyCount(int modifyCount) {
+        this.modifyCount = modifyCount;
     }
 
-    public Annotation getParent() {
-        return parent;
+    public Set<Annotation> getAnnotations() {
+        return annotations;
     }
 
-    public Set<Annotation> getChildren() {
-        return children;
+    public void setAnnotations(Set<Annotation> annotations) {
+        this.annotations = annotations;
     }
 
-    public Set<AnnotationTarget> getReferences() {
-        return references;
+    public Set<AnnotationData> getAnnotationData() {
+        return annotationData;
     }
 
-    public boolean hasReference(AnnotationTarget ref) {
-        return references.contains(ref);
+    public void setAnnotationData(Set<AnnotationData> annotationData) {
+        this.annotationData = annotationData;
     }
 
-    public boolean hasReferences(Collection<AnnotationTarget> ref) {
-        return references.containsAll(ref);
-    }
-
-    public void addReference(AnnotationTarget ref) {
-        references.add(ref);
-    }
-
-    public void addReferences(AnnotationTarget... refs) {
-        addReferences(Arrays.asList(refs));
-    }
-
-    public void addReferences(Collection<AnnotationTarget> refs) {
-        references.addAll(refs);
-    }
-
-    public void removeReference(AnnotationTarget ref) {
-        references.remove(ref);
-    }
-
-    public void removeReferences(AnnotationTarget... refs) {
-        removeReferences(Arrays.asList(refs));
-    }
-
-    public void removeReferences(Collection<AnnotationTarget> refs) {
-        references.removeAll(refs);
-    }
-
-    public Set<AnnotationData> getData() {
-        return data;
-    }
-
-    public boolean hasData(AnnotationData data) {
-        return this.data.contains(data);
-    }
-
-    public boolean hasData(Collection<AnnotationData> data) {
-        return this.data.containsAll(data);
-    }
-
-    public void addData(AnnotationData data) {
-        this.data.add(data);
-    }
-
-    public void addData(AnnotationData... data) {
-        addData(Arrays.asList(data));
-    }
-
-    public void addData(Collection<AnnotationData> data) {
-        this.data.addAll(data);
-    }
-
-    public void removeData(AnnotationData data) {
-        this.data.remove(data);
-    }
-
-    public void removeData(AnnotationData... data) {
-        removeData(Arrays.asList(data));
-    }
-
-    public void removeData(Collection<AnnotationData> data) {
-        this.data.removeAll(data);
-    }
 }

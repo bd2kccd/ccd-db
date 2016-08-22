@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2016 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,98 +16,93 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
+ *
+ * Aug 3, 2016 12:28:58 PM
+ *
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
+@Table(name = "AnnotationData")
 public class AnnotationData implements Serializable {
 
-    private static final long serialVersionUID = 6905712225800779882L;
+    private static final long serialVersionUID = -6554269784502436864L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    private Timestamp created;
-
-    private Timestamp modified;
-
-    @Version
-    private Integer version;
-
-    @NotNull
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "annotationId", nullable = false)
     private Annotation annotation;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "parentAnnotationDataId", nullable = false)
+    private AnnotationData parentAnnotationData;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "attributeId", nullable = false)
     private Attribute attribute;
 
-    @Column(nullable = true)
+    @Column(name = "value", nullable = false)
     private String value;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = true)
-    private AnnotationData parent;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "createdDate", nullable = false, length = 19)
+    private Date createdDate;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-    private Set<AnnotationData> subData = new HashSet<>(0);
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "modifiedDate", nullable = false, length = 19)
+    private Date modifiedDate;
+
+    @Column(name = "modifyCount", nullable = false)
+    private int modifyCount;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "annotationData")
+    private Set<AnnotationData> annotationData = new HashSet<>(0);
 
     public AnnotationData() {
     }
 
-    public AnnotationData(Annotation annotation, Attribute attribute) {
+    public AnnotationData(Annotation annotation, AnnotationData annotationData, Attribute attribute, String value, Date createdDate, Date modifiedDate, int modifyCount) {
         this.annotation = annotation;
+        this.parentAnnotationData = annotationData;
         this.attribute = attribute;
-    }
-
-    public AnnotationData(Annotation annotation, Attribute attribute, String value) {
-        this(annotation, attribute);
         this.value = value;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
+        this.modifyCount = modifyCount;
     }
 
-    public AnnotationData(Annotation annotation, AnnotationData parent, Attribute attribute) {
-        this(annotation, attribute);
-        this.parent = parent;
-    }
-
-    public AnnotationData(Annotation annotation, AnnotationData parent, Attribute attribute, String value) {
-        this(annotation, parent, attribute);
+    public AnnotationData(Annotation annotation, AnnotationData annotationData, Attribute attribute, String value, Date createdDate, Date modifiedDate, int modifyCount, Set<AnnotationData> annotationDatas) {
+        this.annotation = annotation;
+        this.parentAnnotationData = annotationData;
+        this.attribute = attribute;
         this.value = value;
-    }
-
-    @PrePersist
-    private void onCreate() {
-        created = new Timestamp((new Date()).getTime());
-    }
-
-    @PreUpdate
-    private void onUpdate() {
-        modified = new Timestamp((new Date()).getTime());
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
+        this.modifyCount = modifyCount;
+        this.annotationData = annotationDatas;
     }
 
     public Long getId() {
@@ -118,24 +113,20 @@ public class AnnotationData implements Serializable {
         this.id = id;
     }
 
-    public Timestamp getCreated() {
-        return created;
-    }
-
-    public Timestamp getModified() {
-        return modified;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
     public Annotation getAnnotation() {
         return annotation;
     }
 
     public void setAnnotation(Annotation annotation) {
         this.annotation = annotation;
+    }
+
+    public AnnotationData getParentAnnotationData() {
+        return parentAnnotationData;
+    }
+
+    public void setParentAnnotationData(AnnotationData parentAnnotationData) {
+        this.parentAnnotationData = parentAnnotationData;
     }
 
     public Attribute getAttribute() {
@@ -154,23 +145,36 @@ public class AnnotationData implements Serializable {
         this.value = value;
     }
 
-    public AnnotationData getParent() {
-        return parent;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setParent(AnnotationData parent) {
-        this.parent = parent;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public Set<AnnotationData> getSubData() {
-        return subData;
+    public Date getModifiedDate() {
+        return modifiedDate;
     }
 
-    public void setSubData(Set<AnnotationData> subData) {
-        this.subData = subData;
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
-    public boolean hasSubData(AnnotationData sub) {
-        return subData.contains(sub);
+    public int getModifyCount() {
+        return modifyCount;
     }
+
+    public void setModifyCount(int modifyCount) {
+        this.modifyCount = modifyCount;
+    }
+
+    public Set<AnnotationData> getAnnotationData() {
+        return annotationData;
+    }
+
+    public void setAnnotationData(Set<AnnotationData> annotationData) {
+        this.annotationData = annotationData;
+    }
+
 }

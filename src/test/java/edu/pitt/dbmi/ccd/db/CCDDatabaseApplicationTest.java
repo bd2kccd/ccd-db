@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 University of Pittsburgh.
+ * Copyright (C) 2015 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,28 +16,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.service;
+package edu.pitt.dbmi.ccd.db;
 
-import edu.pitt.dbmi.ccd.db.repository.AttributeRepository;
-import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  *
- * Aug 3, 2016 4:27:46 PM
+ * Aug 3, 2016 5:52:37 PM
  *
- * @author Mark Silvis (marksilvis@pitt.edu)
+ * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Service
-@Transactional
-public class AttributeService {
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class CCDDatabaseApplicationTest {
 
-    private final AttributeRepository attributeRepository;
-
-    @Autowired
-    public AttributeService(AttributeRepository attributeRepository) {
-        this.attributeRepository = attributeRepository;
+    @Test
+    public void contextLoads() {
     }
 
 }

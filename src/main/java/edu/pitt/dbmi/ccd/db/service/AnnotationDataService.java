@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2016 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,46 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-
 package edu.pitt.dbmi.ccd.db.service;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import edu.pitt.dbmi.ccd.db.entity.Annotation;
-import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationDataRepository;
+import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
+ *
+ * Aug 3, 2016 4:22:50 PM
+ *
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Service
 @Transactional
 public class AnnotationDataService {
 
+    private final AnnotationDataRepository annotationDataRepository;
+
     @Autowired
-    private AnnotationDataRepository annotationDataRepository;
-    @Autowired
-    private AttributeService attributeService;
-
-    public AnnotationData save(AnnotationData data) {
-        return annotationDataRepository.save(data);
+    public AnnotationDataService(AnnotationDataRepository annotationDataRepository) {
+        this.annotationDataRepository = annotationDataRepository;
     }
 
-    public Optional<AnnotationData> findById(Long id) {
-        return annotationDataRepository.findById(id);
-    }
-
-    public Page<AnnotationData> findByAnnotation(Annotation annotation, Pageable pageable) {
-        return annotationDataRepository.findByAnnotation(annotation, pageable);
-    }
-
-    protected void delete(AnnotationData data) {
-        annotationDataRepository.delete(data);
-    }
 }

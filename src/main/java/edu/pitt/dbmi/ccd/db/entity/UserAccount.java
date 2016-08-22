@@ -18,19 +18,16 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -38,20 +35,20 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
- * Oct 08, 2015 6:25:18 PM
+ * Jul 23, 2015 3:00:57 PM
  *
  * @since v0.4.0
  * @author Kevin V. Bui (kvb2@pitt.edu)
- * @author Mark Silvis  (marksilvis@pitt.edu)
  */
 @Entity
+@Table(name = "UserAccount", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class UserAccount implements Serializable {
 
     private static final long serialVersionUID = -7488372819059058929L;
@@ -102,35 +99,47 @@ public class UserAccount implements Serializable {
     @Column(name = "activationKey")
     private String activationKey;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
+    private Set<ShareGroup> shareGroups = new HashSet<>(0);
+
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserAccountFileRel", joinColumns = {
+    @JoinTable(name = "ShareGroupMembership", joinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "fileId", nullable = false, updatable = false)})
-    private Set<File> files = new HashSet<>(0);
+        @JoinColumn(name = "shareGroupId", nullable = false, updatable = false)})
+    private Set<ShareGroup> shareGroupMemberships = new HashSet<>(0);
 
-    @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
-    @OrderBy("name")
-    private Set<Group> groups = new HashSet<>(0);
-
-    @ManyToMany(mappedBy = "mods", fetch = FetchType.EAGER)
-    @OrderBy("name")
-    private Set<Group> moderates = new HashSet<>(0);
-
-    @ManyToMany(mappedBy = "requesters", fetch = FetchType.LAZY)
-    private Set<Group> requesting = new HashSet<>(0);
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @OrderBy("created")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
     private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @OrderBy("created")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
+    private Set<File> files = new HashSet<>(0);
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "ShareGroupRequest", joinColumns = {
+        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "shareGroupId", nullable = false, updatable = false)})
+    private Set<ShareGroup> shareGroupRequests = new HashSet<>(0);
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
     private Set<Annotation> annotations = new HashSet<>(0);
 
     public UserAccount() {
     }
 
-    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, UserRole userRole, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account, String activationKey) {
+    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, UserRole userRole, String username, String password, boolean active, boolean disabled, Date registrationDate, String account) {
+        this.person = person;
+        this.userLogin = userLogin;
+        this.userLoginAttempt = userLoginAttempt;
+        this.userRole = userRole;
+        this.username = username;
+        this.password = password;
+        this.active = active;
+        this.disabled = disabled;
+        this.registrationDate = registrationDate;
+        this.account = account;
+    }
+
+    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, UserRole userRole, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account, String activationKey, Set<ShareGroup> shareGroups, Set<ShareGroup> shareGroups_1, Set<AnnotationTarget> annotationTargets, Set<File> files, Set<ShareGroup> shareGroups_2, Set<Annotation> annotations) {
         this.person = person;
         this.userLogin = userLogin;
         this.userLoginAttempt = userLoginAttempt;
@@ -143,11 +152,12 @@ public class UserAccount implements Serializable {
         this.registrationLocation = registrationLocation;
         this.account = account;
         this.activationKey = activationKey;
-    }
-
-    @PrePersist
-    private void onCreate() {
-        registrationDate = new Date();
+        this.shareGroups = shareGroups;
+        this.shareGroupMemberships = shareGroups_1;
+        this.annotationTargets = annotationTargets;
+        this.files = files;
+        this.shareGroupRequests = shareGroups_2;
+        this.annotations = annotations;
     }
 
     public Long getId() {
@@ -254,6 +264,30 @@ public class UserAccount implements Serializable {
         this.activationKey = activationKey;
     }
 
+    public Set<ShareGroup> getShareGroups() {
+        return shareGroups;
+    }
+
+    public void setShareGroups(Set<ShareGroup> shareGroups) {
+        this.shareGroups = shareGroups;
+    }
+
+    public Set<ShareGroup> getShareGroupMemberships() {
+        return shareGroupMemberships;
+    }
+
+    public void setShareGroupMemberships(Set<ShareGroup> shareGroupMemberships) {
+        this.shareGroupMemberships = shareGroupMemberships;
+    }
+
+    public Set<AnnotationTarget> getAnnotationTargets() {
+        return annotationTargets;
+    }
+
+    public void setAnnotationTargets(Set<AnnotationTarget> annotationTargets) {
+        this.annotationTargets = annotationTargets;
+    }
+
     public Set<File> getFiles() {
         return files;
     }
@@ -262,95 +296,20 @@ public class UserAccount implements Serializable {
         this.files = files;
     }
 
-    public Set<Group> getMods() {
-        return moderates;
+    public Set<ShareGroup> getShareGroupRequests() {
+        return shareGroupRequests;
     }
 
-    public boolean isMod(Group group) {
-        return moderates.contains(group);
-    }
-
-    public boolean isMod(Collection<Group> groups) {
-        return this.moderates.containsAll(groups);
-    }
-
-    public void addMod(Group group) {
-        moderates.add(group);
-    }
-
-    public void addMods(Collection<Group> groups) {
-        this.moderates.addAll(groups);
-    }
-
-    public void addMods(Group... groups) {
-        for (Group g : groups) {
-            addMod(g);
-        }
-    }
-
-    public void removeMod(Group group) {
-        moderates.remove(group);
-    }
-
-    public void removeMods(Collection<Group> groups) {
-        this.moderates.removeAll(groups);
-    }
-
-    public void removeMods(Group... groups) {
-        for (Group g : groups) {
-            removeMod(g);
-        }
-    }
-
-    public Set<Group> getGroups() {
-        return groups;
-    }
-
-    public boolean isMember(Group group) {
-        return groups.contains(group);
-    }
-
-    public boolean isMember(Collection<Group> groups) {
-        return this.groups.containsAll(groups);
-    }
-
-    public void addGroup(Group group) {
-        groups.add(group);
-    }
-
-    public void addGroups(Collection<Group> groups) {
-        this.groups.addAll(groups);
-    }
-
-    public void addGroups(Group... groups) {
-        for (Group g : groups) {
-            addGroup(g);
-        }
-    }
-
-    public void removeGroup(Group group) {
-        groups.remove(group);
-    }
-
-    public void removeGroups(Collection<Group> groups) {
-        this.groups.removeAll(groups);
-    }
-
-    public void removeGroups(Group... groups) {
-        for (Group g : groups) {
-            removeGroup(g);
-        }
-    }
-
-    public Set<Group> getRequesting() {
-        return requesting;
-    }
-
-    public Set<AnnotationTarget> getAnnotationTargets() {
-        return annotationTargets;
+    public void setShareGroupRequests(Set<ShareGroup> shareGroupRequests) {
+        this.shareGroupRequests = shareGroupRequests;
     }
 
     public Set<Annotation> getAnnotations() {
         return annotations;
     }
+
+    public void setAnnotations(Set<Annotation> annotations) {
+        this.annotations = annotations;
+    }
+
 }

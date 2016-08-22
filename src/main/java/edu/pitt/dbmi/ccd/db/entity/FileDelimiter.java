@@ -26,6 +26,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
@@ -34,6 +35,7 @@ import javax.persistence.Id;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
+@Table(name = "FileDelimiter")
 public class FileDelimiter implements Serializable {
 
     private static final long serialVersionUID = -4574772817571231748L;
