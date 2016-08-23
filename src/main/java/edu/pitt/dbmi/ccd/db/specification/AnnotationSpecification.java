@@ -205,9 +205,9 @@ public final class AnnotationSpecification {
         // group access AND requester in group
         // criteriabuilder's in clause throws
         // sql error if collection has no elements
-        if (requester.getGroups().size() > 0) {
+        if (requester.getShareGroups().size() > 0) {
             predicates.add(cb.and(cb.like(root.get(ACCESS).get(NAME), GROUP_ACCESS),
-                    root.get(GROUP).in(requester.getGroups())));
+                    root.get(GROUP).in(requester.getShareGroups())));
         }
         return cb.or(predicates.toArray(new Predicate[predicates.size()]));
     }

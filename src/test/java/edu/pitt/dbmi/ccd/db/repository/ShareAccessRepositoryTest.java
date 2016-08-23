@@ -17,45 +17,46 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
+import edu.pitt.dbmi.ccd.db.entity.ShareAccess;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = CCDDatabaseApplication.class)
-public class AccessRepositoryTest {
+public class ShareAccessRepositoryTest {
 
     @Autowired(required=true)
-    private AccessRepository accessRepository;
+    private ShareAccessRepository shareAccessRepository;
 
     @Test
     public void saveAndDelete() {
         // save
-        final Access access = accessRepository.save(new Access("TEST", "Test access"));
-        assertNotNull(access.getId());
+        final ShareAccess shareAccess = shareAccessRepository.save(new ShareAccess("TEST", "Test shareAccess"));
+        assertNotNull(shareAccess.getId());
 
         // delete
-        accessRepository.delete(access);
-        final Optional<Access> found = accessRepository.findById(access.getId());
+        shareAccessRepository.delete(shareAccess);
+        final Optional<ShareAccess> found = shareAccessRepository.findById(shareAccess.getId());
         assertFalse(found.isPresent());
     }
 
     @Test
     public void findById() {
-        final Optional<Access> access = accessRepository.findById(1L);
-        assertTrue(access.isPresent());
+        final Optional<ShareAccess> shareAccess = shareAccessRepository.findById(1L);
+        assertTrue(shareAccess.isPresent());
     }
 
     @Test
     public void findByName() {
-        final Optional<Access> access = accessRepository.findByName("PUBLIC");
-        assertTrue(access.isPresent());
+        final Optional<ShareAccess> shareAccess = shareAccessRepository.findByName("PUBLIC");
+        assertTrue(shareAccess.isPresent());
     }
 
     @Test
     public void findAll() {
         final Pageable pageable = new PageRequest(0, 3);
-        final Page<Access> page = accessRepository.findAll(pageable);
+        final Page<ShareAccess> page = shareAccessRepository.findAll(pageable);
         assertEquals(3, page.getTotalElements());
     }
 }
