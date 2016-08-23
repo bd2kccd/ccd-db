@@ -68,7 +68,7 @@ public class File implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, length = 128)
     private String title;
 
     @Column(name = "absolutePath", nullable = false)

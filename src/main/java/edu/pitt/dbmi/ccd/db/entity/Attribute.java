@@ -18,14 +18,16 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -51,11 +53,11 @@ public class Attribute implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parentAttributeId", nullable = false)
+    @JoinColumn(name = "parentAttributeId")
     private Attribute parentAttribute;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "attributeLevelId", nullable = false)
+    @JoinColumn(name = "attributeLevelId")
     private AttributeLevel attributeLevel;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -68,31 +70,23 @@ public class Attribute implements Serializable {
     @Column(name = "required", nullable = false)
     private boolean required;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "attribute")
-    private Set<AnnotationData> annotationData = new HashSet<>(0);
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentAttribute")
-    private Set<Attribute> childrenAttributes = new HashSet<>(0);
+    private Set<Attribute> nestedAttributes = new HashSet<>(0);
 
     public Attribute() {
     }
 
-    public Attribute(Attribute attribute, AttributeLevel attributeLevel, Vocabulary vocabulary, String name, boolean required) {
-        this.parentAttribute = attribute;
-        this.attributeLevel = attributeLevel;
+    public Attribute(Vocabulary vocabulary, String name, boolean required) {
         this.vocabulary = vocabulary;
         this.name = name;
         this.required = required;
     }
 
-    public Attribute(Attribute attribute, AttributeLevel attributeLevel, Vocabulary vocabulary, String name, boolean required, Set<AnnotationData> annotationDatas, Set<Attribute> attributes) {
-        this.parentAttribute = attribute;
+    public Attribute(Vocabulary vocabulary, String name, boolean required, AttributeLevel attributeLevel, Attribute parentAttribute) {
+        this(vocabulary, name, required);
         this.attributeLevel = attributeLevel;
-        this.vocabulary = vocabulary;
-        this.name = name;
-        this.required = required;
-        this.annotationData = annotationDatas;
-        this.childrenAttributes = attributes;
+        this.parentAttribute = parentAttribute;
+
     }
 
     public Long getId() {
@@ -143,20 +137,12 @@ public class Attribute implements Serializable {
         this.required = required;
     }
 
-    public Set<AnnotationData> getAnnotationData() {
-        return annotationData;
+    public Set<Attribute> getNestedAttributes() {
+        return nestedAttributes;
     }
 
-    public void setAnnotationData(Set<AnnotationData> annotationData) {
-        this.annotationData = annotationData;
-    }
-
-    public Set<Attribute> getChildrenAttributes() {
-        return childrenAttributes;
-    }
-
-    public void setChildrenAttributes(Set<Attribute> childrenAttributes) {
-        this.childrenAttributes = childrenAttributes;
+    public void setNestedAttributes(Set<Attribute> nestedAttributes) {
+        this.nestedAttributes = nestedAttributes;
     }
 
 }

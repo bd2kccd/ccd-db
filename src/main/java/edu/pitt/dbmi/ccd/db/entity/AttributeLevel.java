@@ -27,6 +27,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -51,8 +54,11 @@ public class AttributeLevel implements Serializable {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @Column(name = "description", length = 511)
+    @Column(name = "description", length = 500)
     private String description;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "attributeLevels")
+    private Set<Vocabulary> vocabularies = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "attributeLevel")
     private Set<Attribute> attributes = new HashSet<>(0);
@@ -64,10 +70,9 @@ public class AttributeLevel implements Serializable {
         this.name = name;
     }
 
-    public AttributeLevel(String name, String description, Set<Attribute> attributes) {
-        this.name = name;
+    public AttributeLevel(String name, String description) {
+        this(name);
         this.description = description;
-        this.attributes = attributes;
     }
 
     public Long getId() {
@@ -92,6 +97,14 @@ public class AttributeLevel implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Vocabulary> getVocabularies() {
+        return vocabularies;
+    }
+
+    public void setVocabularies(Set<Vocabulary> vocabularies) {
+        this.vocabularies = vocabularies;
     }
 
     public Set<Attribute> getAttributes() {

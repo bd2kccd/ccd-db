@@ -99,14 +99,11 @@ public class UserAccount implements Serializable {
     @Column(name = "activationKey")
     private String activationKey;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "members")
     private Set<ShareGroup> shareGroups = new HashSet<>(0);
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ShareGroupMembership", joinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "shareGroupId", nullable = false, updatable = false)})
-    private Set<ShareGroup> shareGroupMemberships = new HashSet<>(0);
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "requesters")
+    private Set<ShareGroup> shareGroupRequests = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
     private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
@@ -114,11 +111,8 @@ public class UserAccount implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
     private Set<File> files = new HashSet<>(0);
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ShareGroupRequest", joinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "shareGroupId", nullable = false, updatable = false)})
-    private Set<ShareGroup> shareGroupRequests = new HashSet<>(0);
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
+    private Set<Address> addresses = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
     private Set<Annotation> annotations = new HashSet<>(0);
@@ -153,7 +147,7 @@ public class UserAccount implements Serializable {
         this.account = account;
         this.activationKey = activationKey;
         this.shareGroups = shareGroups;
-        this.shareGroupMemberships = shareGroups_1;
+        this.shareGroups = shareGroups_1;
         this.annotationTargets = annotationTargets;
         this.files = files;
         this.shareGroupRequests = shareGroups_2;
@@ -272,12 +266,12 @@ public class UserAccount implements Serializable {
         this.shareGroups = shareGroups;
     }
 
-    public Set<ShareGroup> getShareGroupMemberships() {
-        return shareGroupMemberships;
+    public Set<ShareGroup> getShareGroupRequests() {
+        return shareGroupRequests;
     }
 
-    public void setShareGroupMemberships(Set<ShareGroup> shareGroupMemberships) {
-        this.shareGroupMemberships = shareGroupMemberships;
+    public void setShareGroupRequests(Set<ShareGroup> shareGroupRequests) {
+        this.shareGroupRequests = shareGroupRequests;
     }
 
     public Set<AnnotationTarget> getAnnotationTargets() {
@@ -296,12 +290,12 @@ public class UserAccount implements Serializable {
         this.files = files;
     }
 
-    public Set<ShareGroup> getShareGroupRequests() {
-        return shareGroupRequests;
+    public Set<Address> getAddresses() {
+        return addresses;
     }
 
-    public void setShareGroupRequests(Set<ShareGroup> shareGroupRequests) {
-        this.shareGroupRequests = shareGroupRequests;
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public Set<Annotation> getAnnotations() {

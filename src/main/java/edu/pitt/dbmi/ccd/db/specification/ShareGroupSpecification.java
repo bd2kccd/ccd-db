@@ -21,44 +21,45 @@ package edu.pitt.dbmi.ccd.db.specification;
 
 import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.springframework.data.jpa.domain.Specification;
 
-import edu.pitt.dbmi.ccd.db.entity.Group;
+import edu.pitt.dbmi.ccd.db.entity.ShareGroup;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-public final class GroupSpecification {
+public final class ShareGroupSpecification {
 
     // columns
     private static final String NAME = "name";
     private static final String DESC = "description";
 
-    private GroupSpecification() { }
+    private ShareGroupSpecification() { }
 
     /**
      * find groups that contain search terms
-     * @param  terms search terms
-     * @return       specification
+     * @param  matches search terms
+     * @param  nots    negated search terms
+     * @return specification
      */
-    public static Specification<Group> searchSpec(Set<String> matches,
-                                                  Set<String> nots) {
+    public static Specification<ShareGroup> searchSpec(Set<String> matches,
+                                                       Set<String> nots) {
         return (root, query, cb) -> {
             return buildSearchSpec(root, cb, matches, nots);
         };
     }
 
     // build search predicates
-    private static Predicate buildSearchSpec(Root<Group> root, CriteriaBuilder cb, Set<String> matches, Set<String> nots) {
+    private static Predicate buildSearchSpec(Root<ShareGroup> root, CriteriaBuilder cb, Set<String> matches, Set<String> nots) {
         List<Predicate> predicates = new ArrayList<>(0);
         if (!isNullOrEmpty(matches)) {
             predicates.addAll(inNameOrDescription(root, cb, matches));
@@ -70,7 +71,7 @@ public final class GroupSpecification {
     }
 
     // build (name or description contains term) predicate for each search term
-    private static List<Predicate> inNameOrDescription(Root<Group> root, CriteriaBuilder cb, Set<String> terms) {
+    private static List<Predicate> inNameOrDescription(Root<ShareGroup> root, CriteriaBuilder cb, Set<String> terms) {
         return terms.stream()
                     .map(t -> containsLike(t))
                     .map(t -> cb.or(nameContains(root, cb, t),
@@ -79,7 +80,7 @@ public final class GroupSpecification {
     }
 
     // build (neither name or description contains term) predicate for each search term
-    private static List<Predicate> notInNameOrDescription(Root<Group> root, CriteriaBuilder cb, Set<String> terms) {
+    private static List<Predicate> notInNameOrDescription(Root<ShareGroup> root, CriteriaBuilder cb, Set<String> terms) {
         return terms.stream()
                     .map(t -> containsLike(t))
                     .map(t -> cb.not(cb.or(nameContains(root, cb, t),
@@ -88,12 +89,12 @@ public final class GroupSpecification {
     }
 
     // build name contains term predicate
-    private static Predicate nameContains(Root<Group> root, CriteriaBuilder cb, String term) {
+    private static Predicate nameContains(Root<ShareGroup> root, CriteriaBuilder cb, String term) {
         return cb.like(cb.lower(root.get(NAME)), term);
     }
 
     // build description contains term predicate
-    private static Predicate descriptionContains(Root<Group> root, CriteriaBuilder cb, String term) {
+    private static Predicate descriptionContains(Root<ShareGroup> root, CriteriaBuilder cb, String term) {
         return cb.like(cb.lower(root.get(DESC)), term);
     }
 

@@ -18,27 +18,30 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.Version;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
- *
  * Aug 3, 2016 12:29:18 PM
  *
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -47,7 +50,7 @@ import javax.persistence.TemporalType;
 @Table(name = "AnnotationTarget")
 public class AnnotationTarget implements Serializable {
 
-    private static final long serialVersionUID = -2275516486925004695L;
+    private static final long serialVersionUID = -8650768942525534955L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -62,40 +65,48 @@ public class AnnotationTarget implements Serializable {
     @JoinColumn(name = "userAccountId", nullable = false)
     private UserAccount userAccount;
 
-    @Column(name = "url", length = 2083)
-    private String url;
+    @Column(name = "address")
+    private Address address;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdDate", nullable = false, length = 19)
-    private Date createdDate;
+    private Timestamp createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modifiedDate", length = 19)
-    private Date modifiedDate;
+    private Timestamp modifiedDate;
 
+    @Version
     @Column(name = "modifyCount", nullable = false)
     private int modifyCount;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "annotationTarget")
-    private Set<Annotation> annotations = new HashSet<>(0);
+    @Transient
+    private TargetType type;
+
+    @Transient
+    private String title;
 
     public AnnotationTarget() {
     }
 
-    public AnnotationTarget(UserAccount userAccount, Date createdDate, int modifyCount) {
+    public AnnotationTarget(UserAccount userAccount) {
         this.userAccount = userAccount;
-        this.createdDate = createdDate;
-        this.modifyCount = modifyCount;
     }
 
-    public AnnotationTarget(File file, UserAccount userAccount, String url, Date createdDate, Date modifiedDate, int modifyCount, Set<Annotation> annotations) {
+    public AnnotationTarget(UserAccount userAccount, File file, Address address) {
+        this(userAccount);
         this.file = file;
-        this.userAccount = userAccount;
-        this.url = url;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-        this.modifyCount = modifyCount;
-        this.annotations = annotations;
+        this.address = address;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        createdDate = new Timestamp((new Date()).getTime());
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        modifiedDate = new Timestamp((new Date()).getTime());
     }
 
     public Long getId() {
@@ -122,27 +133,27 @@ public class AnnotationTarget implements Serializable {
         this.userAccount = userAccount;
     }
 
-    public String getUrl() {
-        return url;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
-    public Date getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Date getModifiedDate() {
+    public Timestamp getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
+    public void setModifiedDate(Timestamp modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 
@@ -154,12 +165,32 @@ public class AnnotationTarget implements Serializable {
         this.modifyCount = modifyCount;
     }
 
-    public Set<Annotation> getAnnotations() {
-        return annotations;
+    public TargetType getType() {
+        if (this.file != null && this.address == null) {
+            return TargetType.FILE;
+        } else if (this.address != null && this.file == null) {
+            return TargetType.ADDRESS;
+        } else {
+            return TargetType.NOT_SET;
+        }
     }
 
-    public void setAnnotations(Set<Annotation> annotations) {
-        this.annotations = annotations;
+    public String getTitle() {
+        String title = "";
+        switch (getType()) {
+            case FILE:
+                title = this.file.getTitle();
+                break;
+            case ADDRESS:
+                title = this.address.getTitle();
+                break;
+            case NOT_SET:
+                break;
+        }
+        return title;
     }
 
+    public enum TargetType {
+        FILE, ADDRESS, NOT_SET;
+    }
 }

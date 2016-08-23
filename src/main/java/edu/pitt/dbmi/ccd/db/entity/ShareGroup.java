@@ -54,7 +54,7 @@ public class ShareGroup implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userAccountId", nullable = false)
-    private UserAccount userAccount;
+    private UserAccount owner;
 
     @Column(name = "name", unique = true, nullable = false, length = 127)
     private String name;
@@ -66,33 +66,21 @@ public class ShareGroup implements Serializable {
     @JoinTable(name = "ShareGroupMembership", joinColumns = {
         @JoinColumn(name = "shareGroupId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
-    private Set<UserAccount> shareGroupMemberships = new HashSet<>(0);
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shareGroup")
-    private Set<Annotation> annotations = new HashSet<>(0);
+    private Set<UserAccount> members = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ShareGroupRequest", joinColumns = {
+    @JoinTable(name = "ShareGroupRequests", joinColumns = {
         @JoinColumn(name = "shareGroupId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
-    private Set<UserAccount> shareGroupRequests = new HashSet<>(0);
+    private Set<UserAccount> requesters = new HashSet<>(0);
 
     public ShareGroup() {
     }
 
-    public ShareGroup(UserAccount userAccount, String name, String description) {
-        this.userAccount = userAccount;
+    public ShareGroup(UserAccount owner, String name, String description) {
+        this.owner = owner;
         this.name = name;
         this.description = description;
-    }
-
-    public ShareGroup(UserAccount userAccount, String name, String description, Set<UserAccount> userAccounts, Set<Annotation> annotations, Set<UserAccount> userAccounts_1) {
-        this.userAccount = userAccount;
-        this.name = name;
-        this.description = description;
-        this.shareGroupMemberships = userAccounts;
-        this.annotations = annotations;
-        this.shareGroupRequests = userAccounts_1;
     }
 
     public Long getId() {
@@ -103,12 +91,12 @@ public class ShareGroup implements Serializable {
         this.id = id;
     }
 
-    public UserAccount getUserAccount() {
-        return userAccount;
+    public UserAccount getOwner() {
+        return owner;
     }
 
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
+    public void setOwner(UserAccount owner) {
+        this.owner = owner;
     }
 
     public String getName() {
@@ -127,28 +115,43 @@ public class ShareGroup implements Serializable {
         this.description = description;
     }
 
-    public Set<UserAccount> getShareGroupMemberships() {
-        return shareGroupMemberships;
+    public Set<UserAccount> getMembers() {
+        return members;
     }
 
-    public void setShareGroupMemberships(Set<UserAccount> shareGroupMemberships) {
-        this.shareGroupMemberships = shareGroupMemberships;
+    public void setMembers(Set<UserAccount> members) {
+        this.members = members;
     }
 
-    public Set<Annotation> getAnnotations() {
-        return annotations;
+    public boolean hasMember(UserAccount userAccount) {
+        return this.members.contains(userAccount);
     }
 
-    public void setAnnotations(Set<Annotation> annotations) {
-        this.annotations = annotations;
+    public boolean addMember(UserAccount userAccount) {
+        return this.members.add(userAccount);
     }
 
-    public Set<UserAccount> getShareGroupRequests() {
-        return shareGroupRequests;
+    public boolean removeMember(UserAccount userAccount) {
+        return this.members.remove(userAccount);
     }
 
-    public void setShareGroupRequests(Set<UserAccount> shareGroupRequests) {
-        this.shareGroupRequests = shareGroupRequests;
+    public Set<UserAccount> getRequesters() {
+        return requesters;
     }
 
+    public void setRequesters(Set<UserAccount> requesters) {
+        this.requesters = requesters;
+    }
+
+    public boolean hasRequester(UserAccount userAccount) {
+        return this.requesters.contains(userAccount);
+    }
+
+    public boolean addRequester(UserAccount userAccount) {
+        return this.requesters.add(userAccount);
+    }
+
+    public boolean removeRequester(UserAccount userAccount) {
+        return this.requesters.remove(userAccount);
+    }
 }

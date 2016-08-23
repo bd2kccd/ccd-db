@@ -54,21 +54,12 @@ public class ShareAccess implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shareAccess")
-    private Set<Annotation> annotations = new HashSet<>(0);
-
     public ShareAccess() {
     }
 
     public ShareAccess(String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    public ShareAccess(String name, String description, Set<Annotation> annotations) {
-        this.name = name;
-        this.description = description;
-        this.annotations = annotations;
     }
 
     public Long getId() {
@@ -94,13 +85,4 @@ public class ShareAccess implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public Set<Annotation> getAnnotations() {
-        return annotations;
-    }
-
-    public void setAnnotations(Set<Annotation> annotations) {
-        this.annotations = annotations;
-    }
-
 }

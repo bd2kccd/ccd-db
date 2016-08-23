@@ -18,9 +18,16 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.ShareGroup;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import edu.pitt.dbmi.ccd.db.entity.ShareGroup;
 
 /**
  *
@@ -30,5 +37,42 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ShareGroupRepository extends JpaRepository<ShareGroup, Long> {
+    /**
+     * Find group by id
+     * @param  id group id
+     * @return    group
+     */
+    public Optional<ShareGroup> findById(Long id);
 
+    /**
+     * Find group by name
+     * @param  name group name
+     * @return      group
+     */
+    public Optional<ShareGroup> findByName(String name);
+
+    @Query(value="SELECT g FROM Group AS g " +
+            "LEFT JOIN g.members AS m " +
+            "WHERE m.username = ?1")
+    public Page<ShareGroup> findByMember(String username, Pageable pageable);
+
+    @Query(value="SELECT g FROM Group AS g " +
+            "LEFT JOIN g.requesters AS r " +
+            "WHERE r.username = ?1")
+    public Page<ShareGroup> findByRequester(String username, Pageable pageable);
+
+    /**
+     * Find all groups by spec
+     * @param  spec      group specification
+     * @param  pageable  page request
+     * @return           page of groups matching parameters
+     */
+    public Page<ShareGroup> findAll(Specification<ShareGroup> spec, Pageable  pageable);
+
+    /**
+     * Find all groups
+     * @param  pageable  page request
+     * @return           page of groups
+     */
+    public Page<ShareGroup> findAll(Pageable pageable);
 }

@@ -36,47 +36,47 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Access;
+import edu.pitt.dbmi.ccd.db.entity.ShareAccess;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = CCDDatabaseApplication.class)
-public class AccessServiceTest {
+public class ShareAccessServiceTest {
 
     @Autowired
-    private AccessService accessService;
+    private ShareAccessService shareAccessService;
 
     @Test
     public void saveAndDelete() {
         // save
-        Access access = new Access("TEST", "Test access");
-        access = accessService.save(access);
-        assertNotNull(access.getId());
+        ShareAccess shareAccess = new ShareAccess("TEST", "Test access");
+        shareAccess = shareAccessService.save(shareAccess);
+        assertNotNull(shareAccess.getId());
 
         // delete
-        accessService.delete(access);
-        Optional<Access> found = accessService.findById(access.getId());
+        shareAccessService.delete(shareAccess);
+        Optional<ShareAccess> found = shareAccessService.findById(shareAccess.getId());
         assertFalse(found.isPresent());
     }
 
     @Test
     public void findById() {
-        Optional<Access> access = accessService.findById(1L);
+        Optional<ShareAccess> access = shareAccessService.findById(1L);
         assertTrue(access.isPresent());
     }
 
     @Test
     public void findByName() {
-        Optional<Access> access = accessService.findByName("PUBLIC");
+        Optional<ShareAccess> access = shareAccessService.findByName("PUBLIC");
         assertTrue(access.isPresent());
     }
 
     @Test
     public void findAll() {
         Pageable pageable = new PageRequest(0, 10);
-        Page<Access> accesses = accessService.findAll(pageable);
+        Page<ShareAccess> accesses = shareAccessService.findAll(pageable);
         assertEquals(3, accesses.getTotalElements());
     }
 }

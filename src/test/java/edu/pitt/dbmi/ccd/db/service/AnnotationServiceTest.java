@@ -20,9 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Access;
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
+import edu.pitt.dbmi.ccd.db.entity.ShareAccess;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 
@@ -40,7 +40,7 @@ public class AnnotationServiceTest {
     @Autowired
     private AnnotationTargetService annotationTargetService;
     @Autowired
-    private AccessService accessService;
+    private ShareAccessService shareAccessService;
     @Autowired
     private VocabularyService vocabularyService;
 
@@ -58,7 +58,7 @@ public class AnnotationServiceTest {
     public void saveAndDelete() {
         // save
         final AnnotationTarget annotationTarget = annotationTargetService.findById(1L).get();
-        final Access access = accessService.findById(1L).get();
+        final ShareAccess access = shareAccessService.findById(1L).get();
         final Vocabulary vocabulary = vocabularyService.findById(1L).get();
         Annotation annotation = new Annotation(owner, annotationTarget, null, access, null, vocabulary);
         annotation = annotationService.save(annotation);

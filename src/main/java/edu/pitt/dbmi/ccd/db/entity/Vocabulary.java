@@ -18,16 +18,22 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -62,34 +68,33 @@ public class Vocabulary implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdDate", nullable = false, length = 19)
-    private Date createdDate;
+    private Timestamp createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modifiedDate", length = 19)
-    private Date modifiedDate;
+    private Timestamp modifiedDate;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "VocabularyAttributeLevels", joinColumns = {
+        @JoinColumn(name = "vocabularyId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "attributeLevelId", nullable = false, updatable = false)})
+    private Set<AttributeLevel> attributeLevels = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "vocabulary")
     private Set<Attribute> attributes = new HashSet<>(0);
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "vocabulary")
-    private Set<Annotation> annotations = new HashSet<>(0);
-
     public Vocabulary() {
     }
 
-    public Vocabulary(String name, String description, Date createdDate) {
+    public Vocabulary(String name, String description, String version) {
         this.name = name;
         this.description = description;
-        this.createdDate = createdDate;
+        this.version = version;
     }
 
-    public Vocabulary(String name, String description, Date createdDate, Date modifiedDate, Set<Attribute> attributes, Set<Annotation> annotations) {
-        this.name = name;
-        this.description = description;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-        this.attributes = attributes;
-        this.annotations = annotations;
+    public Vocabulary(String name, String description, String version, Set<AttributeLevel> attributeLevels) {
+        this(name, description, version);
+        this.attributeLevels = attributeLevels;
     }
 
     public Long getId() {
@@ -124,19 +129,19 @@ public class Vocabulary implements Serializable {
         this.description = description;
     }
 
-    public Date getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Date getModifiedDate() {
+    public Timestamp getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
+    public void setModifiedDate(Timestamp modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 
@@ -148,12 +153,35 @@ public class Vocabulary implements Serializable {
         this.attributes = attributes;
     }
 
-    public Set<Annotation> getAnnotations() {
-        return annotations;
+    public boolean hasAttribute(Attribute attribute) {
+        return this.attributes.contains(attribute);
     }
 
-    public void setAnnotations(Set<Annotation> annotations) {
-        this.annotations = annotations;
+    public boolean addAttribute(Attribute attribute) {
+        return this.attributes.add(attribute);
     }
 
+    public boolean removeAttribute(Attribute attribute) {
+        return this.attributes.remove(attribute);
+    }
+
+    public Set<AttributeLevel> getAttributeLevels() {
+        return attributeLevels;
+    }
+
+    public void setAttributeLevels(Set<AttributeLevel> attributeLevels) {
+        this.attributeLevels = attributeLevels;
+    }
+
+    public boolean hasAttributeLevel(AttributeLevel attributeLevel) {
+        return this.attributeLevels.contains(attributeLevel);
+    }
+
+    public boolean addAttributeLevel(AttributeLevel attributeLevel) {
+        return this.attributeLevels.add(attributeLevel);
+    }
+
+    public boolean removeAttributeLevel(AttributeLevel attributeLevel) {
+        return this.attributeLevels.remove(attributeLevel);
+    }
 }

@@ -18,10 +18,17 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.repository.ShareAccessRepository;
+import java.util.Optional;
+
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import edu.pitt.dbmi.ccd.db.entity.ShareAccess;
+import edu.pitt.dbmi.ccd.db.repository.ShareAccessRepository;
 
 /**
  *
@@ -38,6 +45,26 @@ public class ShareAccessService {
     @Autowired
     public ShareAccessService(ShareAccessRepository shareAccessRepository) {
         this.shareAccessRepository = shareAccessRepository;
+    }
+
+    public ShareAccess save(ShareAccess access) {
+        return shareAccessRepository.save(access);
+    }
+
+    public Optional<ShareAccess> findById(Long id) {
+        return shareAccessRepository.findById(id);
+    }
+
+    public Optional<ShareAccess> findByName(String name) {
+        return shareAccessRepository.findByName(name);
+    }
+
+    public Page<ShareAccess> findAll(Pageable pageable) {
+        return shareAccessRepository.findAll(pageable);
+    }
+
+    public void delete(ShareAccess access) {
+        shareAccessRepository.delete(access);
     }
 
 }

@@ -18,26 +18,31 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- *
  * Aug 3, 2016 12:29:09 PM
  *
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -78,21 +83,22 @@ public class Annotation implements Serializable {
     private Vocabulary vocabulary;
 
     @Column(name = "redacted", nullable = false)
-    private Boolean redacted;
+    private boolean redacted;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "createddate", nullable = false, length = 19)
-    private Date createddate;
+    @Column(name = "createdDate", nullable = false)
+    private Timestamp createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modifiedDate", length = 19)
-    private Date modifiedDate;
+    @Column(name = "modifiedDate")
+    private Timestamp modifiedDate;
 
+    @Version
     @Column(name = "modifyCount", nullable = false)
     private int modifyCount;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentAnnotation")
-    private Set<Annotation> annotations = new HashSet<>(0);
+    private Set<Annotation> childAnnotations = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "annotation", cascade = CascadeType.ALL)
     private Set<AnnotationData> annotationData = new HashSet<>(0);
@@ -100,29 +106,27 @@ public class Annotation implements Serializable {
     public Annotation() {
     }
 
-    public Annotation(AnnotationTarget annotationTarget, ShareAccess shareAccess, UserAccount userAccount, Vocabulary vocabulary, Boolean redacted, Date createddate, int modifyCount) {
+    public Annotation(AnnotationTarget annotationTarget, UserAccount userAccount, Vocabulary vocabulary, ShareAccess shareAccess, ShareGroup shareGroup) {
         this.annotationTarget = annotationTarget;
-        this.shareAccess = shareAccess;
         this.userAccount = userAccount;
         this.vocabulary = vocabulary;
-        this.redacted = redacted;
-        this.createddate = createddate;
-        this.modifyCount = modifyCount;
-    }
-
-    public Annotation(Annotation parentAnnotation, AnnotationTarget annotationTarget, ShareAccess shareAccess, ShareGroup shareGroup, UserAccount userAccount, Vocabulary vocabulary, Boolean redacted, Date createddate, Date modifiedDate, int modifyCount, Set<Annotation> annotations, Set<AnnotationData> annotationDatas) {
-        this.parentAnnotation = parentAnnotation;
-        this.annotationTarget = annotationTarget;
         this.shareAccess = shareAccess;
         this.shareGroup = shareGroup;
-        this.userAccount = userAccount;
-        this.vocabulary = vocabulary;
-        this.redacted = redacted;
-        this.createddate = createddate;
-        this.modifiedDate = modifiedDate;
-        this.modifyCount = modifyCount;
-        this.annotations = annotations;
-        this.annotationData = annotationDatas;
+    }
+
+    public Annotation(AnnotationTarget annotationTarget, UserAccount userAccount, Vocabulary vocabulary, ShareAccess shareAccess, ShareGroup shareGroup, Annotation parentAnnotation) {
+        this(annotationTarget, userAccount, vocabulary, shareAccess, shareGroup);
+        this.parentAnnotation = parentAnnotation;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        createdDate = new Timestamp((new Date()).getTime());
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        modifiedDate = new Timestamp((new Date()).getTime());
     }
 
     public Long getId() {
@@ -189,19 +193,19 @@ public class Annotation implements Serializable {
         this.redacted = redacted;
     }
 
-    public Date getCreateddate() {
-        return createddate;
+    public Timestamp getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreateddate(Date createddate) {
-        this.createddate = createddate;
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public Date getModifiedDate() {
+    public Timestamp getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
+    public void setModifiedDate(Timestamp modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 
@@ -213,12 +217,12 @@ public class Annotation implements Serializable {
         this.modifyCount = modifyCount;
     }
 
-    public Set<Annotation> getAnnotations() {
-        return annotations;
+    public Set<Annotation> getChildAnnotations() {
+        return childAnnotations;
     }
 
-    public void setAnnotations(Set<Annotation> annotations) {
-        this.annotations = annotations;
+    public void setChildAnnotations(Set<Annotation> childAnnotations) {
+        this.childAnnotations = childAnnotations;
     }
 
     public Set<AnnotationData> getAnnotationData() {

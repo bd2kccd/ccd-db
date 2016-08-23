@@ -27,7 +27,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.pitt.dbmi.ccd.db.entity.Access;
 import edu.pitt.dbmi.ccd.db.repository.AccessRepository;
 
 /**

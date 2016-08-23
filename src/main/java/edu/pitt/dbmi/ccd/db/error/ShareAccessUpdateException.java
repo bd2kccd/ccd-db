@@ -19,19 +19,19 @@
 
 package edu.pitt.dbmi.ccd.db.error;
 
-import edu.pitt.dbmi.ccd.db.entity.Access;
+import edu.pitt.dbmi.ccd.db.entity.ShareAccess;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-public final class AccessUpdateException extends RuntimeException {
+public final class ShareAccessUpdateException extends RuntimeException {
 
     private static final String LOWER_ACCESS_MESSAGE = "Access %s cannot be set to more restrictive access level %s";
     private static final String NO_GROUP_MESSAGE = "Group required to set access to 'GROUP'";
 
     private final String message;
 
-    public AccessUpdateException() {
+    public ShareAccessUpdateException() {
         super();
         // backspace character to remove format literals
         this.message = String.format(LOWER_ACCESS_MESSAGE, "\b", "\b");
@@ -40,7 +40,7 @@ public final class AccessUpdateException extends RuntimeException {
     /**
      * Constructor
      */
-    public AccessUpdateException(Access original, Access change) {
+    public ShareAccessUpdateException(ShareAccess original, ShareAccess change) {
         super();
         this.message = String.format(LOWER_ACCESS_MESSAGE, original.getName(), change.getName());
     }
@@ -49,7 +49,7 @@ public final class AccessUpdateException extends RuntimeException {
      * Constructor
      * @param  groupMissing return exception for missing group
      */
-    public AccessUpdateException(boolean groupMissing) {
+    public ShareAccessUpdateException(boolean groupMissing) {
         super();
         if (groupMissing) {
             this.message = NO_GROUP_MESSAGE;
