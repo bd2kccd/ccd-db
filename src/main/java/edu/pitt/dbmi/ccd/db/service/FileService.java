@@ -101,6 +101,10 @@ public class FileService extends AbstractFileService {
         return fileRepository.findUntypedFileByUserAccount(userAccount);
     }
 
+    public List<File> findByIdsAndUserAccount(List<Long> ids, UserAccount userAccount) {
+        return fileRepository.findByIdsAndUserAccount(ids, userAccount);
+    }
+
     public List<File> findByFileTypeAndUserAccount(FileType fileType, UserAccount userAccount) {
         return fileRepository.findByFileTypeAndUserAccount(fileType, userAccount);
     }
