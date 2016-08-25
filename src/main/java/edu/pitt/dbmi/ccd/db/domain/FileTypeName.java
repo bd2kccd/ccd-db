@@ -29,6 +29,7 @@ public enum FileTypeName {
     DATASET,
     ALGORITHM_RESULT,
     PRIOR_KNOWLEDGE,
-    VARIABLE;
+    VARIABLE,
+    ALGORITHM_RESULT_COMPARISON;
 
 }
