@@ -20,8 +20,8 @@ package edu.pitt.dbmi.ccd.db;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  *
@@ -29,13 +29,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CcdDbApplication.class)
-public class CcdDbApplicationTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class CcdDbApplicationTests {
 
-    /**
-     * Test of main method, of class CcdDbApplication.
-     */
     @Test
     public void contextLoads() {
     }

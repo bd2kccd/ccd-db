@@ -1,0 +1,1 @@
+insert into variable_type (id, description, name) values (null, 'Continuous data.', 'continuous')
