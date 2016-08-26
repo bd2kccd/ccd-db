@@ -53,7 +53,7 @@ public class ShareGroup implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userAccountId", nullable = false)
+    @JoinColumn(name = "owner", nullable = false)
     private UserAccount owner;
 
     @Column(name = "name", unique = true, nullable = false, length = 127)
