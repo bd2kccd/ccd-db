@@ -66,11 +66,9 @@ public class Vocabulary implements Serializable {
     @Column(name = "description", nullable = false, length = 511)
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdDate", nullable = false, length = 19)
     private Timestamp createdDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modifiedDate", length = 19)
     private Timestamp modifiedDate;
 

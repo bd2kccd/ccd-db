@@ -58,9 +58,9 @@ public class PersonService {
         return personRepository.findByEmail(email);
     }
 
-    public Page<Person> findPersonByDescriptionContains(String terms, Pageable pageable) {
-        return personRepository.findByDescriptionContains(terms, pageable);
-    }
+//    public Page<Person> findPersonByDescriptionContains(String terms, Pageable pageable) {
+//        return personRepository.findByDescriptionContains(terms, pageable);
+//    }
 
     public void delete(Person person) {
         personRepository.delete(person);

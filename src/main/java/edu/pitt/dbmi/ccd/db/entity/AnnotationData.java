@@ -72,11 +72,9 @@ public class AnnotationData implements Serializable {
     @Column(name = "value")
     private String value;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdDate", nullable = false, length = 19)
     private Timestamp createdDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modifiedDate", nullable = false, length = 19)
     private Timestamp modifiedDate;
 
@@ -84,7 +82,7 @@ public class AnnotationData implements Serializable {
     @Column(name = "modifyCount", nullable = false)
     private int modifyCount;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "nestedAnnotationData")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentAnnotationData")
     private Set<AnnotationData> nestedAnnotationData = new HashSet<>(0);
 
     public AnnotationData() {

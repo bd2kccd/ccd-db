@@ -88,15 +88,15 @@ public class UserAccountService {
     }
 
     public Page<UserAccount> findByGroupMembership(Group group, Pageable pageable) {
-        return userAccountRepository.findByGroupMembership(group.getName(), pageable);
+        return userAccountRepository.findByShareGroupMemberships(group.getName(), pageable);
     }
 
-    public Page<UserAccount> findByGroupModeration(Group group, Pageable pageable) {
-        return userAccountRepository.findByGroupModeration(group.getName(), pageable);
-    }
+//    public Page<UserAccount> findByGroupModeration(Group group, Pageable pageable) {
+//        return userAccountRepository.findByGroupModeration(group.getName(), pageable);
+//    }
 
     public Page<UserAccount> findByGroupRequests(Group group, Pageable pageable) {
-        return userAccountRepository.findByGroupRequests(group.getName(), pageable);
+        return userAccountRepository.findByShareGroupRequests(group.getName(), pageable);
     }
 
     public Page<UserAccount> findAll(Pageable pageable) {

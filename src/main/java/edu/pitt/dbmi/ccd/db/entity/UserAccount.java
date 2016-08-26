@@ -99,8 +99,11 @@ public class UserAccount implements Serializable {
     @Column(name = "activationKey")
     private String activationKey;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "members")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     private Set<ShareGroup> shareGroups = new HashSet<>(0);
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "members")
+    private Set<ShareGroup> shareGroupMemberships = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "requesters")
     private Set<ShareGroup> shareGroupRequests = new HashSet<>(0);
@@ -264,6 +267,14 @@ public class UserAccount implements Serializable {
 
     public void setShareGroups(Set<ShareGroup> shareGroups) {
         this.shareGroups = shareGroups;
+    }
+
+    public Set<ShareGroup> getShareGroupMemberships() {
+        return shareGroupMemberships;
+    }
+
+    public void setShareGroupMemberships(Set<ShareGroup> shareGroupMemberships) {
+        this.shareGroupMemberships= shareGroupMemberships;
     }
 
     public Set<ShareGroup> getShareGroupRequests() {

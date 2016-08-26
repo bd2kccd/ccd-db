@@ -68,11 +68,9 @@ public class AnnotationTarget implements Serializable {
     @Column(name = "address")
     private Address address;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdDate", nullable = false, length = 19)
     private Timestamp createdDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modifiedDate", length = 19)
     private Timestamp modifiedDate;
 

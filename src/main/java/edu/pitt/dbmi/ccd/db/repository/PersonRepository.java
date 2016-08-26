@@ -49,6 +49,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     // public Page<Person> findByFirstNameAndMiddleNameAndLastName(String first, String middle, String last);
 
-    public Page<Person> findByDescriptionContains(String terms, Pageable pageable);
+//    public Page<Person> findByDescriptionContains(String terms, Pageable pageable);
 
 }

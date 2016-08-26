@@ -74,7 +74,6 @@ public class File implements Serializable {
     @Column(name = "absolutePath", nullable = false)
     private String absolutePath;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "creationTime", nullable = false, length = 19)
     private Date creationTime;
 

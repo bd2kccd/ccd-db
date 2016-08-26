@@ -85,11 +85,9 @@ public class Annotation implements Serializable {
     @Column(name = "redacted", nullable = false)
     private boolean redacted;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdDate", nullable = false)
     private Timestamp createdDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modifiedDate")
     private Timestamp modifiedDate;
 
