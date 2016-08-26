@@ -56,17 +56,21 @@ public class Person implements Serializable {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Column(name = "description", nullable = false)
+    private String desription;
+
     @Column(name = "workspace", nullable = false)
     private String workspace;
 
     public Person() {
     }
 
-    public Person(String firstName, String middleName, String lastName, String email, String workspace) {
+    public Person(String firstName, String middleName, String lastName, String email, String description, String workspace) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
         this.email = email;
+        this.desription = description;
         this.workspace = workspace;
     }
 
@@ -108,6 +112,14 @@ public class Person implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDesription() {
+        return desription;
+    }
+
+    public void setDesription(String desription) {
+        this.desription = desription;
     }
 
     public String getWorkspace() {
