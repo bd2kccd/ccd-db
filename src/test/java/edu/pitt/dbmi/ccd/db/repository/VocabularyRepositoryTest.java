@@ -1,9 +1,26 @@
+/*
+ * Copyright (C) 2016 University of Pittsburgh.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
+ */
+
 package edu.pitt.dbmi.ccd.db.repository;
 
 import static edu.pitt.dbmi.ccd.db.specification.VocabularySpecification.searchSpec;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,10 +49,12 @@ public class VocabularyRepositoryTest {
     @Autowired(required=true)
     private VocabularyRepository vocabularyRepository;
 
+    private final Pageable pageable = new PageRequest(0, 100);
+
     @Test
     public void saveAndDelete() {
         // save
-        final Vocabulary vocabulary = vocabularyRepository.save(new Vocabulary("TEST", "Test vocabulary"));
+        Vocabulary vocabulary = vocabularyRepository.save(new Vocabulary("TEST", "Test vocabulary", "1"));
         assertNotNull(vocabulary.getId());
 
         // delete
@@ -46,32 +65,32 @@ public class VocabularyRepositoryTest {
 
     @Test
     public void findById() {
-        final Optional<Vocabulary> found = vocabularyRepository.findById(1L);
-        assertTrue(found.isPresent());
+        Optional<Vocabulary> vocabulary = vocabularyRepository.findById(1L);
+        assertTrue(vocabulary.isPresent());
     }
 
     @Test
     public void findByName() {
-        final Optional<Vocabulary> found = vocabularyRepository.findByName("Plaintext");
-        assertTrue(found.isPresent());
+        Optional<Vocabulary> vocabulary = vocabularyRepository.findByName("Plaintext");
+        assertTrue(vocabulary.isPresent());
     }
 
     @Test
     public void search() {
-        final Set<String> searches = new HashSet<>(Arrays.asList("text"));
-        final Pageable pageable = new PageRequest(0, 1000);
-        final Page<Vocabulary> vocabularies = vocabularyRepository.findAll(searchSpec(searches, null), pageable);
-        assertTrue(vocabularies.getTotalElements() == 1);
+        final Set<String> searchText = new HashSet<>(Arrays.asList("text"));
 
-        final Set<String> nots = searches;
-        final Page<Vocabulary> empty = vocabularyRepository.findAll(searchSpec(null, nots), pageable);
-        assertTrue(empty.getTotalElements() == 0);
+        // Search for text
+        Page<Vocabulary> vocabularies = vocabularyRepository.findAll(searchSpec(searchText, null), pageable);
+        assertEquals(1, vocabularies.getTotalElements());
+
+        // Search for negated text
+        Page<Vocabulary> empty = vocabularyRepository.findAll(searchSpec(null, searchText), pageable);
+        assertEquals(0, empty.getTotalElements());
     }
 
     @Test
     public void findAll() {
-        final Pageable pageable = new PageRequest(0, 1000);
-        final Page<Vocabulary> vocabularies = vocabularyRepository.findAll(pageable);
-        assertTrue(vocabularies.getTotalElements() == 1);
+        Page<Vocabulary> vocabularies = vocabularyRepository.findAll(pageable);
+        assertEquals(1, vocabularies.getTotalElements());
     }
 }

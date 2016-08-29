@@ -18,9 +18,15 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 
 /**
  *
@@ -31,4 +37,31 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VocabularyRepository extends JpaRepository<Vocabulary, Long> {
 
+    /**
+     * @param id Id to find
+     * @return Optional vocabulary
+     */
+    Optional<Vocabulary> findById(Long id);
+
+    /**
+     *
+     * @param name Vocabulary name
+     * @return Optional vocabulary
+     */
+    Optional<Vocabulary> findByName(String name);
+
+    /**
+     * Search for vocabulary
+     * @param specification Search specification
+     * @param pageable      Page, size, and sort parameters
+     * @return Page of vocabularies
+     */
+    Page<Vocabulary> findAll(Specification<Vocabulary> specification, Pageable pageable);
+
+    /**
+     * All vocabularies
+     * @param pageable Page, size, and sort parameters
+     * @return Page of vocabularies
+     */
+    Page<Vocabulary> findAll(Pageable pageable);
 }

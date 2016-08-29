@@ -22,23 +22,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 /**
  *
@@ -57,7 +43,7 @@ public class Vocabulary implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "version", nullable = false, length = 63)
+    @Column(name = "version", length = 63)
     private String version;
 
     @Column(name = "name", unique = true, nullable = false, length = 127)
@@ -155,12 +141,24 @@ public class Vocabulary implements Serializable {
         return this.attributes.contains(attribute);
     }
 
+    public boolean hasAttributes(Set<Attribute> attributes) {
+        return this.attributes.containsAll(attributes);
+    }
+
     public boolean addAttribute(Attribute attribute) {
         return this.attributes.add(attribute);
     }
 
+    public boolean addAttributes(Set<Attribute> attributes) {
+        return this.attributes.addAll(attributes);
+    }
+
     public boolean removeAttribute(Attribute attribute) {
         return this.attributes.remove(attribute);
+    }
+
+    public boolean removeAttributes(Set<Attribute> attributes) {
+        return this.attributes.removeAll(attributes);
     }
 
     public Set<AttributeLevel> getAttributeLevels() {
@@ -175,11 +173,22 @@ public class Vocabulary implements Serializable {
         return this.attributeLevels.contains(attributeLevel);
     }
 
+    public boolean hasAttributeLevels(Set<AttributeLevel> attributeLevels) {
+        return this.attributeLevels.containsAll(attributeLevels);
+    }
+
     public boolean addAttributeLevel(AttributeLevel attributeLevel) {
         return this.attributeLevels.add(attributeLevel);
     }
 
+    public boolean addAttributeLevels(Set<AttributeLevel> attributeLevels) {
+        return this.attributeLevels.addAll(attributeLevels);
+    }
     public boolean removeAttributeLevel(AttributeLevel attributeLevel) {
         return this.attributeLevels.remove(attributeLevel);
+    }
+
+    public boolean removeAttributeLevels(Set<AttributeLevel> attributeLevels) {
+        return this.attributeLevels.removeAll(attributeLevels);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2016 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,9 +19,7 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -29,13 +27,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
@@ -43,20 +39,19 @@ import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = CCDDatabaseApplication.class)
 public class VocabularyServiceTest {
 
     @Autowired
     private VocabularyService vocabularyService;
 
-    private final Pageable pageable = new PageRequest(0, 1);
+    private final Pageable pageable = new PageRequest(0, 100);
 
     @Test
     public void saveAndDelete() {
         // save
-        Vocabulary vocabulary = new Vocabulary("TEST", "Test vocabulary");
-        vocabulary = vocabularyService.save(vocabulary);
+        Vocabulary vocabulary = vocabularyService.save(new Vocabulary("TEST", "Test vocabulary", null));
+        assertNotNull(vocabulary.getId());
 
         // delete
         vocabularyService.delete(vocabulary);
@@ -78,14 +73,15 @@ public class VocabularyServiceTest {
 
     @Test
     public void search() {
-        // matches
-        final Set<String> search = new HashSet<>(Arrays.asList("Plaintext"));
-        Page<Vocabulary> vocabularies = vocabularyService.search(search, new HashSet<String>(0), pageable);
+        final Set<String> searchText = new HashSet<>(Arrays.asList("text"));
+
+        // Search for text
+        Page<Vocabulary> vocabularies = vocabularyService.search(searchText, null, pageable);
         assertEquals(1, vocabularies.getTotalElements());
 
-        // nots
-        vocabularies = vocabularyService.search(new HashSet<String>(0), search, pageable);
-        assertEquals(0, vocabularies.getTotalElements());
+        // Search for negated text
+        Page<Vocabulary> empty = vocabularyService.search(null, searchText, pageable);
+        assertEquals(0, empty.getTotalElements());
     }
 
     @Test
