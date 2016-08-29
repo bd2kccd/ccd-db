@@ -32,8 +32,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 import java.io.Serializable;
@@ -58,9 +56,23 @@ public class Annotation implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
+    @Column(name = "createdDate", nullable = false)
+    private Timestamp createdDate;
+
+    @Column(name = "modifiedDate")
+    private Timestamp modifiedDate;
+
+    @Version
+    @Column(name = "modifyCount", nullable = false)
+    private int modifyCount;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "parentAnnotationId")
-    private Annotation parentAnnotation;
+    @JoinColumn(name = "userAccountId", nullable = false)
+    private UserAccount userAccount;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "vocabularyId", nullable = false)
+    private Vocabulary vocabulary;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "annotationTargetId", nullable = false)
@@ -75,25 +87,11 @@ public class Annotation implements Serializable {
     private ShareGroup shareGroup;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userAccountId", nullable = false)
-    private UserAccount userAccount;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "vocabularyId", nullable = false)
-    private Vocabulary vocabulary;
+    @JoinColumn(name = "parentAnnotationId")
+    private Annotation parentAnnotation;
 
     @Column(name = "redacted", nullable = false)
     private boolean redacted;
-
-    @Column(name = "createdDate", nullable = false)
-    private Timestamp createdDate;
-
-    @Column(name = "modifiedDate")
-    private Timestamp modifiedDate;
-
-    @Version
-    @Column(name = "modifyCount", nullable = false)
-    private int modifyCount;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentAnnotation")
     private Set<Annotation> childAnnotations = new HashSet<>(0);

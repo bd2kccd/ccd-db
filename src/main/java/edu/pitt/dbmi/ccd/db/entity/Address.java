@@ -44,7 +44,6 @@ public class Address implements Serializable {
     @Column(name = "title", nullable = false, length = 128)
     private String title;
 
-
     public Address() {
     }
 
