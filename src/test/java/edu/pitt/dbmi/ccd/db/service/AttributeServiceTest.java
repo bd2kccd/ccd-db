@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
+import edu.pitt.dbmi.ccd.db.entity.AttributeLevel;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 
 /**
@@ -38,7 +39,7 @@ public class AttributeServiceTest {
     public void saveAndDelete() {
         // save
         final Vocabulary vocabulary = vocabularyService.findById(1L).get();
-        Attribute attribute = new Attribute(vocabulary, null, "TEST", null);
+        Attribute attribute = new Attribute(vocabulary, "Test", false);
         attribute = attributeService.save(attribute);
 
         // delete
@@ -54,16 +55,9 @@ public class AttributeServiceTest {
     }
 
     @Test
-    public void findByVocab() {
+    public void search() {
         final Vocabulary vocabulary = vocabularyService.findById(1L).get();
-        Page<Attribute> attributes = attributeService.findByVocab(vocabulary, pageable);
-        assertEquals(1, attributes.getTotalElements());
-    }
-
-    @Test
-    public void findByVocabAndParentIsNull() {
-        final Vocabulary vocabulary = vocabularyService.findById(1L).get();
-        Page<Attribute> attributes = attributeService.findByVocabAndParentIsNull(vocabulary, pageable);
+        Page<Attribute> attributes = attributeService.search(vocabulary, null, "text", null, null, pageable);
         assertEquals(1, attributes.getTotalElements());
     }
 }

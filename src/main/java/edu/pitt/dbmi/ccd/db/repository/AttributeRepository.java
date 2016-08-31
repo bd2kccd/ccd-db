@@ -18,9 +18,19 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.Attribute;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import edu.pitt.dbmi.ccd.db.entity.Attribute;
+import edu.pitt.dbmi.ccd.db.entity.AttributeLevel;
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 
 /**
  *
@@ -31,4 +41,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 
+    public Optional<Attribute> findById(Long id);
+
+    @Query(value = "SELECT a FROM Attribute AS a " +
+            "WHERE (:vocabulary IS NULL OR a.vocabulary = :vocabulary " +
+            "AND (:level IS NULL OR a.attributeLevel = :level " +
+            "AND (:name IS NULL OR a.name LIKE :name " +
+            "AND (:required IS NULL OR a.required = :required) " +
+            "AND (:parent IS NULL OR a.parentAttribute = :parent")
+    public Page<Attribute> search(@Param("vocabulary") Vocabulary vocabulary, @Param("level") AttributeLevel level, @Param("name") String name, @Param("required") Boolean required, @Param("parent") Attribute parent, Pageable pageable);
+
+    public List<Attribute> findAll();
 }

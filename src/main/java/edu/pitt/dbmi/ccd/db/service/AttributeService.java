@@ -18,9 +18,21 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.Attribute;
+import edu.pitt.dbmi.ccd.db.entity.AttributeLevel;
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import edu.pitt.dbmi.ccd.db.repository.AttributeRepository;
 import javax.transaction.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 /**
@@ -40,4 +52,31 @@ public class AttributeService {
         this.attributeRepository = attributeRepository;
     }
 
+    public Attribute save(Attribute attribute) {
+        return attributeRepository.save(attribute);
+    }
+
+    public Set<Attribute> save(Set<Attribute> attributes) {
+        return attributeRepository.save(attributes).stream().collect(Collectors.toSet());
+    }
+
+    public Optional<Attribute> findById(Long id) {
+        return attributeRepository.findById(id);
+    }
+
+    public Page<Attribute> search(Vocabulary vocabulary, AttributeLevel attributeLevel, String name,Boolean required, Attribute parent, Pageable pageable) {
+        return attributeRepository.search(vocabulary, attributeLevel, name, required, parent, pageable);
+    }
+
+    public List<Attribute> findAll() {
+        return attributeRepository.findAll();
+    }
+
+    public void delete(Attribute attribute) {
+        attributeRepository.delete(attribute);
+    }
+
+    public void delete(Set<Attribute> attributes) {
+        attributeRepository.delete(attributes);
+    }
 }

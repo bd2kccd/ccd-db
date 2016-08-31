@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -45,10 +46,12 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     public Optional<Person> findByEmail(String email);
 
+    public Optional<Person> findByDescriptionContains(String query);
+
     public Page<Person> findByFirstNameAndLastName(String first, String last, Pageable pageable);
 
-    // public Page<Person> findByFirstNameAndMiddleNameAndLastName(String first, String middle, String last);
-
     public Page<Person> findByDescriptionContains(String terms, Pageable pageable);
+
+    public List<Person> findAll();
 
 }
