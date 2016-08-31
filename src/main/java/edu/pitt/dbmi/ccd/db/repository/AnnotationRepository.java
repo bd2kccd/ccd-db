@@ -19,7 +19,12 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -29,6 +34,9 @@ import org.springframework.stereotype.Repository;
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
-public interface AnnotationRepository extends JpaRepository<Annotation, Long> {
+public interface AnnotationRepository extends JpaRepository<Annotation, Long>, JpaSpecificationExecutor<Annotation> {
 
+    public Annotation findOne(Specification<Annotation> specification);
+
+    public Page<Annotation> findAll(Specification<Annotation> specification, Pageable pageable);
 }

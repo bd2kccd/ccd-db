@@ -18,10 +18,25 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.repository.AnnotationRepository;
+import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.filterSpec;
+import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.idSpec;
+import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.parentSpec;
+
 import javax.transaction.Transactional;
+
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import edu.pitt.dbmi.ccd.db.entity.Annotation;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.repository.AnnotationRepository;
 
 /**
  *
@@ -40,4 +55,33 @@ public class AnnotationService {
         this.annotationRepository = annotationRepository;
     }
 
+    public Annotation save (Annotation annotation) {
+        return annotationRepository.save(annotation);
+    }
+
+    public Set<Annotation> save(Set<Annotation> annotations) {
+        return annotationRepository.save(annotations).stream().collect(Collectors.toSet());
+    }
+
+    public Optional<Annotation> findById(UserAccount requester, Long id) {
+        Specification<Annotation> specification = idSpec(requester, id);
+        return Optional.ofNullable(annotationRepository.findOne(specification));
+    }
+
+    public Page<Annotation> findByParent(UserAccount requester, Annotation parent, boolean showRedacted, Pageable pageable) {
+        Specification<Annotation> specification = parentSpec(requester, parent.getId(), showRedacted);
+        return annotationRepository.findAll(specification, pageable);
+    }
+//
+//    public Page<Annotation> filter(UserAccount requester, Long user, Long group, Long target, Long vocabulary, Long attributeLevel, Long attribute, Boolean attributeRequired, Boolean showRedacted, Boolean parentless, Pageable pageable) {
+//        Specification<Annotation> specification = filterSpec(requester, user, group)
+//    }
+
+    protected void delete(Annotation annotation) {
+        annotationRepository.delete(annotation);
+    }
+
+    protected void delete(Set<Annotation> annotations) {
+        annotationRepository.delete(annotations);
+    }
 }
