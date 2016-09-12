@@ -18,9 +18,14 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.AttributeLevel;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import edu.pitt.dbmi.ccd.db.entity.AttributeLevel;
 
 /**
  *
@@ -31,4 +36,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AttributeLevelRepository extends JpaRepository<AttributeLevel, Long> {
 
+    public Optional<AttributeLevel> findById(Long id);
+
+    public Optional<AttributeLevel> findByName(String name);
+
+    public Page<AttributeLevel> findByDescriptionContains(String terms, Pageable pageable);
+
+    public Page<AttributeLevel> findAll(Pageable pageable);
 }

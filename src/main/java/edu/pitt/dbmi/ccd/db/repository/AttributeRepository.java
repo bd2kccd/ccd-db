@@ -51,5 +51,7 @@ public interface AttributeRepository extends JpaRepository<Attribute, Long> {
             "AND (:parent IS NULL OR a.parentAttribute = :parent")
     public Page<Attribute> search(@Param("vocabulary") Vocabulary vocabulary, @Param("level") AttributeLevel level, @Param("name") String name, @Param("required") Boolean required, @Param("parent") Attribute parent, Pageable pageable);
 
+    public Page<Attribute> findAll(Pageable pageable);
+
     public List<Attribute> findAll();
 }

@@ -18,9 +18,18 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import edu.pitt.dbmi.ccd.db.entity.Address;
+import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
+import edu.pitt.dbmi.ccd.db.entity.File;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  *
@@ -31,4 +40,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AnnotationTargetRepository extends JpaRepository<AnnotationTarget, Long> {
 
+    public Optional<AnnotationTarget> findById(Long id);
+
+    public Optional<AnnotationTarget> findByFile(File file);
+
+    public Optional<AnnotationTarget> findByAddress(Address address);
+
+    public Page<AnnotationTarget> findByTitleContains(String terms, Pageable pageable);
+
+    public Page<AnnotationTarget> findByUser(UserAccount user, Pageable pageable);
+
+    // search and filter
+
+    public Page<AnnotationTarget> findAll(Specification<AnnotationTarget> spec, Pageable pageable);
+
+    public Page<AnnotationTarget> findAll(Pageable pageable);
 }

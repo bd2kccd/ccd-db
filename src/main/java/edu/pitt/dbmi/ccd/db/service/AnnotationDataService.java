@@ -18,10 +18,19 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.repository.AnnotationDataRepository;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import edu.pitt.dbmi.ccd.db.entity.Annotation;
+import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
+import edu.pitt.dbmi.ccd.db.repository.AnnotationDataRepository;
 
 /**
  *
@@ -38,6 +47,26 @@ public class AnnotationDataService {
     @Autowired
     public AnnotationDataService(AnnotationDataRepository annotationDataRepository) {
         this.annotationDataRepository = annotationDataRepository;
+    }
+
+    public AnnotationData save(AnnotationData annotationData) {
+        return annotationDataRepository.save(annotationData);
+    }
+
+    public Set<AnnotationData> save(Set<AnnotationData> annotationData) {
+        return annotationDataRepository.save(annotationData).stream().collect(Collectors.toSet());
+    }
+
+    public Optional<AnnotationData> findById(Long id) {
+        return annotationDataRepository.findById(id);
+    }
+
+    public Page<AnnotationData> findByAnnotation(Annotation annotation, Pageable pageable) {
+        return annotationDataRepository.findByAnnotation(annotation, pageable);
+    }
+
+    protected void delete(AnnotationData annotationData) {
+        annotationDataRepository.delete(annotationData);
     }
 
 }

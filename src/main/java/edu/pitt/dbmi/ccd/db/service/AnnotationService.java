@@ -18,15 +18,12 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.filterSpec;
-import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.idSpec;
-import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.parentSpec;
-
-import javax.transaction.Transactional;
+import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.*;
 
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -72,10 +69,21 @@ public class AnnotationService {
         Specification<Annotation> specification = parentSpec(requester, parent.getId(), showRedacted);
         return annotationRepository.findAll(specification, pageable);
     }
-//
-//    public Page<Annotation> filter(UserAccount requester, Long user, Long group, Long target, Long vocabulary, Long attributeLevel, Long attribute, Boolean attributeRequired, Boolean showRedacted, Boolean parentless, Pageable pageable) {
-//        Specification<Annotation> specification = filterSpec(requester, user, group)
-//    }
+
+    public Page<Annotation> filter(
+            UserAccount requester,
+            String userAccount,
+            Long group,
+            Long target,
+            Long vocabulary,
+            Long attributeLevel,
+            Long attribute,
+            boolean showRedacted,
+            boolean topLevelOnly,
+            Pageable pageable) {
+        Specification<Annotation> specification = filterSpec(requester, userAccount, group, target, vocabulary, attributeLevel, attribute, showRedacted, topLevelOnly);
+        return annotationRepository.findAll(specification, pageable);
+    }
 
     protected void delete(Annotation annotation) {
         annotationRepository.delete(annotation);

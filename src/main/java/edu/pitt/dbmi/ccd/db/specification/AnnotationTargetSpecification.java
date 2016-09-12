@@ -81,7 +81,7 @@ public final class AnnotationTargetSpecification {
             if (type.equalsIgnoreCase(FILE)) {
                 predicates.add(isFile(root, cb));
             } else if (type.equalsIgnoreCase(URL)) {
-                predicates.add(isURL(root, cb));
+                predicates.add(isAddress(root, cb));
             }
         }
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -110,8 +110,8 @@ public final class AnnotationTargetSpecification {
         return cb.isNull(root.get(ADDRESS));
     }
 
-    // is url predicate
-    private static Predicate isURL(Root<AnnotationTarget> root, CriteriaBuilder cb) {
+    // is address predicate
+    private static Predicate isAddress(Root<AnnotationTarget> root, CriteriaBuilder cb) {
         return cb.isNotNull(root.get(ADDRESS));
     }
 
@@ -119,9 +119,8 @@ public final class AnnotationTargetSpecification {
     private static List<Predicate> inTitleOrAddressOrName(Root<AnnotationTarget> root, CriteriaBuilder cb, Set<String> terms) {
         return terms.stream()
                     .map(t -> containsLike(t))
-                    .map(t -> cb.or(titleContains(root, cb, t),
-                                    (root.get(ADDRESS) != null) ? addressContains(root, cb, t)
-                                                                : fileNameContains(root, cb, t)))
+                    .map(t -> cb.or(fileContains(root, cb, t),
+                                    addressContains(root, cb, t)))
                     .collect(Collectors.toList());
     }
 
@@ -129,20 +128,19 @@ public final class AnnotationTargetSpecification {
     private static List<Predicate> notInTitleOrAddressOrName(Root<AnnotationTarget> root, CriteriaBuilder cb, Set<String> terms) {
         return terms.stream()
                     .map(t -> containsLike(t))
-                    .map(t -> cb.not(cb.or(titleContains(root, cb, t),
-                                           (root.get(ADDRESS) != null) ? addressContains(root, cb, t)
-                                                                       : fileNameContains(root, cb, t))))
+                    .map(t -> cb.not(cb.or(fileContains(root, cb, t),
+                                           addressContains(root, cb, t))))
                     .collect(Collectors.toList());
     }
 
     // build title contains term predicate
-    private static Predicate titleContains(Root<AnnotationTarget> root, CriteriaBuilder cb, String term) {
+    private static Predicate fileContains(Root<AnnotationTarget> root, CriteriaBuilder cb, String term) {
         return cb.like(cb.lower(root.get(FILE).get(TITLE)), term);
     }
 
     // build address contains term predicate
     private static Predicate addressContains(Root<AnnotationTarget> root, CriteriaBuilder cb, String term) {
-        return cb.like(cb.lower(root.get(ADDRESS)), term);
+        return cb.like(cb.lower(root.get(ADDRESS).get(TITLE)), term);
     }
 
     // build file name contains term predicate
