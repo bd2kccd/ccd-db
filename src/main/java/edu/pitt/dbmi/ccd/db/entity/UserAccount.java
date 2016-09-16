@@ -18,27 +18,13 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 /**
  *
@@ -136,7 +122,7 @@ public class UserAccount implements Serializable {
         this.account = account;
     }
 
-    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, UserRole userRole, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account, String activationKey, Set<ShareGroup> shareGroups, Set<ShareGroup> shareGroups_1, Set<AnnotationTarget> annotationTargets, Set<File> files, Set<ShareGroup> shareGroups_2, Set<Annotation> annotations) {
+    public UserAccount(Person person, UserLogin userLogin, UserLoginAttempt userLoginAttempt, UserRole userRole, String username, String password, boolean active, boolean disabled, Date registrationDate, Long registrationLocation, String account, String activationKey, Set<ShareGroup> shareGroups, Set<AnnotationTarget> annotationTargets, Set<File> files, Set<Annotation> annotations) {
         this.person = person;
         this.userLogin = userLogin;
         this.userLoginAttempt = userLoginAttempt;
@@ -150,10 +136,8 @@ public class UserAccount implements Serializable {
         this.account = account;
         this.activationKey = activationKey;
         this.shareGroups = shareGroups;
-        this.shareGroups = shareGroups_1;
         this.annotationTargets = annotationTargets;
         this.files = files;
-        this.shareGroupRequests = shareGroups_2;
         this.annotations = annotations;
     }
 

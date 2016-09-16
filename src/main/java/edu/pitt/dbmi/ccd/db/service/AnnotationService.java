@@ -85,6 +85,28 @@ public class AnnotationService {
         return annotationRepository.findAll(specification, pageable);
     }
 
+    public Page<Annotation> search(
+            UserAccount requester,
+            String userAccount,
+            Long group,
+            Long target,
+            Long vocabulary,
+            Long attributeLevel,
+            Long attribute,
+            boolean showRedacted,
+            boolean topLevelOnly,
+            Set<String> matches,
+            Set<String> nots,
+            Pageable pageable) {
+        Specification<Annotation> specification = searchSpec(requester, userAccount, group, target, vocabulary, attributeLevel, attribute, showRedacted, topLevelOnly, matches, nots);
+        return annotationRepository.findAll(specification, pageable);
+    }
+
+    public Page<Annotation> findAll(UserAccount requester, Pageable pageable) {
+        Specification<Annotation> spec = authSpec(requester);
+        return annotationRepository.findAll(spec, pageable);
+    }
+
     protected void delete(Annotation annotation) {
         annotationRepository.delete(annotation);
     }

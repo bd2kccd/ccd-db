@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
+import edu.pitt.dbmi.ccd.db.entity.Address;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
@@ -42,7 +43,7 @@ public class AnnotationTargetServiceTest {
     public void saveAndDelete() {
         // save
         final UserAccount userAccount = userAccountService.findById(1L).get();
-        AnnotationTarget annotationTarget = new AnnotationTarget(userAccount, "Test annotationTarget", "https://google.com");
+        AnnotationTarget annotationTarget = new AnnotationTarget(userAccount, null, new Address(userAccount, "https://google.com", "Test annotationTarget"));
         annotationTarget = annotationTargetService.save(annotationTarget);
         assertNotNull(annotationTarget.getId());
 

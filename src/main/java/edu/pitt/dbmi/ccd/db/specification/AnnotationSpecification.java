@@ -249,7 +249,7 @@ public final class AnnotationSpecification {
         return predicates;
     }
 
-    // build search predicates of non-null parameters
+    // build search predxicates of non-null parameters
     private static List<Predicate> buildSearchPredicates(Root<Annotation> root,
                                                          CriteriaQuery query,
                                                          CriteriaBuilder cb,

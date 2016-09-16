@@ -1,9 +1,6 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Date;
 import java.util.Optional;
@@ -19,11 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Person;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.entity.UserLogin;
-import edu.pitt.dbmi.ccd.db.entity.UserLoginAttempt;
-import edu.pitt.dbmi.ccd.db.entity.UserRole;
+import edu.pitt.dbmi.ccd.db.entity.*;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -46,7 +39,7 @@ public class UserAccountRepositoryTest {
 
         // save
         Person person = new Person("Albert", null, "Einstein", "einstein@example.com", "~/ccd_workspace/", "Physicist");
-        UserAccount user = new UserAccount(person, new UserLogin(), new UserLoginAttempt(), userRole, "einstein", "$2a$10$mTPRrCa1THQJyk60QrhIQOgvQAnSpDkcm1QK5zwKc6m9xBu87hKqG", true, false, new Date(), registrationLocation, UUID.randomUUID().toString(), "abcde");
+        UserAccount user = new UserAccount(person, new UserLogin(), new UserLoginAttempt(), userRole, "einstein", "$2a$10$mTPRrCa1THQJyk60QrhIQOgvQAnSpDkcm1QK5zwKc6m9xBu87hKqG", true, false, new Date(), UUID.randomUUID().toString());
         user = userAccountRepository.save(user);
         assertNotNull(user.getId());
 
@@ -74,26 +67,26 @@ public class UserAccountRepositoryTest {
         assertTrue(user.isPresent());
     }
 
-    @Test
-    public void findByGroupMembership() {
-        Page<UserAccount> users = userAccountRepository.findByGroupMembership("Scientists", pageable);
-        assertTrue(users.getTotalElements() == 1);
-        assertEquals(users.iterator().next().getUsername(), "isaac");
-    }
-
-    @Test
-    public void findByGroupModeration() {
-        Page<UserAccount> users = userAccountRepository.findByGroupModeration("Scientists", pageable);
-        assertTrue(users.getTotalElements() == 1);
-        assertEquals(users.iterator().next().getUsername(), "isaac");
-    }
-
-    @Test
-    public void findByGroupRequests() {
-        Page<UserAccount> users = userAccountRepository.findByGroupRequests("Scientists", pageable);
-        assertTrue(users.getTotalElements() == 1);
-        assertEquals(users.iterator().next().getUsername(), "alan");
-    }
+//    @Test
+//    public void findByGroupMembership() {
+//        Page<UserAccount> users = userAccountRepository.findByGroupMembership("Scientists", pageable);
+//        assertTrue(users.getTotalElements() == 1);
+//        assertEquals(users.iterator().next().getUsername(), "isaac");
+//    }
+//
+//    @Test
+//    public void findByGroupModeration() {
+//        Page<UserAccount> users = userAccountRepository.findByGroupModeration("Scientists", pageable);
+//        assertTrue(users.getTotalElements() == 1);
+//        assertEquals(users.iterator().next().getUsername(), "isaac");
+//    }
+//
+//    @Test
+//    public void findByGroupRequests() {
+//        Page<UserAccount> users = userAccountRepository.findByGroupRequests("Scientists", pageable);
+//        assertTrue(users.getTotalElements() == 1);
+//        assertEquals(users.iterator().next().getUsername(), "alan");
+//    }
 
     @Test
     public void findByEmail() {

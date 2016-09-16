@@ -60,7 +60,7 @@ public class AnnotationDataServiceTest {
         // save
         final Annotation annotation = annotationRepository.findOne(1L);
         final Attribute attribute = attributeService.findById(1L).get();
-        AnnotationData annotationData = new AnnotationData(annotation, attribute, "TEST ANNOTATION DATA");
+        AnnotationData annotationData = new AnnotationData(annotation, attribute, "TEST ANNOTATION DATA", null);
         annotationData = annotationDataService.save(annotationData);
         assertNotNull(annotationData.getId());
 

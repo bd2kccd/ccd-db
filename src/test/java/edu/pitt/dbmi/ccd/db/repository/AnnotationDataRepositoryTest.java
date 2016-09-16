@@ -40,7 +40,7 @@ public class AnnotationDataRepositoryTest {
         // save
         final Annotation annotation = annotationRepository.findOne(1L);
         final Attribute attribute = attributeRepository.findOne(1L);
-        final AnnotationData data = annotationDataRepository.save(new AnnotationData(annotation, attribute, "Test"));
+        final AnnotationData data = annotationDataRepository.save(new AnnotationData(annotation, attribute, "Test", null));
         assertNotNull(data.getId());
 
         // delete

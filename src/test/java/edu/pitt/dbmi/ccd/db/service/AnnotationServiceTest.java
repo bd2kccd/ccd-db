@@ -60,7 +60,7 @@ public class AnnotationServiceTest {
         final AnnotationTarget annotationTarget = annotationTargetService.findById(1L).get();
         final ShareAccess access = shareAccessService.findById(1L).get();
         final Vocabulary vocabulary = vocabularyService.findById(1L).get();
-        Annotation annotation = new Annotation(owner, annotationTarget, null, access, null, vocabulary);
+        Annotation annotation = new Annotation(annotationTarget, owner, vocabulary, access, null, null);
         annotation = annotationService.save(annotation);
 
         // delete
@@ -120,61 +120,61 @@ public class AnnotationServiceTest {
 
         // make sure parent is actually parent
         final Annotation child = annotations.iterator().next();
-        assertEquals(parent.getId(), child.getParent().getId());
+        assertEquals(parent.getId(), child.getParentAnnotation().getId());
     }
 
     @Test
     public void filterUser() {
         // has annotations
-        final Page<Annotation> annotations = annotationService.filter(owner, owner.getUsername(), null, null, null, null, null, null, false, false, pageable);
+        final Page<Annotation> annotations = annotationService.filter(owner, owner.getUsername(), null, null, null, null, null, false, false, pageable);
         assertEquals(4, annotations.getTotalElements());
 
         // does not have annotations
-        final Page<Annotation> empty = annotationService.filter(owner, viewer.getUsername(), null, null, null, null, null, null, false, false, pageable);
+        final Page<Annotation> empty = annotationService.filter(owner, viewer.getUsername(), null, null, null, null, null, false, false, pageable);
         assertEquals(0, empty.getTotalElements());
     }
 
     @Test
     public void filterGroup() {
         // has annotations
-        final Page<Annotation> annotations = annotationService.filter(owner, null, "scientists", null, null, null, null, null, false, false, pageable);
+        final Page<Annotation> annotations = annotationService.filter(owner, null, 1L, null, null, null, null, false, false, pageable);
         assertEquals(1, annotations.getTotalElements());
 
         // does not have annotations
-        final Page<Annotation> empty = annotationService.filter(owner, null, "Does Not Exist", null, null, null, null, null, false, false, pageable);
+        final Page<Annotation> empty = annotationService.filter(owner, null, 2000L, null, null, null, null, false, false, pageable);
         assertEquals(0, empty.getTotalElements());
     }
 
     @Test
     public void filterTarget() {
         // has annotations
-        final Page<Annotation> annotations = annotationService.filter(owner, null, null, 1L, null, null, null, null, false, false, pageable);
+        final Page<Annotation> annotations = annotationService.filter(owner, null, null, 1L, null, null, null, false, false, pageable);
         assertEquals(4, annotations.getTotalElements());
 
         // does not have annotations
-        final Page<Annotation> empty = annotationService.filter(owner, null, null, 100L, null, null, null, null, false, false, pageable);
+        final Page<Annotation> empty = annotationService.filter(owner, null, null, 100L, null, null, null, false, false, pageable);
         assertEquals(0, empty.getTotalElements());
     }
 
     @Test
     public void filterVocabulary() {
         // has annotations
-        final Page<Annotation> annotations = annotationService.filter(owner, null, null, null, "Plaintext", null, null, null, false, false, pageable);
+        final Page<Annotation> annotations = annotationService.filter(owner, null, null, null, 1L, null, null, false, false, pageable);
         assertEquals(4, annotations.getTotalElements());
 
         // does not have annotations
-        final Page<Annotation> empty = annotationService.filter(owner, null, null, null, "Does Not Exist", null, null, null, false, false, pageable);
+        final Page<Annotation> empty = annotationService.filter(owner, null, null, null, 2000L, null, null, false, false, pageable);
         assertEquals(0, empty.getTotalElements());
     }
 
     @Test
     public void filterAttributeName() {
         // has annotations
-        final Page<Annotation> annotations = annotationService.filter(owner, null, null, null, null, null, "text", null, false, false, pageable);
+        final Page<Annotation> annotations = annotationService.filter(owner, null, null, null, null, null, 1L, false, false, pageable);
         assertEquals(4, annotations.getTotalElements());
 
         // does not have annotations
-        final Page<Annotation> empty = annotationService.filter(owner, null, null, null, null, null, "Does Not Exist", null, false, false, pageable);
+        final Page<Annotation> empty = annotationService.filter(owner, null, null, null, null, null, 2000L, false, false, pageable);
         assertEquals(0, empty.getTotalElements());
     }
 
@@ -182,12 +182,12 @@ public class AnnotationServiceTest {
     public void search() {
         // matches
         final Set<String> search = new HashSet<>(Arrays.asList("annotation"));
-        Page<Annotation> annotations = annotationService.search(owner, null, null, null, null, null, null, null, false, false, search, new HashSet<String>(0), pageable);
+        Page<Annotation> annotations = annotationService.search(owner, null, null, null, null, null, null, false, false, search, new HashSet<String>(0), pageable);
         assertEquals(4, annotations.getTotalElements());
 
         // nots
         final Set<String> nots = search;
-        annotations = annotationService.search(owner, null, null, null, null, null, null, null, false, false, new HashSet<String>(0), nots, pageable);
+        annotations = annotationService.search(owner, null, null, null, null, null, null, false, false, new HashSet<String>(0), nots, pageable);
         assertEquals(0, annotations.getTotalElements());
     }
 

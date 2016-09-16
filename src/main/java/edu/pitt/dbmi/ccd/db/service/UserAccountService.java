@@ -28,7 +28,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
@@ -85,18 +84,6 @@ public class UserAccountService {
 
     public Optional<UserAccount> findByEmail(String email) {
         return userAccountRepository.findByEmail(email);
-    }
-
-    public Page<UserAccount> findByGroupMembership(Group group, Pageable pageable) {
-        return userAccountRepository.findByShareGroupMemberships(group.getName(), pageable);
-    }
-
-//    public Page<UserAccount> findByGroupModeration(Group group, Pageable pageable) {
-//        return userAccountRepository.findByGroupModeration(group.getName(), pageable);
-//    }
-
-    public Page<UserAccount> findByGroupRequests(Group group, Pageable pageable) {
-        return userAccountRepository.findByShareGroupRequests(group.getName(), pageable);
     }
 
     public Page<UserAccount> findAll(Pageable pageable) {
