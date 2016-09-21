@@ -18,9 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.entity.Address;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
@@ -28,8 +27,9 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 /**
  * Mark Silvis (marksilvis@pitt.edu)
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = CCDDatabaseApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@Ignore
 public class AnnotationTargetServiceTest {
 
     @Autowired

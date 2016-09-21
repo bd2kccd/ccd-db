@@ -94,7 +94,7 @@ public class UserAccount implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "requesters")
     private Set<ShareGroup> shareGroupRequests = new HashSet<>(0);
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userAccount")

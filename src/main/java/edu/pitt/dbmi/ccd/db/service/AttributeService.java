@@ -64,9 +64,9 @@ public class AttributeService {
         return attributeRepository.findById(id);
     }
 
-    public Page<Attribute> search(Vocabulary vocabulary, AttributeLevel attributeLevel, String name,Boolean required, Attribute parent, Pageable pageable) {
-        return attributeRepository.search(vocabulary, attributeLevel, name, required, parent, pageable);
-    }
+//    public Page<Attribute> search(Vocabulary vocabulary, AttributeLevel attributeLevel, String name,Boolean required, Attribute parent, Pageable pageable) {
+//        return attributeRepository.search(vocabulary, attributeLevel, name, required, parent, pageable);
+//    }
 
     public List<Attribute> findAll() {
         return attributeRepository.findAll();

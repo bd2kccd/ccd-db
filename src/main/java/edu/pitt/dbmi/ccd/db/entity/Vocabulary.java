@@ -20,11 +20,25 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
 
 /**
  *
@@ -43,13 +57,13 @@ public class Vocabulary implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "version", length = 63)
+    @Column(name = "version", length = 50)
     private String version;
 
-    @Column(name = "name", unique = true, nullable = false, length = 127)
+    @Column(name = "name", unique = true, nullable = false, length = 25)
     private String name;
 
-    @Column(name = "description", nullable = false, length = 511)
+    @Column(name = "description", nullable = false, length = 500)
     private String description;
 
     @Column(name = "createdDate", nullable = false, length = 19)
@@ -79,6 +93,16 @@ public class Vocabulary implements Serializable {
     public Vocabulary(String name, String description, String version, Set<AttributeLevel> attributeLevels) {
         this(name, description, version);
         this.attributeLevels = attributeLevels;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        createdDate = new Timestamp((new Date()).getTime());
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        modifiedDate = new Timestamp((new Date()).getTime());
     }
 
     public Long getId() {

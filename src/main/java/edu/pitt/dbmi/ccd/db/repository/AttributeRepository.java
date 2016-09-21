@@ -43,13 +43,13 @@ public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 
     public Optional<Attribute> findById(Long id);
 
-    @Query(value = "SELECT a FROM Attribute AS a " +
-            "WHERE (:vocabulary IS NULL OR a.vocabulary = :vocabulary " +
-            "AND (:level IS NULL OR a.attributeLevel = :level " +
-            "AND (:name IS NULL OR a.name LIKE :name " +
-            "AND (:required IS NULL OR a.required = :required) " +
-            "AND (:parent IS NULL OR a.parentAttribute = :parent")
-    public Page<Attribute> search(@Param("vocabulary") Vocabulary vocabulary, @Param("level") AttributeLevel level, @Param("name") String name, @Param("required") Boolean required, @Param("parent") Attribute parent, Pageable pageable);
+//    @Query(value = "SELECT a FROM Attribute AS a " +
+//            "WHERE (:vocabulary IS NULL OR a.vocabulary = :vocabulary " +
+//            "AND (:level IS NULL OR a.attributeLevel = :level " +
+//            "AND (:name IS NULL OR a.name LIKE :name " +
+//            "AND (:required IS NULL OR a.required = :required) " +
+//            "AND (:parent IS NULL OR a.parentAttribute = :parent")
+//    public Page<Attribute> search(@Param("vocabulary") Vocabulary vocabulary, @Param("level") AttributeLevel level, @Param("name") String name, @Param("required") Boolean required, @Param("parent") Attribute parent, Pageable pageable);
 
     public Page<Attribute> findAll(Pageable pageable);
 

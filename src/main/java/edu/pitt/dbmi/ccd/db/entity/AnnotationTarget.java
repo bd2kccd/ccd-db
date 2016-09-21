@@ -63,7 +63,7 @@ public class AnnotationTarget implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userAccountId", nullable = false)
-    private UserAccount userAccount;
+    private UserAccount user;
 
     @Column(name = "address")
     private Address address;
@@ -87,12 +87,12 @@ public class AnnotationTarget implements Serializable {
     public AnnotationTarget() {
     }
 
-    public AnnotationTarget(UserAccount userAccount) {
-        this.userAccount = userAccount;
+    public AnnotationTarget(UserAccount user) {
+        this.user = user;
     }
 
-    public AnnotationTarget(UserAccount userAccount, File file, Address address) {
-        this(userAccount);
+    public AnnotationTarget(UserAccount user, File file, Address address) {
+        this(user);
         this.file = file;
         this.address = address;
     }
@@ -123,12 +123,12 @@ public class AnnotationTarget implements Serializable {
         this.file = file;
     }
 
-    public UserAccount getUserAccount() {
-        return userAccount;
+    public UserAccount getUser() {
+        return user;
     }
 
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
+    public void setUser(UserAccount user) {
+        this.user = user;
     }
 
     public Address getAddress() {

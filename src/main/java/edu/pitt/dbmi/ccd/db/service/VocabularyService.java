@@ -48,10 +48,11 @@ import edu.pitt.dbmi.ccd.db.repository.VocabularyRepository;
 @Transactional
 public class VocabularyService {
 
-    private final VocabularyRepository vocabularyRepository;
+    private VocabularyRepository vocabularyRepository;
 
     @Autowired
     public VocabularyService(VocabularyRepository vocabularyRepository) {
+
         this.vocabularyRepository = vocabularyRepository;
 
         List<Vocabulary> vocabularies = vocabularyRepository.findAll();

@@ -57,7 +57,7 @@ public class Person implements Serializable {
     private String email;
 
     @Column(name = "description", nullable = false)
-    private String desription;
+    private String description;
 
     @Column(name = "workspace", nullable = false)
     private String workspace;
@@ -70,7 +70,7 @@ public class Person implements Serializable {
         this.middleName = middleName;
         this.lastName = lastName;
         this.email = email;
-        this.desription = description;
+        this.description = description;
         this.workspace = workspace;
     }
 
@@ -114,12 +114,12 @@ public class Person implements Serializable {
         this.email = email;
     }
 
-    public String getDesription() {
-        return desription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesription(String desription) {
-        this.desription = desription;
+    public void setDescription(String desription) {
+        this.description = desription;
     }
 
     public String getWorkspace() {

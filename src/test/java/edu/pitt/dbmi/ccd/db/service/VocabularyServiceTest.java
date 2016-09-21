@@ -19,27 +19,33 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-@SpringBootTest(classes = CCDDatabaseApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class VocabularyServiceTest {
 
     @Autowired
@@ -51,6 +57,7 @@ public class VocabularyServiceTest {
     public void saveAndDelete() {
         // save
         Vocabulary vocabulary = vocabularyService.save(new Vocabulary("TEST", "Test vocabulary", null));
+        System.out.println("Vocabulary is: " + vocabulary.toString());
         assertNotNull(vocabulary.getId());
 
         // delete
