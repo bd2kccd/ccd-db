@@ -26,6 +26,7 @@ import edu.pitt.dbmi.ccd.db.entity.Attribute;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class AnnotationDataRepositoryTest {
 
     @Autowired

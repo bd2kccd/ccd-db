@@ -52,7 +52,6 @@ import edu.pitt.dbmi.ccd.db.entity.UserRole;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore
 public class UserAccountServiceTest {
 
     @Autowired

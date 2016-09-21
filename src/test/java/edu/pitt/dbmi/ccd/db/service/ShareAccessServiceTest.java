@@ -43,7 +43,6 @@ import edu.pitt.dbmi.ccd.db.entity.ShareAccess;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore
 public class ShareAccessServiceTest {
 
     @Autowired

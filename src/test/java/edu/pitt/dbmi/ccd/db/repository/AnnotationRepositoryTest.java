@@ -35,6 +35,7 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Ignore
 public class AnnotationRepositoryTest {
 
     @Autowired
