@@ -16,28 +16,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.service;
+package edu.pitt.dbmi.ccd.db;
 
-import edu.pitt.dbmi.ccd.db.repository.OauthAccessTokenRepository;
-import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  *
- * Aug 3, 2016 4:28:26 PM
+ * Sep 21, 2016 10:42:40 PM
  *
- * @author Mark Silvis (marksilvis@pitt.edu)
+ * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Service
-@Transactional
-public class OauthAccessTokenService {
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class CcdDbApplicationTests {
 
-    private final OauthAccessTokenRepository oauthAccessTokenRepository;
-
-    @Autowired
-    public OauthAccessTokenService(OauthAccessTokenRepository oauthAccessTokenRepository) {
-        this.oauthAccessTokenRepository = oauthAccessTokenRepository;
+    @Test
+    public void contextLoads() {
     }
 
 }

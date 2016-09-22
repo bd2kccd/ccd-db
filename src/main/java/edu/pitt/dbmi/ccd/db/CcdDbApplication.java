@@ -16,28 +16,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.service;
+package edu.pitt.dbmi.ccd.db;
 
-import edu.pitt.dbmi.ccd.db.repository.AttributeRepository;
-import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  *
- * Aug 3, 2016 4:27:46 PM
+ * Sep 21, 2016 10:41:26 PM
  *
- * @author Mark Silvis (marksilvis@pitt.edu)
+ * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Service
-@Transactional
-public class AttributeService {
+@SpringBootApplication
+public class CcdDbApplication {
 
-    private final AttributeRepository attributeRepository;
-
-    @Autowired
-    public AttributeService(AttributeRepository attributeRepository) {
-        this.attributeRepository = attributeRepository;
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(CcdDbApplication.class, args);
     }
 
 }
