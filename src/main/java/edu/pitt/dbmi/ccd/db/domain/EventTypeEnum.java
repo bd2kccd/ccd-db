@@ -29,6 +29,7 @@ public enum EventTypeEnum {
     USER_LOGIN,
     USER_LOGOUT,
     USER_REGISTRATION,
+    USER_PROFILE_UPDATE,
     USER_LOGIN_FAILED;
 
 }
