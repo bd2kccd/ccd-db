@@ -20,13 +20,12 @@ package edu.pitt.dbmi.ccd.db.service;
 
 import static edu.pitt.dbmi.ccd.db.specification.ShareGroupSpecification.searchSpec;
 
-import javax.transaction.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +33,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.pitt.dbmi.ccd.db.entity.ShareGroup;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.ShareGroupRepository;
 
 /**
@@ -83,13 +81,13 @@ public class ShareGroupService {
                 .collect(Collectors.toList());
     }
 
-    public Page<ShareGroup> findByMember(UserAccount user, Pageable pageable) {
-        return shareGroupRepository.findByMember(user.getUsername(), pageable);
-    }
-
-    public Page<ShareGroup> findByRequester(UserAccount user, Pageable pageable) {
-        return shareGroupRepository.findByRequester(user.getUsername(), pageable);
-    }
+//    public Page<ShareGroup> findByMember(UserAccount user, Pageable pageable) {
+//        return shareGroupRepository.findByMember(user.getUsername(), pageable);
+//    }
+//
+//    public Page<ShareGroup> findByRequester(UserAccount user, Pageable pageable) {
+//        return shareGroupRepository.findByRequester(user.getUsername(), pageable);
+//    }
 
     public Page<ShareGroup> search(Set<String> matches, Set<String> nots, Pageable pageable) {
         return shareGroupRepository.findAll(searchSpec(matches, nots), pageable);

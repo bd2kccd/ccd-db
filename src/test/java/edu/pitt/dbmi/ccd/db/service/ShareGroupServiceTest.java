@@ -19,8 +19,7 @@
 
 package edu.pitt.dbmi.ccd.db.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Optional;
 
@@ -55,15 +54,16 @@ public class ShareGroupServiceTest {
     @Test
     @Ignore
     public void saveAndDelete() {
-//        // save
-//        ShareGroup shareGroup = new ShareGroup("TEST", "Test shareGroup");
-//        shareGroup = shareGroupService.save(shareGroup);
-//        assertNotNull(shareGroup.getId());
-//
-//        // delete
-//        shareGroupService.delete(shareGroup);
-//        Optional<ShareGroup> found = shareGroupService.findById(shareGroup.getId());
-//        assertFalse(found.isPresent());
+        // save
+        UserAccount owner = userAccountService.findById(1L).get();
+        ShareGroup shareGroup = new ShareGroup(owner, "TEST", "Test shareGroup");
+        shareGroup = shareGroupService.save(shareGroup);
+        assertNotNull(shareGroup.getId());
+
+        // delete
+        shareGroupService.delete(shareGroup);
+        Optional<ShareGroup> found = shareGroupService.findById(shareGroup.getId());
+        assertFalse(found.isPresent());
     }
 
     @Test
@@ -78,31 +78,31 @@ public class ShareGroupServiceTest {
         assertTrue(shareGroup.isPresent());
     }
 
-    @Test
-    public void findByMember() {
-        // is member
-        UserAccount newton = userAccountService.findById(1L).get();
-        Page<ShareGroup> shareGroups = shareGroupService.findByMember(newton, pageable);
-        assertEquals(1, shareGroups.getTotalElements());
-
-        // is not member
-        UserAccount turing = userAccountService.findById(2L).get();
-        shareGroups = shareGroupService.findByMember(turing, pageable);
-        assertEquals(0, shareGroups.getTotalElements());
-    }
-
-    @Test
-    public void findByRequester() {
-        // is requester
-        UserAccount turing = userAccountService.findById(2L).get();
-        Page<ShareGroup> shareGroups = shareGroupService.findByRequester(turing, pageable);
-        assertEquals(1, shareGroups.getTotalElements());
-
-        // is not requester
-        UserAccount newton = userAccountService.findById(1L).get();
-        shareGroups = shareGroupService.findByRequester(newton, pageable);
-        assertEquals(0, shareGroups.getTotalElements());
-    }
+//    @Test
+//    public void findByMember() {
+//        // is member
+//        UserAccount newton = userAccountService.findById(1L).get();
+//        Page<ShareGroup> shareGroups = shareGroupService.findByMember(newton, pageable);
+//        assertEquals(1, shareGroups.getTotalElements());
+//
+//        // is not member
+//        UserAccount turing = userAccountService.findById(2L).get();
+//        shareGroups = shareGroupService.findByMember(turing, pageable);
+//        assertEquals(0, shareGroups.getTotalElements());
+//    }
+//
+//    @Test
+//    public void findByRequester() {
+//        // is requester
+//        UserAccount turing = userAccountService.findById(2L).get();
+//        Page<ShareGroup> shareGroups = shareGroupService.findByRequester(turing, pageable);
+//        assertEquals(1, shareGroups.getTotalElements());
+//
+//        // is not requester
+//        UserAccount newton = userAccountService.findById(1L).get();
+//        shareGroups = shareGroupService.findByRequester(newton, pageable);
+//        assertEquals(0, shareGroups.getTotalElements());
+//    }
 
     @Test
     public void findAll() {

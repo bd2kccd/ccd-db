@@ -24,7 +24,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import edu.pitt.dbmi.ccd.db.entity.ShareGroup;
@@ -51,15 +50,15 @@ public interface ShareGroupRepository extends JpaRepository<ShareGroup, Long> {
      */
     public Optional<ShareGroup> findByName(String name);
 
-    @Query(value="SELECT g FROM Group AS g " +
-            "LEFT JOIN g.members AS m " +
-            "WHERE m.username = ?1")
-    public Page<ShareGroup> findByMember(String username, Pageable pageable);
-
-    @Query(value="SELECT g FROM Group AS g " +
-            "LEFT JOIN g.requesters AS r " +
-            "WHERE r.username = ?1")
-    public Page<ShareGroup> findByRequester(String username, Pageable pageable);
+//    @Query(value="SELECT g FROM Group AS g " +
+//            "LEFT JOIN g.members AS m " +
+//            "WHERE m.username = ?1")
+//    public Page<ShareGroup> findByMember(String username, Pageable pageable);
+//
+//    @Query(value="SELECT g FROM Group AS g " +
+//            "LEFT JOIN g.requesters AS r " +
+//            "WHERE r.username = ?1")
+//    public Page<ShareGroup> findByRequester(String username, Pageable pageable);
 
     /**
      * Find all groups by spec
