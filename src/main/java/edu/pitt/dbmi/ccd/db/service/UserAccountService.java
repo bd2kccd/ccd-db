@@ -67,6 +67,10 @@ public class UserAccountService {
         return userAccountRepository.findByEmail(email);
     }
 
+    public Long countByUsername(String username) {
+        return userAccountRepository.countByUsername(username);
+    }
+
     public UserAccount save(UserAccount userAccount) {
         personRepository.save(userAccount.getPerson());
 
