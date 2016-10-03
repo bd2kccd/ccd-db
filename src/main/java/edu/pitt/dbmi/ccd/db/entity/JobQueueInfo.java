@@ -75,7 +75,7 @@ public class JobQueueInfo implements Serializable {
     @Column(name = "addedTime", nullable = false, length = 19)
     private Date addedTime;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "UserAccountJobQueueInfoRel", joinColumns = {
         @JoinColumn(name = "jobQueueInfoId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
