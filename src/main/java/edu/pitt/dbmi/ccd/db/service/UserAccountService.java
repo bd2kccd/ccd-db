@@ -18,10 +18,14 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.domain.AccountRegistration;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
+import java.nio.file.Paths;
+import java.util.Date;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,11 +64,67 @@ public class UserAccountService {
         return userAccountRepository.findByAccountId(accountId);
     }
 
+    @Deprecated
     public UserAccount saveUserAccount(UserAccount userAccount) {
         Person person = personRepository.save(userAccount.getPerson());
         userAccount.setPerson(person);
 
         return userAccountRepository.save(userAccount);
+    }
+
+    public UserAccount save(UserAccount userAccount) {
+        personRepository.save(userAccount.getPerson());
+
+        return userAccountRepository.save(userAccount);
+    }
+
+    public UserAccount createNewAccount(AccountRegistration accountRegistration) {
+        UserAccount userAccount = createUserAccount(accountRegistration);
+
+        return save(userAccount);
+    }
+
+    public Long countByUsername(String username) {
+        return userAccountRepository.countByUsername(username);
+    }
+
+    protected UserAccount createUserAccount(AccountRegistration accountRegistration) {
+        String username = accountRegistration.getUsername();
+        String password = accountRegistration.getPassword();
+        boolean activated = accountRegistration.isActivated();
+
+        String accountId = UUID.randomUUID().toString();
+        Date registrationDate = new Date(System.currentTimeMillis());
+        Person person = createPerson(accountRegistration, accountId);
+
+        UserAccount userAccount = new UserAccount();
+        userAccount.setAccountId(accountId);
+        userAccount.setActive(activated);
+        userAccount.setPassword(password);
+        userAccount.setPerson(person);
+        userAccount.setCreatedDate(registrationDate);
+        userAccount.setLastLoginDate(registrationDate);
+        userAccount.setUsername(username);
+
+        return userAccount;
+    }
+
+    protected Person createPerson(AccountRegistration accountRegistration, String account) {
+        String firstName = accountRegistration.getFirstName();
+        String middleName = accountRegistration.getMiddleName();
+        String lastName = accountRegistration.getLastName();
+        String email = accountRegistration.getEmail();
+        String workspace = Paths.get(accountRegistration.getWorkspace(), account.replace("-", "_")).toAbsolutePath().toString();
+
+        Person person = new Person();
+        person.setEmail(email);
+        person.setFirstName(firstName);
+        person.setLastName(lastName);
+        person.setLastName(lastName);
+        person.setMiddleName(middleName);
+        person.setWorkspace(workspace);
+
+        return person;
     }
 
 }
