@@ -82,6 +82,14 @@ public class UserAccountService {
         return userAccountRepository.save(userAccount);
     }
 
+    public Person updatePerson(UserAccount userAccount) {
+        return personRepository.save(userAccount.getPerson());
+    }
+
+    public UserAccount updateAccount(UserAccount userAccount) {
+        return userAccountRepository.save(userAccount);
+    }
+
     public UserAccount createNewAccount(AccountRegistration accountRegistration) {
         UserAccount userAccount = createUserAccount(accountRegistration);
 
