@@ -33,4 +33,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     public Person findByEmail(String email);
 
+    public Long countByEmail(String email);
+
 }

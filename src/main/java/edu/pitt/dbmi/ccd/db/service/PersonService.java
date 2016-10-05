@@ -53,4 +53,8 @@ public class PersonService {
         return personRepository.findByEmail(email);
     }
 
+    public Long countByEmail(String email) {
+        return personRepository.countByEmail(email);
+    }
+
 }
