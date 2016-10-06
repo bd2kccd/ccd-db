@@ -105,7 +105,7 @@ public class UserAccountService {
         String password = accountRegistration.getPassword();
         boolean activated = accountRegistration.isActivated();
 
-        String accountId = UUID.randomUUID().toString();
+        String accountId = activated ? null : UUID.randomUUID().toString();
         Date registrationDate = new Date(System.currentTimeMillis());
         Person person = createPerson(accountRegistration, accountId);
 
@@ -126,7 +126,7 @@ public class UserAccountService {
         String middleName = accountRegistration.getMiddleName();
         String lastName = accountRegistration.getLastName();
         String email = accountRegistration.getEmail();
-        String workspace = Paths.get(accountRegistration.getWorkspace(), account.replace("-", "_")).toAbsolutePath().toString();
+        String workspace = Paths.get(accountRegistration.getWorkspace()).toAbsolutePath().toString();
 
         Person person = new Person();
         person.setEmail(email);
