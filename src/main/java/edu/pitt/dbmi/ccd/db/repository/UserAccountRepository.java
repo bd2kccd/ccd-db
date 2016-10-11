@@ -32,6 +32,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 
+    public UserAccount findById(Long id);
+
     public UserAccount findByUsername(String username);
 
     public UserAccount findByAccountId(String accountId);
