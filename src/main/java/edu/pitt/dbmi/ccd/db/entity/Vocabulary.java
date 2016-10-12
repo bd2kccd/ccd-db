@@ -18,7 +18,6 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import edu.pitt.dbmi.ccd.db.validation.Name;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
@@ -46,7 +45,6 @@ public class Vocabulary implements Serializable {
     @Version
     private Integer version;
 
-    @Name
     @NotBlank
     @Size(min = 4, max = 255, message = "Name must be between 4 and 255 characters")
     @Column(length = 255, unique = true, nullable = false)

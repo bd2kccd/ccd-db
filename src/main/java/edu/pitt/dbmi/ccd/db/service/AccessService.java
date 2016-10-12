@@ -41,11 +41,11 @@ public class AccessService {
         return accessRepository.save(access);
     }
 
-    public Optional<Access> findById(Long id) {
+    public Access findById(Long id) {
         return accessRepository.findById(id);
     }
 
-    public Optional<Access> findByName(String name) {
+    public Access findByName(String name) {
         return accessRepository.findByName(name);
     }
 

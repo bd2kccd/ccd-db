@@ -42,7 +42,7 @@ public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecific
      * @param id group id
      * @return group
      */
-    public Optional<Group> findById(Long id);
+    public Group findById(Long id);
 
     /**
      * Find group by name
@@ -50,22 +50,22 @@ public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecific
      * @param name group name
      * @return group
      */
-    public Optional<Group> findByName(String name);
+    public Group findByName(String name);
 
-    @Query(value = "SELECT g FROM Group AS g "
-            + "LEFT JOIN g.members AS m "
-            + "WHERE m.username = ?1")
-    public Page<Group> findByMember(String username, Pageable pageable);
-
-    @Query(value = "SELECT g FROM Group AS g "
-            + "LEFT JOIN g.mods AS m "
-            + "WHERE m.username = ?1")
-    public Page<Group> findByModerator(String username, Pageable pageable);
-
-    @Query(value = "SELECT g FROM Group AS g "
-            + "LEFT JOIN g.requesters AS r "
-            + "WHERE r.username = ?1")
-    public Page<Group> findByRequester(String username, Pageable pageable);
+//    @Query(value = "SELECT g FROM Group AS g "
+//            + "LEFT JOIN g.members AS m "
+//            + "WHERE m.username = ?1")
+//    public Page<Group> findByMember(String username, Pageable pageable);
+//
+//    @Query(value = "SELECT g FROM Group AS g "
+//            + "LEFT JOIN g.mods AS m "
+//            + "WHERE m.username = ?1")
+//    public Page<Group> findByModerator(String username, Pageable pageable);
+//
+//    @Query(value = "SELECT g FROM Group AS g "
+//            + "LEFT JOIN g.requesters AS r "
+//            + "WHERE r.username = ?1")
+//    public Page<Group> findByRequester(String username, Pageable pageable);
 
     /**
      * Find all groups by spec

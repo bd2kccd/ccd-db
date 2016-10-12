@@ -34,7 +34,7 @@ import org.springframework.stereotype.Repository;
 @RepositoryRestResource(exported = false)
 public interface AnnotationDataRepository extends JpaRepository<AnnotationData, Long> {
 
-    public Optional<AnnotationData> findById(Long id);
+    public AnnotationData findById(Long id);
 
     public Page<AnnotationData> findByAnnotation(Annotation annotation, Pageable pageable);
 

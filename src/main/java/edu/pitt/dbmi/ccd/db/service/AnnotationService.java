@@ -50,9 +50,9 @@ public class AnnotationService {
         return annotationRepository.saveAndFlush(annotation);
     }
 
-    public Optional<Annotation> findById(UserAccount requester, Long id) {
+    public Annotation findById(UserAccount requester, Long id) {
         Specification<Annotation> spec = idSpec(requester, id);
-        return Optional.ofNullable(annotationRepository.findOne(spec));
+        return annotationRepository.findOne(spec);
     }
 
     public Page<Annotation> findByParent(UserAccount requester, Annotation annotation, boolean showRedacted, Pageable pageable) {

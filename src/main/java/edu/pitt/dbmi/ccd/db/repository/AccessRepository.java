@@ -18,13 +18,13 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.Access;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
+
+import edu.pitt.dbmi.ccd.db.entity.Access;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -33,9 +33,9 @@ import org.springframework.stereotype.Repository;
 @RepositoryRestResource(exported = false)
 public interface AccessRepository extends JpaRepository<Access, Long> {
 
-    public Optional<Access> findById(Long id);
+    public Access findById(Long id);
 
-    public Optional<Access> findByName(String name);
+    public Access findByName(String name);
 
     public Page<Access> findAll(Pageable pageable);
 }

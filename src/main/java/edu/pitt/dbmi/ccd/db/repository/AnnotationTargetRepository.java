@@ -37,13 +37,11 @@ import org.springframework.stereotype.Repository;
 @RepositoryRestResource(exported = false)
 public interface AnnotationTargetRepository extends JpaRepository<AnnotationTarget, Long>, JpaSpecificationExecutor<AnnotationTarget> {
 
-    public Optional<AnnotationTarget> findById(Long id);
+    public AnnotationTarget findById(Long id);
 
-    public Optional<AnnotationTarget> findByFile(DataFile file);
+    public AnnotationTarget findByFile(DataFile file);
 
-    public Page<AnnotationTarget> findByTitleContains(String terms, Pageable pageable);
-
-    public Page<AnnotationTarget> findByUser(UserAccount user, Pageable pageable);
+//    public Page<AnnotationTarget> findByUser(UserAccount user, Pageable pageable);
 
     // search and filter
     public Page<AnnotationTarget> findAll(Specification<AnnotationTarget> spec, Pageable pageable);

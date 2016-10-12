@@ -53,11 +53,11 @@ public class AnnotationTargetService {
         return annotationTargetRepository.save(annotationTargets);
     }
 
-    public Optional<AnnotationTarget> findById(Long id) {
+    public AnnotationTarget findById(Long id) {
         return annotationTargetRepository.findById(id);
     }
 
-    public Optional<AnnotationTarget> findByDataFile(DataFile file) {
+    public AnnotationTarget findByDataFile(DataFile file) {
         return annotationTargetRepository.findByFile(file);
     }
 

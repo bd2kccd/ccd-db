@@ -35,9 +35,9 @@ import org.springframework.stereotype.Repository;
 @RepositoryRestResource(exported = false)
 public interface VocabularyRepository extends JpaRepository<Vocabulary, Long>, JpaSpecificationExecutor<Vocabulary> {
 
-    public Optional<Vocabulary> findById(Long id);
+    public Vocabulary findById(Long id);
 
-    public Optional<Vocabulary> findByName(String name);
+    public Vocabulary findByName(String name);
 
     public Page<Vocabulary> findAll(Specification<Vocabulary> spec, Pageable pageable);
 

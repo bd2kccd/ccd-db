@@ -44,7 +44,8 @@ public final class VocabularySpecification {
     /**
      * find vocabularies that contain search terms
      *
-     * @param terms search terms
+     * @param matches search terms
+     * @param nots negated search terms
      * @return specification
      */
     public static Specification<Vocabulary> searchSpec(Set<String> matches,

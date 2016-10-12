@@ -32,6 +32,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -104,6 +106,25 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)})
     private Set<SecurityAnswer> securityAnswers = new HashSet<>(0);
+
+    @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
+    @OrderBy("name")
+    private Set<Group> groups = new HashSet<>(0);
+
+    @ManyToMany(mappedBy = "mods", fetch = FetchType.EAGER)
+    @OrderBy("name")
+    private Set<Group> moderates = new HashSet<>(0);
+
+    @ManyToMany(mappedBy = "requesters", fetch = FetchType.LAZY)
+    private Set<Group> requesting = new HashSet<>(0);
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OrderBy("created")
+    private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OrderBy("created")
+    private Set<Annotation> annotations = new HashSet<>(0);
 
     public UserAccount() {
     }
@@ -245,4 +266,23 @@ public class UserAccount implements Serializable {
         this.securityAnswers = securityAnswers;
     }
 
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public Set<Group> getRequesting() {
+        return requesting;
+    }
+
+    public Set<Group> getMods() {
+        return moderates;
+    }
+
+    public Set<AnnotationTarget> getAnnotationTargets() {
+        return annotationTargets;
+    }
+
+    public Set<Annotation> getAnnotations() {
+        return annotations;
+    }
 }

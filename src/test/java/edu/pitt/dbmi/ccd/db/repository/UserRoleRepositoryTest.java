@@ -27,19 +27,7 @@ public class UserRoleRepositoryTest {
 
     @Autowired
     private UserAccountRepository userAccountRepository;
-
-    @Test
-    public void saveAndDelete() {
-        // save
-        UserRole userRole = userRoleRepository.save(new UserRole("TEST", "Test user role"));
-        assertNotNull(userRole.getId());
-
-        // delete
-        userRoleRepository.delete(userRole);
-        Optional<UserRole> found = userRoleRepository.findById(userRole.getId());
-        assertFalse(found.isPresent());
-    }
-
+    /*
     @Test
     public void findById() {
         Optional<UserRole> role = userRoleRepository.findById(1L);
@@ -61,5 +49,5 @@ public class UserRoleRepositoryTest {
         Optional<UserRole> role = userRoleRepository.findByUserAccounts(users);
         assertTrue(role.isPresent());
         assertEquals("USER", role.get().getName());
-    }
+    }*/
 }

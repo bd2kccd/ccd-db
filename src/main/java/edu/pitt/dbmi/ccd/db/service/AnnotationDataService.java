@@ -44,7 +44,7 @@ public class AnnotationDataService {
         return annotationDataRepository.save(data);
     }
 
-    public Optional<AnnotationData> findById(Long id) {
+    public AnnotationData findById(Long id) {
         return annotationDataRepository.findById(id);
     }
 

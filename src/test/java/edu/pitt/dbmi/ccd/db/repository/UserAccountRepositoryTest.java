@@ -55,35 +55,23 @@ public class UserAccountRepositoryTest {
     public UserAccountRepositoryTest() {
     }
 
-    @Test
-    public void saveAndDelete() {
-        // save
-        Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace/");
-        UserAccount user = new UserAccount(person, "einstein", "$2a$10$mTPRrCa1THQJyk60QrhIQOgvQAnSpDkcm1QK5zwKc6m9xBu87hKqG", UUID.randomUUID().toString(), true, new Date());
-        user = userAccountRepository.save(user);
-        assertNotNull(user.getId());
-
-        // delete
-        userAccountRepository.delete(user);
-        Optional<UserAccount> found = userAccountRepository.findById(user.getId());
-        assertFalse(found.isPresent());
-    }
+//    @Test
+//    public void saveAndDelete() {
+//        // save
+//        Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace/");
+//        UserAccount user = new UserAccount(person, "einstein", "$2a$10$mTPRrCa1THQJyk60QrhIQOgvQAnSpDkcm1QK5zwKc6m9xBu87hKqG", UUID.randomUUID().toString(), true, new Date());
+//        user = userAccountRepository.save(user);
+//        assertNotNull(user.getId());
+//
+//        // delete
+//        userAccountRepository.delete(user);
+//        Optional<UserAccount> found = userAccountRepository.findById(user.getId());
+//        assertFalse(found.isPresent());
+//    }
 
     @Test
     public void findById() {
         Optional<UserAccount> user = userAccountRepository.findById(1L);
-        assertTrue(user.isPresent());
-    }
-
-    @Test
-    public void findByUsername() {
-        Optional<UserAccount> user = userAccountRepository.findByUsername("isaac");
-        assertTrue(user.isPresent());
-    }
-
-    @Test
-    public void findByUsernameAndActivationKey() {
-        Optional<UserAccount> user = userAccountRepository.findByUsernameAndActivationKey("isaac", "abcd");
         assertTrue(user.isPresent());
     }
 
@@ -109,21 +97,9 @@ public class UserAccountRepositoryTest {
     }
 
     @Test
-    public void findByEmail() {
-        Optional<UserAccount> user = userAccountRepository.findByEmail("isaac@example.com");
-        assertTrue(user.isPresent());
-    }
-
-    @Test
-    public void findByFirstNameAndLastName() {
-        Optional<UserAccount> user = userAccountRepository.findByFirstNameAndLastName("Alan", "Turing");
-        assertTrue(user.isPresent());
-    }
-
-    @Test
     public void findAll() {
         Page<UserAccount> users = userAccountRepository.findAll(pageable);
-        assertTrue(users.getTotalElements() == 2);
+        assertEquals(users.getTotalElements(), 3);
     }
 
     /**

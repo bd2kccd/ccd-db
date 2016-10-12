@@ -18,20 +18,23 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.Group;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.repository.GroupRepository;
 import static edu.pitt.dbmi.ccd.db.specification.GroupSpecification.searchSpec;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import edu.pitt.dbmi.ccd.db.entity.Group;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.repository.GroupRepository;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -68,37 +71,37 @@ public class GroupService {
 //        }
 //        return save(group);
 //    }
-    public Optional<Group> findById(Long id) {
+    public Group findById(Long id) {
         return groupRepository.findById(id);
     }
 
-    public List<Optional<Group>> findByIds(Iterable<Long> ids) {
+    public List<Group> findByIds(Iterable<Long> ids) {
         return StreamSupport.stream(ids.spliterator(), false)
                 .map(this::findById)
                 .collect(Collectors.toList());
     }
 
-    public Optional<Group> findByName(String name) {
+    public Group findByName(String name) {
         return groupRepository.findByName(name);
     }
 
-    public List<Optional<Group>> findByNames(Iterable<String> names) {
+    public List<Group> findByNames(Iterable<String> names) {
         return StreamSupport.stream(names.spliterator(), false)
                 .map(this::findByName)
                 .collect(Collectors.toList());
     }
 
-    public Page<Group> findByMember(UserAccount user, Pageable pageable) {
-        return groupRepository.findByMember(user.getUsername(), pageable);
-    }
-
-    public Page<Group> findByModerator(UserAccount user, Pageable pageable) {
-        return groupRepository.findByModerator(user.getUsername(), pageable);
-    }
-
-    public Page<Group> findByRequester(UserAccount user, Pageable pageable) {
-        return groupRepository.findByRequester(user.getUsername(), pageable);
-    }
+//    public Page<Group> findByMember(UserAccount user, Pageable pageable) {
+//        return groupRepository.findByMember(user.getUsername(), pageable);
+//    }
+//
+//    public Page<Group> findByModerator(UserAccount user, Pageable pageable) {
+//        return groupRepository.findByModerator(user.getUsername(), pageable);
+//    }
+//
+//    public Page<Group> findByRequester(UserAccount user, Pageable pageable) {
+//        return groupRepository.findByRequester(user.getUsername(), pageable);
+//    }
 
     public Page<Group> search(Set<String> matches, Set<String> nots, Pageable pageable) {
         return groupRepository.findAll(searchSpec(matches, nots), pageable);

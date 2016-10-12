@@ -21,19 +21,6 @@ public class PersonServiceTest {
     private PersonService personService;
 
     @Test
-    public void saveAndDelete() {
-        // save
-        Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace");
-        person = personService.save(person);
-        assertNotNull(person.getId());
-
-        // delete
-        personService.delete(person);
-        Optional<Person> found = personService.findById(person.getId());
-        assertFalse(found.isPresent());
-    }
-
-    @Test
     public void findById() {
         Optional<Person> person = personService.findById(1L);
         assertTrue(person.isPresent());
