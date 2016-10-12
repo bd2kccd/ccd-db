@@ -19,6 +19,7 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,8 +33,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.jboss.jandex.AnnotationTarget;
 
 /**
  *
@@ -77,6 +81,9 @@ public class DataFile implements Serializable {
         @JoinColumn(name = "dataFileId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     private Set<UserAccount> userAccounts = new HashSet<>(0);
+
+    @OneToOne(mappedBy = "file", fetch = FetchType.LAZY)
+    private AnnotationTarget annotationTarget;
 
     public DataFile() {
     }
@@ -151,6 +158,14 @@ public class DataFile implements Serializable {
 
     public void setUserAccounts(Set<UserAccount> userAccounts) {
         this.userAccounts = userAccounts;
+    }
+
+    public AnnotationTarget getAnnotationTarget() {
+        return annotationTarget;
+    }
+
+    public void setAnnotationTarget(AnnotationTarget annotationTarget) {
+        this.annotationTarget = annotationTarget;
     }
 
 }
