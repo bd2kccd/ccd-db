@@ -36,7 +36,7 @@ import org.springframework.util.Assert;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
 public class PersonRepositoryTest {
-    
+
     @Autowired
     private PersonRepository personRepository;
 

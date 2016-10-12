@@ -18,6 +18,8 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -27,13 +29,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 public class Annotation implements Serializable {
+
     private static final long serialVersionUID = 3156490985879126383L;
 
     @Id

@@ -18,13 +18,12 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import java.io.Serializable;
 
 /**
  *
@@ -32,6 +31,7 @@ import java.io.Serializable;
  */
 @Entity
 public class Access implements Serializable {
+
     private static final Long serialVersionUID = 7788384757549817895L;
 
     @Id

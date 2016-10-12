@@ -18,6 +18,11 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,15 +32,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -43,6 +41,7 @@ import java.util.Set;
 @Entity
 @Table(name = "Groups")
 public class Group implements Serializable {
+
     private static final long serialVersionUID = 8879813170966961889L;
 
     @Id
@@ -57,22 +56,28 @@ public class Group implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupModeratoreration",
-        joinColumns = {@JoinColumn(name = "groupId")},
-        inverseJoinColumns = {@JoinColumn(name = "userAccountId")})
+            joinColumns = {
+                @JoinColumn(name = "groupId")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "userAccountId")})
     @OrderBy("username")
     private Set<UserAccount> moderators = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupMembership",
-            joinColumns = {@JoinColumn(name = "groupId")},
-            inverseJoinColumns = {@JoinColumn(name = "userAccountId")})
+            joinColumns = {
+                @JoinColumn(name = "groupId")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "userAccountId")})
     @OrderBy("username")
     private Set<UserAccount> members = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "GroupRequests",
-            joinColumns = {@JoinColumn(name = "groupId")},
-            inverseJoinColumns = {@JoinColumn(name = "userAccountId")})
+            joinColumns = {
+                @JoinColumn(name = "groupId")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "userAccountId")})
     @OrderBy("username")
     private Set<UserAccount> requesters = new HashSet<>(0);
 
@@ -156,7 +161,6 @@ public class Group implements Serializable {
     public void setModerators(Set<UserAccount> moderators) {
         this.moderators = moderators;
     }
-
 
     public boolean hasModerator(UserAccount mod) {
         return moderators.contains(mod);
