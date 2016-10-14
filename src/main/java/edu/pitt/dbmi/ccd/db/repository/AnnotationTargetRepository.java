@@ -18,25 +18,33 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
+import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.entity.UserRole;
-import java.util.Set;
+import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
 
 /**
- *
- * Oct 6, 2015 11:28:25 AM
- *
- * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
-public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
+@RepositoryRestResource(exported = false)
+public interface AnnotationTargetRepository extends JpaRepository<AnnotationTarget, Long>, JpaSpecificationExecutor<AnnotationTarget> {
 
-    public UserRole findById(Long id);
+    public AnnotationTarget findById(Long id);
 
-    public UserRole findByName(String name);
+    public AnnotationTarget findByFile(DataFile file);
 
-    public UserRole findByUserAccounts(Set<UserAccount> userAccounts);
+//    public Page<AnnotationTarget> findByUser(UserAccount user, Pageable pageable);
 
+    // search and filter
+    public Page<AnnotationTarget> findAll(Specification<AnnotationTarget> spec, Pageable pageable);
+
+    public Page<AnnotationTarget> findAll(Pageable pageable);
 }

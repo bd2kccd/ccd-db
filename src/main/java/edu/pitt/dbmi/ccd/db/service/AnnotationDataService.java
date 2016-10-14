@@ -18,47 +18,41 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.Person;
-import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
+import edu.pitt.dbmi.ccd.db.entity.Annotation;
+import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
+import edu.pitt.dbmi.ccd.db.repository.AnnotationDataRepository;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
- * Jul 24, 2015 1:31:14 PM
- *
- * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Service
 @Transactional
-public class PersonService {
+public class AnnotationDataService {
 
-    private final PersonRepository personRepository;
+    @Autowired
+    private AnnotationDataRepository annotationDataRepository;
+    @Autowired
+    private AttributeService attributeService;
 
-    @Autowired(required = true)
-    public PersonService(PersonRepository personRepository) {
-        this.personRepository = personRepository;
+    public AnnotationData save(AnnotationData data) {
+        return annotationDataRepository.save(data);
     }
 
-    public Person findById(Long id) {
-        return personRepository.findById(id);
+    public AnnotationData findById(Long id) {
+        return annotationDataRepository.findById(id);
     }
 
-    public Person findPerson(Long id) {
-        return personRepository.findOne(id);
+    public Page<AnnotationData> findByAnnotation(Annotation annotation, Pageable pageable) {
+        return annotationDataRepository.findByAnnotation(annotation, pageable);
     }
 
-    public Person save(Person person) {
-        return personRepository.save(person);
+    protected void delete(AnnotationData data) {
+        annotationDataRepository.delete(data);
     }
-
-    public Person findPersonByEmail(String email) {
-        return personRepository.findByEmail(email);
-    }
-
-    public Long countByEmail(String email) {
-        return personRepository.countByEmail(email);
-    }
-
 }

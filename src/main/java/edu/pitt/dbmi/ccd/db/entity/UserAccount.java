@@ -22,18 +22,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 /**
  *
@@ -51,7 +40,7 @@ public class UserAccount implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "personId", nullable = false)
     private Person person;
 
@@ -104,6 +93,25 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "securityAnswerId", nullable = false, updatable = false)})
     private Set<SecurityAnswer> securityAnswers = new HashSet<>(0);
+
+    @ManyToMany(mappedBy = "members", fetch = FetchType.EAGER)
+    @OrderBy("name")
+    private Set<Group> groups = new HashSet<>(0);
+
+    @ManyToMany(mappedBy = "moderators", fetch = FetchType.EAGER)
+    @OrderBy("name")
+    private Set<Group> moderates = new HashSet<>(0);
+
+    @ManyToMany(mappedBy = "requesters", fetch = FetchType.LAZY)
+    private Set<Group> requesting = new HashSet<>(0);
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OrderBy("created")
+    private Set<AnnotationTarget> annotationTargets = new HashSet<>(0);
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OrderBy("created")
+    private Set<Annotation> annotations = new HashSet<>(0);
 
     public UserAccount() {
     }
@@ -245,4 +253,23 @@ public class UserAccount implements Serializable {
         this.securityAnswers = securityAnswers;
     }
 
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public Set<Group> getRequesting() {
+        return requesting;
+    }
+
+    public Set<Group> getMods() {
+        return moderates;
+    }
+
+    public Set<AnnotationTarget> getAnnotationTargets() {
+        return annotationTargets;
+    }
+
+    public Set<Annotation> getAnnotations() {
+        return annotations;
+    }
 }
