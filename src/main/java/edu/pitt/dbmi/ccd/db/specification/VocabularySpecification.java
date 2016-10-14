@@ -18,8 +18,8 @@
  */
 package edu.pitt.dbmi.ccd.db.specification;
 
-import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
-import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +27,10 @@ import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.springframework.data.jpa.domain.Specification;
+
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -58,10 +61,10 @@ public final class VocabularySpecification {
     // build search predicates
     private static Predicate buildSearchSpec(Root<Vocabulary> root, CriteriaBuilder cb, Set<String> matches, Set<String> nots) {
         List<Predicate> predicates = new ArrayList<>(0);
-        if (!isNullOrEmpty(matches)) {
+        if (!isEmpty(matches)) {
             predicates.addAll(inNameOrDescription(root, cb, matches));
         }
-        if (!isNullOrEmpty(nots)) {
+        if (!isEmpty(nots)) {
             predicates.addAll(notInNameOrDescription(root, cb, nots));
         }
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -97,7 +100,7 @@ public final class VocabularySpecification {
 
     // wrap term in wildcards
     private static String containsLike(String term) {
-        if (isNullOrEmpty(term)) {
+        if (isEmpty(term)) {
             return "%";
         } else {
             return "%" + term.toLowerCase() + "%";

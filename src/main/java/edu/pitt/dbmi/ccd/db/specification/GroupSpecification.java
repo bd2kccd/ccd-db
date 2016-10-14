@@ -18,8 +18,8 @@
  */
 package edu.pitt.dbmi.ccd.db.specification;
 
-import edu.pitt.dbmi.ccd.db.entity.Group;
-import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +27,10 @@ import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.springframework.data.jpa.domain.Specification;
+
+import edu.pitt.dbmi.ccd.db.entity.Group;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -44,7 +47,8 @@ public final class GroupSpecification {
     /**
      * find groups that contain search terms
      *
-     * @param terms search terms
+     * @param matches search terms
+     * @param nots negated search terms
      * @return specification
      */
     public static Specification<Group> searchSpec(Set<String> matches,
@@ -57,10 +61,10 @@ public final class GroupSpecification {
     // build search predicates
     private static Predicate buildSearchSpec(Root<Group> root, CriteriaBuilder cb, Set<String> matches, Set<String> nots) {
         List<Predicate> predicates = new ArrayList<>(0);
-        if (!isNullOrEmpty(matches)) {
+        if (!isEmpty(matches)) {
             predicates.addAll(inNameOrDescription(root, cb, matches));
         }
-        if (!isNullOrEmpty(nots)) {
+        if (!isEmpty(nots)) {
             predicates.addAll(notInNameOrDescription(root, cb, nots));
         }
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -96,7 +100,7 @@ public final class GroupSpecification {
 
     // wrap term in wildcards
     private static String containsLike(String term) {
-        if (isNullOrEmpty(term)) {
+        if (isEmpty(term)) {
             return "%";
         } else {
             return "%" + term.toLowerCase() + "%";

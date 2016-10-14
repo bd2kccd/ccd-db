@@ -18,8 +18,8 @@
  */
 package edu.pitt.dbmi.ccd.db.specification;
 
-import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
-import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +27,10 @@ import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.springframework.data.jpa.domain.Specification;
+
+import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -71,10 +74,10 @@ public final class AnnotationTargetSpecification {
 
     private static Predicate buildFilterSpec(Root<AnnotationTarget> root, CriteriaBuilder cb, String username, String type) {
         List<Predicate> predicates = new ArrayList<>(0);
-        if (!isNullOrEmpty(username)) {
+        if (!isEmpty(username)) {
             predicates.add(belongsToUser(root, cb, username));
         }
-        if (!isNullOrEmpty(type)) {
+        if (!isEmpty(type)) {
             if (type.equalsIgnoreCase(FILE)) {
                 predicates.add(isFile(root, cb));
             } else if (type.equalsIgnoreCase(URL)) {
@@ -88,10 +91,10 @@ public final class AnnotationTargetSpecification {
     private static Predicate buildSearchSpec(Root<AnnotationTarget> root, CriteriaBuilder cb, String username, String type, Set<String> matches, Set<String> nots) {
         List<Predicate> predicates = new ArrayList<>(0);
         predicates.add(buildFilterSpec(root, cb, username, type));
-        if (!isNullOrEmpty(matches)) {
+        if (!isEmpty(matches)) {
             predicates.addAll(inTitleOrAddressOrName(root, cb, matches));
         }
-        if (!isNullOrEmpty(nots)) {
+        if (!isEmpty(nots)) {
             predicates.addAll(notInTitleOrAddressOrName(root, cb, nots));
         }
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -149,7 +152,7 @@ public final class AnnotationTargetSpecification {
 
     // wrap term in wildcards
     private static String containsLike(String term) {
-        if (isNullOrEmpty(term)) {
+        if (isEmpty(term)) {
             return "%";
         } else {
             return "%" + term.toLowerCase() + "%";

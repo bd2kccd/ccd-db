@@ -18,21 +18,20 @@
  */
 package edu.pitt.dbmi.ccd.db.specification;
 
-import edu.pitt.dbmi.ccd.db.entity.Annotation;
-import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import static edu.pitt.dbmi.ccd.db.util.StringUtils.isNullOrEmpty;
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
+import javax.persistence.criteria.*;
+
 import org.springframework.data.jpa.domain.Specification;
+
+import edu.pitt.dbmi.ccd.db.entity.Annotation;
+import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -244,25 +243,25 @@ public final class AnnotationSpecification {
             Date modifiedAfter) {
 
         final List<Predicate> predicates = new ArrayList<>(0);
-        if (!isNullOrEmpty(username)) {
+        if (!isEmpty(username)) {
             predicates.add(belongsToUser(root, cb, username));
         }
-        if (!isNullOrEmpty(group)) {
+        if (!isEmpty(group)) {
             predicates.add(belongsToGroup(root, cb, group));
         }
-        if (!isNullOrEmpty(target)) {
+        if (!isEmpty(target)) {
             predicates.add(targetstarget(root, cb, target));
         }
-        if (!isNullOrEmpty(vocab)) {
+        if (!isEmpty(vocab)) {
             predicates.add(hasVocabulary(root, cb, vocab));
         }
-        if (!isNullOrEmpty(attributeLevel)) {
+        if (!isEmpty(attributeLevel)) {
             predicates.add(hasAttributeLevel(root, query, cb, attributeLevel));
         }
-        if (!isNullOrEmpty(attributeName)) {
+        if (!isEmpty(attributeName)) {
             predicates.add(hasAttributeName(root, query, cb, attributeName));
         }
-        if (!isNullOrEmpty(attributeReqLevel)) {
+        if (!isEmpty(attributeReqLevel)) {
             predicates.add(hasAttributeReqLevel(root, query, cb, attributeReqLevel));
         }
         if (!showRedacted) {
@@ -271,16 +270,16 @@ public final class AnnotationSpecification {
         if (parentless) {
             predicates.add(parentless(root, cb));
         }
-        if (!isNullOrEmpty(createdBefore)) {
+        if (!isEmpty(createdBefore)) {
             predicates.add(createdBefore(root, cb, createdBefore));
         }
-        if (!isNullOrEmpty(createdAfter)) {
+        if (!isEmpty(createdAfter)) {
             predicates.add(createdAfter(root, cb, createdAfter));
         }
-        if (!isNullOrEmpty(modifiedBefore)) {
+        if (!isEmpty(modifiedBefore)) {
             predicates.add(modifiedBefore(root, cb, modifiedBefore));
         }
-        if (!isNullOrEmpty(modifiedAfter)) {
+        if (!isEmpty(modifiedAfter)) {
             predicates.add(modifiedAfter(root, cb, modifiedAfter));
         }
         return predicates;
@@ -294,10 +293,10 @@ public final class AnnotationSpecification {
             Set<String> nots) {
 
         final List<Predicate> predicates = new ArrayList<>(0);
-        if (!isNullOrEmpty(matches)) {
+        if (!isEmpty(matches)) {
             predicates.addAll(containsTerms(root, query, cb, matches));
         }
-        if (!isNullOrEmpty(nots)) {
+        if (!isEmpty(nots)) {
             predicates.addAll(doesNotContainTerms(root, query, cb, nots));
         }
         return predicates;
@@ -412,7 +411,7 @@ public final class AnnotationSpecification {
     }
 
     private static String containsLike(String terms) {
-        if (isNullOrEmpty(terms)) {
+        if (isEmpty(terms)) {
             return "%";
         } else {
             return "%" + terms.toLowerCase() + "%";
