@@ -56,7 +56,7 @@ public class Vocabulary implements Serializable {
     @Column(length = 500, nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "vocab", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "vocabulary", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Attribute> attributes = new HashSet<>(0);
 
     public Vocabulary() {

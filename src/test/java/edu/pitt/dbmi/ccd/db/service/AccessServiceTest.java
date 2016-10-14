@@ -18,24 +18,26 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Access;
-import java.util.Optional;
 import static org.junit.Assert.*;
+
+import java.util.Optional;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import edu.pitt.dbmi.ccd.db.entity.Access;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class AccessServiceTest {
 
     @Autowired
@@ -50,20 +52,22 @@ public class AccessServiceTest {
 
         // delete
         accessService.delete(access);
-        Optional<Access> found = accessService.findById(access.getId());
-        assertFalse(found.isPresent());
+        Access found = accessService.findById(access.getId());
+        assertNull(found);
     }
 
     @Test
     public void findById() {
-        Optional<Access> access = accessService.findById(1L);
-        assertTrue(access.isPresent());
+        Access access = accessService.findById(1L);
+        assertNotNull(access);
+        assertEquals((Long) 1L, access.getId());
     }
 
     @Test
     public void findByName() {
-        Optional<Access> access = accessService.findByName("PUBLIC");
-        assertTrue(access.isPresent());
+        Access access = accessService.findByName("PUBLIC");
+        assertNotNull(access);
+        assertEquals("PUBLIC", access.getName());
     }
 
     @Test

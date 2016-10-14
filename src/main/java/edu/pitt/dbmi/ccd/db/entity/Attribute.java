@@ -30,7 +30,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 @Table(uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"vocabId", "level", "name"})
+    @UniqueConstraint(columnNames = {"vocabulary_id", "level", "name"})
 })
 public class Attribute implements Serializable {
 
@@ -42,8 +42,8 @@ public class Attribute implements Serializable {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vocabId", nullable = false)
-    private Vocabulary vocab;
+    @JoinColumn(name = "vocabulary_id", nullable = false)
+    private Vocabulary vocabulary;
 
     @Column(unique = false, nullable = true)
     private String level;
@@ -66,7 +66,7 @@ public class Attribute implements Serializable {
     }
 
     public Attribute(Vocabulary vocab, String level, String name, String requirementLevel) {
-        this.vocab = vocab;
+        this.vocabulary = vocab;
         this.level = level;
         this.name = name;
         this.requirementLevel = requirementLevel;
@@ -86,11 +86,11 @@ public class Attribute implements Serializable {
     }
 
     public Vocabulary getVocabulary() {
-        return vocab;
+        return vocabulary;
     }
 
-    public void setVocabulary(Vocabulary vocab) {
-        this.vocab = vocab;
+    public void setVocabulary(Vocabulary vocabulary) {
+        this.vocabulary = vocabulary;
     }
 
     public String getLevel() {

@@ -1,30 +1,32 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Annotation;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.*;
+import static org.junit.Assert.*;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import edu.pitt.dbmi.ccd.db.entity.Annotation;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class AnnotationRepositoryTest {
 
     @Autowired
@@ -39,8 +41,8 @@ public class AnnotationRepositoryTest {
 
     @Before
     public void setup() {
-        owner = userAccountRepository.findOne(1L);
-        viewer = userAccountRepository.findOne(2L);
+        owner = userAccountRepository.findById(1L);
+        viewer = userAccountRepository.findById(2L);
     }
 
     @Test
@@ -51,6 +53,7 @@ public class AnnotationRepositoryTest {
         Specification<Annotation> spec = idSpec(owner, 1L);
         annotation = annotationRepository.findOne(spec);
         assertNotNull(annotation);
+        assertEquals((Long) 1L, annotation.getId());
 
         // non-owner
         spec = idSpec(viewer, 1L);
@@ -67,6 +70,7 @@ public class AnnotationRepositoryTest {
 
         annotation = annotationRepository.findOne(spec);
         assertNotNull(annotation);
+        assertEquals((Long) 3L, annotation.getId());
 
         // non-member
         spec = idSpec(viewer, 3L);
@@ -82,6 +86,7 @@ public class AnnotationRepositoryTest {
         Specification<Annotation> spec = idSpec(owner, 4L);
         annotation = annotationRepository.findOne(spec);
         assertNotNull(annotation);
+        assertEquals((Long) 4L, annotation.getId());
 
         // non-owner
         spec = idSpec(viewer, 4L);

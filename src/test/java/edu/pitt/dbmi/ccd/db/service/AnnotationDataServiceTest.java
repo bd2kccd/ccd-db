@@ -18,27 +18,29 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
+import static org.junit.Assert.*;
+
+import java.util.Optional;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.junit4.SpringRunner;
+
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationRepository;
-import java.util.Optional;
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class AnnotationDataServiceTest {
 
     @Autowired
@@ -52,21 +54,22 @@ public class AnnotationDataServiceTest {
     public void saveAndDelete() {
         // save
         final Annotation annotation = annotationRepository.findOne(1L);
-        final Attribute attribute = attributeService.findById(1L).get();
+        final Attribute attribute = attributeService.findById(1L);
         AnnotationData annotationData = new AnnotationData(annotation, attribute, "TEST ANNOTATION DATA");
         annotationData = annotationDataService.save(annotationData);
         assertNotNull(annotationData.getId());
 
         // delete
         annotationDataService.delete(annotationData);
-        final Optional<AnnotationData> found = annotationDataService.findById(annotationData.getId());
-        assertFalse(found.isPresent());
+        final AnnotationData found = annotationDataService.findById(annotationData.getId());
+        assertNull(found);
     }
 
     @Test
     public void findById() {
-        final Optional<AnnotationData> annotationData = annotationDataService.findById(1L);
-        assertTrue(annotationData.isPresent());
+        final AnnotationData annotationData = annotationDataService.findById(1L);
+        assertNotNull(annotationData);
+        assertEquals((Long) 1L, annotationData.getId());
     }
 
     @Test

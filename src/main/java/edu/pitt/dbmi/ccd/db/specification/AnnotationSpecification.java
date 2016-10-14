@@ -43,7 +43,7 @@ public final class AnnotationSpecification {
     public static final String GROUP = "group";
     public static final String ACCESS = "accessControl";
     public static final String TARGET = "target";
-    public static final String VOCAB = "vocab";
+    public static final String VOCAB = "vocabulary";
     public static final String ANNO = "annotation";
     public static final String ATTRIB = "attribute";
     public static final String PARENT = "parent";

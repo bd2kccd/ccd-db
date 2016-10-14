@@ -56,21 +56,21 @@ public class Annotation implements Serializable {
 
     @NotNull
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "accessControl", nullable = false)
+    @JoinColumn(name = "access_control", nullable = false)
     private Access accessControl;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "groupId", nullable = true)
+    @JoinColumn(name = "group_id", nullable = true)
     private Group group;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false)
-    private Vocabulary vocab;
+    @JoinColumn(name = "vocabulary_id", nullable = false)
+    private Vocabulary vocabulary;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "targetId", nullable = false)
+    @JoinColumn(name = "target_id", nullable = false)
     private AnnotationTarget target;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -82,8 +82,8 @@ public class Annotation implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "AnnotationTargetReferences", joinColumns = {
-            @JoinColumn(name = "annotationId", nullable = false)}, inverseJoinColumns = {
-            @JoinColumn(name = "targetId", nullable = false)})
+            @JoinColumn(name = "annotation_id", nullable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "target_id", nullable = false)})
     private Set<AnnotationTarget> references = new HashSet<>(0);
 
     @OneToMany(mappedBy = "annotation", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -92,13 +92,13 @@ public class Annotation implements Serializable {
     public Annotation() {
     }
 
-    public Annotation(UserAccount user, AnnotationTarget target, Annotation parent, Access accessControl, Group group, Vocabulary vocab) {
+    public Annotation(UserAccount user, AnnotationTarget target, Annotation parent, Access accessControl, Group group, Vocabulary vocabulary) {
         this.user = user;
         this.target = target;
         this.parent = parent;
         this.accessControl = accessControl;
         this.group = group;
-        this.vocab = vocab;
+        this.vocabulary = vocabulary;
     }
 
     @PrePersist
@@ -176,11 +176,11 @@ public class Annotation implements Serializable {
     }
 
     public Vocabulary getVocabulary() {
-        return vocab;
+        return vocabulary;
     }
 
     public void setVocabulary(Vocabulary vocab) {
-        this.vocab = vocab;
+        this.vocabulary = vocab;
     }
 
     public Annotation getParent() {

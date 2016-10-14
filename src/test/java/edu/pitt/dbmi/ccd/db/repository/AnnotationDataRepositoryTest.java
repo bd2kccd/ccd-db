@@ -2,18 +2,15 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import static org.junit.Assert.*;
 
-import java.util.Optional;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
@@ -21,8 +18,8 @@ import edu.pitt.dbmi.ccd.db.entity.Attribute;
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class AnnotationDataRepositoryTest {
 
     @Autowired
@@ -42,14 +39,15 @@ public class AnnotationDataRepositoryTest {
 
         // delete
         annotationDataRepository.delete(data);
-        final Optional<AnnotationData> found = annotationDataRepository.findById(data.getId());
-        assertFalse(found.isPresent());
+        final AnnotationData found = annotationDataRepository.findById(data.getId());
+        assertNull(found);
     }
 
     @Test
     public void findById() {
-        final Optional<AnnotationData> data = annotationDataRepository.findById(1L);
-        assertTrue(data.isPresent());
+        final AnnotationData data = annotationDataRepository.findById(1L);
+        assertNotNull(data);
+        assertEquals((Long) 1L, data.getId());
     }
 
     @Test

@@ -55,7 +55,7 @@ public class Group implements Serializable {
     private String description;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "GroupModeratoreration",
+    @JoinTable(name = "GroupModeration",
             joinColumns = {
                 @JoinColumn(name = "groupId")},
             inverseJoinColumns = {

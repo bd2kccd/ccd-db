@@ -1,25 +1,25 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Attribute;
-import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
-import java.util.Optional;
 import static org.junit.Assert.*;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import edu.pitt.dbmi.ccd.db.entity.Attribute;
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class AttributeRepositoryTest {
 
     @Autowired(required = true)
@@ -38,20 +38,21 @@ public class AttributeRepositoryTest {
 
         // delete
         attributeRepository.delete(attribute);
-        final Optional<Attribute> found = attributeRepository.findById(attribute.getId());
-        assertFalse(found.isPresent());
+        final Attribute found = attributeRepository.findById(attribute.getId());
+        assertNull(found);
     }
 
     @Test
     public void findById() {
-        final Optional<Attribute> attribute = attributeRepository.findById(1L);
-        assertTrue(attribute.isPresent());
+        final Attribute attribute = attributeRepository.findById(1L);
+        assertNotNull(attribute);
+        assertEquals((Long) 1L, attribute.getId());
     }
 
     @Test
     public void findAll() {
         final Pageable pageable = new PageRequest(0, 10);
         final Page<Attribute> attributes = attributeRepository.findAll(pageable);
-        assertTrue(attributes.getTotalElements() == 1);
+        assertEquals(1, attributes.getTotalElements());
     }
 }

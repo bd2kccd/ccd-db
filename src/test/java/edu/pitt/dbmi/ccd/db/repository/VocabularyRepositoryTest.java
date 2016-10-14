@@ -1,27 +1,28 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import static edu.pitt.dbmi.ccd.db.specification.VocabularySpecification.searchSpec;
+import static org.junit.Assert.*;
+
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
-import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class VocabularyRepositoryTest {
 
     @Autowired(required = true)
@@ -35,20 +36,22 @@ public class VocabularyRepositoryTest {
 
         // delete
         vocabularyRepository.delete(vocabulary);
-        Optional<Vocabulary> found = vocabularyRepository.findById(vocabulary.getId());
-        assertFalse(found.isPresent());
+        Vocabulary found = vocabularyRepository.findById(vocabulary.getId());
+        assertNull(found);
     }
 
     @Test
     public void findById() {
-        final Optional<Vocabulary> found = vocabularyRepository.findById(1L);
-        assertTrue(found.isPresent());
+        final Vocabulary found = vocabularyRepository.findById(1L);
+        assertNotNull(found);
+        assertEquals((Long) 1L, found.getId());
     }
 
     @Test
     public void findByName() {
-        final Optional<Vocabulary> found = vocabularyRepository.findByName("Plaintext");
-        assertTrue(found.isPresent());
+        final Vocabulary found = vocabularyRepository.findByName("Plaintext");
+        assertNotNull(found);
+        assertEquals("Plaintext", found.getName());
     }
 
     @Test

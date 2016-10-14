@@ -18,19 +18,21 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.Annotation;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.repository.AnnotationRepository;
 import static edu.pitt.dbmi.ccd.db.specification.AnnotationSpecification.*;
+
 import java.util.Date;
-import java.util.Optional;
 import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import edu.pitt.dbmi.ccd.db.entity.Annotation;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.repository.AnnotationRepository;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)

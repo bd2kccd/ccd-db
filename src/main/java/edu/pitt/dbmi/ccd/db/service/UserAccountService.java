@@ -23,6 +23,8 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +50,10 @@ public class UserAccountService {
         this.personRepository = personRepository;
     }
 
+    public UserAccount findById(Long id) {
+        return userAccountRepository.findById(id);
+    }
+
     public UserAccount findByUsername(String username) {
         return userAccountRepository.findByUsername(username);
     }
@@ -56,8 +62,16 @@ public class UserAccountService {
         return userAccountRepository.findByEmail(email);
     }
 
+    public UserAccount findByEmail(String email) {
+        return userAccountRepository.findByEmail(email);
+    }
+
     public UserAccount findByAccountId(String accountId) {
         return userAccountRepository.findByAccountId(accountId);
+    }
+
+    public Page<UserAccount> findAll(Pageable pageable) {
+        return userAccountRepository.findAll(pageable);
     }
 
     public UserAccount saveUserAccount(UserAccount userAccount) {
@@ -65,6 +79,16 @@ public class UserAccountService {
         userAccount.setPerson(person);
 
         return userAccountRepository.save(userAccount);
+    }
+
+    public UserAccount save(UserAccount userAccount) {
+        Person person = personRepository.save(userAccount.getPerson());
+        userAccount.setPerson(person);
+        return userAccountRepository.save(userAccount);
+    }
+
+    public void delete(UserAccount userAccount) {
+        userAccountRepository.delete(userAccount);
     }
 
 }

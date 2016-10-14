@@ -1,23 +1,25 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.CCDDatabaseApplication;
-import edu.pitt.dbmi.ccd.db.entity.Access;
-import java.util.Optional;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import edu.pitt.dbmi.ccd.db.entity.Access;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CCDDatabaseApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class AccessRepositoryTest {
 
     @Autowired(required = true)
@@ -31,20 +33,22 @@ public class AccessRepositoryTest {
 
         // delete
         accessRepository.delete(access);
-        final Optional<Access> found = accessRepository.findById(access.getId());
-        assertFalse(found.isPresent());
+        final Access found = accessRepository.findById(access.getId());
+        assertNull(found);
     }
 
     @Test
     public void findById() {
-        final Optional<Access> access = accessRepository.findById(1L);
-        assertTrue(access.isPresent());
+        final Access access = accessRepository.findById(1L);
+        assertNotNull(access);
+        assertEquals((Long) 1L, access.getId());
     }
 
     @Test
     public void findByName() {
-        final Optional<Access> access = accessRepository.findByName("PUBLIC");
-        assertTrue(access.isPresent());
+        final Access access = accessRepository.findByName("PUBLIC");
+        assertNotNull(access);
+        assertEquals("PUBLIC", access.getName());
     }
 
     @Test

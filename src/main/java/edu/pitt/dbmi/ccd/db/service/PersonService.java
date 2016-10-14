@@ -41,6 +41,10 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
+    public Person findById(Long id) {
+        return personRepository.findById(id);
+    }
+
     public Person findPerson(Long id) {
         return personRepository.findOne(id);
     }
