@@ -22,18 +22,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+
 
 /**
  *
@@ -77,6 +67,9 @@ public class DataFile implements Serializable {
         @JoinColumn(name = "dataFileId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     private Set<UserAccount> userAccounts = new HashSet<>(0);
+
+    @OneToOne(mappedBy = "file", fetch = FetchType.LAZY)
+    private AnnotationTarget annotationTarget;
 
     public DataFile() {
     }
@@ -151,6 +144,14 @@ public class DataFile implements Serializable {
 
     public void setUserAccounts(Set<UserAccount> userAccounts) {
         this.userAccounts = userAccounts;
+    }
+
+    public AnnotationTarget getAnnotationTarget() {
+        return annotationTarget;
+    }
+
+    public void setAnnotationTarget(AnnotationTarget annotationTarget) {
+        this.annotationTarget = annotationTarget;
     }
 
 }

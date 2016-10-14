@@ -18,47 +18,42 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.Person;
-import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
+import edu.pitt.dbmi.ccd.db.entity.Access;
+import edu.pitt.dbmi.ccd.db.repository.AccessRepository;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
- * Jul 24, 2015 1:31:14 PM
- *
- * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Service
 @Transactional
-public class PersonService {
+public class AccessService {
 
-    private final PersonRepository personRepository;
+    @Autowired
+    private AccessRepository accessRepository;
 
-    @Autowired(required = true)
-    public PersonService(PersonRepository personRepository) {
-        this.personRepository = personRepository;
+    public Access save(Access access) {
+        return accessRepository.save(access);
     }
 
-    public Person findById(Long id) {
-        return personRepository.findById(id);
+    public Access findById(Long id) {
+        return accessRepository.findById(id);
     }
 
-    public Person findPerson(Long id) {
-        return personRepository.findOne(id);
+    public Access findByName(String name) {
+        return accessRepository.findByName(name);
     }
 
-    public Person save(Person person) {
-        return personRepository.save(person);
+    public Page<Access> findAll(Pageable pageable) {
+        return accessRepository.findAll(pageable);
     }
 
-    public Person findPersonByEmail(String email) {
-        return personRepository.findByEmail(email);
+    public void delete(Access access) {
+        accessRepository.delete(access);
     }
-
-    public Long countByEmail(String email) {
-        return personRepository.countByEmail(email);
-    }
-
 }

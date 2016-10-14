@@ -27,6 +27,8 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,10 +58,6 @@ public class UserAccountService {
         return userAccountRepository.findById(id);
     }
 
-    public UserAccount findByEmail(String email) {
-        return userAccountRepository.findByEmail(email);
-    }
-
     public UserAccount findByUsername(String username) {
         return userAccountRepository.findByUsername(username);
     }
@@ -68,11 +66,18 @@ public class UserAccountService {
         return userAccountRepository.findByEmail(email);
     }
 
+    public UserAccount findByEmail(String email) {
+        return userAccountRepository.findByEmail(email);
+    }
+
     public UserAccount findByAccountId(String accountId) {
         return userAccountRepository.findByAccountId(accountId);
     }
 
-    @Deprecated
+    public Page<UserAccount> findAll(Pageable pageable) {
+        return userAccountRepository.findAll(pageable);
+    }
+
     public UserAccount saveUserAccount(UserAccount userAccount) {
         Person person = personRepository.save(userAccount.getPerson());
         userAccount.setPerson(person);
@@ -80,11 +85,6 @@ public class UserAccountService {
         return userAccountRepository.save(userAccount);
     }
 
-    public UserAccount save(UserAccount userAccount) {
-        personRepository.save(userAccount.getPerson());
-
-        return userAccountRepository.save(userAccount);
-    }
 
     public Person updatePerson(UserAccount userAccount) {
         return personRepository.save(userAccount.getPerson());
@@ -97,7 +97,7 @@ public class UserAccountService {
     public UserAccount createNewAccount(AccountRegistration accountRegistration) {
         UserAccount userAccount = createUserAccount(accountRegistration);
 
-        return save(userAccount);
+        return saveUserAccount(userAccount);
     }
 
     public Long countByUsername(String username) {
@@ -143,4 +143,7 @@ public class UserAccountService {
         return person;
     }
 
+    public void delete(UserAccount userAccount) {
+        userAccountRepository.delete(userAccount);
+    }
 }

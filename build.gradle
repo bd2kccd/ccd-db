@@ -1,0 +1,61 @@
+buildscript {
+    ext {
+        springBootVersion = '1.4.1.RELEASE'
+    }
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'spring-boot'
+apply plugin: 'maven'
+apply plugin: 'idea'
+
+group = 'edu.pitt.dbmi'
+version = '0.6.2'
+
+jar {
+    baseName = 'ccd-db'
+    version = version
+}
+
+def compatibilityVersion = 1.8
+sourceCompatibility = compatibilityVersion
+targetCompatibility = compatibilityVersion
+
+repositories {
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+}
+
+ext {
+    //hibernateValidatorVersion = '5.2.4.Final'
+    hsqldbVersion = '2.3.4'
+    mysqlConnectorVersion = '5.1.39'
+}
+
+dependencies {
+    // compile
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-rest:${springBootVersion}")
+    //compile("org.hibernate:hibernate-validator:${hibernateValidatorVersion}")
+
+    // run
+    runtime("org.hsqldb:hsqldb:${hsqldbVersion}")
+    runtime("mysql:mysql-connector-java:${mysqlConnectorVersion}")
+
+    // test
+    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+}
+
+// gradle wrapper (./gradlew)
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.1'
+}

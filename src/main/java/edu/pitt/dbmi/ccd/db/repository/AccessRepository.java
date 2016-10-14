@@ -18,23 +18,24 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.Person;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
 
+import edu.pitt.dbmi.ccd.db.entity.Access;
+
 /**
- *
- * Jul 23, 2015 1:44:13 PM
- *
- * @author Kevin V. Bui (kvb2@pitt.edu)
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Repository
-public interface PersonRepository extends JpaRepository<Person, Long> {
+@RepositoryRestResource(exported = false)
+public interface AccessRepository extends JpaRepository<Access, Long> {
 
-    public Person findById(Long id);
+    public Access findById(Long id);
 
-    public Person findByEmail(String email);
+    public Access findByName(String name);
 
-    public Long countByEmail(String email);
-
+    public Page<Access> findAll(Pageable pageable);
 }
