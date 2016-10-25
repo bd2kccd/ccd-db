@@ -78,7 +78,7 @@ public class UserAccountService {
         return userAccountRepository.findAll(pageable);
     }
 
-    public UserAccount saveUserAccount(UserAccount userAccount) {
+    public UserAccount save(UserAccount userAccount) {
         Person person = personRepository.save(userAccount.getPerson());
         userAccount.setPerson(person);
 
@@ -97,7 +97,7 @@ public class UserAccountService {
     public UserAccount createNewAccount(AccountRegistration accountRegistration) {
         UserAccount userAccount = createUserAccount(accountRegistration);
 
-        return saveUserAccount(userAccount);
+        return save(userAccount);
     }
 
     public Long countByUsername(String username) {

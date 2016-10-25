@@ -18,7 +18,9 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +32,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -69,7 +70,7 @@ public class UserAccountServiceTest {
         // save
         Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace");
         UserAccount userAccount = new UserAccount(person, "einstein", "$2a$10$MSi.zsnU.TAHocBApb5BN.G.3Cyp/t0WLd6/76u87Lp8qIINkUy0i", true, new Date(), new Date());
-        userAccount = userAccountService.saveUserAccount(userAccount);
+        userAccount = userAccountService.save(userAccount);
         assertNotNull(userAccount.getId());
 
         // delete
@@ -156,7 +157,7 @@ public class UserAccountServiceTest {
 
                 Person person = new Person(firstName, lastName, email, workspace);
                 UserAccount userAccount = new UserAccount(person, username, password, true, createdDate, lastLoginDate);
-                userAccountService.saveUserAccount(userAccount);
+                userAccountService.save(userAccount);
             }
         } catch (IOException exception) {
             exception.printStackTrace(System.err);
