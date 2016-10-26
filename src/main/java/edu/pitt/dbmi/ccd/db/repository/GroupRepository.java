@@ -58,7 +58,7 @@ public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecific
     public Page<Group> findByMember(String username, Pageable pageable);
 
     @Query(value = "SELECT g FROM Group AS g "
-            + "LEFT JOIN g.mods AS m "
+            + "LEFT JOIN g.moderators AS m "
             + "WHERE m.username = ?1")
     public Page<Group> findByModerator(String username, Pageable pageable);
 
