@@ -91,17 +91,17 @@ public class GroupService {
                 .collect(Collectors.toList());
     }
 
-//    public Page<Group> findByMember(UserAccount user, Pageable pageable) {
-//        return groupRepository.findByMember(user.getUsername(), pageable);
-//    }
-//
-//    public Page<Group> findByModerator(UserAccount user, Pageable pageable) {
-//        return groupRepository.findByModerator(user.getUsername(), pageable);
-//    }
-//
-//    public Page<Group> findByRequester(UserAccount user, Pageable pageable) {
-//        return groupRepository.findByRequester(user.getUsername(), pageable);
-//    }
+    public Page<Group> findByMember(UserAccount user, Pageable pageable) {
+        return groupRepository.findByMember(user.getUsername(), pageable);
+    }
+
+    public Page<Group> findByModerator(UserAccount user, Pageable pageable) {
+        return groupRepository.findByModerator(user.getUsername(), pageable);
+    }
+
+    public Page<Group> findByRequester(UserAccount user, Pageable pageable) {
+        return groupRepository.findByRequester(user.getUsername(), pageable);
+    }
 
     public Page<Group> search(Set<String> matches, Set<String> nots, Pageable pageable) {
         return groupRepository.findAll(searchSpec(matches, nots), pageable);
