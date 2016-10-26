@@ -46,20 +46,20 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     public Long countByUsername(String username);
 
-//    @Query(value="SELECT ua FROM UserAccount ua " +
-//            "LEFT JOIN ua.groups AS m " +
-//            "WHERE m.name = ?1")
-//    public Page<UserAccount> findByGroupMembership(String group, Pageable pageable);
-//
-//    @Query(value="SELECT ua FROM UserAccount ua " +
-//            "LEFT JOIN ua.moderates AS m " +
-//            "WHERE m.name = ?1")
-//    public Page<UserAccount> findByGroupModeration(String group, Pageable pageable);
-//
-//    @Query(value="SELECT ua FROM UserAccount ua " +
-//            "LEFT JOIN ua.requesting AS r " +
-//            "WHERE r.name = ?1")
-//    public Page<UserAccount> findByGroupRequests(String group, Pageable pageable);
+    @Query(value="SELECT ua FROM UserAccount ua " +
+            "LEFT JOIN ua.groups AS m " +
+            "WHERE m.id = ?1")
+    public Page<UserAccount> findByGroupMembership(Long groupId, Pageable pageable);
+
+    @Query(value="SELECT ua FROM UserAccount ua " +
+            "LEFT JOIN ua.moderates AS m " +
+            "WHERE m.id = ?1")
+    public Page<UserAccount> findByGroupModeration(Long groupId, Pageable pageable);
+
+    @Query(value="SELECT ua FROM UserAccount ua " +
+            "LEFT JOIN ua.requesting AS r " +
+            "WHERE r.id = ?1")
+    public Page<UserAccount> findByGroupRequests(Long groupId, Pageable pageable);
 
     public Page<UserAccount> findAll(Pageable pageable);
 

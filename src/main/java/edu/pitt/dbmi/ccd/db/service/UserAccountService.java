@@ -18,19 +18,22 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.domain.AccountRegistration;
-import edu.pitt.dbmi.ccd.db.entity.Person;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
-import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import edu.pitt.dbmi.ccd.db.domain.AccountRegistration;
+import edu.pitt.dbmi.ccd.db.entity.Group;
+import edu.pitt.dbmi.ccd.db.entity.Person;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
+import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
 
 /**
  *
@@ -72,6 +75,18 @@ public class UserAccountService {
 
     public UserAccount findByAccountId(String accountId) {
         return userAccountRepository.findByAccountId(accountId);
+    }
+
+    public Page<UserAccount> findByGroupModeration(Group group, Pageable pageable) {
+        return userAccountRepository.findByGroupModeration(group.getId(), pageable);
+    }
+
+    public Page<UserAccount> findByGroupMembership(Group group, Pageable pageable) {
+        return userAccountRepository.findByGroupMembership(group.getId(), pageable);
+    }
+
+    public Page<UserAccount> findByGroupRequests(Group group, Pageable pageable) {
+        return userAccountRepository.findByGroupRequests(group.getId(), pageable);
     }
 
     public Page<UserAccount> findAll(Pageable pageable) {
