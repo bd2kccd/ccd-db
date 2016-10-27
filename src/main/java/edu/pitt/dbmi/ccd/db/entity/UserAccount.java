@@ -76,10 +76,12 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "dataFileId", nullable = false, updatable = false)})
     private Set<DataFile> dataFiles = new HashSet<>(0);
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
+//        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
+//        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
+//    private Set<UserRole> userRoles = new HashSet<>(0);
+    @ManyToMany(mappedBy = "userAccounts", fetch = FetchType.EAGER)
     private Set<UserRole> userRoles = new HashSet<>(0);
 
     @ManyToMany(fetch = FetchType.LAZY)
