@@ -18,9 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -69,7 +67,7 @@ public class UserAccountServiceTest {
     public void saveAndDelete() {
         // save
         Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace");
-        UserAccount userAccount = new UserAccount(person, "einstein", "$2a$10$MSi.zsnU.TAHocBApb5BN.G.3Cyp/t0WLd6/76u87Lp8qIINkUy0i", true, new Date(), new Date());
+        UserAccount userAccount = new UserAccount(person, "einstein", "$2a$10$MSi.zsnU.TAHocBApb5BN.G.3Cyp/t0WLd6/76u87Lp8qIINkUy0i", true, "2ad00112-9d3a-11e6-8433-38c9860967a0", new Date(), new Date());
         userAccount = userAccountService.save(userAccount);
         assertNotNull(userAccount.getId());
 
@@ -156,7 +154,7 @@ public class UserAccountServiceTest {
                 String workspace = fields[7].trim();
 
                 Person person = new Person(firstName, lastName, email, workspace);
-                UserAccount userAccount = new UserAccount(person, username, password, true, createdDate, lastLoginDate);
+                UserAccount userAccount = new UserAccount(person, username, password, true, "61b2b10c-9d3a-11e6-8c7a-38c9860967a0", createdDate, lastLoginDate);
                 userAccountService.save(userAccount);
             }
         } catch (IOException exception) {

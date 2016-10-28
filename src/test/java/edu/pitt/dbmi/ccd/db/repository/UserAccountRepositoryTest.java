@@ -61,7 +61,7 @@ public class UserAccountRepositoryTest {
         // save
         Person person = new Person("Albert", "Einstein", "einstein@example.com", "~/ccd_workspace/");
         person = personRepository.save(person);
-        UserAccount user = new UserAccount(person, "einstein", "$2a$10$mTPRrCa1THQJyk60QrhIQOgvQAnSpDkcm1QK5zwKc6m9xBu87hKqG", true, new Date(), new Date());
+        UserAccount user = new UserAccount(person, "einstein", "$2a$10$mTPRrCa1THQJyk60QrhIQOgvQAnSpDkcm1QK5zwKc6m9xBu87hKqG", true, "2ad00112-9d3a-11e6-8433-38c9860967a0", new Date(), new Date());
         user = userAccountRepository.save(user);
         assertNotNull(user.getId());
 
