@@ -59,7 +59,7 @@ public class UserAccount implements Serializable {
     @Column(name = "active", nullable = false)
     private Boolean active;
 
-    @Column(name = "accountId")
+    @Column(name = "accountId", nullable = false)
     private String accountId;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -118,11 +118,12 @@ public class UserAccount implements Serializable {
     public UserAccount() {
     }
 
-    public UserAccount(Person person, String username, String password, boolean active, Date createdDate, Date lastLoginDate) {
+    public UserAccount(Person person, String username, String password, boolean active, String accountId, Date createdDate, Date lastLoginDate) {
         this.person = person;
         this.username = username;
         this.password = password;
         this.active = active;
+        this.accountId = accountId;
         this.createdDate = createdDate;
         this.lastLoginDate = lastLoginDate;
     }
