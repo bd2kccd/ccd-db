@@ -20,6 +20,8 @@ package edu.pitt.dbmi.ccd.db.service;
 
 import edu.pitt.dbmi.ccd.db.entity.Access;
 import edu.pitt.dbmi.ccd.db.repository.AccessRepository;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,8 +36,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class AccessService {
 
-    @Autowired
     private AccessRepository accessRepository;
+
+    @Autowired(required = true)
+    public AccessService(AccessRepository accessRepository) {
+        this.accessRepository = accessRepository;
+
+        List<Access> accesses = accessRepository.findAll();
+        if (accesses.isEmpty()) {
+            accesses.add(new Access("PUBLIC", "Visible to all users"));
+            accesses.add(new Access("GROUP", "Visible to members of specified group"));
+            accesses.add(new Access("PRIVATE", "Visible only to creator"));
+
+            accessRepository.save(accesses);
+        }
+    }
 
     public Access save(Access access) {
         return accessRepository.save(access);
