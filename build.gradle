@@ -36,7 +36,6 @@ repositories {
 }
 
 ext {
-    //hibernateValidatorVersion = '5.2.4.Final'
     hsqldbVersion = '2.3.4'
     mysqlConnectorVersion = '5.1.39'
 }
@@ -45,7 +44,6 @@ dependencies {
     // compile
     compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-data-rest:${springBootVersion}")
-    //compile("org.hibernate:hibernate-validator:${hibernateValidatorVersion}")
 
     // run
     runtime("org.hsqldb:hsqldb:${hsqldbVersion}")
