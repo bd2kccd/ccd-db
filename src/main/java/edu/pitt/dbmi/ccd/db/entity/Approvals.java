@@ -39,6 +39,6 @@ public class Approvals implements Serializable {
     private Timestamp expires;
 
     @NotNull
-    @Column(nullable=false, columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @Column(nullable=false, columnDefinition="TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Timestamp lastModified;
 }
