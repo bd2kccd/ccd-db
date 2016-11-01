@@ -29,6 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.pitt.dbmi.ccd.db.entity.Attribute;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import edu.pitt.dbmi.ccd.db.repository.VocabularyRepository;
 
@@ -42,70 +43,70 @@ public class VocabularyService {
     private static final String DUPLICATE = "Vocabulary already exists with name: %s";
     private static final String DUPLICATES = "Vocabularies already exist with names: ";
 
-    private final VocabularyRepository vocabRepository;
+    private final VocabularyRepository vocabularyRepository;
 
     @Autowired(required = true)
-    public VocabularyService(VocabularyRepository vocabRepository) {
-        this.vocabRepository = vocabRepository;
+    public VocabularyService(VocabularyRepository vocabularyRepository) {
+        this.vocabularyRepository = vocabularyRepository;
 
-//        List<Vocabulary> vocabs = vocabRepository.findAll();
-//        if (vocabs.isEmpty()) {
-//            Vocabulary hcls = new Vocabulary("HCLS", "http://www.w3.org/2001/sw/hcls/notes/hcls-dataset/");
-//            hcls.addAttributes(
-//                new Attribute(hcls, "Summary", "Type", "Required"),
-//                new Attribute(hcls, "Summary", "Title", "Required"),
-//                new Attribute(hcls, "Summary", "Description", "Required"),
-//                new Attribute(hcls, "Summary", "Created By", "Required"),
-//                new Attribute(hcls, "Summary", "Created On", "Required"),
-//                new Attribute(hcls, "Summary", "Last Access Time", "Required"),
-//                new Attribute(hcls, "Summary", "Publisher", "Required"),
-//                new Attribute(hcls, "Summary", "License", "Optional"),
-//                new Attribute(hcls, "Version", "Identifier", "Optional"),
-//                new Attribute(hcls, "Version", "Link", "Required"),
-//                new Attribute(hcls, "Version", "Data Source Provenance", "Optional"),
-//                new Attribute(hcls, "Version", "Distribution", "Optional"),
-//                new Attribute(hcls, "Version", "Issued", "Required"),
-//                new Attribute(hcls, "Version", "Download URI", "Required")
-//            );
-//            vocabs.add(hcls);
-//
-//            Vocabulary plaintext = new Vocabulary("Plaintext", "Text with no required structure");
-//            plaintext.addAttribute(new Attribute(plaintext, null, "Text", null));
-//            vocabs.add(plaintext);
-//
-//            vocabRepository.save(vocabs);
-//        }
+        List<Vocabulary> vocabularies = vocabularyRepository.findAll();
+        if (vocabularies.isEmpty()) {
+            Vocabulary hcls = new Vocabulary("HCLS", "http://www.w3.org/2001/sw/hcls/notes/hcls-dataset/");
+            hcls.addAttributes(
+                new Attribute(hcls, "Summary", "Type", "Required"),
+                new Attribute(hcls, "Summary", "Title", "Required"),
+                new Attribute(hcls, "Summary", "Description", "Required"),
+                new Attribute(hcls, "Summary", "Created By", "Required"),
+                new Attribute(hcls, "Summary", "Created On", "Required"),
+                new Attribute(hcls, "Summary", "Last Access Time", "Required"),
+                new Attribute(hcls, "Summary", "Publisher", "Required"),
+                new Attribute(hcls, "Summary", "License", "Optional"),
+                new Attribute(hcls, "Version", "Identifier", "Optional"),
+                new Attribute(hcls, "Version", "Link", "Required"),
+                new Attribute(hcls, "Version", "Data Source Provenance", "Optional"),
+                new Attribute(hcls, "Version", "Distribution", "Optional"),
+                new Attribute(hcls, "Version", "Issued", "Required"),
+                new Attribute(hcls, "Version", "Download URI", "Required")
+            );
+            vocabularies.add(hcls);
+
+            Vocabulary plaintext = new Vocabulary("Plaintext", "Text with no required structure");
+            plaintext.addAttribute(new Attribute(plaintext, null, "Text", null));
+            vocabularies.add(plaintext);
+
+            vocabularyRepository.save(vocabularies);
+        }
     }
 
-    public Vocabulary save(Vocabulary vocab) {
-        return vocabRepository.save(vocab);
+    public Vocabulary save(Vocabulary vocabulary) {
+        return vocabularyRepository.save(vocabulary);
     }
 
     public List<Vocabulary> save(Set<Vocabulary> vocabs) {
-        return vocabRepository.save(vocabs);
+        return vocabularyRepository.save(vocabs);
     }
 
     public Vocabulary findById(Long id) {
-        return vocabRepository.findById(id);
+        return vocabularyRepository.findById(id);
     }
 
     public Vocabulary findByName(String name) {
-        return vocabRepository.findByName(name);
+        return vocabularyRepository.findByName(name);
     }
 
     public Page<Vocabulary> search(Set<String> matches, Set<String> nots, Pageable pageable) {
-        return vocabRepository.findAll(searchSpec(matches, nots), pageable);
+        return vocabularyRepository.findAll(searchSpec(matches, nots), pageable);
     }
 
     public Page<Vocabulary> findAll(Pageable pageable) {
-        return vocabRepository.findAll(pageable);
+        return vocabularyRepository.findAll(pageable);
     }
 
     protected void delete(Vocabulary vocabularies) {
-        vocabRepository.delete(vocabularies);
+        vocabularyRepository.delete(vocabularies);
     }
 
     protected void delete(Set<Vocabulary> vocabularies) {
-        vocabRepository.delete(vocabularies);
+        vocabularyRepository.delete(vocabularies);
     }
 }
