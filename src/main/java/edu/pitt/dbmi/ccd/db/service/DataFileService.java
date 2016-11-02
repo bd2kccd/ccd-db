@@ -18,20 +18,24 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.DataFile;
-import edu.pitt.dbmi.ccd.db.entity.DataFileInfo;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.repository.DataFileInfoRepository;
-import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
+import edu.pitt.dbmi.ccd.db.entity.DataFile;
+import edu.pitt.dbmi.ccd.db.entity.DataFileInfo;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.repository.AnnotationTargetRepository;
+import edu.pitt.dbmi.ccd.db.repository.DataFileInfoRepository;
+import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
 
 /**
  *
@@ -49,12 +53,16 @@ public class DataFileService {
 
     private final DataFileInfoRepository dataFileInfoRepository;
 
+    private final AnnotationTargetRepository annotationTargetRepository;
+
     @Autowired(required = true)
     public DataFileService(
             DataFileRepository dataFileRepository,
-            DataFileInfoRepository dataFileInfoRepository) {
+            DataFileInfoRepository dataFileInfoRepository,
+            AnnotationTargetRepository annotationTargetRepository) {
         this.dataFileRepository = dataFileRepository;
         this.dataFileInfoRepository = dataFileInfoRepository;
+        this.annotationTargetRepository = annotationTargetRepository;
     }
 
     public DataFile findById(Long id) {
@@ -111,8 +119,13 @@ public class DataFileService {
         try {
             DataFile dataFile = dataFileRepository.findByAbsolutePathAndName(absolutePath, name);
             DataFileInfo dataFileInfo = dataFile.getDataFileInfo();
+            AnnotationTarget annotationTarget = dataFile.getAnnotationTarget();
             if (dataFileInfo != null) {
                 dataFileInfoRepository.delete(dataFileInfo);
+            }
+            if (annotationTarget != null) {
+                annotationTarget.setFile(null);
+                annotationTargetRepository.save(annotationTarget);
             }
 
             dataFileRepository.delete(dataFile);
