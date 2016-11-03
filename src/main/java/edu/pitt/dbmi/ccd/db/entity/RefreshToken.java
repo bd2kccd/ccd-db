@@ -12,9 +12,9 @@ import javax.validation.constraints.NotNull;
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
-@Table(name="oauth_refresh_token")
+@Table(name = "oauth_refresh_token")
 public class RefreshToken implements Serializable {
-    
+
     private static final long serialVersionUID = 6671308861475893032L;
 
     @Id
@@ -22,11 +22,11 @@ public class RefreshToken implements Serializable {
 
     @NotNull
     @Lob
-    @Column(nullable=false)
+    @Column(nullable = false)
     private byte[] token;
 
     @NotNull
     @Lob
-    @Column(nullable=false)
+    @Column(nullable = false)
     private byte[] authentication;
 }

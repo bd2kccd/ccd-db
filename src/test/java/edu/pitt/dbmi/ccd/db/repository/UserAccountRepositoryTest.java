@@ -18,10 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import static org.junit.Assert.*;
-
+import edu.pitt.dbmi.ccd.db.entity.Person;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.Date;
-
+import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,15 +33,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.pitt.dbmi.ccd.db.entity.Person;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-
 /**
  *
  * May 18, 2016 3:41:02 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
- * @author Mark Silvis  (marksilvis@pitt.edu)
+ * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest

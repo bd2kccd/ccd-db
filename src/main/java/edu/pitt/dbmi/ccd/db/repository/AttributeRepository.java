@@ -19,9 +19,6 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.Attribute;
-import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
-import java.util.Optional;
-import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -90,8 +87,6 @@ public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 //    public Page<Attribute> findByParent(Attribute parent, Pageable pageable);
 //
 //    public Page<Attribute> findByChildrenIn(Set<Attribute> children, Pageable pageable);
-
 //    public Page<Attribute> findAllByParentIsNull(Pageable pageable);
-
     public Page<Attribute> findAll(Pageable pageable);
 }

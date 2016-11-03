@@ -18,13 +18,12 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 
 /**
  *
@@ -41,24 +40,26 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     public UserAccount findByAccountId(String accountId);
 
+    public UserAccount findByActivationKey(String activationKey);
+
     @Query("SELECT ua FROM UserAccount ua WHERE ua.person.email = ?1")
     public UserAccount findByEmail(String email);
 
     public Long countByUsername(String username);
 
-    @Query(value="SELECT ua FROM UserAccount ua " +
-            "LEFT JOIN ua.groups AS m " +
-            "WHERE m.id = ?1")
+    @Query(value = "SELECT ua FROM UserAccount ua "
+            + "LEFT JOIN ua.groups AS m "
+            + "WHERE m.id = ?1")
     public Page<UserAccount> findByGroupMembership(Long groupId, Pageable pageable);
 
-    @Query(value="SELECT ua FROM UserAccount ua " +
-            "LEFT JOIN ua.moderates AS m " +
-            "WHERE m.id = ?1")
+    @Query(value = "SELECT ua FROM UserAccount ua "
+            + "LEFT JOIN ua.moderates AS m "
+            + "WHERE m.id = ?1")
     public Page<UserAccount> findByGroupModeration(Long groupId, Pageable pageable);
 
-    @Query(value="SELECT ua FROM UserAccount ua " +
-            "LEFT JOIN ua.requesting AS r " +
-            "WHERE r.id = ?1")
+    @Query(value = "SELECT ua FROM UserAccount ua "
+            + "LEFT JOIN ua.requesting AS r "
+            + "WHERE r.id = ?1")
     public Page<UserAccount> findByGroupRequests(Long groupId, Pageable pageable);
 
     public Page<UserAccount> findAll(Pageable pageable);

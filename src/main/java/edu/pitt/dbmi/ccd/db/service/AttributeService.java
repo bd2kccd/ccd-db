@@ -22,7 +22,6 @@ import edu.pitt.dbmi.ccd.db.entity.Attribute;
 import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import edu.pitt.dbmi.ccd.db.repository.AttributeRepository;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,19 +54,15 @@ public class AttributeService {
 //    public Attribute findByVocabAndLevelAndName(Vocabulary vocabulary, String level, String name) {
 //        return attributeRepository.findByVocabAndLevelAndName(vocabulary, level, name);
 //    }
-
 //    public Page<Attribute> findByVocab(Vocabulary vocab, Pageable pageable) {
 //        return attributeRepository.findByVocabulary(vocab.getName(), pageable);
 //    }
-
 //    public Page<Attribute> findByVocabAndParentIsNull(Vocabulary vocabulary, Pageable pageable) {
 //        return attributeRepository.findByVocabAndParentIsNull(vocabulary, pageable);
 //    }
-
 //    public Page<Attribute> findByVocabAndParent(Vocabulary vocabulary, Attribute parent, Pageable pageable) {
 //        return attributeRepository.findByVocabAndParent(vocabulary, parent, pageable);
 //    }
-
     /**
      * Find Attributes matching non-null parameters
      *
@@ -81,7 +76,6 @@ public class AttributeService {
     public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevel(Vocabulary vocab, String level, String name, String requirementLevel, Pageable pageable) {
         return attributeRepository.findByVocabAndLevelAndNameAndRequirementLevel(vocab.getName(), level, name, requirementLevel, pageable);
     }
-
 
     public Page<Attribute> findByVocabAndLevelAndNameAndRequirementLevelAndParentIsNull(Vocabulary vocab, String level, String name, String requirementLevel, Pageable pageable) {
         return attributeRepository.findByVocabAndLevelAndNameAndRequirementLevelAndParentIsNull(vocab.getName(), level, name, requirementLevel, pageable);

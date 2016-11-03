@@ -11,42 +11,43 @@ import javax.validation.constraints.Size;
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
-@Table(name="oauth_client_details")
+@Table(name = "oauth_client_details")
 public class ClientDetails implements Serializable {
-    
+
     private static final long serialVersionUID = 3932864394592817342L;
 
     @Id
     private String clientId;
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     private String resourceIds;
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     private String clientSecret;
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     private String scope;
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     private String authorizedGrantTypes;
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     private String webServerRedirectUri;
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     private String authorities;
 
-    @Column(nullable=true, columnDefinition="INT(11)")
+    @Column(nullable = true, columnDefinition = "INT(11)")
     private Integer accessTokenValidity;
 
-    @Column(nullable=true, columnDefinition="INT(11)")
+    @Column(nullable = true, columnDefinition = "INT(11)")
     private Integer refreshTokenValidity;
 
-    @Size(max=4096)
-    @Column(length=4096, nullable=true)
+    @Size(max = 4096)
+    @Column(length = 4096, nullable = true)
     private String additionalInformation;
 
-    @Column(name="autoapprove", nullable=true)
+    @Column(name = "autoapprove", nullable = true)
     private String autoApproveScopes;
+
 }

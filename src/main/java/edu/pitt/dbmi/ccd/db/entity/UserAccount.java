@@ -22,7 +22,21 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -59,8 +73,11 @@ public class UserAccount implements Serializable {
     @Column(name = "active", nullable = false)
     private Boolean active;
 
-    @Column(name = "accountId", nullable = false)
+    @Column(name = "accountId", nullable = false, unique = true)
     private String accountId;
+
+    @Column(name = "activationKey")
+    private String activationKey;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdDate", nullable = false, length = 19)
@@ -128,7 +145,7 @@ public class UserAccount implements Serializable {
         this.lastLoginDate = lastLoginDate;
     }
 
-    public UserAccount(Person person, String username, String password, String publicKey, String privateKey, boolean active, String accountId, Date createdDate, Date lastLoginDate, Set<DataFile> dataFiles, Set<UserRole> userRoles, Set<JobQueueInfo> jobQueueInfos, Set<SecurityAnswer> securityAnswers) {
+    public UserAccount(Person person, String username, String password, String publicKey, String privateKey, boolean active, String accountId, String activationKey, Date createdDate, Date lastLoginDate, Set<DataFile> dataFiles, Set<UserRole> userRoles, Set<JobQueueInfo> jobQueueInfos, Set<SecurityAnswer> securityAnswers) {
         this.person = person;
         this.username = username;
         this.password = password;
@@ -136,6 +153,7 @@ public class UserAccount implements Serializable {
         this.privateKey = privateKey;
         this.active = active;
         this.accountId = accountId;
+        this.activationKey = activationKey;
         this.createdDate = createdDate;
         this.lastLoginDate = lastLoginDate;
         this.dataFiles = dataFiles;
@@ -208,6 +226,14 @@ public class UserAccount implements Serializable {
         this.accountId = accountId;
     }
 
+    public String getActivationKey() {
+        return activationKey;
+    }
+
+    public void setActivationKey(String activationKey) {
+        this.activationKey = activationKey;
+    }
+
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -260,19 +286,40 @@ public class UserAccount implements Serializable {
         return groups;
     }
 
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
+    }
+
+    public Set<Group> getModerates() {
+        return moderates;
+    }
+
+    public void setModerates(Set<Group> moderates) {
+        this.moderates = moderates;
+    }
+
     public Set<Group> getRequesting() {
         return requesting;
     }
 
-    public Set<Group> getMods() {
-        return moderates;
+    public void setRequesting(Set<Group> requesting) {
+        this.requesting = requesting;
     }
 
     public Set<AnnotationTarget> getAnnotationTargets() {
         return annotationTargets;
     }
 
+    public void setAnnotationTargets(Set<AnnotationTarget> annotationTargets) {
+        this.annotationTargets = annotationTargets;
+    }
+
     public Set<Annotation> getAnnotations() {
         return annotations;
     }
+
+    public void setAnnotations(Set<Annotation> annotations) {
+        this.annotations = annotations;
+    }
+
 }

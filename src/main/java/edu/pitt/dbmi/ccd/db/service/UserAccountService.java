@@ -18,22 +18,20 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import java.nio.file.Paths;
-import java.util.Date;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import edu.pitt.dbmi.ccd.db.domain.AccountRegistration;
 import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
+import java.nio.file.Paths;
+import java.util.Date;
+import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -77,6 +75,10 @@ public class UserAccountService {
         return userAccountRepository.findByAccountId(accountId);
     }
 
+    public UserAccount findByActivationKey(String activationKey) {
+        return userAccountRepository.findByActivationKey(activationKey);
+    }
+
     public Page<UserAccount> findByGroupModeration(Group group, Pageable pageable) {
         return userAccountRepository.findByGroupModeration(group.getId(), pageable);
     }
@@ -99,7 +101,6 @@ public class UserAccountService {
 
         return userAccountRepository.save(userAccount);
     }
-
 
     public Person updatePerson(UserAccount userAccount) {
         return personRepository.save(userAccount.getPerson());
@@ -124,12 +125,14 @@ public class UserAccountService {
         String password = accountRegistration.getPassword();
         boolean activated = accountRegistration.isActivated();
 
-        String accountId = activated ? null : UUID.randomUUID().toString();
+        String accountId = UUID.randomUUID().toString();
+        String activationKey = activated ? null : UUID.randomUUID().toString();
         Date registrationDate = new Date(System.currentTimeMillis());
-        Person person = createPerson(accountRegistration, accountId);
+        Person person = createPerson(accountRegistration);
 
         UserAccount userAccount = new UserAccount();
         userAccount.setAccountId(accountId);
+        userAccount.setActivationKey(activationKey);
         userAccount.setActive(activated);
         userAccount.setPassword(password);
         userAccount.setPerson(person);
@@ -140,7 +143,7 @@ public class UserAccountService {
         return userAccount;
     }
 
-    protected Person createPerson(AccountRegistration accountRegistration, String account) {
+    protected Person createPerson(AccountRegistration accountRegistration) {
         String firstName = accountRegistration.getFirstName();
         String middleName = accountRegistration.getMiddleName();
         String lastName = accountRegistration.getLastName();

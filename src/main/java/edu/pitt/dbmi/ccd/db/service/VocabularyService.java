@@ -18,20 +18,17 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.Attribute;
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
+import edu.pitt.dbmi.ccd.db.repository.VocabularyRepository;
 import static edu.pitt.dbmi.ccd.db.specification.VocabularySpecification.searchSpec;
-
 import java.util.List;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import edu.pitt.dbmi.ccd.db.entity.Attribute;
-import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
-import edu.pitt.dbmi.ccd.db.repository.VocabularyRepository;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -53,20 +50,20 @@ public class VocabularyService {
         if (vocabularies.isEmpty()) {
             Vocabulary hcls = new Vocabulary("HCLS", "http://www.w3.org/2001/sw/hcls/notes/hcls-dataset/");
             hcls.addAttributes(
-                new Attribute(hcls, "Summary", "Type", "Required"),
-                new Attribute(hcls, "Summary", "Title", "Required"),
-                new Attribute(hcls, "Summary", "Description", "Required"),
-                new Attribute(hcls, "Summary", "Created By", "Required"),
-                new Attribute(hcls, "Summary", "Created On", "Required"),
-                new Attribute(hcls, "Summary", "Last Access Time", "Required"),
-                new Attribute(hcls, "Summary", "Publisher", "Required"),
-                new Attribute(hcls, "Summary", "License", "Optional"),
-                new Attribute(hcls, "Version", "Identifier", "Optional"),
-                new Attribute(hcls, "Version", "Link", "Required"),
-                new Attribute(hcls, "Version", "Data Source Provenance", "Optional"),
-                new Attribute(hcls, "Version", "Distribution", "Optional"),
-                new Attribute(hcls, "Version", "Issued", "Required"),
-                new Attribute(hcls, "Version", "Download URI", "Required")
+                    new Attribute(hcls, "Summary", "Type", "Required"),
+                    new Attribute(hcls, "Summary", "Title", "Required"),
+                    new Attribute(hcls, "Summary", "Description", "Required"),
+                    new Attribute(hcls, "Summary", "Created By", "Required"),
+                    new Attribute(hcls, "Summary", "Created On", "Required"),
+                    new Attribute(hcls, "Summary", "Last Access Time", "Required"),
+                    new Attribute(hcls, "Summary", "Publisher", "Required"),
+                    new Attribute(hcls, "Summary", "License", "Optional"),
+                    new Attribute(hcls, "Version", "Identifier", "Optional"),
+                    new Attribute(hcls, "Version", "Link", "Required"),
+                    new Attribute(hcls, "Version", "Data Source Provenance", "Optional"),
+                    new Attribute(hcls, "Version", "Distribution", "Optional"),
+                    new Attribute(hcls, "Version", "Issued", "Required"),
+                    new Attribute(hcls, "Version", "Download URI", "Required")
             );
             vocabularies.add(hcls);
 

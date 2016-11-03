@@ -16,14 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.*;
-
-import javax.persistence.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -82,8 +98,8 @@ public class Annotation implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "AnnotationTargetReferences", joinColumns = {
-            @JoinColumn(name = "annotation_id", nullable = false)}, inverseJoinColumns = {
-            @JoinColumn(name = "target_id", nullable = false)})
+        @JoinColumn(name = "annotation_id", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "target_id", nullable = false)})
     private Set<AnnotationTarget> references = new HashSet<>(0);
 
     @OneToMany(mappedBy = "annotation", fetch = FetchType.EAGER, cascade = CascadeType.ALL)

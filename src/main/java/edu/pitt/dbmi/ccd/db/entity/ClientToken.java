@@ -12,28 +12,28 @@ import javax.validation.constraints.NotNull;
  * @author Mark Silvis (marksilvis@pitt.edu)
  */
 @Entity
-@Table(name="oauth_client_token")
+@Table(name = "oauth_client_token")
 public class ClientToken implements Serializable {
-    
+
     private static final long serialVersionUID = 7534882149225664328L;
 
     @Id
     private String authenticationId;
 
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String tokenId;
 
     @NotNull
     @Lob
-    @Column(nullable=false)
+    @Column(nullable = false)
     private byte[] token;
 
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String userName;
 
     @NotNull
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String clientId;
 }

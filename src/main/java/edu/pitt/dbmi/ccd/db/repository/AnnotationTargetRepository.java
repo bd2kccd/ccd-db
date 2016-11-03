@@ -20,8 +20,6 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
 import edu.pitt.dbmi.ccd.db.entity.DataFile;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -42,7 +40,6 @@ public interface AnnotationTargetRepository extends JpaRepository<AnnotationTarg
     public AnnotationTarget findByFile(DataFile file);
 
 //    public Page<AnnotationTarget> findByUser(UserAccount user, Pageable pageable);
-
     // search and filter
     public Page<AnnotationTarget> findAll(Specification<AnnotationTarget> spec, Pageable pageable);
 
