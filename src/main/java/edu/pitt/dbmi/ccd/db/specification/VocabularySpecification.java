@@ -18,8 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.specification;
 
-import static org.springframework.util.StringUtils.isEmpty;
-
+import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,10 +26,8 @@ import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import org.springframework.data.jpa.domain.Specification;
-
-import edu.pitt.dbmi.ccd.db.entity.Vocabulary;
+import static org.springframework.util.StringUtils.isEmpty;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -75,7 +72,7 @@ public final class VocabularySpecification {
         return terms.stream()
                 .map(t -> containsLike(t))
                 .map(t -> cb.or(nameContains(root, cb, t),
-                        descriptionContains(root, cb, t)))
+                descriptionContains(root, cb, t)))
                 .collect(Collectors.toList());
     }
 
@@ -84,7 +81,7 @@ public final class VocabularySpecification {
         return terms.stream()
                 .map(t -> containsLike(t))
                 .map(t -> cb.not(cb.or(nameContains(root, cb, t),
-                        descriptionContains(root, cb, t))))
+                descriptionContains(root, cb, t))))
                 .collect(Collectors.toList());
     }
 
