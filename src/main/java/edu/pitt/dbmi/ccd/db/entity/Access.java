@@ -45,7 +45,6 @@ public class Access implements Serializable {
     private String description;
 
     public Access() {
-
     }
 
     public Access(String name, String description) {

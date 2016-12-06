@@ -26,4 +26,31 @@ public class AuthCode implements Serializable {
     @Column(nullable = true)
     private byte[] authentication;
 
+    public AuthCode() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public byte[] getAuthentication() {
+        return authentication;
+    }
+
+    public void setAuthentication(byte[] authentication) {
+        this.authentication = authentication;
+    }
+
 }
