@@ -18,17 +18,6 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
 import edu.pitt.dbmi.ccd.db.entity.DataFile;
 import edu.pitt.dbmi.ccd.db.entity.DataFileInfo;
@@ -36,6 +25,15 @@ import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.AnnotationTargetRepository;
 import edu.pitt.dbmi.ccd.db.repository.DataFileInfoRepository;
 import edu.pitt.dbmi.ccd.db.repository.DataFileRepository;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -116,26 +114,15 @@ public class DataFileService {
     }
 
     public boolean deleteDataFileByNameAndAbsolutePath(String absolutePath, String name) {
+        boolean success = false;
         try {
             DataFile dataFile = dataFileRepository.findByAbsolutePathAndName(absolutePath, name);
-            DataFileInfo dataFileInfo = dataFile.getDataFileInfo();
-            AnnotationTarget annotationTarget = dataFile.getAnnotationTarget();
-            if (dataFileInfo != null) {
-                dataFileInfoRepository.delete(dataFileInfo);
-            }
-            if (annotationTarget != null) {
-                annotationTarget.setFile(null);
-                annotationTargetRepository.save(annotationTarget);
-            }
-
-            dataFileRepository.delete(dataFile);
+            success = deleteDataFile(dataFile);
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
-
-            return false;
         }
 
-        return true;
+        return success;
     }
 
     public boolean deleteDataFile(List<DataFile> dataFiles) {
@@ -146,18 +133,25 @@ public class DataFileService {
         try {
             // remove data file info first
             List<DataFileInfo> dataFileInfos = new LinkedList<>();
+            List<AnnotationTarget> annotationTargets = new LinkedList<>();
             dataFiles.forEach(dataFile -> {
                 DataFileInfo dataFileInfo = dataFile.getDataFileInfo();
                 if (dataFileInfo != null) {
                     dataFileInfos.add(dataFile.getDataFileInfo());
                 }
+
+                AnnotationTarget annotationTarget = dataFile.getAnnotationTarget();
+                if (annotationTarget != null) {
+                    annotationTarget.setFile(null);
+                    annotationTargets.add(annotationTarget);
+                }
             });
             dataFileInfoRepository.delete(dataFileInfos);
+            annotationTargetRepository.save(annotationTargets);
 
             dataFileRepository.delete(dataFiles);
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
-
             return false;
         }
 
@@ -169,6 +163,12 @@ public class DataFileService {
             DataFileInfo dataFileInfo = dataFile.getDataFileInfo();
             if (dataFileInfo != null) {
                 dataFileInfoRepository.delete(dataFileInfo);
+            }
+
+            AnnotationTarget annotationTarget = dataFile.getAnnotationTarget();
+            if (annotationTarget != null) {
+                annotationTarget.setFile(null);
+                annotationTargetRepository.save(annotationTarget);
             }
 
             dataFileRepository.delete(dataFile);

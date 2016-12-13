@@ -29,4 +29,32 @@ public class RefreshToken implements Serializable {
     @Lob
     @Column(nullable = false)
     private byte[] authentication;
+
+    public RefreshToken() {
+    }
+
+    public String getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
+    }
+
+    public byte[] getToken() {
+        return token;
+    }
+
+    public void setToken(byte[] token) {
+        this.token = token;
+    }
+
+    public byte[] getAuthentication() {
+        return authentication;
+    }
+
+    public void setAuthentication(byte[] authentication) {
+        this.authentication = authentication;
+    }
+
 }
