@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import javax.persistence.criteria.*;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -416,5 +418,99 @@ public final class AnnotationSpecification {
         } else {
             return "%" + terms.toLowerCase() + "%";
         }
+    }
+
+    public static final class SearchBuilder {
+        private final UserAccount requester;
+        private Long userId;
+        private Long groupId;
+        private Long targetId;
+        private Long vocabularyId;
+        private Long attributeId;
+        private String attributeLevel;
+        private String attributeRequirementLevel;
+        private Boolean showTopLevel;
+        private Boolean showRedacted;
+        private Date createdBefore;
+        private Date createdAfter;
+        private Date modifiedBefore;
+        private Date modifiedAfter;
+        private Set<String> contains;
+        private Set<String> notContains;
+
+        public SearchBuilder(final UserAccount requester) {
+            this.requester = requester;
+        }
+
+        public SearchBuilder user(final Long userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public SearchBuilder group(final Long groupId) {
+            this.groupId = groupId;
+            return this;
+        }
+
+        public SearchBuilder target(final Long targetId) {
+            this.targetId = targetId;
+            return this;
+        }
+
+        public SearchBuilder vocabulary(final Long vocabularyId) {
+            this.vocabularyId = vocabularyId;
+            return this;
+        }
+
+        public SearchBuilder attribute(final Long attributeId) {
+            this.attributeId = attributeId;
+            return this;
+        }
+
+        public SearchBuilder attributeLevel(final String attributeLevel) {
+            this.attributeLevel = attributeLevel;
+            return this;
+        }
+
+        public SearchBuilder attributeRequirementLevel(final String attributeRequirementLevel) {
+            this.attributeRequirementLevel = attributeRequirementLevel;
+            return this;
+        }
+
+        public SearchBuilder topLevelOnly() {
+            this.showTopLevel = true;
+            return this;
+        }
+
+        public SearchBuilder showRedacted() {
+            this.showRedacted = true;
+            return this;
+        }
+
+        public SearchBuilder createdRange(final Date createdAfter, final Date createdBefore) {
+            this.createdAfter = createdAfter;
+            this.createdBefore = createdBefore;
+            return this;
+        }
+
+        public SearchBuilder modifiedRange(final Date modifiedAfter, final Date modifiedBefore) {
+            this.modifiedAfter = modifiedAfter;
+            this.modifiedBefore = modifiedBefore;
+            return this;
+        }
+
+        public SearchBuilder containing(final Iterable<String> contains) {
+            this.contains = StreamSupport.stream(contains.spliterator(), false).collect(Collectors.toSet());
+            return this;
+        }
+
+        public SearchBuilder notContaining(final Iterable<String> notContains) {
+            this.notContains = StreamSupport.stream(notContains.spliterator(), false).collect(Collectors.toSet());
+            return this;
+        }
+
+//        public SearchBuilder build() {
+//            return AnnotationSpecification.searchSpec(requester, userId, groupId, targetId, vocabularyId, attributeId, attributeLevel, attributeRequirementLevel, showTopLevel, showRedacted, createdBefore, createdAfter, modifiedBefore, modifiedAfter, contains, notContains);
+//        }
     }
 }
