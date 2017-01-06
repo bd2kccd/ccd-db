@@ -55,6 +55,10 @@ public class AccessService {
         return accessRepository.save(access);
     }
 
+    public List<Access> save(Iterable<Access> accesses) {
+        return accessRepository.save(accesses);
+    }
+
     public Access findById(Long id) {
         return accessRepository.findById(id);
     }
