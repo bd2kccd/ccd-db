@@ -21,6 +21,8 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.Group;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.GroupRepository;
+import edu.pitt.dbmi.ccd.db.specification.GroupSpecification;
+
 import static edu.pitt.dbmi.ccd.db.specification.GroupSpecification.searchSpec;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +31,7 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,6 +104,10 @@ public class GroupService {
 
     public Page<Group> search(Set<String> matches, Set<String> nots, Pageable pageable) {
         return groupRepository.findAll(searchSpec(matches, nots), pageable);
+    }
+
+    public Page<Group> search(Specification<Group> specification, Pageable pageable) {
+        return groupRepository.findAll(specification, pageable);
     }
 
     public Page<Group> findAll(Pageable pageable) {

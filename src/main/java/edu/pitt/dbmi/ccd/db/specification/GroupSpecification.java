@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -44,25 +45,24 @@ public final class GroupSpecification {
     /**
      * find groups that contain search terms
      *
-     * @param matches search terms
-     * @param nots negated search terms
+     * @param containing search terms
+     * @param notContaining search terms
      * @return specification
      */
-    public static Specification<Group> searchSpec(Set<String> matches,
-            Set<String> nots) {
+    public static Specification<Group> searchSpec(Set<String> containing, Set<String> notContaining) {
         return (root, query, cb) -> {
-            return buildSearchSpec(root, cb, matches, nots);
+            return buildSearchSpec(root, cb, containing, notContaining);
         };
     }
 
     // build search predicates
-    private static Predicate buildSearchSpec(Root<Group> root, CriteriaBuilder cb, Set<String> matches, Set<String> nots) {
+    private static Predicate buildSearchSpec(Root<Group> root, CriteriaBuilder cb, Set<String> containing, Set<String> notContaining) {
         List<Predicate> predicates = new ArrayList<>(0);
-        if (!isEmpty(matches)) {
-            predicates.addAll(inNameOrDescription(root, cb, matches));
+        if (!isEmpty(containing)) {
+            predicates.addAll(inNameOrDescription(root, cb, containing));
         }
-        if (!isEmpty(nots)) {
-            predicates.addAll(notInNameOrDescription(root, cb, nots));
+        if (!isEmpty(notContaining)) {
+            predicates.addAll(notInNameOrDescription(root, cb, notContaining));
         }
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
     }
@@ -71,8 +71,7 @@ public final class GroupSpecification {
     private static List<Predicate> inNameOrDescription(Root<Group> root, CriteriaBuilder cb, Set<String> terms) {
         return terms.stream()
                 .map(t -> containsLike(t))
-                .map(t -> cb.or(nameContains(root, cb, t),
-                descriptionContains(root, cb, t)))
+                .map(t -> cb.or(nameContains(root, cb, t), descriptionContains(root, cb, t)))
                 .collect(Collectors.toList());
     }
 
@@ -80,8 +79,7 @@ public final class GroupSpecification {
     private static List<Predicate> notInNameOrDescription(Root<Group> root, CriteriaBuilder cb, Set<String> terms) {
         return terms.stream()
                 .map(t -> containsLike(t))
-                .map(t -> cb.not(cb.or(nameContains(root, cb, t),
-                descriptionContains(root, cb, t))))
+                .map(t -> cb.not(cb.or(nameContains(root, cb, t), descriptionContains(root, cb, t))))
                 .collect(Collectors.toList());
     }
 
@@ -101,6 +99,29 @@ public final class GroupSpecification {
             return "%";
         } else {
             return "%" + term.toLowerCase() + "%";
+        }
+    }
+
+    public static final class SearchBuilder {
+        private Set<String> contains;
+        private Set<String> notContains;
+
+        public SearchBuilder() {
+
+        }
+
+        public SearchBuilder containing(final Iterable<String> contains) {
+            this.contains = StreamSupport.stream(contains.spliterator(), false).collect(Collectors.toSet());
+            return this;
+        }
+
+        public SearchBuilder notContaining(final Iterable<String> notContains) {
+            this.notContains = StreamSupport.stream(notContains.spliterator(), false).collect(Collectors.toSet());
+            return this;
+        }
+
+        public Specification<Group> build() {
+            return GroupSpecification.searchSpec(contains, notContains);
         }
     }
 }
