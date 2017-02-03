@@ -28,6 +28,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,12 +58,20 @@ public class AnnotationTargetService {
         return annotationTargetRepository.findByFile(file);
     }
 
-    public Page<AnnotationTarget> filter(String username, String type, Pageable pageable) {
-        return annotationTargetRepository.findAll(filterSpec(username, type), pageable);
+//    public Page<AnnotationTarget> filter(String username, String type, Pageable pageable) {
+//        return annotationTargetRepository.findAll(filterSpec(username, type), pageable);
+//    }
+//
+//    public Page<AnnotationTarget> search(String username, String type, Set<String> matches, Set<String> nots, Pageable pageable) {
+//        return annotationTargetRepository.findAll(searchSpec(username, type, matches, nots), pageable);
+//    }
+
+    public Page<AnnotationTarget> filter(Specification<AnnotationTarget> specification, Pageable pageable) {
+        return annotationTargetRepository.findAll(specification, pageable);
     }
 
-    public Page<AnnotationTarget> search(String username, String type, Set<String> matches, Set<String> nots, Pageable pageable) {
-        return annotationTargetRepository.findAll(searchSpec(username, type, matches, nots), pageable);
+    public Page<AnnotationTarget> search(Specification<AnnotationTarget> specification, Pageable pageable) {
+        return annotationTargetRepository.findAll(specification, pageable);
     }
 
     public Page<AnnotationTarget> findAll(Pageable pageable) {

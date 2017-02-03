@@ -62,46 +62,54 @@ public class AnnotationService {
         return annotationRepository.findAll(spec, pageable);
     }
 
-    public Page<Annotation> filter(
-            UserAccount requester,
-            String username,
-            String group,
-            Long target,
-            String vocab,
-            String attributeLevel,
-            String attributeName,
-            String attributeRequirementLevel,
-            Boolean showRedacted,
-            Boolean parentless,
-            Date createdBefore,
-            Date createdAfter,
-            Date modifiedBefore,
-            Date modifiedAfter,
-            Pageable pageable) {
-        Specification<Annotation> spec = filterSpec(requester, username, group, target, vocab, attributeLevel, attributeName, attributeRequirementLevel, showRedacted, parentless, createdBefore, createdAfter, modifiedBefore, modifiedAfter);
-        return annotationRepository.findAll(spec, pageable);
+//    public Page<Annotation> filter(
+//            UserAccount requester,
+//            String username,
+//            String group,
+//            Long target,
+//            String vocab,
+//            String attributeLevel,
+//            String attributeName,
+//            String attributeRequirementLevel,
+//            Boolean showRedacted,
+//            Boolean parentless,
+//            Date createdBefore,
+//            Date createdAfter,
+//            Date modifiedBefore,
+//            Date modifiedAfter,
+//            Pageable pageable) {
+//        Specification<Annotation> spec = filterSpec(requester, username, group, target, vocab, attributeLevel, attributeName, attributeRequirementLevel, showRedacted, parentless, createdBefore, createdAfter, modifiedBefore, modifiedAfter);
+//        return annotationRepository.findAll(spec, pageable);
+//    }
+//
+//    public Page<Annotation> search(
+//            UserAccount requester,
+//            String username,
+//            String group,
+//            Long target,
+//            String vocab,
+//            String attributeLevel,
+//            String attributeName,
+//            String attributeRequirementLevel,
+//            Boolean showRedacted,
+//            Boolean parentless,
+//            Date createdBefore,
+//            Date createdAfter,
+//            Date modifiedBefore,
+//            Date modifiedAfter,
+//            Set<String> matches,
+//            Set<String> nots,
+//            Pageable pageable) {
+//        Specification<Annotation> spec = searchSpec(requester, username, group, target, vocab, attributeLevel, attributeName, attributeRequirementLevel, showRedacted, parentless, createdBefore, createdAfter, modifiedBefore, modifiedAfter, matches, nots);
+//        return annotationRepository.findAll(spec, pageable);
+//    }
+
+    public Page<Annotation> filter(Specification<Annotation> specification, Pageable pageable) {
+        return annotationRepository.findAll(specification, pageable);
     }
 
-    public Page<Annotation> search(
-            UserAccount requester,
-            String username,
-            String group,
-            Long target,
-            String vocab,
-            String attributeLevel,
-            String attributeName,
-            String attributeRequirementLevel,
-            Boolean showRedacted,
-            Boolean parentless,
-            Date createdBefore,
-            Date createdAfter,
-            Date modifiedBefore,
-            Date modifiedAfter,
-            Set<String> matches,
-            Set<String> nots,
-            Pageable pageable) {
-        Specification<Annotation> spec = searchSpec(requester, username, group, target, vocab, attributeLevel, attributeName, attributeRequirementLevel, showRedacted, parentless, createdBefore, createdAfter, modifiedBefore, modifiedAfter, matches, nots);
-        return annotationRepository.findAll(spec, pageable);
+    public Page<Annotation> search(Specification<Annotation> specification, Pageable pageable) {
+        return annotationRepository.findAll(specification, pageable);
     }
 
     public Page<Annotation> findAll(UserAccount requester, Pageable pageable) {

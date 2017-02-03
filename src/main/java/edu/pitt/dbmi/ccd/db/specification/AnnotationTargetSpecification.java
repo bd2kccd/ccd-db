@@ -18,16 +18,19 @@
  */
 package edu.pitt.dbmi.ccd.db.specification;
 
-import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import edu.pitt.dbmi.ccd.db.entity.AnnotationTarget;
 import org.springframework.data.jpa.domain.Specification;
-import static org.springframework.util.StringUtils.isEmpty;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -36,6 +39,7 @@ public final class AnnotationTargetSpecification {
 
     private static final String USER = "user";
     private static final String USERNAME = "username";
+    private static final String USERACCOUNTID = "userAccountId";
     private static final String TITLE = "title";
     private static final String ADDRESS = "address";
     private static final String FILE = "file";
@@ -45,34 +49,34 @@ public final class AnnotationTargetSpecification {
     private AnnotationTargetSpecification() {
     }
 
-    public static Specification<AnnotationTarget> filterSpec(String username, String type) {
+    public static Specification<AnnotationTarget> filterSpec(Long userAccountId, String type) {
         return (root, query, cb) -> {
-            return buildFilterSpec(root, cb, username, type);
+            return buildFilterSpec(root, cb, userAccountId, type);
         };
     }
 
     /**
      * find uploads that contain search terms
      *
-     * @param username user
-     * @param type upload type (url or file)
-     * @param matches contains terms
-     * @param nots does not contain terms
+     * @param userAccountId user account id
+     * @param type     upload type (url or file)
+     * @param matches  contains terms
+     * @param nots     does not contain terms
      * @return specification
      */
-    public static Specification<AnnotationTarget> searchSpec(String username,
-            String type,
-            Set<String> matches,
-            Set<String> nots) {
+    public static Specification<AnnotationTarget> searchSpec(Long userAccountId,
+                                                             String type,
+                                                             Set<String> matches,
+                                                             Set<String> nots) {
         return (root, query, cb) -> {
-            return buildSearchSpec(root, cb, username, type, matches, nots);
+            return buildSearchSpec(root, cb, userAccountId, type, matches, nots);
         };
     }
 
-    private static Predicate buildFilterSpec(Root<AnnotationTarget> root, CriteriaBuilder cb, String username, String type) {
+    private static Predicate buildFilterSpec(Root<AnnotationTarget> root, CriteriaBuilder cb, Long userAccountId, String type) {
         List<Predicate> predicates = new ArrayList<>(0);
-        if (!isEmpty(username)) {
-            predicates.add(belongsToUser(root, cb, username));
+        if (!isEmpty(userAccountId)) {
+            predicates.add(belongsToUser(root, cb, userAccountId));
         }
         if (!isEmpty(type)) {
             if (type.equalsIgnoreCase(FILE)) {
@@ -85,9 +89,9 @@ public final class AnnotationTargetSpecification {
     }
 
     // build search predicates
-    private static Predicate buildSearchSpec(Root<AnnotationTarget> root, CriteriaBuilder cb, String username, String type, Set<String> matches, Set<String> nots) {
+    private static Predicate buildSearchSpec(Root<AnnotationTarget> root, CriteriaBuilder cb, Long userAccountId, String type, Set<String> matches, Set<String> nots) {
         List<Predicate> predicates = new ArrayList<>(0);
-        predicates.add(buildFilterSpec(root, cb, username, type));
+        predicates.add(buildFilterSpec(root, cb, userAccountId, type));
         if (!isEmpty(matches)) {
             predicates.addAll(inTitleOrAddressOrName(root, cb, matches));
         }
@@ -98,8 +102,9 @@ public final class AnnotationTargetSpecification {
     }
 
     // belongs to user predicate
-    private static Predicate belongsToUser(Root<AnnotationTarget> root, CriteriaBuilder cb, String username) {
-        return cb.like(cb.lower(root.get(USER).get(USERNAME)), username.toLowerCase());
+    private static Predicate belongsToUser(Root<AnnotationTarget> root, CriteriaBuilder cb, Long userAccountId) {
+        return cb.equal(root.get(USER).get(USERACCOUNTID), userAccountId);
+//        return cb.like(cb.lower(root.get(USER).get(USERNAME)), username.toLowerCase());
     }
 
     // is file predicate
@@ -117,8 +122,8 @@ public final class AnnotationTargetSpecification {
         return terms.stream()
                 .map(t -> containsLike(t))
                 .map(t -> cb.or(titleContains(root, cb, t),
-                (root.get(ADDRESS) != null) ? addressContains(root, cb, t)
-                : fileNameContains(root, cb, t)))
+                        (root.get(ADDRESS) != null) ? addressContains(root, cb, t)
+                                : fileNameContains(root, cb, t)))
                 .collect(Collectors.toList());
     }
 
@@ -127,8 +132,8 @@ public final class AnnotationTargetSpecification {
         return terms.stream()
                 .map(t -> containsLike(t))
                 .map(t -> cb.not(cb.or(titleContains(root, cb, t),
-                (root.get(ADDRESS) != null) ? addressContains(root, cb, t)
-                : fileNameContains(root, cb, t))))
+                        (root.get(ADDRESS) != null) ? addressContains(root, cb, t)
+                                : fileNameContains(root, cb, t))))
                 .collect(Collectors.toList());
     }
 
@@ -153,6 +158,41 @@ public final class AnnotationTargetSpecification {
             return "%";
         } else {
             return "%" + term.toLowerCase() + "%";
+        }
+    }
+
+    public static final class SearchBuilder {
+        private Long userAccountId;
+        private String type;
+        private Set<String> contains;
+        private Set<String> notContains;
+
+        public SearchBuilder() {
+
+        }
+
+        public SearchBuilder user(final Long userAccountId) {
+            this.userAccountId = userAccountId;
+            return this;
+        }
+
+        public SearchBuilder type(final String type) {
+            this.type = type;
+            return this;
+        }
+
+        public SearchBuilder containing(final Iterable<String> contains) {
+            this.contains = StreamSupport.stream(contains.spliterator(), false).collect(Collectors.toSet());
+            return this;
+        }
+
+        public SearchBuilder notContaining(final Iterable<String> notContains) {
+            this.notContains = StreamSupport.stream(notContains.spliterator(), false).collect(Collectors.toSet());
+            return this;
+        }
+
+        public Specification<AnnotationTarget> build() {
+            return searchSpec(userAccountId, type, contains, notContains);
         }
     }
 }

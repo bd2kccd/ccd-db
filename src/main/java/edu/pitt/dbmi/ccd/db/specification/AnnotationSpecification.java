@@ -25,15 +25,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import javax.persistence.criteria.*;
-
-import org.springframework.data.jpa.domain.Specification;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import edu.pitt.dbmi.ccd.db.entity.Annotation;
 import edu.pitt.dbmi.ccd.db.entity.AnnotationData;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import org.springframework.data.jpa.domain.Specification;
 
 /**
  * @author Mark Silvis (marksilvis@pitt.edu)
@@ -44,13 +46,13 @@ public final class AnnotationSpecification {
     public static final String GROUP = "group";
     public static final String ACCESS = "accessControl";
     public static final String TARGET = "target";
-    public static final String VOCAB = "vocabulary";
-    public static final String ANNO = "annotation";
-    public static final String ATTRIB = "attribute";
+    public static final String VOCABULARY = "vocabulary";
+    public static final String ANNOTATION = "annotation";
+    public static final String ATTRIBRIBUTE = "attribute";
     public static final String PARENT = "parent";
     public static final String ID = "id";
     public static final String NAME = "name";
-    public static final String USERNAME = "username";
+    public static final String USERACCOUNTID = "userAccountId";
     public static final String PUBLIC_ACCESS = "PUBLIC";
     public static final String GROUP_ACCESS = "GROUP";
     public static final String PRIVATE_ACCESS = "PRIVATE";
@@ -83,42 +85,46 @@ public final class AnnotationSpecification {
     }
 
     public static Specification<Annotation> filterSpec(UserAccount requester,
-            String username,
-            String group,
-            Long target,
-            String vocab,
-            String attributeLevel,
-            String attributeName,
-            String attributeReqLevel,
-            Boolean showRedacted,
-            Boolean parentless,
-            Date createdBefore,
-            Date createdAfter,
-            Date modifiedBefore,
-            Date modifiedAfter) {
+                                                       Long userAccountId,
+                                                       Long groupId,
+                                                       Long targetId,
+                                                       Long vocabularyId,
+                                                       Long attributeId,
+                                                       String attributeLevel,
+                                                       String attributeName,
+                                                       String attributeReqLevel,
+                                                       Boolean showRedacted,
+                                                       Boolean topLevel,
+                                                       Date createdBefore,
+                                                       Date createdAfter,
+                                                       Date modifiedBefore,
+                                                       Date modifiedAfter) {
         return (root, query, cb) -> {
-            return buildFilterSpec(root, query, cb, requester, username, group, target, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted, parentless, createdBefore, createdAfter, modifiedBefore, modifiedAfter);
+//            return buildFilterSpec(root, query, cb, requester, userAccountId, groupId, targetId, vocabularyId, attributeLevel, attributeName, attributeReqLevel, showRedacted, parentless, createdBefore, createdAfter, modifiedBefore, modifiedAfter);
+            return buildFilterSpec(root, query, cb, requester, userAccountId, groupId, targetId, vocabularyId, attributeId, attributeLevel, attributeName, attributeReqLevel, showRedacted, topLevel, createdBefore, createdAfter, modifiedBefore, modifiedAfter);
         };
     }
 
     public static Specification<Annotation> searchSpec(UserAccount requester,
-            String username,
-            String group,
-            Long target,
-            String vocab,
-            String attributeLevel,
-            String attributeName,
-            String attributeReqLevel,
-            Boolean showRedacted,
-            Boolean parentless,
-            Date createdBefore,
-            Date createdAfter,
-            Date modifiedBefore,
-            Date modifiedAfter,
-            Set<String> matches,
-            Set<String> nots) {
+                                                       Long userAccountId,
+                                                       Long groupId,
+                                                       Long targetId,
+                                                       Long vocabularyId,
+                                                       Long attributeId,
+                                                       String attributeLevel,
+                                                       String attributeName,
+                                                       String attributeReqLevel,
+                                                       Boolean showRedacted,
+                                                       Boolean topLevel,
+                                                       Date createdBefore,
+                                                       Date createdAfter,
+                                                       Date modifiedBefore,
+                                                       Date modifiedAfter,
+                                                       Set<String> matches,
+                                                       Set<String> nots) {
         return (root, query, cb) -> {
-            return buildSearchSpec(root, query, cb, requester, username, group, target, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted, parentless, createdBefore, createdAfter, modifiedBefore, modifiedAfter, matches, nots);
+//            return buildSearchSpec(root, query, cb, requester, username, group, target, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted, parentless, createdBefore, createdAfter, modifiedBefore, modifiedAfter, matches, nots);
+            return buildSearchSpec(root, query, cb, requester, userAccountId, groupId, targetId, vocabularyId, attributeId, attributeLevel, attributeName, attributeReqLevel, showRedacted, topLevel, createdBefore, createdAfter, modifiedBefore, modifiedAfter, matches, nots);
         };
     }
 
@@ -142,25 +148,26 @@ public final class AnnotationSpecification {
     }
 
     private static Predicate buildFilterSpec(Root<Annotation> root,
-            CriteriaQuery query,
-            CriteriaBuilder cb,
-            UserAccount requester,
-            String username,
-            String group,
-            Long target,
-            String vocab,
-            String attributeLevel,
-            String attributeName,
-            String attributeReqLevel,
-            Boolean showRedacted,
-            Boolean parentless,
-            Date createdBefore,
-            Date createdAfter,
-            Date modifiedBefore,
-            Date modifiedAfter) {
+                                             CriteriaQuery query,
+                                             CriteriaBuilder cb,
+                                             UserAccount requester,
+                                             Long userAccountId,
+                                             Long groupId,
+                                             Long targetId,
+                                             Long vocabularyId,
+                                             Long attributeId,
+                                             String attributeLevel,
+                                             String attributeName,
+                                             String attributeReqLevel,
+                                             Boolean showRedacted,
+                                             Boolean topLevel,
+                                             Date createdBefore,
+                                             Date createdAfter,
+                                             Date modifiedBefore,
+                                             Date modifiedAfter) {
         final List<Predicate> predicates = new ArrayList<>(0);
         final Predicate authPredicate = authFilter(root, cb, requester);
-        final List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, target, vocab, attributeLevel, attributeName, attributeReqLevel, showRedacted, parentless, createdBefore, createdAfter, modifiedBefore, modifiedAfter);
+        final List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, userAccountId, groupId, targetId, vocabularyId, attributeId, attributeLevel, attributeName, attributeReqLevel, showRedacted, topLevel, createdBefore, createdAfter, modifiedBefore, modifiedAfter);
 
         predicates.add(authPredicate);
         predicates.addAll(filterPredicates);
@@ -169,27 +176,28 @@ public final class AnnotationSpecification {
     }
 
     private static Predicate buildSearchSpec(Root<Annotation> root,
-            CriteriaQuery query,
-            CriteriaBuilder cb,
-            UserAccount requester,
-            String username,
-            String group,
-            Long target,
-            String vocab,
-            String attributeLevel,
-            String attributeName,
-            String attributeReqLevel,
-            Boolean showRedacted,
-            Boolean parentless,
-            Date createdBefore,
-            Date createdAfter,
-            Date modifiedBefore,
-            Date modifiedAfter,
-            Set<String> matches,
-            Set<String> nots) {
+                                             CriteriaQuery query,
+                                             CriteriaBuilder cb,
+                                             UserAccount requester,
+                                             Long userAccountId,
+                                             Long groupId,
+                                             Long targetId,
+                                             Long vocabularyId,
+                                             Long attributeId,
+                                             String attributeLevel,
+                                             String attributeName,
+                                             String attributeReqLevel,
+                                             Boolean showRedacted,
+                                             Boolean topLevel,
+                                             Date createdBefore,
+                                             Date createdAfter,
+                                             Date modifiedBefore,
+                                             Date modifiedAfter,
+                                             Set<String> matches,
+                                             Set<String> nots) {
         final List<Predicate> predicates = new ArrayList<>(0);
         final Predicate authPredicate = authFilter(root, cb, requester);
-        final List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, username, group, target, vocab, attributeName, attributeLevel, attributeReqLevel, showRedacted, parentless, createdBefore, createdAfter, modifiedBefore, modifiedAfter);
+        final List<Predicate> filterPredicates = buildFilterPredicates(root, query, cb, userAccountId, groupId, targetId, vocabularyId, attributeId, attributeName, attributeLevel, attributeReqLevel, showRedacted, topLevel, createdBefore, createdAfter, modifiedBefore, modifiedAfter);
         final List<Predicate> searchPredicates = buildSearchPredicates(root, query, cb, matches, nots);
 
         predicates.add(authPredicate);
@@ -209,16 +217,16 @@ public final class AnnotationSpecification {
     private static Predicate authFilter(Root<Annotation> root, CriteriaBuilder cb, UserAccount requester) {
         final List<Predicate> predicates = new ArrayList<>(0);
 
-        // public access
+        // Annotation has public access
         predicates.add(cb.like(root.get(ACCESS).get(NAME), PUBLIC_ACCESS));
 
-        // private access AND belongs to requester
+        // Annotation has private access AND belongs to requester
         predicates.add(cb.and(cb.like(root.get(ACCESS).get(NAME), PRIVATE_ACCESS),
                 cb.equal(root.get(USER), requester)));
 
-        // group access AND requester in group
-        // criteriabuilder's in clause throws
-        // sql error if collection has no elements
+        // Annotation has group access AND requester is in annotation's group
+        // criteriabuilder's in clause throws sql error if collection has no elements
+        // TODO: Look into if this is SQL error is fixed
         if (requester.getGroups().size() > 0) {
             predicates.add(cb.and(cb.like(root.get(ACCESS).get(NAME), GROUP_ACCESS),
                     root.get(GROUP).in(requester.getGroups())));
@@ -228,34 +236,38 @@ public final class AnnotationSpecification {
 
     // build filter predicates of non-null parameters
     private static List<Predicate> buildFilterPredicates(Root<Annotation> root,
-            CriteriaQuery query,
-            CriteriaBuilder cb,
-            String username,
-            String group,
-            Long target,
-            String vocab,
-            String attributeLevel,
-            String attributeName,
-            String attributeReqLevel,
-            Boolean showRedacted,
-            Boolean parentless,
-            Date createdBefore,
-            Date createdAfter,
-            Date modifiedBefore,
-            Date modifiedAfter) {
+                                                         CriteriaQuery query,
+                                                         CriteriaBuilder cb,
+                                                         Long userAccountId,
+                                                         Long groupId,
+                                                         Long targetId,
+                                                         Long vocabularyId,
+                                                         Long attributeId,
+                                                         String attributeLevel,
+                                                         String attributeName,
+                                                         String attributeReqLevel,
+                                                         Boolean showRedacted,
+                                                         Boolean topLevel,
+                                                         Date createdBefore,
+                                                         Date createdAfter,
+                                                         Date modifiedBefore,
+                                                         Date modifiedAfter) {
 
         final List<Predicate> predicates = new ArrayList<>(0);
-        if (!isEmpty(username)) {
-            predicates.add(belongsToUser(root, cb, username));
+        if (!isEmpty(userAccountId)) {
+            predicates.add(belongsToUser(root, cb, userAccountId));
         }
-        if (!isEmpty(group)) {
-            predicates.add(belongsToGroup(root, cb, group));
+        if (!isEmpty(groupId)) {
+            predicates.add(belongsToGroup(root, cb, groupId));
         }
-        if (!isEmpty(target)) {
-            predicates.add(targetstarget(root, cb, target));
+        if (!isEmpty(targetId)) {
+            predicates.add(hasTarget(root, cb, targetId));
         }
-        if (!isEmpty(vocab)) {
-            predicates.add(hasVocabulary(root, cb, vocab));
+        if (!isEmpty(vocabularyId)) {
+            predicates.add(hasVocabulary(root, cb, vocabularyId));
+        }
+        if (!isEmpty(attributeId)) {
+            predicates.add(hasAttribute(root, query, cb, attributeId));
         }
         if (!isEmpty(attributeLevel)) {
             predicates.add(hasAttributeLevel(root, query, cb, attributeLevel));
@@ -269,8 +281,8 @@ public final class AnnotationSpecification {
         if (!showRedacted) {
             predicates.add(notRedacted(root, cb));
         }
-        if (parentless) {
-            predicates.add(parentless(root, cb));
+        if (topLevel) {
+            predicates.add(topLevel(root, cb));
         }
         if (!isEmpty(createdBefore)) {
             predicates.add(createdBefore(root, cb, createdBefore));
@@ -289,10 +301,10 @@ public final class AnnotationSpecification {
 
     // build search predicates of non-null parameters
     private static List<Predicate> buildSearchPredicates(Root<Annotation> root,
-            CriteriaQuery query,
-            CriteriaBuilder cb,
-            Set<String> matches,
-            Set<String> nots) {
+                                                         CriteriaQuery query,
+                                                         CriteriaBuilder cb,
+                                                         Set<String> matches,
+                                                         Set<String> nots) {
 
         final List<Predicate> predicates = new ArrayList<>(0);
         if (!isEmpty(matches)) {
@@ -305,23 +317,27 @@ public final class AnnotationSpecification {
     }
 
     // belong to user predicate
-    private static Predicate belongsToUser(Root<Annotation> root, CriteriaBuilder cb, String username) {
-        return cb.like(cb.lower(root.get(USER).get(USERNAME)), username.toLowerCase());
+    private static Predicate belongsToUser(Root<Annotation> root, CriteriaBuilder cb, Long userAccountId) {
+        return cb.equal(root.get(USER).get(USERACCOUNTID), userAccountId);
+//        return cb.like(cb.lower(root.get(USER).get(USERNAME)), username.toLowerCase());
     }
 
     // belongs to group predicate
-    private static Predicate belongsToGroup(Root<Annotation> root, CriteriaBuilder cb, String group) {
-        return cb.like(cb.lower(root.get(GROUP).get(NAME)), group.toLowerCase());
+    private static Predicate belongsToGroup(Root<Annotation> root, CriteriaBuilder cb, Long groupId) {
+        return cb.equal(root.get(GROUP).get(ID), groupId);
+//        return cb.like(cb.lower(root.get(GROUP).get(NAME)), group.toLowerCase());
     }
 
-    // targets target predicate
-    private static Predicate targetstarget(Root<Annotation> root, CriteriaBuilder cb, Long target) {
-        return cb.equal(root.get(TARGET).get(ID), target);
+    // has target predicate
+    private static Predicate hasTarget(Root<Annotation> root, CriteriaBuilder cb, Long targetId) {
+        return cb.equal(root.get(TARGET).get(ID), targetId);
+//        return cb.equal(root.get(TARGET).get(ID), target);
     }
 
     // has vocabulary predicate
-    private static Predicate hasVocabulary(Root<Annotation> root, CriteriaBuilder cb, String vocab) {
-        return cb.like(cb.lower(root.get(VOCAB).get(NAME)), vocab.toLowerCase());
+    private static Predicate hasVocabulary(Root<Annotation> root, CriteriaBuilder cb, Long vocabularyId) {
+        return cb.equal(root.get(VOCABULARY).get(ID), vocabularyId);
+//        return cb.like(cb.lower(root.get(VOCAB).get(NAME)), vocab.toLowerCase());
     }
 
     // contains terms predicate
@@ -337,7 +353,7 @@ public final class AnnotationSpecification {
         final Subquery<AnnotationData> subquery = query.subquery(AnnotationData.class);
         final Root<AnnotationData> subroot = subquery.from(AnnotationData.class);
         return cb.exists(subquery.select(subroot)
-                .where(cb.and(cb.equal(subroot.get(ANNO), root),
+                .where(cb.and(cb.equal(subroot.get(ANNOTATION), root),
                         cb.like(cb.lower(subroot.get(VALUE)), term))));
     }
 
@@ -354,13 +370,22 @@ public final class AnnotationSpecification {
         return cb.not(existsInData(root, query, cb, term));
     }
 
+    // has attribute
+    private static Predicate hasAttribute(Root<Annotation> root, CriteriaQuery query, CriteriaBuilder cb, Long attributeId) {
+        final Subquery<AnnotationData> subquery = query.subquery(AnnotationData.class);
+        final Root<AnnotationData> subroot = subquery.from(AnnotationData.class);
+        return cb.exists(subquery.select(subroot)
+                .where(cb.and(cb.equal(subroot.get(ANNOTATION), root),
+                        cb.equal(subroot.get(ATTRIBRIBUTE).get(ID), attributeId))));
+    }
+
     // has attribute name
     private static Predicate hasAttributeName(Root<Annotation> root, CriteriaQuery query, CriteriaBuilder cb, String attributeName) {
         final Subquery<AnnotationData> subquery = query.subquery(AnnotationData.class);
         final Root<AnnotationData> subroot = subquery.from(AnnotationData.class);
         return cb.exists(subquery.select(subroot)
-                .where(cb.and(cb.equal(subroot.get(ANNO), root),
-                        cb.like(cb.lower(subroot.get(ATTRIB).get(NAME)), attributeName.toLowerCase()))));
+                .where(cb.and(cb.equal(subroot.get(ANNOTATION), root),
+                        cb.like(cb.lower(subroot.get(ATTRIBRIBUTE).get(NAME)), attributeName.toLowerCase()))));
     }
 
     // has attribute level
@@ -368,8 +393,8 @@ public final class AnnotationSpecification {
         final Subquery<AnnotationData> subquery = query.subquery(AnnotationData.class);
         final Root<AnnotationData> subroot = subquery.from(AnnotationData.class);
         return cb.exists(subquery.select(subroot)
-                .where(cb.and(cb.equal(subroot.get(ANNO), root),
-                        cb.like(cb.lower(subroot.get(ATTRIB).get(LEVEL)), attributeLevel.toLowerCase()))));
+                .where(cb.and(cb.equal(subroot.get(ANNOTATION), root),
+                        cb.like(cb.lower(subroot.get(ATTRIBRIBUTE).get(LEVEL)), attributeLevel.toLowerCase()))));
     }
 
     // has attribute requirement name
@@ -377,8 +402,8 @@ public final class AnnotationSpecification {
         final Subquery<AnnotationData> subquery = query.subquery(AnnotationData.class);
         final Root<AnnotationData> subroot = subquery.from(AnnotationData.class);
         return cb.exists(subquery.select(subroot)
-                .where(cb.and(cb.equal(subroot.get(ANNO), root),
-                        cb.like(cb.lower(subroot.get(ATTRIB).get(REQ_LEVEL)), attributeReqLevel.toLowerCase()))));
+                .where(cb.and(cb.equal(subroot.get(ANNOTATION), root),
+                        cb.like(cb.lower(subroot.get(ATTRIBRIBUTE).get(REQ_LEVEL)), attributeReqLevel.toLowerCase()))));
     }
 
     // annotation is not redacted
@@ -386,8 +411,8 @@ public final class AnnotationSpecification {
         return cb.equal(root.get(REDACTED), false);
     }
 
-    // annotation has no parent
-    private static Predicate parentless(Root<Annotation> root, CriteriaBuilder cb) {
+    // annotation is top-level (annotations target directly)
+    private static Predicate topLevel(Root<Annotation> root, CriteriaBuilder cb) {
         return cb.isNull(root.get(PARENT));
     }
 
@@ -403,13 +428,13 @@ public final class AnnotationSpecification {
 
     // annotation was modified before date
     private static Predicate modifiedBefore(Root<Annotation> root, CriteriaBuilder cb, Date date) {
-        return cb.lessThan(root.<Date>get(CREATED_DATE), date);
+        return cb.lessThan(root.<Date>get(MODIFIED_DATE), date);
     }
 
     // annotation was modified after date
     private static Predicate modifiedAfter(Root<Annotation> root, CriteriaBuilder cb, Date date) {
 
-        return cb.greaterThan(root.<Date>get(CREATED_DATE), date);
+        return cb.greaterThan(root.<Date>get(MODIFIED_DATE), date);
     }
 
     private static String containsLike(String terms) {
@@ -422,12 +447,13 @@ public final class AnnotationSpecification {
 
     public static final class SearchBuilder {
         private final UserAccount requester;
-        private Long userId;
+        private Long userAccountId;
         private Long groupId;
         private Long targetId;
         private Long vocabularyId;
         private Long attributeId;
         private String attributeLevel;
+        private String attributeName;
         private String attributeRequirementLevel;
         private Boolean showTopLevel;
         private Boolean showRedacted;
@@ -442,8 +468,8 @@ public final class AnnotationSpecification {
             this.requester = requester;
         }
 
-        public SearchBuilder user(final Long userId) {
-            this.userId = userId;
+        public SearchBuilder user(final Long userAccountId) {
+            this.userAccountId = userAccountId;
             return this;
         }
 
@@ -469,6 +495,11 @@ public final class AnnotationSpecification {
 
         public SearchBuilder attributeLevel(final String attributeLevel) {
             this.attributeLevel = attributeLevel;
+            return this;
+        }
+
+        public SearchBuilder attributeName(final String attributeName) {
+            this.attributeName = attributeName;
             return this;
         }
 
@@ -509,8 +540,8 @@ public final class AnnotationSpecification {
             return this;
         }
 
-//        public SearchBuilder build() {
-//            return AnnotationSpecification.searchSpec(requester, userId, groupId, targetId, vocabularyId, attributeId, attributeLevel, attributeRequirementLevel, showTopLevel, showRedacted, createdBefore, createdAfter, modifiedBefore, modifiedAfter, contains, notContains);
-//        }
+        public Specification<Annotation> build() {
+            return AnnotationSpecification.searchSpec(requester, userAccountId, groupId, targetId, vocabularyId, attributeId, attributeLevel, attributeName, attributeRequirementLevel, showTopLevel, showRedacted, createdBefore, createdAfter, modifiedBefore, modifiedAfter, contains, notContains);
+        }
     }
 }
