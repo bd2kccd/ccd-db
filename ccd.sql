@@ -83,7 +83,7 @@ CREATE TABLE `annotation_data` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
-  `value` varchar(255) DEFAULT NULL,
+  `value` varchar(1000) DEFAULT NULL,
   `version` int(11) DEFAULT NULL,
   `annotation_id` bigint(20) NOT NULL,
   `attribute_id` bigint(20) NOT NULL,

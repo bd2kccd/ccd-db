@@ -55,7 +55,7 @@ public class AnnotationData implements Serializable {
     @JoinColumn(nullable = false)
     private Attribute attribute;
 
-    @Column(nullable = true)
+    @Column(nullable = true, length = 1000)
     private String value;
 
     @ManyToOne(fetch = FetchType.EAGER)
