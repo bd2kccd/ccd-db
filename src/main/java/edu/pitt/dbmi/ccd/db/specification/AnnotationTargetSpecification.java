@@ -38,8 +38,7 @@ import org.springframework.data.jpa.domain.Specification;
 public final class AnnotationTargetSpecification {
 
     private static final String USER = "user";
-    private static final String USERNAME = "username";
-    private static final String USERACCOUNTID = "userAccountId";
+    private static final String ACCOUNTID = "accountId";
     private static final String TITLE = "title";
     private static final String ADDRESS = "address";
     private static final String FILE = "file";
@@ -49,7 +48,7 @@ public final class AnnotationTargetSpecification {
     private AnnotationTargetSpecification() {
     }
 
-    public static Specification<AnnotationTarget> filterSpec(Long userAccountId, String type) {
+    public static Specification<AnnotationTarget> filterSpec(String userAccountId, String type) {
         return (root, query, cb) -> {
             return buildFilterSpec(root, cb, userAccountId, type);
         };
@@ -64,7 +63,7 @@ public final class AnnotationTargetSpecification {
      * @param nots     does not contain terms
      * @return specification
      */
-    public static Specification<AnnotationTarget> searchSpec(Long userAccountId,
+    public static Specification<AnnotationTarget> searchSpec(String userAccountId,
                                                              String type,
                                                              Set<String> matches,
                                                              Set<String> nots) {
@@ -73,7 +72,7 @@ public final class AnnotationTargetSpecification {
         };
     }
 
-    private static Predicate buildFilterSpec(Root<AnnotationTarget> root, CriteriaBuilder cb, Long userAccountId, String type) {
+    private static Predicate buildFilterSpec(Root<AnnotationTarget> root, CriteriaBuilder cb, String userAccountId, String type) {
         List<Predicate> predicates = new ArrayList<>(0);
         if (!isEmpty(userAccountId)) {
             predicates.add(belongsToUser(root, cb, userAccountId));
@@ -89,7 +88,7 @@ public final class AnnotationTargetSpecification {
     }
 
     // build search predicates
-    private static Predicate buildSearchSpec(Root<AnnotationTarget> root, CriteriaBuilder cb, Long userAccountId, String type, Set<String> matches, Set<String> nots) {
+    private static Predicate buildSearchSpec(Root<AnnotationTarget> root, CriteriaBuilder cb, String userAccountId, String type, Set<String> matches, Set<String> nots) {
         List<Predicate> predicates = new ArrayList<>(0);
         predicates.add(buildFilterSpec(root, cb, userAccountId, type));
         if (!isEmpty(matches)) {
@@ -102,9 +101,8 @@ public final class AnnotationTargetSpecification {
     }
 
     // belongs to user predicate
-    private static Predicate belongsToUser(Root<AnnotationTarget> root, CriteriaBuilder cb, Long userAccountId) {
-        return cb.equal(root.get(USER).get(USERACCOUNTID), userAccountId);
-//        return cb.like(cb.lower(root.get(USER).get(USERNAME)), username.toLowerCase());
+    private static Predicate belongsToUser(Root<AnnotationTarget> root, CriteriaBuilder cb, String userAccountId) {
+        return cb.equal(root.get(USER).get(ACCOUNTID), userAccountId);
     }
 
     // is file predicate
@@ -162,7 +160,7 @@ public final class AnnotationTargetSpecification {
     }
 
     public static final class SearchBuilder {
-        private Long userAccountId;
+        private String userAccountId;
         private String type;
         private Set<String> contains;
         private Set<String> notContains;
@@ -171,7 +169,7 @@ public final class AnnotationTargetSpecification {
 
         }
 
-        public SearchBuilder user(final Long userAccountId) {
+        public SearchBuilder user(final String userAccountId) {
             this.userAccountId = userAccountId;
             return this;
         }

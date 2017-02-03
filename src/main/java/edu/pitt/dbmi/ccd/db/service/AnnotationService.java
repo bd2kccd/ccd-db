@@ -104,9 +104,9 @@ public class AnnotationService {
 //        return annotationRepository.findAll(spec, pageable);
 //    }
 
-    public Page<Annotation> filter(Specification<Annotation> specification, Pageable pageable) {
-        return annotationRepository.findAll(specification, pageable);
-    }
+//    public Page<Annotation> filter(Specification<Annotation> specification, Pageable pageable) {
+//        return annotationRepository.findAll(specification, pageable);
+//    }
 
     public Page<Annotation> search(Specification<Annotation> specification, Pageable pageable) {
         return annotationRepository.findAll(specification, pageable);

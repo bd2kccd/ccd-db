@@ -50,13 +50,13 @@ INSERT INTO attribute (id, level, name, requirement_level, vocabulary_id) VALUES
 
 -- Create Annotations with AnnotationData
 -- Public
-INSERT INTO annotation (id, redacted, created, version, access_control, parent_id, target_id, user_account_id, vocabulary_id) VALUES (1, b'0', '2016-10-09 15:58:15', 0, 1, NULL, 1, 1, 1), (2, b'0', '2016-10-11 13:00:00', 0, 1, 1, 1, 1, 1);
+INSERT INTO annotation (id, redacted, created, modified, version, access_control, parent_id, target_id, user_account_id, vocabulary_id) VALUES (1, b'0', '2017-02-01 12:00:00', '2017-02-01 13:00:00', 0, 1, NULL, 1, 1, 1), (2, b'0', '2017-02-02 13:00:00', '2017-02-02 14:00:00', 0, 1, 1, 1, 1, 1);
 INSERT INTO annotation_data (id, value, annotation_id, attribute_id) VALUES (1, 'Public annotation', 1, 1), (2, 'Child annotation', 2, 1);
 
 -- Group
-INSERT INTO annotation (id, redacted, created, version, access_control, group_id, parent_id, target_id, user_account_id, vocabulary_id) VALUES (3, b'0', '2016-10-10 15:58:15', 0, 2, 1, NULL, 1, 1, 1);
+INSERT INTO annotation (id, redacted, created, modified, version, access_control, group_id, parent_id, target_id, user_account_id, vocabulary_id) VALUES (3, b'0', '2017-02-03 12:00:00', '2017-02-03 13:00:00', 0, 2, 1, NULL, 1, 1, 1);
 INSERT INTO annotation_data (id, value, annotation_id, attribute_id) VALUES(3, 'Scientists group annotation', 3, 1);
 
 -- Private
-INSERT INTO annotation (id, redacted, created, version, access_control, parent_id, target_id, user_account_id, vocabulary_id) VALUES (4, b'0', '2016-10-12 16:00:00', 0, 3, NULL, 1, 1, 1);
+INSERT INTO annotation (id, redacted, created, modified, version, access_control, parent_id, target_id, user_account_id, vocabulary_id) VALUES (4, b'0', '2017-02-04 16:00:00', NULL, 0, 3, NULL, 1, 1, 1);
 INSERT INTO annotation_data (id, value, annotation_id, attribute_id) VALUES (4, 'Private annotation', 4, 1), (5, 'Private annotation with additional data', 4, 1);

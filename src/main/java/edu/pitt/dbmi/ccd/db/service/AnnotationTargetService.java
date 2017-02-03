@@ -65,10 +65,10 @@ public class AnnotationTargetService {
 //    public Page<AnnotationTarget> search(String username, String type, Set<String> matches, Set<String> nots, Pageable pageable) {
 //        return annotationTargetRepository.findAll(searchSpec(username, type, matches, nots), pageable);
 //    }
-
-    public Page<AnnotationTarget> filter(Specification<AnnotationTarget> specification, Pageable pageable) {
-        return annotationTargetRepository.findAll(specification, pageable);
-    }
+//
+//    public Page<AnnotationTarget> filter(Specification<AnnotationTarget> specification, Pageable pageable) {
+//        return annotationTargetRepository.findAll(specification, pageable);
+//    }
 
     public Page<AnnotationTarget> search(Specification<AnnotationTarget> specification, Pageable pageable) {
         return annotationTargetRepository.findAll(specification, pageable);
