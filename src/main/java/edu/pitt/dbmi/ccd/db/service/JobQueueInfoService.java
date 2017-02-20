@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * Aug 3, 2015 10:59:47 AM
  *
- * @author Chirayu (Kong) Wongchokprasitti
+ * @author Chirayu Kong Wongchokprasitti, PhD (chw20@pitt.edu)
  *
  */
 @Service

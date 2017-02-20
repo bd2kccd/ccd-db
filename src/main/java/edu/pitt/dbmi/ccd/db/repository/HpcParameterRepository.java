@@ -18,28 +18,19 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.JobQueueInfo;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import java.util.List;
-import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+
+import edu.pitt.dbmi.ccd.db.entity.HpcParameter;
 
 /**
- *
- * Aug 3, 2015 10:57:00 AM
- *
+ * 
+ * Feb 20, 2017 6:22:58 PM
+ * 
  * @author Chirayu Kong Wongchokprasitti, PhD (chw20@pitt.edu)
+ *
  */
-@Repository
-public interface JobQueueInfoRepository extends JpaRepository<JobQueueInfo, Long> {
+public interface HpcParameterRepository extends JpaRepository<HpcParameter, Long> {
 
-    public JobQueueInfo findByPid(Long pid);
-
-    public JobQueueInfo findByIdAndUserAccounts(Long id, Set<UserAccount> userAccounts);
-
-    public List<JobQueueInfo> findByStatus(int status);
-
-    public List<JobQueueInfo> findByUserAccounts(Set<UserAccount> userAccounts);
-
+	public HpcParameter findById(Long id);
+	
 }
