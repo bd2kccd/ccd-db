@@ -192,4 +192,12 @@ public class JobQueueInfo implements Serializable {
         this.userAccounts = userAccounts;
     }
 
+	public Set<HpcParameter> getHpcParameters() {
+		return hpcParameters;
+	}
+
+	public void setHpcParameters(Set<HpcParameter> hpcParameters) {
+		this.hpcParameters = hpcParameters;
+	}
+
 }
