@@ -50,7 +50,7 @@ public class HpcParameter implements Serializable {
     
     @NotNull
     @Column(nullable = false)
-    private Object value;
+    private String value;
 
 	public Long getId() {
 		return id;
@@ -68,11 +68,11 @@ public class HpcParameter implements Serializable {
 		this.key = key;
 	}
 
-	public Object getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(Object value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 	
