@@ -38,7 +38,7 @@ import javax.persistence.TemporalType;
  *
  * Aug 3, 2015 10:36:57 AM
  *
- * @author Chirayu (Kong) Wongchokprasitti
+ * @author Chirayu Kong Wongchokprasitti, PhD (chw20@pitt.edu)
  */
 @Entity
 public class JobQueueInfo implements Serializable {
@@ -81,6 +81,12 @@ public class JobQueueInfo implements Serializable {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)})
     private Set<UserAccount> userAccounts = new HashSet<>(0);
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "hpcParameterJobQueueInfoRel", joinColumns = {
+        @JoinColumn(name = "jobQueueInfoId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "hpcParameterId", nullable = false, updatable = false)})
+    private Set<HpcParameter> hpcParameters = new HashSet<>(0);
+    
     public JobQueueInfo() {
     }
 
@@ -185,5 +191,13 @@ public class JobQueueInfo implements Serializable {
     public void setUserAccounts(Set<UserAccount> userAccounts) {
         this.userAccounts = userAccounts;
     }
+
+	public Set<HpcParameter> getHpcParameters() {
+		return hpcParameters;
+	}
+
+	public void setHpcParameters(Set<HpcParameter> hpcParameters) {
+		this.hpcParameters = hpcParameters;
+	}
 
 }
