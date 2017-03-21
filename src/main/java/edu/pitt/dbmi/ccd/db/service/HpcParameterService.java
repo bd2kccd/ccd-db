@@ -18,36 +18,36 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.HpcParameter;
+import edu.pitt.dbmi.ccd.db.repository.HpcParameterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.pitt.dbmi.ccd.db.entity.HpcParameter;
-import edu.pitt.dbmi.ccd.db.repository.HpcParameterRepository;
-
 /**
- * 
+ *
  * Feb 20, 2017 6:26:57 PM
- * 
+ *
  * @author Chirayu Kong Wongchokprasitti, PhD (chw20@pitt.edu)
  *
  */
 @Service
 @Transactional
 public class HpcParameterService {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(HpcParameterService.class);
-	
-	private final HpcParameterRepository hpcParameterRepository;
-	
-	@Autowired(required = true)
-    public HpcParameterService(HpcParameterRepository hpcParameterRepository){
-		this.hpcParameterRepository = hpcParameterRepository;
-	}
-	
-	public HpcParameter findById(Long id){
-		return hpcParameterRepository.findById(id);
-	}
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HpcParameterService.class);
+
+    private final HpcParameterRepository hpcParameterRepository;
+
+    @Autowired(required = true)
+    public HpcParameterService(HpcParameterRepository hpcParameterRepository) {
+        this.hpcParameterRepository = hpcParameterRepository;
+    }
+
+    public HpcParameter findById(Long id) {
+        return hpcParameterRepository.findById(id);
+    }
+
 }

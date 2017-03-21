@@ -86,7 +86,7 @@ public class JobQueueInfo implements Serializable {
         @JoinColumn(name = "jobQueueInfoId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "hpcParameterId", nullable = false, updatable = false)})
     private Set<HpcParameter> hpcParameters = new HashSet<>(0);
-    
+
     public JobQueueInfo() {
     }
 
@@ -192,12 +192,12 @@ public class JobQueueInfo implements Serializable {
         this.userAccounts = userAccounts;
     }
 
-	public Set<HpcParameter> getHpcParameters() {
-		return hpcParameters;
-	}
+    public Set<HpcParameter> getHpcParameters() {
+        return hpcParameters;
+    }
 
-	public void setHpcParameters(Set<HpcParameter> hpcParameters) {
-		this.hpcParameters = hpcParameters;
-	}
+    public void setHpcParameters(Set<HpcParameter> hpcParameters) {
+        this.hpcParameters = hpcParameters;
+    }
 
 }

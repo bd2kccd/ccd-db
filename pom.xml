@@ -50,7 +50,6 @@
             <artifactId>spring-data-rest-core</artifactId>
         </dependency>
 
-
         <!-- database -->
         <dependency>
             <groupId>org.hsqldb</groupId>
