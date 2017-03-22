@@ -18,8 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.HpcParameter;
 import edu.pitt.dbmi.ccd.db.entity.JobQueueInfo;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.repository.HpcParameterRepository;
 import edu.pitt.dbmi.ccd.db.repository.JobQueueInfoRepository;
 import java.util.Collections;
 import java.util.List;
@@ -44,16 +46,25 @@ public class JobQueueInfoService {
     private static final Logger LOGGER = LoggerFactory.getLogger(JobQueueInfoService.class);
 
     private final JobQueueInfoRepository jobQueueInfoRepository;
+    
+    private final HpcParameterRepository hpcParameterRepository;
 
     /**
      * @param jobQueueInfoRepository
      */
     @Autowired(required = true)
-    public JobQueueInfoService(JobQueueInfoRepository jobQueueInfoRepository) {
+    public JobQueueInfoService(JobQueueInfoRepository jobQueueInfoRepository, HpcParameterRepository hpcParameterRepository) {
         this.jobQueueInfoRepository = jobQueueInfoRepository;
+        this.hpcParameterRepository = hpcParameterRepository;
     }
 
     public JobQueueInfo saveJobIntoQueue(JobQueueInfo jobQueueInfo) {
+    	Set<HpcParameter> hpcParameters = jobQueueInfo.getHpcParameters();
+    	if(hpcParameters != null && !hpcParameters.isEmpty()){
+    		hpcParameters.forEach(param -> {
+    			hpcParameterRepository.save(param);
+    		});
+    	}
         return jobQueueInfoRepository.save(jobQueueInfo);
     }
 

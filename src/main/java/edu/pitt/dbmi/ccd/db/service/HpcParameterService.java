@@ -50,4 +50,8 @@ public class HpcParameterService {
         return hpcParameterRepository.findById(id);
     }
 
+    public void save(HpcParameter hpcParamter){
+    	hpcParameterRepository.save(hpcParamter);
+    }
+    
 }
