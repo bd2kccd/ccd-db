@@ -19,61 +19,68 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 /**
- * 
+ *
  * Feb 20, 2017 6:05:41 PM
- * 
+ *
  * @author Chirayu Kong Wongchokprasitti, PhD (chw20@pitt.edu)
  *
  */
 @Entity
 public class HpcParameter implements Serializable {
 
-	private static final long serialVersionUID = -6268316192973727066L;
+    private static final long serialVersionUID = -6268316192973727066L;
 
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-	private Long id;
-    
+    private Long id;
+
     @NotNull
-    @Column(nullable = false)
-    private String key;
-    
+    @Column(name = "parameterKey", nullable = false)
+    private String parameterKey;
+
     @NotNull
-    @Column(nullable = false)
-    private String value;
+    @Column(name = "parameterValue", nullable = false)
+    private String parameterValue;
 
-	public Long getId() {
-		return id;
-	}
+    public HpcParameter() {
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public HpcParameter(String parameterKey, String parameterValue) {
+        this.parameterKey = parameterKey;
+        this.parameterValue = parameterValue;
+    }
 
-	public String getKey() {
-		return key;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getParameterKey() {
+        return parameterKey;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
-	
+    public void setParameterKey(String parameterKey) {
+        this.parameterKey = parameterKey;
+    }
+
+    public String getParameterValue() {
+        return parameterValue;
+    }
+
+    public void setParameterValue(String parameterValue) {
+        this.parameterValue = parameterValue;
+    }
+
 }

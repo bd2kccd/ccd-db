@@ -64,7 +64,7 @@ public class AnnotationTarget implements Serializable {
 
     @URL
     @Size(min = 2, max = 2083, message = "Valid URLs are at least 2 characters and no more than 2083 characters")
-    @Column(length = 2083, unique = true, nullable = true)
+    @Column(length = 2083, nullable = true)
     private String address;
 
     @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)

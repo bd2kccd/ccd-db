@@ -18,21 +18,20 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.entity.HpcParameter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import edu.pitt.dbmi.ccd.db.entity.HpcParameter;
-
 /**
- * 
+ *
  * Feb 20, 2017 6:22:58 PM
- * 
+ *
  * @author Chirayu Kong Wongchokprasitti, PhD (chw20@pitt.edu)
  *
  */
 @Repository
 public interface HpcParameterRepository extends JpaRepository<HpcParameter, Long> {
 
-	public HpcParameter findById(Long id);
-	
+    public HpcParameter findById(Long id);
+
 }
