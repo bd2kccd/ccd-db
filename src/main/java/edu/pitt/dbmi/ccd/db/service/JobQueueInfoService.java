@@ -46,7 +46,7 @@ public class JobQueueInfoService {
     private static final Logger LOGGER = LoggerFactory.getLogger(JobQueueInfoService.class);
 
     private final JobQueueInfoRepository jobQueueInfoRepository;
-    
+
     private final HpcParameterRepository hpcParameterRepository;
 
     /**
@@ -59,12 +59,12 @@ public class JobQueueInfoService {
     }
 
     public JobQueueInfo saveJobIntoQueue(JobQueueInfo jobQueueInfo) {
-    	Set<HpcParameter> hpcParameters = jobQueueInfo.getHpcParameters();
-    	if(hpcParameters != null && !hpcParameters.isEmpty()){
-    		hpcParameters.forEach(param -> {
-    			hpcParameterRepository.save(param);
-    		});
-    	}
+        Set<HpcParameter> hpcParameters = jobQueueInfo.getHpcParameters();
+        if (hpcParameters != null && !hpcParameters.isEmpty()) {
+            hpcParameters.forEach(param -> {
+                hpcParameterRepository.save(param);
+            });
+        }
         return jobQueueInfoRepository.save(jobQueueInfo);
     }
 
