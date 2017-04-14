@@ -18,10 +18,14 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import java.util.Date;
+
 import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import java.util.Date;
-import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +35,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.Assert;
 
 /**
  *
@@ -114,7 +117,7 @@ public class UserAccountRepositoryTest {
 
         String username = "bspears";
         UserAccount userAccount = userAccountRepository.findByUsername(username);
-        Assert.notNull(userAccount);
+        assertNotNull(userAccount);
 
     }
 
@@ -126,7 +129,7 @@ public class UserAccountRepositoryTest {
         System.out.println("findByAccountId");
         String accountId = "123456789";
         UserAccount userAccount = userAccountRepository.findByAccountId(accountId);
-        Assert.notNull(userAccount);
+        assertNotNull(userAccount);
     }
 
     /**
@@ -137,7 +140,7 @@ public class UserAccountRepositoryTest {
         System.out.println("findByEmail");
         String email = "bspears@localhost";
         UserAccount userAccount = userAccountRepository.findByEmail(email);
-        Assert.notNull(userAccount);
+        assertNotNull(userAccount);
     }
 
 }

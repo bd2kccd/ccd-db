@@ -18,14 +18,14 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import static org.junit.Assert.assertNotNull;
+
+import edu.pitt.dbmi.ccd.db.entity.Person;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.Assert;
-
-import edu.pitt.dbmi.ccd.db.entity.Person;
 
 /**
  *
@@ -51,7 +51,7 @@ public class PersonRepositoryTest {
         System.out.println("findByEmail");
         String email = "bspears@localhost";
         Person person = personRepository.findByEmail(email);
-        Assert.notNull(person);
+        assertNotNull(person);
     }
 
 }
