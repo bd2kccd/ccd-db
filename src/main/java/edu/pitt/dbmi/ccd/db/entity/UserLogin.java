@@ -19,52 +19,51 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * Mar 19, 2017 7:00:50 PM
+ * Mar 28, 2017 12:02:34 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "UserRole", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table(name = "UserLogin")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class UserRole implements Serializable {
+public class UserLogin implements Serializable {
 
-    private static final long serialVersionUID = 7543174854846867790L;
+    private static final long serialVersionUID = -9192355411276772808L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 64)
-    private String name;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "loginDate", length = 19)
+    private Date loginDate;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "loginLocation")
+    private Long loginLocation;
 
-    public UserRole() {
+    public UserLogin() {
     }
 
-    public UserRole(String name) {
-        this.name = name;
-    }
-
-    public UserRole(String name, String description) {
-        this.name = name;
-        this.description = description;
+    public UserLogin(Date loginDate, Long loginLocation) {
+        this.loginDate = loginDate;
+        this.loginLocation = loginLocation;
     }
 
     public Long getId() {
@@ -75,20 +74,20 @@ public class UserRole implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Date getLoginDate() {
+        return loginDate;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLoginDate(Date loginDate) {
+        this.loginDate = loginDate;
     }
 
-    public String getDescription() {
-        return description;
+    public Long getLoginLocation() {
+        return loginLocation;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setLoginLocation(Long loginLocation) {
+        this.loginLocation = loginLocation;
     }
 
 }

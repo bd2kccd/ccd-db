@@ -18,33 +18,17 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.UserLogin;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * Mar 20, 2017 6:25:43 AM
+ * Mar 28, 2017 12:39:38 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
-public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
-
-    public UserAccount findByUsername(String username);
-
-    public UserAccount findByAccount(String account);
-
-    public UserAccount findByActionKey(String actionKey);
-
-    public Long countByUsername(String username);
-
-    @Query("SELECT ua FROM UserAccount ua WHERE ua.userInfo.email = ?1")
-    public UserAccount findByEmail(String email);
-
-    public boolean existsByUsername(String username);
-
-    public boolean existsByActionKey(String actionKey);
+public interface UserLoginRepository extends JpaRepository<UserLogin, Long> {
 
 }

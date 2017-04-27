@@ -25,46 +25,49 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * Mar 19, 2017 7:00:50 PM
+ * Mar 19, 2017 7:00:37 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "UserRole", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table(name = "UserInfo")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class UserRole implements Serializable {
+public class UserInfo implements Serializable {
 
-    private static final long serialVersionUID = 7543174854846867790L;
+    private static final long serialVersionUID = 8097039983207404926L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 64)
-    private String name;
+    @Column(name = "firstName")
+    private String firstName;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "middleName")
+    private String middleName;
 
-    public UserRole() {
+    @Column(name = "lastName")
+    private String lastName;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    public UserInfo() {
     }
 
-    public UserRole(String name) {
-        this.name = name;
-    }
-
-    public UserRole(String name, String description) {
-        this.name = name;
-        this.description = description;
+    public UserInfo(String firstName, String middleName, String lastName, String email) {
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.email = email;
     }
 
     public Long getId() {
@@ -75,20 +78,36 @@ public class UserRole implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getDescription() {
-        return description;
+    public String getMiddleName() {
+        return middleName;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }

@@ -16,35 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
+package edu.pitt.dbmi.ccd.db;
 
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  *
- * Mar 20, 2017 6:25:43 AM
+ * Mar 19, 2017 6:53:45 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
-public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class CcdDbApplicationTest {
 
-    public UserAccount findByUsername(String username);
-
-    public UserAccount findByAccount(String account);
-
-    public UserAccount findByActionKey(String actionKey);
-
-    public Long countByUsername(String username);
-
-    @Query("SELECT ua FROM UserAccount ua WHERE ua.userInfo.email = ?1")
-    public UserAccount findByEmail(String email);
-
-    public boolean existsByUsername(String username);
-
-    public boolean existsByActionKey(String actionKey);
+    /**
+     * Test of main method, of class CcdDbApplication.
+     */
+    @Test
+    public void contextLoads() {
+    }
 
 }
