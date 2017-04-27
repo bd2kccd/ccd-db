@@ -16,35 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
+package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import edu.pitt.dbmi.ccd.db.repository.UserInfoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
- * Mar 20, 2017 6:25:43 AM
+ * Apr 23, 2017 10:06:36 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
-public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
+@Service
+public class UserInfoService {
 
-    public UserAccount findByUsername(String username);
+    private final UserInfoRepository userInfoRepository;
 
-    public UserAccount findByAccount(String account);
+    @Autowired
+    public UserInfoService(UserInfoRepository userInfoRepository) {
+        this.userInfoRepository = userInfoRepository;
+    }
 
-    public UserAccount findByActionKey(String actionKey);
-
-    public Long countByUsername(String username);
-
-    @Query("SELECT ua FROM UserAccount ua WHERE ua.userInfo.email = ?1")
-    public UserAccount findByEmail(String email);
-
-    public boolean existsByUsername(String username);
-
-    public boolean existsByActionKey(String actionKey);
+    public UserInfoRepository getUserInfoRepository() {
+        return userInfoRepository;
+    }
 
 }

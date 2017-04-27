@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2017 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,25 +18,21 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.entity.UserRole;
-import java.util.Set;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * Oct 6, 2015 11:28:25 AM
+ * Mar 20, 2017 6:26:38 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
 
-    public UserRole findById(Long id);
-
+    @Cacheable("userRoles")
     public UserRole findByName(String name);
-
-    public UserRole findByUserAccounts(Set<UserAccount> userAccounts);
 
 }

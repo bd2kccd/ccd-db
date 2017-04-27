@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2017 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,50 +22,45 @@ import edu.pitt.dbmi.ccd.db.entity.UserRole;
 import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * Oct 6, 2015 11:40:23 AM
+ * Mar 31, 2017 5:22:24 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-@Transactional
 public class UserRoleService {
+
+    private static final String ADMIN_ROLE_NAME = "admin";
+    private static final String REGULAR_ROLE_NAME = "regular";
 
     private final UserRoleRepository userRoleRepository;
 
-    @Autowired(required = true)
+    @Autowired
     public UserRoleService(UserRoleRepository userRoleRepository) {
         this.userRoleRepository = userRoleRepository;
+
+        List<UserRole> userRoles = userRoleRepository.findAll();
+        if (userRoles.isEmpty()) {
+            userRoles.add(new UserRole(ADMIN_ROLE_NAME, "Administrator."));
+            userRoles.add(new UserRole(REGULAR_ROLE_NAME, "Regular user."));
+
+            userRoleRepository.save(userRoles);
+        }
     }
 
-    public List<UserRole> findAll() {
-        return userRoleRepository.findAll();
+    public UserRole getAdminRole() {
+        return userRoleRepository.findByName(ADMIN_ROLE_NAME);
     }
 
-    public Page<UserRole> findAll(Pageable pageable) {
-        return userRoleRepository.findAll(pageable);
+    public UserRole getRegularRole() {
+        return userRoleRepository.findByName(REGULAR_ROLE_NAME);
     }
 
-    public UserRole findById(Long id) {
-        return userRoleRepository.findOne(id);
-    }
-
-    public UserRole findByName(String name) {
-        return userRoleRepository.findByName(name);
-    }
-
-    public UserRole save(UserRole UserRole) {
-        return userRoleRepository.save(UserRole);
-    }
-
-    public void delete(UserRole UserRole) {
-        userRoleRepository.delete(UserRole);
+    public UserRoleRepository getUserRoleRepository() {
+        return userRoleRepository;
     }
 
 }

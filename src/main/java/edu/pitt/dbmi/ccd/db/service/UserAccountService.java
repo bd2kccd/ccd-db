@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2017 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,24 +18,24 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.domain.AccountRegistration;
-import edu.pitt.dbmi.ccd.db.entity.Group;
-import edu.pitt.dbmi.ccd.db.entity.Person;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.repository.PersonRepository;
+import edu.pitt.dbmi.ccd.db.entity.UserInfo;
+import edu.pitt.dbmi.ccd.db.entity.UserLogin;
+import edu.pitt.dbmi.ccd.db.entity.UserRole;
+import edu.pitt.dbmi.ccd.db.model.AccountRegistration;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
-import java.nio.file.Paths;
+import edu.pitt.dbmi.ccd.db.repository.UserInfoRepository;
+import edu.pitt.dbmi.ccd.db.repository.UserLoginRepository;
+import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * Jul 24, 2015 1:29:56 PM
+ * Mar 20, 2017 6:44:21 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -44,124 +44,93 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
+    private final UserInfoRepository userInfoRepository;
+    private final UserLoginRepository userLoginRepository;
+    private final UserRoleService userRoleService;
 
-    private final PersonRepository personRepository;
-
-    @Autowired(required = true)
+    @Autowired
     public UserAccountService(
             UserAccountRepository userAccountRepository,
-            PersonRepository personRepository) {
+            UserInfoRepository userInfoRepository,
+            UserLoginRepository userLoginRepository,
+            UserRoleService userRoleService) {
         this.userAccountRepository = userAccountRepository;
-        this.personRepository = personRepository;
-    }
-
-    public UserAccount findById(Long id) {
-        return userAccountRepository.findById(id);
-    }
-
-    public UserAccount findByUsername(String username) {
-        return userAccountRepository.findByUsername(username);
-    }
-
-    public UserAccount findUserAccountByEmail(String email) {
-        return userAccountRepository.findByEmail(email);
+        this.userInfoRepository = userInfoRepository;
+        this.userLoginRepository = userLoginRepository;
+        this.userRoleService = userRoleService;
     }
 
     public UserAccount findByEmail(String email) {
         return userAccountRepository.findByEmail(email);
     }
 
-    public UserAccount findByAccountId(String accountId) {
-        return userAccountRepository.findByAccountId(accountId);
-    }
+    public UserAccount createRegularUser(AccountRegistration accountRegistration) {
+        UserInfo userInfo = createUserInfo(accountRegistration);
+        UserRole userRole = userRoleService.getRegularRole();
+        UserLogin userLogin = new UserLogin();
 
-    public UserAccount findByActivationKey(String activationKey) {
-        return userAccountRepository.findByActivationKey(activationKey);
-    }
+        userInfo = userInfoRepository.save(userInfo);
+        userLogin = userLoginRepository.save(userLogin);
 
-    public Page<UserAccount> findByGroupModeration(Group group, Pageable pageable) {
-        return userAccountRepository.findByGroupModeration(group.getId(), pageable);
-    }
-
-    public Page<UserAccount> findByGroupMembership(Group group, Pageable pageable) {
-        return userAccountRepository.findByGroupMembership(group.getId(), pageable);
-    }
-
-    public Page<UserAccount> findByGroupRequests(Group group, Pageable pageable) {
-        return userAccountRepository.findByGroupRequests(group.getId(), pageable);
-    }
-
-    public Page<UserAccount> findAll(Pageable pageable) {
-        return userAccountRepository.findAll(pageable);
-    }
-
-    public UserAccount save(UserAccount userAccount) {
-        Person person = personRepository.save(userAccount.getPerson());
-        userAccount.setPerson(person);
-
-        return userAccountRepository.save(userAccount);
-    }
-
-    public Person updatePerson(UserAccount userAccount) {
-        return personRepository.save(userAccount.getPerson());
-    }
-
-    public UserAccount updateAccount(UserAccount userAccount) {
-        return userAccountRepository.save(userAccount);
-    }
-
-    public UserAccount createNewAccount(AccountRegistration accountRegistration) {
         UserAccount userAccount = createUserAccount(accountRegistration);
+        userAccount.setUserInfo(userInfo);
+        userAccount.setUserLogin(userLogin);
+        userAccount.setUserRoles(Collections.singletonList(userRole));
 
-        return save(userAccount);
+        return userAccountRepository.save(userAccount);
     }
 
-    public Long countByUsername(String username) {
-        return userAccountRepository.countByUsername(username);
-    }
-
-    protected UserAccount createUserAccount(AccountRegistration accountRegistration) {
+    private UserAccount createUserAccount(AccountRegistration accountRegistration) {
         String username = accountRegistration.getUsername();
         String password = accountRegistration.getPassword();
         boolean activated = accountRegistration.isActivated();
+        Long registrationLocation = accountRegistration.getRegistrationLocation();
 
-        String accountId = UUID.randomUUID().toString();
         String activationKey = activated ? null : UUID.randomUUID().toString();
+        String account = UUID.randomUUID().toString();
         Date registrationDate = new Date(System.currentTimeMillis());
-        Person person = createPerson(accountRegistration);
 
         UserAccount userAccount = new UserAccount();
-        userAccount.setAccountId(accountId);
-        userAccount.setActivationKey(activationKey);
-        userAccount.setActive(activated);
+        userAccount.setAccount(account);
+        userAccount.setActionKey(activationKey);
+        userAccount.setActivated(activated);
         userAccount.setPassword(password);
-        userAccount.setPerson(person);
-        userAccount.setCreatedDate(registrationDate);
-        userAccount.setLastLoginDate(registrationDate);
+        userAccount.setRegistrationDate(registrationDate);
+        userAccount.setRegistrationLocation(registrationLocation);
         userAccount.setUsername(username);
 
         return userAccount;
     }
 
-    protected Person createPerson(AccountRegistration accountRegistration) {
+    private UserInfo createUserInfo(AccountRegistration accountRegistration) {
         String firstName = accountRegistration.getFirstName();
         String middleName = accountRegistration.getMiddleName();
         String lastName = accountRegistration.getLastName();
         String email = accountRegistration.getEmail();
-        String workspace = Paths.get(accountRegistration.getWorkspace()).toAbsolutePath().toString();
 
-        Person person = new Person();
-        person.setEmail(email);
-        person.setFirstName(firstName);
-        person.setLastName(lastName);
-        person.setLastName(lastName);
-        person.setMiddleName(middleName);
-        person.setWorkspace(workspace);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setEmail(email);
+        userInfo.setFirstName(firstName);
+        userInfo.setMiddleName(middleName);
+        userInfo.setLastName(lastName);
 
-        return person;
+        return userInfo;
     }
 
-    public void delete(UserAccount userAccount) {
-        userAccountRepository.delete(userAccount);
+    public UserAccountRepository getUserAccountRepository() {
+        return userAccountRepository;
     }
+
+    public UserInfoRepository getUserInfoRepository() {
+        return userInfoRepository;
+    }
+
+    public UserLoginRepository getUserLoginRepository() {
+        return userLoginRepository;
+    }
+
+    public UserRoleService getUserRoleService() {
+        return userRoleService;
+    }
+
 }
