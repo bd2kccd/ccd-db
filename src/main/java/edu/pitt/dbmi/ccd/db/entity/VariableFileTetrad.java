@@ -28,6 +28,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -37,6 +40,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "VariableFileTetrad")
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class VariableFileTetrad implements Serializable {
 
     private static final long serialVersionUID = -9109124379850929401L;

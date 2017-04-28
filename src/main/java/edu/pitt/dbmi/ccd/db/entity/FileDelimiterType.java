@@ -26,6 +26,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -35,6 +38,8 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "FileDelimiterType", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class FileDelimiterType implements Serializable {
 
     private static final long serialVersionUID = 6563071964563659186L;

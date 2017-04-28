@@ -32,6 +32,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -43,6 +47,8 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "File", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"name", "userAccountId"})
     , @UniqueConstraint(columnNames = {"title", "userAccountId"})})
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class File implements Serializable {
 
     private static final long serialVersionUID = -3475479909814116370L;
@@ -74,6 +80,7 @@ public class File implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userAccountId", nullable = false)
+    @XmlTransient
     private UserAccount userAccount;
 
     public File() {
