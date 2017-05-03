@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -81,6 +82,7 @@ public class File implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userAccountId", nullable = false)
     @XmlTransient
+    @JsonIgnore
     private UserAccount userAccount;
 
     public File() {

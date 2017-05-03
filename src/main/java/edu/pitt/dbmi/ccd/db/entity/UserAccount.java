@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
@@ -67,6 +68,7 @@ public class UserAccount implements Serializable {
 
     @Column(name = "password", nullable = false)
     @XmlTransient
+    @JsonIgnore
     private String password;
 
     @Column(name = "account", unique = true, nullable = false)
@@ -91,11 +93,13 @@ public class UserAccount implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userInfoId", nullable = false)
     @XmlTransient
+    @JsonIgnore
     private UserInfo userInfo;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userLoginId", nullable = false)
     @XmlTransient
+    @JsonIgnore
     private UserLogin userLogin;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -103,6 +107,7 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
     @XmlTransient
+    @JsonIgnore
     private List<UserRole> userRoles = new LinkedList<>();
 
     public UserAccount() {
