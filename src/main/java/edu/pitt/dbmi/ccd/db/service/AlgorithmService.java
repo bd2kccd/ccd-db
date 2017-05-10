@@ -18,28 +18,43 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.repository.VariableFileTetradRepository;
+import edu.pitt.dbmi.ccd.db.entity.Algorithm;
+import edu.pitt.dbmi.ccd.db.repository.AlgorithmRepository;
+import java.util.Arrays;
+import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Apr 27, 2017 5:10:50 PM
+ * May 10, 2017 2:53:41 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-public class VariableFileTetradService {
+@Transactional
+public class AlgorithmService {
 
-    private final VariableFileTetradRepository variableFileTetradRepository;
+    public static final String TDI_ALGO_NAME = "TDI";
+    public static final String TETRAD_ALGO_NAME = "Tetrad";
+
+    private final AlgorithmRepository algorithmRepository;
 
     @Autowired
-    public VariableFileTetradService(VariableFileTetradRepository variableFileTetradRepository) {
-        this.variableFileTetradRepository = variableFileTetradRepository;
+    public AlgorithmService(AlgorithmRepository algorithmRepository) {
+        this.algorithmRepository = algorithmRepository;
+
+        List<Algorithm> algorithms = algorithmRepository.findAll();
+        if (algorithms.isEmpty()) {
+            algorithmRepository.save(Arrays.asList(
+                    new Algorithm(TDI_ALGO_NAME),
+                    new Algorithm(TETRAD_ALGO_NAME)));
+        }
     }
 
-    public VariableFileTetradRepository getVariableFileTetradRepository() {
-        return variableFileTetradRepository;
+    public AlgorithmRepository getAlgorithmRepository() {
+        return algorithmRepository;
     }
 
 }

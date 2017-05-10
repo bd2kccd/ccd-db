@@ -30,6 +30,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -38,17 +39,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * Mar 19, 2017 7:00:50 PM
+ * May 10, 2017 12:27:02 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "UserRole", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table(name = "FileFormat", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class UserRole implements Serializable {
+public class FileFormat implements Serializable {
 
-    private static final long serialVersionUID = 7543174854846867790L;
+    private static final long serialVersionUID = -2456952936310636255L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,26 +59,22 @@ public class UserRole implements Serializable {
     @Column(name = "name", unique = true, nullable = false, length = 64)
     private String name;
 
-    @Column(name = "description")
-    private String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fileTypeId", nullable = false)
+    private FileType fileType;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserRoleUserRolePermissionRel", joinColumns = {
-        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userRolePermissionId", nullable = false, updatable = false)})
-    private List<UserRolePermission> userRolePermissions = new LinkedList<>();
+    @JoinTable(name = "FileFormatAlgorithmRel", joinColumns = {
+        @JoinColumn(name = "fileFormatId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "algorithmId", nullable = false, updatable = false)})
+    private List<Algorithm> algorithms = new LinkedList<>();
 
-    public UserRole() {
+    public FileFormat() {
     }
 
-    public UserRole(String name) {
+    public FileFormat(String name, FileType fileType) {
         this.name = name;
-    }
-
-    public UserRole(String name, String description, List<UserRolePermission> userRolePermissions) {
-        this.name = name;
-        this.description = description;
-        this.userRolePermissions = userRolePermissions;
+        this.fileType = fileType;
     }
 
     public Long getId() {
@@ -96,20 +93,20 @@ public class UserRole implements Serializable {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public FileType getFileType() {
+        return fileType;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setFileType(FileType fileType) {
+        this.fileType = fileType;
     }
 
-    public List<UserRolePermission> getUserRolePermissions() {
-        return userRolePermissions;
+    public List<Algorithm> getAlgorithms() {
+        return algorithms;
     }
 
-    public void setUserRolePermissions(List<UserRolePermission> userRolePermissions) {
-        this.userRolePermissions = userRolePermissions;
+    public void setAlgorithms(List<Algorithm> algorithms) {
+        this.algorithms = algorithms;
     }
 
 }

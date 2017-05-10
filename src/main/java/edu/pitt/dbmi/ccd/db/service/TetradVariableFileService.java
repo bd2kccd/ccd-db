@@ -16,22 +16,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
+package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.DataFileTetrad;
-import edu.pitt.dbmi.ccd.db.entity.File;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import edu.pitt.dbmi.ccd.db.repository.TetradVariableFileRepository;
+import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
- * Apr 27, 2017 5:05:36 PM
+ * May 10, 2017 3:00:55 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
-public interface DataFileTetradRepository extends JpaRepository<DataFileTetrad, Long> {
+@Service
+@Transactional
+public class TetradVariableFileService {
 
-    public DataFileTetrad findByFile(File file);
+    private final TetradVariableFileRepository tetradVariableFileRepository;
+
+    @Autowired
+    public TetradVariableFileService(TetradVariableFileRepository tetradVariableFileRepository) {
+        this.tetradVariableFileRepository = tetradVariableFileRepository;
+    }
+
+    public TetradVariableFileRepository getTetradVariableFileRepository() {
+        return tetradVariableFileRepository;
+    }
 
 }

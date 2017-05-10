@@ -19,56 +19,50 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * Apr 27, 2017 4:21:47 PM
+ * May 10, 2017 2:32:30 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "FileType", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class FileType implements Serializable {
+@Table(name = "TetradVariableFile")
+public class TetradVariableFile implements Serializable {
 
-    private static final long serialVersionUID = -3146122016288565052L;
+    private static final long serialVersionUID = -6626880099132750795L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 64)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fileId", nullable = false)
+    private File file;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "fileType")
-    private List<FileFormat> fileFormats = new LinkedList<>();
+    @Column(name = "numOfVariables")
+    private Integer numOfVariables;
 
-    public FileType() {
+    public TetradVariableFile() {
     }
 
-    public FileType(String name) {
-        this.name = name;
+    public TetradVariableFile(File file) {
+        this.file = file;
     }
 
-    public FileType(String name, List<FileFormat> fileFormats) {
-        this.name = name;
-        this.fileFormats = fileFormats;
+    public TetradVariableFile(File file, Integer numOfVariables) {
+        this.file = file;
+        this.numOfVariables = numOfVariables;
     }
 
     public Long getId() {
@@ -79,20 +73,20 @@ public class FileType implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public File getFile() {
+        return file;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFile(File file) {
+        this.file = file;
     }
 
-    public List<FileFormat> getFileFormats() {
-        return fileFormats;
+    public Integer getNumOfVariables() {
+        return numOfVariables;
     }
 
-    public void setFileFormats(List<FileFormat> fileFormats) {
-        this.fileFormats = fileFormats;
+    public void setNumOfVariables(Integer numOfVariables) {
+        this.numOfVariables = numOfVariables;
     }
 
 }

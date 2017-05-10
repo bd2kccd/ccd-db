@@ -18,21 +18,21 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.FileType;
+import edu.pitt.dbmi.ccd.db.entity.FileFormat;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * Apr 27, 2017 4:26:46 PM
+ * May 10, 2017 2:46:35 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
-public interface FileTypeRepository extends JpaRepository<FileType, Long> {
+public interface FileFormatRepository extends JpaRepository<FileFormat, Long> {
 
-    @Cacheable("fileTypeByName")
-    public FileType findByName(String name);
+    @Cacheable("fileFormatByName")
+    public FileFormat findByName(String name);
 
 }

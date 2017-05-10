@@ -18,49 +18,41 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.UserRole;
-import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
-import java.util.Arrays;
+import edu.pitt.dbmi.ccd.db.entity.UserRolePermission;
+import edu.pitt.dbmi.ccd.db.repository.UserRolePermissionRepository;
 import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Mar 31, 2017 5:22:24 PM
+ * May 10, 2017 3:04:23 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-public class UserRoleService {
+@Transactional
+public class UserRolePermissionService {
 
-    private static final String ADMIN_ROLE_NAME = "admin";
-    private static final String REGULAR_ROLE_NAME = "regular";
+    public static final String PERMISSION_ALL = "*";
 
-    private final UserRoleRepository userRoleRepository;
+    private final UserRolePermissionRepository userRolePermissionRepository;
 
     @Autowired
-    public UserRoleService(UserRoleRepository userRoleRepository) {
-        this.userRoleRepository = userRoleRepository;
+    public UserRolePermissionService(UserRolePermissionRepository userRolePermissionRepository) {
+        this.userRolePermissionRepository = userRolePermissionRepository;
 
-        List<UserRole> userRoles = userRoleRepository.findAll();
-        if (userRoles.isEmpty()) {
-            userRoleRepository.save(Arrays.asList(
-                    new UserRole(ADMIN_ROLE_NAME),
-                    new UserRole(REGULAR_ROLE_NAME)));
+        List<UserRolePermission> list = userRolePermissionRepository.findAll();
+        if (list.isEmpty()) {
+            list.add(new UserRolePermission(PERMISSION_ALL));
         }
+
+        userRolePermissionRepository.save(list);
     }
 
-    public UserRole getAdminRole() {
-        return userRoleRepository.findByName(ADMIN_ROLE_NAME);
-    }
-
-    public UserRole getRegularRole() {
-        return userRoleRepository.findByName(REGULAR_ROLE_NAME);
-    }
-
-    public UserRoleRepository getUserRoleRepository() {
-        return userRoleRepository;
+    public UserRolePermissionRepository getUserRolePermissionRepository() {
+        return userRolePermissionRepository;
     }
 
 }

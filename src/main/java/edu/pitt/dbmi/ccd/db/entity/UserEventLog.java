@@ -19,56 +19,55 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
- * Apr 27, 2017 4:21:47 PM
+ * May 10, 2017 2:09:14 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "FileType", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class FileType implements Serializable {
+@Table(name = "UserEventLog")
+public class UserEventLog implements Serializable {
 
-    private static final long serialVersionUID = -3146122016288565052L;
+    private static final long serialVersionUID = -476214440962592336L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 64)
-    private String name;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "eventDate", nullable = false, length = 19)
+    private Date eventDate;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "fileType")
-    private List<FileFormat> fileFormats = new LinkedList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "eventTypeId", nullable = false)
+    private EventType eventType;
 
-    public FileType() {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userAccountId", nullable = false)
+    private UserAccount userAccount;
+
+    public UserEventLog() {
     }
 
-    public FileType(String name) {
-        this.name = name;
-    }
-
-    public FileType(String name, List<FileFormat> fileFormats) {
-        this.name = name;
-        this.fileFormats = fileFormats;
+    public UserEventLog(Date eventDate, EventType eventType, UserAccount userAccount) {
+        this.eventDate = eventDate;
+        this.eventType = eventType;
+        this.userAccount = userAccount;
     }
 
     public Long getId() {
@@ -79,20 +78,28 @@ public class FileType implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Date getEventDate() {
+        return eventDate;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
     }
 
-    public List<FileFormat> getFileFormats() {
-        return fileFormats;
+    public EventType getEventType() {
+        return eventType;
     }
 
-    public void setFileFormats(List<FileFormat> fileFormats) {
-        this.fileFormats = fileFormats;
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
+    }
+
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 
 }

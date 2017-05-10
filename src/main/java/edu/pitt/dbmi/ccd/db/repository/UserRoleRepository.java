@@ -32,7 +32,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
 
-    @Cacheable("userRoles")
+    @Cacheable("userRoleByName")
     public UserRole findByName(String name);
 
 }

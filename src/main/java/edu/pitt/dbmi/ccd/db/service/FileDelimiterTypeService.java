@@ -20,6 +20,7 @@ package edu.pitt.dbmi.ccd.db.service;
 
 import edu.pitt.dbmi.ccd.db.entity.FileDelimiterType;
 import edu.pitt.dbmi.ccd.db.repository.FileDelimiterTypeRepository;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,21 +34,30 @@ import org.springframework.stereotype.Service;
 @Service
 public class FileDelimiterTypeService {
 
+    public static final String TAB_DELIM_NAME = "tab";
+    public static final String SPACE_DELIM_NAME = "space";
+    public static final String WHITESPACE_DELIM_NAME = "whitespace";
+    public static final String COMMA_DELIM_NAME = "comma";
+    public static final String COLON_DELIM_NAME = "colon";
+    public static final String SEMICOLON_DELIM_NAME = "semicolon";
+    public static final String PIPE_DELIM_NAME = "pipe";
+
     private final FileDelimiterTypeRepository fileDelimiterTypeRepository;
 
     @Autowired
     public FileDelimiterTypeService(FileDelimiterTypeRepository fileDelimiterTypeRepository) {
         this.fileDelimiterTypeRepository = fileDelimiterTypeRepository;
 
-        List<FileDelimiterType> types = fileDelimiterTypeRepository.findAll();
-        if (types.isEmpty()) {
-            String[] typeNames = {
-                "tab", "space", "whitespace", "comma", "colon", "semicolon", "pipe"
-            };
-            for (String name : typeNames) {
-                types.add(new FileDelimiterType(name));
-            }
-            fileDelimiterTypeRepository.save(types);
+        List<FileDelimiterType> fileDelimiterTypes = fileDelimiterTypeRepository.findAll();
+        if (fileDelimiterTypes.isEmpty()) {
+            fileDelimiterTypeRepository.save(Arrays.asList(
+                    new FileDelimiterType(TAB_DELIM_NAME),
+                    new FileDelimiterType(SPACE_DELIM_NAME),
+                    new FileDelimiterType(WHITESPACE_DELIM_NAME),
+                    new FileDelimiterType(COMMA_DELIM_NAME),
+                    new FileDelimiterType(COLON_DELIM_NAME),
+                    new FileDelimiterType(SEMICOLON_DELIM_NAME),
+                    new FileDelimiterType(PIPE_DELIM_NAME)));
         }
 
     }

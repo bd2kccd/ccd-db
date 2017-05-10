@@ -16,26 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `DataFileTetrad`
+-- Table structure for table `Algorithm`
 --
 
-DROP TABLE IF EXISTS `DataFileTetrad`;
+DROP TABLE IF EXISTS `Algorithm`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `DataFileTetrad` (
+CREATE TABLE `Algorithm` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `numOfRows` int(11) DEFAULT NULL,
-  `numOfColumns` int(11) DEFAULT NULL,
-  `fileId` bigint(20) NOT NULL,
-  `fileDelimiterTypeId` bigint(20) NOT NULL,
-  `fileVariableTypeId` bigint(20) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fileId` (`fileId`),
-  KEY `fileDelimiterTypeId` (`fileDelimiterTypeId`),
-  KEY `fileVariableTypeId` (`fileVariableTypeId`),
-  CONSTRAINT `DataFileTetrad_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`),
-  CONSTRAINT `DataFileTetrad_ibfk_2` FOREIGN KEY (`fileDelimiterTypeId`) REFERENCES `FileDelimiterType` (`id`),
-  CONSTRAINT `DataFileTetrad_ibfk_3` FOREIGN KEY (`fileVariableTypeId`) REFERENCES `FileVariableType` (`id`)
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `EventType`
+--
+
+DROP TABLE IF EXISTS `EventType`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `EventType` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -53,14 +60,14 @@ CREATE TABLE `File` (
   `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `fileSize` bigint(20) NOT NULL,
   `md5CheckSum` varchar(32) DEFAULT NULL,
-  `fileTypeId` bigint(20) DEFAULT NULL,
+  `fileFormatId` bigint(20) DEFAULT NULL,
   `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`,`userAccountId`),
   UNIQUE KEY `title` (`title`,`userAccountId`),
-  KEY `fileTypeId` (`fileTypeId`),
+  KEY `fileTypeId` (`fileFormatId`),
   KEY `userAccountId` (`userAccountId`),
-  CONSTRAINT `File_ibfk_1` FOREIGN KEY (`fileTypeId`) REFERENCES `FileType` (`id`),
+  CONSTRAINT `File_ibfk_1` FOREIGN KEY (`fileFormatId`) REFERENCES `FileFormat` (`id`),
   CONSTRAINT `File_ibfk_2` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -77,6 +84,41 @@ CREATE TABLE `FileDelimiterType` (
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `FileFormat`
+--
+
+DROP TABLE IF EXISTS `FileFormat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `FileFormat` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `fileTypeId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  KEY `FileFormat_ibfk_1` (`fileTypeId`),
+  CONSTRAINT `FileFormat_ibfk_1` FOREIGN KEY (`fileTypeId`) REFERENCES `FileType` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `FileFormatAlgorithmRel`
+--
+
+DROP TABLE IF EXISTS `FileFormatAlgorithmRel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `FileFormatAlgorithmRel` (
+  `fileFormatId` bigint(20) NOT NULL,
+  `algorithmId` bigint(20) NOT NULL,
+  PRIMARY KEY (`fileFormatId`,`algorithmId`),
+  KEY `algorithmId` (`algorithmId`),
+  CONSTRAINT `FileFormatAlgorithmRel_ibfk_1` FOREIGN KEY (`fileFormatId`) REFERENCES `FileFormat` (`id`),
+  CONSTRAINT `FileFormatAlgorithmRel_ibfk_2` FOREIGN KEY (`algorithmId`) REFERENCES `Algorithm` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -107,6 +149,47 @@ CREATE TABLE `FileVariableType` (
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `TetradDataFile`
+--
+
+DROP TABLE IF EXISTS `TetradDataFile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TetradDataFile` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `numOfRows` int(11) DEFAULT NULL,
+  `numOfColumns` int(11) DEFAULT NULL,
+  `fileId` bigint(20) NOT NULL,
+  `fileDelimiterTypeId` bigint(20) NOT NULL,
+  `fileVariableTypeId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fileId` (`fileId`),
+  KEY `fileDelimiterTypeId` (`fileDelimiterTypeId`),
+  KEY `fileVariableTypeId` (`fileVariableTypeId`),
+  CONSTRAINT `TetradDataFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `TetradDataFile_ibfk_2` FOREIGN KEY (`fileDelimiterTypeId`) REFERENCES `FileDelimiterType` (`id`),
+  CONSTRAINT `TetradDataFile_ibfk_3` FOREIGN KEY (`fileVariableTypeId`) REFERENCES `FileVariableType` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `TetradVariableFile`
+--
+
+DROP TABLE IF EXISTS `TetradVariableFile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TetradVariableFile` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `numOfVariables` int(11) DEFAULT NULL,
+  `fileId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fileId` (`fileId`),
+  CONSTRAINT `TetradVariableFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -153,6 +236,26 @@ CREATE TABLE `UserAccountUserRoleRel` (
   KEY `userRoleId` (`userRoleId`),
   CONSTRAINT `UserAccountUserRoleRel_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`),
   CONSTRAINT `UserAccountUserRoleRel_ibfk_2` FOREIGN KEY (`userRoleId`) REFERENCES `UserRole` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `UserEventLog`
+--
+
+DROP TABLE IF EXISTS `UserEventLog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserEventLog` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `eventDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `eventTypeId` bigint(20) NOT NULL,
+  `userAccountId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `eventTypeId` (`eventTypeId`),
+  KEY `userAccountId` (`userAccountId`),
+  CONSTRAINT `UserEventLog_ibfk_1` FOREIGN KEY (`eventTypeId`) REFERENCES `EventType` (`id`),
+  CONSTRAINT `UserEventLog_ibfk_2` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -205,19 +308,34 @@ CREATE TABLE `UserRole` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `VariableFileTetrad`
+-- Table structure for table `UserRolePermission`
 --
 
-DROP TABLE IF EXISTS `VariableFileTetrad`;
+DROP TABLE IF EXISTS `UserRolePermission`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `VariableFileTetrad` (
+CREATE TABLE `UserRolePermission` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `numOfVariables` int(11) DEFAULT NULL,
-  `fileId` bigint(20) NOT NULL,
+  `name` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fileId` (`fileId`),
-  CONSTRAINT `VariableFileTetrad_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`)
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `UserRoleUserRolePermissionRel`
+--
+
+DROP TABLE IF EXISTS `UserRoleUserRolePermissionRel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserRoleUserRolePermissionRel` (
+  `userRoleId` bigint(20) NOT NULL,
+  `userRolePermissionId` bigint(20) NOT NULL,
+  PRIMARY KEY (`userRoleId`,`userRolePermissionId`),
+  KEY `userRolePermissionId` (`userRolePermissionId`),
+  CONSTRAINT `UserRoleUserRolePermissionRel_ibfk_1` FOREIGN KEY (`userRoleId`) REFERENCES `UserRole` (`id`),
+  CONSTRAINT `UserRoleUserRolePermissionRel_ibfk_2` FOREIGN KEY (`userRolePermissionId`) REFERENCES `UserRolePermission` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -230,4 +348,4 @@ CREATE TABLE `VariableFileTetrad` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-27 15:55:53
+-- Dump completed on 2017-05-10 11:32:46

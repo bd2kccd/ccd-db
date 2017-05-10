@@ -19,17 +19,11 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -38,17 +32,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * Mar 19, 2017 7:00:50 PM
+ * May 10, 2017 12:20:44 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "UserRole", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table(name = "Algorithm", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class UserRole implements Serializable {
+public class Algorithm implements Serializable {
 
-    private static final long serialVersionUID = 7543174854846867790L;
+    private static final long serialVersionUID = -5737496375252903506L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,23 +55,16 @@ public class UserRole implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "UserRoleUserRolePermissionRel", joinColumns = {
-        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userRolePermissionId", nullable = false, updatable = false)})
-    private List<UserRolePermission> userRolePermissions = new LinkedList<>();
-
-    public UserRole() {
+    public Algorithm() {
     }
 
-    public UserRole(String name) {
+    public Algorithm(String name) {
         this.name = name;
     }
 
-    public UserRole(String name, String description, List<UserRolePermission> userRolePermissions) {
+    public Algorithm(String name, String description) {
         this.name = name;
         this.description = description;
-        this.userRolePermissions = userRolePermissions;
     }
 
     public Long getId() {
@@ -102,14 +89,6 @@ public class UserRole implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<UserRolePermission> getUserRolePermissions() {
-        return userRolePermissions;
-    }
-
-    public void setUserRolePermissions(List<UserRolePermission> userRolePermissions) {
-        this.userRolePermissions = userRolePermissions;
     }
 
 }

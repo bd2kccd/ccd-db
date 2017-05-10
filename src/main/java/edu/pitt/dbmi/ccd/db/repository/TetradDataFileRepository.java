@@ -18,20 +18,17 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.File;
-import edu.pitt.dbmi.ccd.db.entity.VariableFileTetrad;
+import edu.pitt.dbmi.ccd.db.entity.TetradDataFile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * Apr 27, 2017 5:10:07 PM
+ * May 10, 2017 2:57:37 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
-public interface VariableFileTetradRepository extends JpaRepository<VariableFileTetrad, Long> {
-
-    public VariableFileTetrad findByFile(File file);
+public interface TetradDataFileRepository extends JpaRepository<TetradDataFile, Long> {
 
 }

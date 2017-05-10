@@ -18,21 +18,21 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.FileType;
+import edu.pitt.dbmi.ccd.db.entity.Algorithm;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * Apr 27, 2017 4:26:46 PM
+ * May 10, 2017 2:42:45 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
-public interface FileTypeRepository extends JpaRepository<FileType, Long> {
+public interface AlgorithmRepository extends JpaRepository<Algorithm, Long> {
 
-    @Cacheable("fileTypeByName")
-    public FileType findByName(String name);
+    @Cacheable("algorithmByName")
+    public Algorithm findByName(String name);
 
 }

@@ -19,34 +19,25 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * Apr 27, 2017 4:21:47 PM
+ * May 10, 2017 2:24:47 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "FileType", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class FileType implements Serializable {
+@Table(name = "UserRolePermission", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+public class UserRolePermission implements Serializable {
 
-    private static final long serialVersionUID = -3146122016288565052L;
+    private static final long serialVersionUID = 2274035970144842324L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,19 +47,11 @@ public class FileType implements Serializable {
     @Column(name = "name", unique = true, nullable = false, length = 64)
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "fileType")
-    private List<FileFormat> fileFormats = new LinkedList<>();
-
-    public FileType() {
+    public UserRolePermission() {
     }
 
-    public FileType(String name) {
+    public UserRolePermission(String name) {
         this.name = name;
-    }
-
-    public FileType(String name, List<FileFormat> fileFormats) {
-        this.name = name;
-        this.fileFormats = fileFormats;
     }
 
     public Long getId() {
@@ -85,14 +68,6 @@ public class FileType implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<FileFormat> getFileFormats() {
-        return fileFormats;
-    }
-
-    public void setFileFormats(List<FileFormat> fileFormats) {
-        this.fileFormats = fileFormats;
     }
 
 }

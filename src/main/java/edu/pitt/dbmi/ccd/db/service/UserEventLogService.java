@@ -18,28 +18,30 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.repository.DataFileTetradRepository;
+import edu.pitt.dbmi.ccd.db.repository.UserEventLogRepository;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Apr 27, 2017 5:06:13 PM
+ * May 10, 2017 3:01:55 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-public class DataFileTetradService {
+@Transactional
+public class UserEventLogService {
 
-    private final DataFileTetradRepository dataFileTetradRepository;
+    private final UserEventLogRepository userEventLogRepository;
 
     @Autowired
-    public DataFileTetradService(DataFileTetradRepository dataFileTetradRepository) {
-        this.dataFileTetradRepository = dataFileTetradRepository;
+    public UserEventLogService(UserEventLogRepository userEventLogRepository) {
+        this.userEventLogRepository = userEventLogRepository;
     }
 
-    public DataFileTetradRepository getDataFileTetradRepository() {
-        return dataFileTetradRepository;
+    public UserEventLogRepository getUserEventLogRepository() {
+        return userEventLogRepository;
     }
 
 }

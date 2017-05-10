@@ -18,49 +18,44 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.UserRole;
-import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
+import edu.pitt.dbmi.ccd.db.entity.EventType;
+import edu.pitt.dbmi.ccd.db.repository.EventTypeRepository;
 import java.util.Arrays;
 import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Mar 31, 2017 5:22:24 PM
+ * May 10, 2017 2:54:59 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-public class UserRoleService {
+@Transactional
+public class EventTypeService {
 
-    private static final String ADMIN_ROLE_NAME = "admin";
-    private static final String REGULAR_ROLE_NAME = "regular";
+    public static final String USER_LOGIN_NAME = "User Login";
+    public static final String USER_REGISTRATION_NAME = "User Registration";
 
-    private final UserRoleRepository userRoleRepository;
+    private final EventTypeRepository eventTypeRepository;
 
     @Autowired
-    public UserRoleService(UserRoleRepository userRoleRepository) {
-        this.userRoleRepository = userRoleRepository;
+    public EventTypeService(EventTypeRepository eventTypeRepository) {
+        this.eventTypeRepository = eventTypeRepository;
 
-        List<UserRole> userRoles = userRoleRepository.findAll();
-        if (userRoles.isEmpty()) {
-            userRoleRepository.save(Arrays.asList(
-                    new UserRole(ADMIN_ROLE_NAME),
-                    new UserRole(REGULAR_ROLE_NAME)));
+        List<EventType> eventTypes = eventTypeRepository.findAll();
+        if (eventTypes.isEmpty()) {
+            eventTypeRepository.save(Arrays.asList(
+                    new EventType(USER_LOGIN_NAME),
+                    new EventType(USER_REGISTRATION_NAME)));
         }
+
     }
 
-    public UserRole getAdminRole() {
-        return userRoleRepository.findByName(ADMIN_ROLE_NAME);
-    }
-
-    public UserRole getRegularRole() {
-        return userRoleRepository.findByName(REGULAR_ROLE_NAME);
-    }
-
-    public UserRoleRepository getUserRoleRepository() {
-        return userRoleRepository;
+    public EventTypeRepository getEventTypeRepository() {
+        return eventTypeRepository;
     }
 
 }

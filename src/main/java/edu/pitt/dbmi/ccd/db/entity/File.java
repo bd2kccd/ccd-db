@@ -75,9 +75,9 @@ public class File implements Serializable {
     @Column(name = "md5CheckSum", length = 32)
     private String md5checkSum;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fileTypeId")
-    private FileType fileType;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "fileFormatId")
+    private FileFormat fileFormat;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userAccountId", nullable = false)
@@ -93,6 +93,16 @@ public class File implements Serializable {
         this.title = title;
         this.creationTime = creationTime;
         this.fileSize = fileSize;
+        this.userAccount = userAccount;
+    }
+
+    public File(String name, String title, Date creationTime, long fileSize, String md5checkSum, FileFormat fileFormat, UserAccount userAccount) {
+        this.name = name;
+        this.title = title;
+        this.creationTime = creationTime;
+        this.fileSize = fileSize;
+        this.md5checkSum = md5checkSum;
+        this.fileFormat = fileFormat;
         this.userAccount = userAccount;
     }
 
@@ -144,12 +154,12 @@ public class File implements Serializable {
         this.md5checkSum = md5checkSum;
     }
 
-    public FileType getFileType() {
-        return fileType;
+    public FileFormat getFileFormat() {
+        return fileFormat;
     }
 
-    public void setFileType(FileType fileType) {
-        this.fileType = fileType;
+    public void setFileFormat(FileFormat fileFormat) {
+        this.fileFormat = fileFormat;
     }
 
     public UserAccount getUserAccount() {

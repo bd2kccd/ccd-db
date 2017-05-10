@@ -19,7 +19,7 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.File;
-import edu.pitt.dbmi.ccd.db.entity.FileType;
+import edu.pitt.dbmi.ccd.db.entity.FileFormat;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,7 +37,7 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     public List<File> findByUserAccount(UserAccount userAccount);
 
-    @Query("SELECT f FROM File f WHERE f.userAccount = ?1 AND f.fileType IS NULL")
+    @Query("SELECT f FROM File f WHERE f.userAccount = ?1 AND f.fileFormat IS NULL")
     public List<File> findUntypedFilesByUserAccount(UserAccount userAccount);
 
     public File findByIdAndUserAccount(Long id, UserAccount userAccount);
@@ -47,9 +47,9 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     public Long countByUserAccount(UserAccount userAccount);
 
-    public Long countByFileTypeAndUserAccount(FileType fileType, UserAccount userAccount);
+    public Long countByFileFormatAndUserAccount(FileFormat fileFormat, UserAccount userAccount);
 
-    @Query("SELECT COUNT(f) FROM File f WHERE f.userAccount = ?1 AND f.fileType IS NULL")
+    @Query("SELECT COUNT(f) FROM File f WHERE f.userAccount = ?1 AND f.fileFormat IS NULL")
     public Long countUntypedFilesByUserAccount(UserAccount userAccount);
 
 }

@@ -21,53 +21,42 @@ package edu.pitt.dbmi.ccd.db.entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * Apr 27, 2017 5:07:57 PM
+ * May 10, 2017 12:23:14 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "VariableFileTetrad")
+@Table(name = "EventType", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class VariableFileTetrad implements Serializable {
+public class EventType implements Serializable {
 
-    private static final long serialVersionUID = -9109124379850929401L;
+    private static final long serialVersionUID = 1296085044556959880L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "numOfVariables")
-    private Integer numOfVariables;
+    @Column(name = "name", unique = true, nullable = false, length = 64)
+    private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fileId", nullable = false)
-    private File file;
-
-    public VariableFileTetrad() {
+    public EventType() {
     }
 
-    public VariableFileTetrad(File file) {
-        this.file = file;
-    }
-
-    public VariableFileTetrad(Integer numOfVariables, File file) {
-        this.numOfVariables = numOfVariables;
-        this.file = file;
+    public EventType(String name) {
+        this.name = name;
     }
 
     public Long getId() {
@@ -78,20 +67,12 @@ public class VariableFileTetrad implements Serializable {
         this.id = id;
     }
 
-    public Integer getNumOfVariables() {
-        return numOfVariables;
+    public String getName() {
+        return name;
     }
 
-    public void setNumOfVariables(Integer numOfVariables) {
-        this.numOfVariables = numOfVariables;
-    }
-
-    public File getFile() {
-        return file;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

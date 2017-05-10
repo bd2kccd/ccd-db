@@ -28,23 +28,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * Apr 27, 2017 5:01:30 PM
+ * May 10, 2017 2:34:12 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "DataFileTetrad")
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class DataFileTetrad implements Serializable {
+@Table(name = "TetradDataFile")
+public class TetradDataFile implements Serializable {
 
-    private static final long serialVersionUID = -2921952561179223195L;
+    private static final long serialVersionUID = 151820174223230277L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,28 +52,28 @@ public class DataFileTetrad implements Serializable {
     @Column(name = "numOfColumns")
     private Integer numOfColumns;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fileId", nullable = false)
     private File file;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fileDelimiterTypeId", nullable = false)
     private FileDelimiterType fileDelimiterType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fileVariableTypeId", nullable = false)
     private FileVariableType fileVariableType;
 
-    public DataFileTetrad() {
+    public TetradDataFile() {
     }
 
-    public DataFileTetrad(File file, FileDelimiterType fileDelimiterType, FileVariableType fileVariableType) {
+    public TetradDataFile(File file, FileDelimiterType fileDelimiterType, FileVariableType fileVariableType) {
         this.file = file;
         this.fileDelimiterType = fileDelimiterType;
         this.fileVariableType = fileVariableType;
     }
 
-    public DataFileTetrad(Integer numOfRows, Integer numOfColumns, File file, FileDelimiterType fileDelimiterType, FileVariableType fileVariableType) {
+    public TetradDataFile(Integer numOfRows, Integer numOfColumns, File file, FileDelimiterType fileDelimiterType, FileVariableType fileVariableType) {
         this.numOfRows = numOfRows;
         this.numOfColumns = numOfColumns;
         this.file = file;
