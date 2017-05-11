@@ -18,9 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.FileFormat;
 import edu.pitt.dbmi.ccd.db.repository.FileFormatRepository;
-import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,29 +33,21 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class FileFormatService {
 
-    public static final String TETRAD_TAB_FMT_NAME = "Tetrad Tabular";
-    public static final String TETRAD_COVAR_FMT_NAME = "Tetrad Covariance";
-    public static final String TETRAD_VAR_FMT_NAME = "Tetrad Variable";
-    public static final String TETRAD_KNOWLEGE_FMT_NAME = "Tetrad Knowledge";
-    public static final String TETRAD_TEXT_RESULT_FMT_NAME = "Tetrad Text Result";
-    public static final String TETRAD_JSON_RESULT_FMT_NAME = "Tetrad JSON Result";
+    public static final String TETRAD_TAB_FMT_NAME = "tetrad-tab";
+    public static final String TETRAD_COVAR_FMT_NAME = "tetrad-covar";
+    public static final String TETRAD_VAR_FMT_NAME = "tetrad-var";
+    public static final String TETRAD_KNOWLEGE_FMT_NAME = "tetrad-knwl";
+    public static final String TETRAD_TEXT_RESULT_FMT_NAME = "tetrad-txt-result";
+    public static final String TETRAD_JSON_RESULT_FMT_NAME = "tetrad-json-result";
 
-    public static final String TDI_TAB_FMT_NAME = "tab";
+    public static final String TDI_TAB_FMT_NAME = "tdi-tab";
+    public static final String TDI_TXT_RESULT_FMT_NAME = "tdi-txt-result";
 
     private final FileFormatRepository fileFormatRepository;
-    private final FileTypeService fileTypeService;
-    private final AlgorithmService algorithmService;
 
     @Autowired
-    public FileFormatService(FileFormatRepository fileFormatRepository, FileTypeService fileTypeService, AlgorithmService algorithmService) {
+    public FileFormatService(FileFormatRepository fileFormatRepository) {
         this.fileFormatRepository = fileFormatRepository;
-        this.fileTypeService = fileTypeService;
-        this.algorithmService = algorithmService;
-
-        List<FileFormat> fileFormats = fileFormatRepository.findAll();
-        if (fileFormats.isEmpty()) {
-            fileTypeService.getFileTypeRepository().findByName(FileTypeService.DATA_NAME);
-        }
     }
 
     public FileFormatRepository getFileFormatRepository() {

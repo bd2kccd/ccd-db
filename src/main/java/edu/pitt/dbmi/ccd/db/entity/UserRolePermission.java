@@ -44,14 +44,18 @@ public class UserRolePermission implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 64)
+    @Column(name = "name", unique = true, nullable = false, length = 32)
     private String name;
+
+    @Column(name = "displayName", nullable = false, length = 64)
+    private String displayName;
 
     public UserRolePermission() {
     }
 
-    public UserRolePermission(String name) {
+    public UserRolePermission(String name, String displayName) {
         this.name = name;
+        this.displayName = displayName;
     }
 
     public Long getId() {
@@ -68,6 +72,14 @@ public class UserRolePermission implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
 }

@@ -37,10 +37,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "Algorithm", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table(name = "AlgorithmType", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Algorithm implements Serializable {
+public class AlgorithmType implements Serializable {
 
     private static final long serialVersionUID = -5737496375252903506L;
 
@@ -49,22 +49,21 @@ public class Algorithm implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 64)
+    @Column(name = "name", unique = true, nullable = false, length = 32)
     private String name;
+
+    @Column(name = "displayName", nullable = false, length = 64)
+    private String displayName;
 
     @Column(name = "description")
     private String description;
 
-    public Algorithm() {
+    public AlgorithmType() {
     }
 
-    public Algorithm(String name) {
+    public AlgorithmType(String name, String displayName) {
         this.name = name;
-    }
-
-    public Algorithm(String name, String description) {
-        this.name = name;
-        this.description = description;
+        this.displayName = displayName;
     }
 
     public Long getId() {
@@ -81,6 +80,14 @@ public class Algorithm implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getDescription() {

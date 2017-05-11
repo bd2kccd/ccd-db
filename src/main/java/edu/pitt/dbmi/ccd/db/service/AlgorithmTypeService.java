@@ -18,10 +18,9 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.Algorithm;
-import edu.pitt.dbmi.ccd.db.repository.AlgorithmRepository;
+import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
+import edu.pitt.dbmi.ccd.db.repository.AlgorithmTypeRepository;
 import java.util.Arrays;
-import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,27 +33,27 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Transactional
-public class AlgorithmService {
+public class AlgorithmTypeService {
 
-    public static final String TDI_ALGO_NAME = "TDI";
-    public static final String TETRAD_ALGO_NAME = "Tetrad";
+    public static final String TDI_ALGO_NAME = "tdi";
+    public static final String TETRAD_ALGO_NAME = "tetrad";
 
-    private final AlgorithmRepository algorithmRepository;
+    private final AlgorithmTypeRepository algorithmTypeRepository;
 
     @Autowired
-    public AlgorithmService(AlgorithmRepository algorithmRepository) {
-        this.algorithmRepository = algorithmRepository;
+    public AlgorithmTypeService(AlgorithmTypeRepository algorithmTypeRepository) {
+        this.algorithmTypeRepository = algorithmTypeRepository;
 
-        List<Algorithm> algorithms = algorithmRepository.findAll();
-        if (algorithms.isEmpty()) {
-            algorithmRepository.save(Arrays.asList(
-                    new Algorithm(TDI_ALGO_NAME),
-                    new Algorithm(TETRAD_ALGO_NAME)));
+        if (algorithmTypeRepository.findAll().isEmpty()) {
+            algorithmTypeRepository.save(Arrays.asList(
+                    new AlgorithmType(TDI_ALGO_NAME, "TDI"),
+                    new AlgorithmType(TETRAD_ALGO_NAME, "Tetrad")
+            ));
         }
     }
 
-    public AlgorithmRepository getAlgorithmRepository() {
-        return algorithmRepository;
+    public AlgorithmTypeRepository getAlgorithmTypeRepository() {
+        return algorithmTypeRepository;
     }
 
 }

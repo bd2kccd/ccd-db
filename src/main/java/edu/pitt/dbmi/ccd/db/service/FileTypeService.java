@@ -20,9 +20,7 @@ package edu.pitt.dbmi.ccd.db.service;
 
 import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,24 +33,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class FileTypeService {
 
-    public static final String DATA_NAME = "Data";
-    public static final String VARIABLE_NAME = "Variable";
-    public static final String KNOWLEDGE_NAME = "Knowledge";
-    public static final String RESULT_NAME = "Result";
+    public static final String DATA_NAME = "data";
+    public static final String VARIABLE_NAME = "var";
+    public static final String KNOWLEDGE_NAME = "knwl";
+    public static final String RESULT_NAME = "result";
 
     private final FileTypeRepository fileTypeRepository;
 
     @Autowired
     public FileTypeService(FileTypeRepository fileTypeRepository) {
         this.fileTypeRepository = fileTypeRepository;
-    }
 
-    public Map<String, FileType> getFileTypeMap() {
-        Map<String, FileType> map = new HashMap<>();
-
-        List<FileType> fileTypes = fileTypeRepository.findAll();
-
-        return map;
+        if (fileTypeRepository.findAll().isEmpty()) {
+            fileTypeRepository.save(Arrays.asList(
+                    new FileType(DATA_NAME, "Data"),
+                    new FileType(VARIABLE_NAME, "Variable"),
+                    new FileType(KNOWLEDGE_NAME, "Knowledge"),
+                    new FileType(RESULT_NAME, "Result")
+            ));
+        }
     }
 
     public FileTypeRepository getFileTypeRepository() {

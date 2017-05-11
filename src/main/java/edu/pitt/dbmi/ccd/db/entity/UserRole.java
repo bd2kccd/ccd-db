@@ -55,13 +55,16 @@ public class UserRole implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 64)
+    @Column(name = "name", unique = true, nullable = false, length = 32)
     private String name;
+
+    @Column(name = "displayName", nullable = false, length = 64)
+    private String displayName;
 
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "UserRoleUserRolePermissionRel", joinColumns = {
         @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userRolePermissionId", nullable = false, updatable = false)})
@@ -70,14 +73,9 @@ public class UserRole implements Serializable {
     public UserRole() {
     }
 
-    public UserRole(String name) {
+    public UserRole(String name, String displayName) {
         this.name = name;
-    }
-
-    public UserRole(String name, String description, List<UserRolePermission> userRolePermissions) {
-        this.name = name;
-        this.description = description;
-        this.userRolePermissions = userRolePermissions;
+        this.displayName = displayName;
     }
 
     public Long getId() {
@@ -94,6 +92,14 @@ public class UserRole implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getDescription() {

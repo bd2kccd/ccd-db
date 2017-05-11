@@ -21,7 +21,6 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.FileVariableType;
 import edu.pitt.dbmi.ccd.db.repository.FileVariableTypeRepository;
 import java.util.Arrays;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +33,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class FileVariableTypeService {
 
-    public static final String CONTINUOUS_NAME = "Continuous";
-    public static final String DISCRETE_NAME = "Discrete";
+    public static final String CONTINUOUS_NAME = "cont";
+    public static final String DISCRETE_NAME = "discrete";
 
     private final FileVariableTypeRepository fileVariableTypeRepository;
 
@@ -43,11 +42,11 @@ public class FileVariableTypeService {
     public FileVariableTypeService(FileVariableTypeRepository fileVariableTypeRepository) {
         this.fileVariableTypeRepository = fileVariableTypeRepository;
 
-        List<FileVariableType> fileVariableTypes = fileVariableTypeRepository.findAll();
-        if (fileVariableTypes.isEmpty()) {
+        if (fileVariableTypeRepository.findAll().isEmpty()) {
             fileVariableTypeRepository.save(Arrays.asList(
-                    new FileVariableType(CONTINUOUS_NAME),
-                    new FileVariableType(DISCRETE_NAME)));
+                    new FileVariableType(CONTINUOUS_NAME, "Continuous"),
+                    new FileVariableType(DISCRETE_NAME, "Discrete")
+            ));
         }
     }
 

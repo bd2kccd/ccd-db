@@ -16,15 +16,16 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `Algorithm`
+-- Table structure for table `AlgorithmType`
 --
 
-DROP TABLE IF EXISTS `Algorithm`;
+DROP TABLE IF EXISTS `AlgorithmType`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Algorithm` (
+CREATE TABLE `AlgorithmType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `displayName` varchar(64) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
@@ -40,7 +41,8 @@ DROP TABLE IF EXISTS `EventType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `EventType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `displayName` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -81,7 +83,8 @@ DROP TABLE IF EXISTS `FileDelimiterType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `FileDelimiterType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `displayName` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -96,7 +99,8 @@ DROP TABLE IF EXISTS `FileFormat`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `FileFormat` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `displayName` varchar(64) NOT NULL,
   `fileTypeId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
@@ -118,7 +122,7 @@ CREATE TABLE `FileFormatAlgorithmRel` (
   PRIMARY KEY (`fileFormatId`,`algorithmId`),
   KEY `algorithmId` (`algorithmId`),
   CONSTRAINT `FileFormatAlgorithmRel_ibfk_1` FOREIGN KEY (`fileFormatId`) REFERENCES `FileFormat` (`id`),
-  CONSTRAINT `FileFormatAlgorithmRel_ibfk_2` FOREIGN KEY (`algorithmId`) REFERENCES `Algorithm` (`id`)
+  CONSTRAINT `FileFormatAlgorithmRel_ibfk_2` FOREIGN KEY (`algorithmId`) REFERENCES `AlgorithmType` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -131,7 +135,8 @@ DROP TABLE IF EXISTS `FileType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `FileType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `displayName` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -146,7 +151,8 @@ DROP TABLE IF EXISTS `FileVariableType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `FileVariableType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `displayName` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -300,7 +306,8 @@ DROP TABLE IF EXISTS `UserRole`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `UserRole` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `displayName` varchar(64) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
@@ -316,7 +323,8 @@ DROP TABLE IF EXISTS `UserRolePermission`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `UserRolePermission` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `displayName` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -348,4 +356,4 @@ CREATE TABLE `UserRoleUserRolePermissionRel` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-10 11:32:46
+-- Dump completed on 2017-05-11 11:16:44

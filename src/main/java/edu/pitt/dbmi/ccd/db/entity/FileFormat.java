@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +37,7 @@ import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -56,25 +58,38 @@ public class FileFormat implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 64)
+    @Column(name = "name", unique = true, nullable = false, length = 32)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "displayName", nullable = false, length = 64)
+    private String displayName;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fileTypeId", nullable = false)
     private FileType fileType;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "FileFormatAlgorithmRel", joinColumns = {
         @JoinColumn(name = "fileFormatId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "algorithmId", nullable = false, updatable = false)})
-    private List<Algorithm> algorithms = new LinkedList<>();
+    @XmlTransient
+    @JsonIgnore
+    private List<AlgorithmType> algorithmTypes = new LinkedList<>();
 
     public FileFormat() {
     }
 
-    public FileFormat(String name, FileType fileType) {
+    public FileFormat(String name, String displayName, FileType fileType) {
         this.name = name;
+        this.displayName = displayName;
         this.fileType = fileType;
+    }
+
+    public FileFormat(String name, String displayName, FileType fileType, List<AlgorithmType> algorithmTypes) {
+        this.name = name;
+        this.displayName = displayName;
+        this.fileType = fileType;
+        this.algorithmTypes = algorithmTypes;
     }
 
     public Long getId() {
@@ -93,6 +108,14 @@ public class FileFormat implements Serializable {
         this.name = name;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
     public FileType getFileType() {
         return fileType;
     }
@@ -101,12 +124,12 @@ public class FileFormat implements Serializable {
         this.fileType = fileType;
     }
 
-    public List<Algorithm> getAlgorithms() {
-        return algorithms;
+    public List<AlgorithmType> getAlgorithmTypes() {
+        return algorithmTypes;
     }
 
-    public void setAlgorithms(List<Algorithm> algorithms) {
-        this.algorithms = algorithms;
+    public void setAlgorithmTypes(List<AlgorithmType> algorithmTypes) {
+        this.algorithmTypes = algorithmTypes;
     }
 
 }

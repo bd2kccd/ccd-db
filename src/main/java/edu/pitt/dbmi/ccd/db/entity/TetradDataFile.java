@@ -52,15 +52,15 @@ public class TetradDataFile implements Serializable {
     @Column(name = "numOfColumns")
     private Integer numOfColumns;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fileId", nullable = false)
     private File file;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fileDelimiterTypeId", nullable = false)
     private FileDelimiterType fileDelimiterType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fileVariableTypeId", nullable = false)
     private FileVariableType fileVariableType;
 

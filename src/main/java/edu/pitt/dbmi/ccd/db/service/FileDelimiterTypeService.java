@@ -21,7 +21,6 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.FileDelimiterType;
 import edu.pitt.dbmi.ccd.db.repository.FileDelimiterTypeRepository;
 import java.util.Arrays;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,18 +47,17 @@ public class FileDelimiterTypeService {
     public FileDelimiterTypeService(FileDelimiterTypeRepository fileDelimiterTypeRepository) {
         this.fileDelimiterTypeRepository = fileDelimiterTypeRepository;
 
-        List<FileDelimiterType> fileDelimiterTypes = fileDelimiterTypeRepository.findAll();
-        if (fileDelimiterTypes.isEmpty()) {
+        if (fileDelimiterTypeRepository.findAll().isEmpty()) {
             fileDelimiterTypeRepository.save(Arrays.asList(
-                    new FileDelimiterType(TAB_DELIM_NAME),
-                    new FileDelimiterType(SPACE_DELIM_NAME),
-                    new FileDelimiterType(WHITESPACE_DELIM_NAME),
-                    new FileDelimiterType(COMMA_DELIM_NAME),
-                    new FileDelimiterType(COLON_DELIM_NAME),
-                    new FileDelimiterType(SEMICOLON_DELIM_NAME),
-                    new FileDelimiterType(PIPE_DELIM_NAME)));
+                    new FileDelimiterType(TAB_DELIM_NAME, "Tab"),
+                    new FileDelimiterType(SPACE_DELIM_NAME, "Space"),
+                    new FileDelimiterType(WHITESPACE_DELIM_NAME, "Whitespace"),
+                    new FileDelimiterType(COMMA_DELIM_NAME, "Comma"),
+                    new FileDelimiterType(COLON_DELIM_NAME, "Colon"),
+                    new FileDelimiterType(SEMICOLON_DELIM_NAME, "Semicolon"),
+                    new FileDelimiterType(PIPE_DELIM_NAME, "Pipe")
+            ));
         }
-
     }
 
     public FileDelimiterTypeRepository getFileDelimiterTypeRepository() {

@@ -18,7 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.Algorithm;
+import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -30,9 +30,9 @@ import org.springframework.stereotype.Repository;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
-public interface AlgorithmRepository extends JpaRepository<Algorithm, Long> {
+public interface AlgorithmTypeRepository extends JpaRepository<AlgorithmType, Long> {
 
-    @Cacheable("algorithmByName")
-    public Algorithm findByName(String name);
+    @Cacheable("algorithmTypeByName")
+    public AlgorithmType findByName(String name);
 
 }
