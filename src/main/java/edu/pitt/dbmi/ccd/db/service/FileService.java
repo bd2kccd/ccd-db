@@ -18,7 +18,22 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.File;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.FileRepository;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,11 +46,79 @@ import org.springframework.stereotype.Service;
 @Service
 public class FileService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileService.class);
+
     private final FileRepository fileRepository;
 
     @Autowired
     public FileService(FileRepository fileRepository) {
         this.fileRepository = fileRepository;
+    }
+
+    public List<File> persistFileInfos(List<Path> files, UserAccount userAccount) {
+        List<File> fileEntities = new LinkedList<>();
+        files.forEach(file -> {
+            File fileEntity = createFileEntity(file, userAccount);
+            if (fileEntity != null) {
+                fileEntities.add(fileEntity);
+            }
+        });
+
+        return fileRepository.save(fileEntities);
+    }
+
+    public File persistFileInfo(Path file, UserAccount userAccount) {
+        File fileEntity = createFileEntity(file, userAccount);
+        if (fileEntity != null) {
+            fileEntity = fileRepository.save(fileEntity);
+        }
+
+        return fileEntity;
+    }
+
+    public File createFileEntity(Path file, UserAccount userAccount) {
+        File fileEntity = null;
+
+        try {
+            BasicFileAttributes attrs = Files.readAttributes(file, BasicFileAttributes.class);
+            String name = file.getFileName().toString();
+            Date creationTime = new Date(attrs.creationTime().toMillis());
+            long fileSize = attrs.size();
+            String md5checkSum = getFileChecksum(file);
+
+            fileEntity = new File();
+            fileEntity.setCreationTime(creationTime);
+            fileEntity.setFileSize(fileSize);
+            fileEntity.setMd5checkSum(md5checkSum);
+            fileEntity.setName(name);
+            fileEntity.setTitle(name);
+            fileEntity.setUserAccount(userAccount);
+        } catch (IOException | NoSuchAlgorithmException exception) {
+            LOGGER.error("Unable to persist physical file information", exception);
+        }
+
+        return fileEntity;
+    }
+
+    private String getFileChecksum(Path file) throws IOException, NoSuchAlgorithmException {
+        StringBuilder sb = new StringBuilder();
+
+        MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+        try (InputStream is = Files.newInputStream(file)) {
+            DigestInputStream dis = new DigestInputStream(is, messageDigest);
+            dis.on(true); // no need to call md.update(buffer) when set ON
+            byte[] buffer = new byte[8192];
+            while (dis.read(buffer) != -1) {
+                // a call to the read method results in an update on the message digest
+            }
+
+            byte[] digest = messageDigest.digest();
+            for (byte b : digest) {
+                sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+            }
+        }
+
+        return sb.toString();
     }
 
     public FileRepository getFileRepository() {

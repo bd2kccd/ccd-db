@@ -18,7 +18,12 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.EventType;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.UserEventLog;
+import edu.pitt.dbmi.ccd.db.repository.EventTypeRepository;
 import edu.pitt.dbmi.ccd.db.repository.UserEventLogRepository;
+import java.util.Date;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,14 +39,31 @@ import org.springframework.stereotype.Service;
 public class UserEventLogService {
 
     private final UserEventLogRepository userEventLogRepository;
+    private final EventTypeRepository eventTypeRepository;
 
     @Autowired
-    public UserEventLogService(UserEventLogRepository userEventLogRepository) {
+    public UserEventLogService(UserEventLogRepository userEventLogRepository, EventTypeRepository eventTypeRepository) {
         this.userEventLogRepository = userEventLogRepository;
+        this.eventTypeRepository = eventTypeRepository;
     }
 
     public UserEventLogRepository getUserEventLogRepository() {
         return userEventLogRepository;
+    }
+
+    public UserEventLog logUserLogin(UserAccount userAccount) {
+        return LogUserEvent(EventTypeService.USR_LOGIN_NAME, userAccount);
+    }
+
+    public UserEventLog logUserRegistration(UserAccount userAccount) {
+        return LogUserEvent(EventTypeService.USR_REGSTR_NAME, userAccount);
+    }
+
+    public UserEventLog LogUserEvent(String userEventName, UserAccount userAccount) {
+        EventType eventType = eventTypeRepository.findByName(userEventName);
+        Date eventDate = new Date(System.currentTimeMillis());
+
+        return userEventLogRepository.save(new UserEventLog(eventDate, eventType, userAccount));
     }
 
 }

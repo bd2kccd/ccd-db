@@ -36,8 +36,8 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class EventTypeService {
 
-    public static final String USER_LOGIN_NAME = "usr-login";
-    public static final String USER_REGISTRATION_NAME = "usr-regstr";
+    public static final String USR_LOGIN_NAME = "usr-login";
+    public static final String USR_REGSTR_NAME = "usr-regstr";
 
     private final EventTypeRepository eventTypeRepository;
 
@@ -48,8 +48,8 @@ public class EventTypeService {
         List<EventType> eventTypes = eventTypeRepository.findAll();
         if (eventTypes.isEmpty()) {
             eventTypeRepository.save(Arrays.asList(
-                    new EventType(USER_LOGIN_NAME, "User Login"),
-                    new EventType(USER_REGISTRATION_NAME, "User Registration")
+                    new EventType(USR_LOGIN_NAME, "User Login"),
+                    new EventType(USR_REGSTR_NAME, "User Registration")
             ));
         }
     }
