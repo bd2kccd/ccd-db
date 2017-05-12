@@ -30,8 +30,10 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +57,18 @@ public class FileService {
         this.fileRepository = fileRepository;
     }
 
-    public List<File> persistFileInfos(List<Path> files, UserAccount userAccount) {
+    public Map<String, File> getUserFiles(UserAccount userAccount) {
+        Map<String, File> files = new HashMap<>();
+
+        List<File> dbFileList = fileRepository.findByUserAccount(userAccount);
+        dbFileList.forEach(file -> {
+            files.put(file.getName(), file);
+        });
+
+        return files;
+    }
+
+    public List<File> persistLocalFiles(List<Path> files, UserAccount userAccount) {
         List<File> fileEntities = new LinkedList<>();
         files.forEach(file -> {
             File fileEntity = createFileEntity(file, userAccount);
@@ -67,7 +80,7 @@ public class FileService {
         return fileRepository.save(fileEntities);
     }
 
-    public File persistFileInfo(Path file, UserAccount userAccount) {
+    public File persistLocalFile(Path file, UserAccount userAccount) {
         File fileEntity = createFileEntity(file, userAccount);
         if (fileEntity != null) {
             fileEntity = fileRepository.save(fileEntity);
