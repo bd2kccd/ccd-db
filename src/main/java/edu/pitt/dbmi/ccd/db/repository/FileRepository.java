@@ -52,4 +52,6 @@ public interface FileRepository extends JpaRepository<File, Long> {
     @Query("SELECT COUNT(f) FROM File f WHERE f.userAccount = ?1 AND f.fileFormat IS NULL")
     public Long countUntypedFilesByUserAccount(UserAccount userAccount);
 
+    public boolean existsByTitleAndUserAccount(String title, UserAccount userAccount);
+
 }
