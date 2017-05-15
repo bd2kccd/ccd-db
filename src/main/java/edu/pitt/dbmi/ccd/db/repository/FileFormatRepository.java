@@ -19,6 +19,8 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.FileFormat;
+import edu.pitt.dbmi.ccd.db.entity.FileType;
+import java.util.List;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -34,5 +36,8 @@ public interface FileFormatRepository extends JpaRepository<FileFormat, Long> {
 
     @Cacheable("fileFormatByName")
     public FileFormat findByName(String name);
+
+    @Cacheable("fileFormatsByFileType")
+    public List<FileFormat> findByFileType(FileType fileType);
 
 }
