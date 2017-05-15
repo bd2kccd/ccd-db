@@ -20,7 +20,10 @@ package edu.pitt.dbmi.ccd.db.service;
 
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.repository.FileDelimiterTypeRepository;
+import edu.pitt.dbmi.ccd.db.repository.FileFormatRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileRepository;
+import edu.pitt.dbmi.ccd.db.repository.FileVariableTypeRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -51,10 +54,24 @@ public class FileService {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileService.class);
 
     private final FileRepository fileRepository;
+    private final FileFormatRepository fileFormatRepository;
+    private final FileDelimiterTypeRepository fileDelimiterTypeRepository;
+    private final FileVariableTypeRepository fileVariableTypeRepository;
 
     @Autowired
-    public FileService(FileRepository fileRepository) {
+    public FileService(FileRepository fileRepository, FileFormatRepository fileFormatRepository, FileDelimiterTypeRepository fileDelimiterTypeRepository, FileVariableTypeRepository fileVariableTypeRepository) {
         this.fileRepository = fileRepository;
+        this.fileFormatRepository = fileFormatRepository;
+        this.fileDelimiterTypeRepository = fileDelimiterTypeRepository;
+        this.fileVariableTypeRepository = fileVariableTypeRepository;
+    }
+
+    public File retrieveFile(Long id, UserAccount userAccount) {
+        if (id == null || userAccount == null) {
+            return null;
+        }
+
+        return fileRepository.findByIdAndUserAccount(id, userAccount);
     }
 
     public Map<String, File> getUserFiles(UserAccount userAccount) {
