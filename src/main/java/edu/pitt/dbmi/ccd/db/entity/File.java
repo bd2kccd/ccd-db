@@ -21,6 +21,9 @@ package edu.pitt.dbmi.ccd.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,6 +32,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -79,6 +83,16 @@ public class File implements Serializable {
     @JoinColumn(name = "fileFormatId")
     private FileFormat fileFormat;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
+    @XmlTransient
+    @JsonIgnore
+    private List<TetradVariableFile> tetradVariableFiles = new LinkedList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
+    @XmlTransient
+    @JsonIgnore
+    private List<TetradDataFile> tetradDataFiles = new LinkedList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userAccountId", nullable = false)
     @XmlTransient
@@ -96,7 +110,8 @@ public class File implements Serializable {
         this.userAccount = userAccount;
     }
 
-    public File(String name, String title, Date creationTime, long fileSize, String md5checkSum, FileFormat fileFormat, UserAccount userAccount) {
+    public File(Long id, String name, String title, Date creationTime, long fileSize, String md5checkSum, FileFormat fileFormat, UserAccount userAccount) {
+        this.id = id;
         this.name = name;
         this.title = title;
         this.creationTime = creationTime;
@@ -160,6 +175,22 @@ public class File implements Serializable {
 
     public void setFileFormat(FileFormat fileFormat) {
         this.fileFormat = fileFormat;
+    }
+
+    public List<TetradVariableFile> getTetradVariableFiles() {
+        return tetradVariableFiles;
+    }
+
+    public void setTetradVariableFiles(List<TetradVariableFile> tetradVariableFiles) {
+        this.tetradVariableFiles = tetradVariableFiles;
+    }
+
+    public List<TetradDataFile> getTetradDataFiles() {
+        return tetradDataFiles;
+    }
+
+    public void setTetradDataFiles(List<TetradDataFile> tetradDataFiles) {
+        this.tetradDataFiles = tetradDataFiles;
     }
 
     public UserAccount getUserAccount() {

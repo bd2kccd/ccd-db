@@ -167,6 +167,9 @@ DROP TABLE IF EXISTS `TetradDataFile`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `TetradDataFile` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `quoteChar` char(1) DEFAULT NULL,
+  `missingValueMarker` varchar(8) DEFAULT NULL,
+  `commentMarker` varchar(8) DEFAULT NULL,
   `numOfRows` int(11) DEFAULT NULL,
   `numOfColumns` int(11) DEFAULT NULL,
   `fileId` bigint(20) NOT NULL,
@@ -356,4 +359,4 @@ CREATE TABLE `UserRoleUserRolePermissionRel` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-11 11:16:44
+-- Dump completed on 2017-05-18 14:00:24
