@@ -37,8 +37,7 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     public List<File> findByUserAccount(UserAccount userAccount);
 
-    @Query("SELECT f FROM File f WHERE f.userAccount = ?1 AND f.fileFormat IS NULL")
-    public List<File> findUntypedFilesByUserAccount(UserAccount userAccount);
+    public List<File> findByUserAccountAndFileFormatIsNull(UserAccount userAccount);
 
     public File findByIdAndUserAccount(Long id, UserAccount userAccount);
 
@@ -49,8 +48,7 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     public Long countByFileFormatAndUserAccount(FileFormat fileFormat, UserAccount userAccount);
 
-    @Query("SELECT COUNT(f) FROM File f WHERE f.userAccount = ?1 AND f.fileFormat IS NULL")
-    public Long countUntypedFilesByUserAccount(UserAccount userAccount);
+    public Long countByUserAccountAndFileFormatIsNull(UserAccount userAccount);
 
     public boolean existsByTitleAndUserAccount(String title, UserAccount userAccount);
 

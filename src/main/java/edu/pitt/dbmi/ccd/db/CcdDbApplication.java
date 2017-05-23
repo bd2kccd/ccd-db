@@ -21,6 +21,7 @@ package edu.pitt.dbmi.ccd.db;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  *
@@ -29,6 +30,7 @@ import org.springframework.cache.annotation.EnableCaching;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @SpringBootApplication
+@EnableTransactionManagement
 @EnableCaching
 public class CcdDbApplication {
 

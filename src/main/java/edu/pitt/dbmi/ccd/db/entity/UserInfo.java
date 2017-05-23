@@ -19,14 +19,13 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -38,36 +37,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "UserInfo")
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class UserInfo implements Serializable {
 
     private static final long serialVersionUID = 8097039983207404926L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "firstName")
+    @Column(name = "firstName", length = 255)
     private String firstName;
 
-    @Column(name = "middleName")
+    @Column(name = "middleName", length = 255)
     private String middleName;
 
-    @Column(name = "lastName")
+    @Column(name = "lastName", length = 255)
     private String lastName;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", length = 255)
     private String email;
 
     public UserInfo() {
-    }
-
-    public UserInfo(String firstName, String middleName, String lastName, String email) {
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
-        this.email = email;
     }
 
     public Long getId() {

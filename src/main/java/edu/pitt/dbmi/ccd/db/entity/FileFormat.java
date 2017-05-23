@@ -18,10 +18,9 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,10 +33,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -48,33 +44,33 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "FileFormat", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class FileFormat implements Serializable {
 
     private static final long serialVersionUID = -2456952936310636255L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 32)
+    @Basic(optional = false)
+    @Column(name = "name", nullable = false, length = 32)
     private String name;
 
+    @Basic(optional = false)
     @Column(name = "displayName", nullable = false, length = 64)
     private String displayName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fileTypeId", nullable = false)
+    @JoinColumn(name = "fileTypeId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private FileType fileType;
 
-    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "FileFormatAlgorithmRel", joinColumns = {
-        @JoinColumn(name = "fileFormatId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "algorithmId", nullable = false, updatable = false)})
-    @XmlTransient
-    @JsonIgnore
-    private List<AlgorithmType> algorithmTypes = new LinkedList<>();
+        @JoinColumn(name = "fileFormatId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "algorithmTypeId", referencedColumnName = "id", nullable = false)})
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<AlgorithmType> algorithmTypes;
 
     public FileFormat() {
     }
@@ -116,20 +112,20 @@ public class FileFormat implements Serializable {
         this.displayName = displayName;
     }
 
-    public FileType getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(FileType fileType) {
-        this.fileType = fileType;
-    }
-
     public List<AlgorithmType> getAlgorithmTypes() {
         return algorithmTypes;
     }
 
     public void setAlgorithmTypes(List<AlgorithmType> algorithmTypes) {
         this.algorithmTypes = algorithmTypes;
+    }
+
+    public FileType getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(FileType fileType) {
+        this.fileType = fileType;
     }
 
 }

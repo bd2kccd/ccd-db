@@ -24,7 +24,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  *
@@ -33,7 +32,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Configuration
-@EnableTransactionManagement
 public class CcdDbApplicationConfigurer {
 
     @Autowired

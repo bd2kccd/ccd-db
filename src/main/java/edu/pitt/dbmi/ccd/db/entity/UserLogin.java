@@ -20,6 +20,7 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,8 +29,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -41,29 +40,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "UserLogin")
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class UserLogin implements Serializable {
 
     private static final long serialVersionUID = -9192355411276772808L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "loginDate")
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "loginDate", length = 19)
     private Date loginDate;
 
     @Column(name = "loginLocation")
     private Long loginLocation;
 
     public UserLogin() {
-    }
-
-    public UserLogin(Date loginDate, Long loginLocation) {
-        this.loginDate = loginDate;
-        this.loginLocation = loginLocation;
     }
 
     public Long getId() {

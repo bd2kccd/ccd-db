@@ -67,7 +67,7 @@ CREATE TABLE `File` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`,`userAccountId`),
   UNIQUE KEY `title` (`title`,`userAccountId`),
-  KEY `fileTypeId` (`fileFormatId`),
+  KEY `fileFormatId` (`fileFormatId`),
   KEY `userAccountId` (`userAccountId`),
   CONSTRAINT `File_ibfk_1` FOREIGN KEY (`fileFormatId`) REFERENCES `FileFormat` (`id`),
   CONSTRAINT `File_ibfk_2` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
@@ -105,7 +105,7 @@ CREATE TABLE `FileFormat` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `FileFormat_ibfk_1` (`fileTypeId`),
-  CONSTRAINT `FileFormat_ibfk_1` FOREIGN KEY (`fileTypeId`) REFERENCES `FileType` (`id`) ON DELETE CASCADE
+  CONSTRAINT `FileFormat_ibfk_1` FOREIGN KEY (`fileTypeId`) REFERENCES `FileType` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -118,11 +118,12 @@ DROP TABLE IF EXISTS `FileFormatAlgorithmRel`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `FileFormatAlgorithmRel` (
   `fileFormatId` bigint(20) NOT NULL,
-  `algorithmId` bigint(20) NOT NULL,
-  PRIMARY KEY (`fileFormatId`,`algorithmId`),
-  KEY `algorithmId` (`algorithmId`),
+  `algorithmTypeId` bigint(20) NOT NULL,
+  PRIMARY KEY (`fileFormatId`,`algorithmTypeId`),
+  KEY `fileFormatId` (`fileFormatId`),
+  KEY `algorithmTypeId` (`algorithmTypeId`),
   CONSTRAINT `FileFormatAlgorithmRel_ibfk_1` FOREIGN KEY (`fileFormatId`) REFERENCES `FileFormat` (`id`),
-  CONSTRAINT `FileFormatAlgorithmRel_ibfk_2` FOREIGN KEY (`algorithmId`) REFERENCES `AlgorithmType` (`id`)
+  CONSTRAINT `FileFormatAlgorithmRel_ibfk_2` FOREIGN KEY (`algorithmTypeId`) REFERENCES `AlgorithmType` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -176,7 +177,7 @@ CREATE TABLE `TetradDataFile` (
   `fileDelimiterTypeId` bigint(20) NOT NULL,
   `fileVariableTypeId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fileId` (`fileId`),
+  UNIQUE KEY `fileId` (`fileId`),
   KEY `fileDelimiterTypeId` (`fileDelimiterTypeId`),
   KEY `fileVariableTypeId` (`fileVariableTypeId`),
   CONSTRAINT `TetradDataFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`) ON DELETE CASCADE,
@@ -197,8 +198,8 @@ CREATE TABLE `TetradVariableFile` (
   `numOfVariables` int(11) DEFAULT NULL,
   `fileId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fileId` (`fileId`),
-  CONSTRAINT `TetradVariableFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`)
+  UNIQUE KEY `fileId` (`fileId`),
+  CONSTRAINT `TetradVariableFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -224,10 +225,10 @@ CREATE TABLE `UserAccount` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `account` (`account`),
-  KEY `userLoginId` (`userLoginId`),
-  KEY `userInfoId` (`userInfoId`),
-  CONSTRAINT `UserAccount_ibfk_1` FOREIGN KEY (`userLoginId`) REFERENCES `UserLogin` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `UserAccount_ibfk_2` FOREIGN KEY (`userInfoId`) REFERENCES `UserInfo` (`id`) ON DELETE CASCADE
+  UNIQUE KEY `userLoginId` (`userLoginId`),
+  UNIQUE KEY `userInfoId` (`userInfoId`),
+  CONSTRAINT `UserAccount_ibfk_1` FOREIGN KEY (`userInfoId`) REFERENCES `UserInfo` (`id`),
+  CONSTRAINT `UserAccount_ibfk_2` FOREIGN KEY (`userLoginId`) REFERENCES `UserLogin` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -242,6 +243,7 @@ CREATE TABLE `UserAccountUserRoleRel` (
   `userAccountId` bigint(20) NOT NULL,
   `userRoleId` bigint(20) NOT NULL,
   PRIMARY KEY (`userAccountId`,`userRoleId`),
+  KEY `userAccountId` (`userAccountId`),
   KEY `userRoleId` (`userRoleId`),
   CONSTRAINT `UserAccountUserRoleRel_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`),
   CONSTRAINT `UserAccountUserRoleRel_ibfk_2` FOREIGN KEY (`userRoleId`) REFERENCES `UserRole` (`id`)
@@ -261,10 +263,10 @@ CREATE TABLE `UserEventLog` (
   `eventTypeId` bigint(20) NOT NULL,
   `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `eventTypeId` (`eventTypeId`),
   KEY `userAccountId` (`userAccountId`),
-  CONSTRAINT `UserEventLog_ibfk_1` FOREIGN KEY (`eventTypeId`) REFERENCES `EventType` (`id`),
-  CONSTRAINT `UserEventLog_ibfk_2` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
+  KEY `eventTypeId` (`eventTypeId`),
+  CONSTRAINT `UserEventLog_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`),
+  CONSTRAINT `UserEventLog_ibfk_2` FOREIGN KEY (`eventTypeId`) REFERENCES `EventType` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -344,6 +346,7 @@ CREATE TABLE `UserRoleUserRolePermissionRel` (
   `userRoleId` bigint(20) NOT NULL,
   `userRolePermissionId` bigint(20) NOT NULL,
   PRIMARY KEY (`userRoleId`,`userRolePermissionId`),
+  KEY `userRoleId` (`userRoleId`),
   KEY `userRolePermissionId` (`userRolePermissionId`),
   CONSTRAINT `UserRoleUserRolePermissionRel_ibfk_1` FOREIGN KEY (`userRoleId`) REFERENCES `UserRole` (`id`),
   CONSTRAINT `UserRoleUserRolePermissionRel_ibfk_2` FOREIGN KEY (`userRolePermissionId`) REFERENCES `UserRolePermission` (`id`)
@@ -359,4 +362,4 @@ CREATE TABLE `UserRoleUserRolePermissionRel` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-18 14:00:24
+-- Dump completed on 2017-05-22 18:43:57

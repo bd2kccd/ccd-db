@@ -19,8 +19,8 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,8 +32,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -43,32 +41,35 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "UserRole", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table(name = "UserRole", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name"})})
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class UserRole implements Serializable {
 
     private static final long serialVersionUID = 7543174854846867790L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 32)
+    @Basic(optional = false)
+    @Column(name = "name", nullable = false, length = 32)
     private String name;
 
+    @Basic(optional = false)
     @Column(name = "displayName", nullable = false, length = 64)
     private String displayName;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 255)
     private String description;
 
-    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "UserRoleUserRolePermissionRel", joinColumns = {
-        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userRolePermissionId", nullable = false, updatable = false)})
-    private List<UserRolePermission> userRolePermissions = new LinkedList<>();
+        @JoinColumn(name = "userRoleId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "userRolePermissionId", referencedColumnName = "id", nullable = false)})
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<UserRolePermission> userRolePermissions;
 
     public UserRole() {
     }

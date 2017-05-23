@@ -18,8 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,6 +33,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -40,25 +44,28 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "UserEventLog")
+@XmlRootElement
 public class UserEventLog implements Serializable {
 
     private static final long serialVersionUID = -476214440962592336L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
+    @Basic(optional = false)
+    @Column(name = "eventDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "eventDate", nullable = false, length = 19)
     private Date eventDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "eventTypeId", nullable = false)
+    @JoinColumn(name = "eventTypeId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private EventType eventType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userAccountId", nullable = false)
+    @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private UserAccount userAccount;
 
     public UserEventLog() {
@@ -86,20 +93,22 @@ public class UserEventLog implements Serializable {
         this.eventDate = eventDate;
     }
 
-    public EventType getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(EventType eventType) {
-        this.eventType = eventType;
-    }
-
+    @XmlTransient
+    @JsonIgnore
     public UserAccount getUserAccount() {
         return userAccount;
     }
 
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
+    }
+
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
     }
 
 }

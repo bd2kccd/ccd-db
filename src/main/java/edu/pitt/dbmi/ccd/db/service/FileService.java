@@ -119,7 +119,7 @@ public class FileService {
             fileEntity = new File();
             fileEntity.setCreationTime(creationTime);
             fileEntity.setFileSize(fileSize);
-            fileEntity.setMd5checkSum(md5checkSum);
+            fileEntity.setMd5CheckSum(md5checkSum);
             fileEntity.setName(name);
             fileEntity.setTitle(name);
             fileEntity.setUserAccount(userAccount);

@@ -21,9 +21,7 @@ package edu.pitt.dbmi.ccd.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import javax.persistence.CascadeType;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,13 +30,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -53,50 +48,42 @@ import javax.xml.bind.annotation.XmlTransient;
     @UniqueConstraint(columnNames = {"name", "userAccountId"})
     , @UniqueConstraint(columnNames = {"title", "userAccountId"})})
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class File implements Serializable {
 
     private static final long serialVersionUID = -3475479909814116370L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Basic(optional = false)
+    @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "title", nullable = false)
+    @Basic(optional = false)
+    @Column(name = "title", nullable = false, length = 255)
     private String title;
 
+    @Basic(optional = false)
+    @Column(name = "creationTime", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "creationTime", nullable = false, length = 19)
     private Date creationTime;
 
+    @Basic(optional = false)
     @Column(name = "fileSize", nullable = false)
     private long fileSize;
 
     @Column(name = "md5CheckSum", length = 32)
-    private String md5checkSum;
+    private String md5CheckSum;
 
+    @JoinColumn(name = "fileFormatId", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fileFormatId")
     private FileFormat fileFormat;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
-    @XmlTransient
-    @JsonIgnore
-    private List<TetradVariableFile> tetradVariableFiles = new LinkedList<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
-    @XmlTransient
-    @JsonIgnore
-    private List<TetradDataFile> tetradDataFiles = new LinkedList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userAccountId", nullable = false)
-    @XmlTransient
-    @JsonIgnore
+    @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private UserAccount userAccount;
 
     public File() {
@@ -107,17 +94,6 @@ public class File implements Serializable {
         this.title = title;
         this.creationTime = creationTime;
         this.fileSize = fileSize;
-        this.userAccount = userAccount;
-    }
-
-    public File(Long id, String name, String title, Date creationTime, long fileSize, String md5checkSum, FileFormat fileFormat, UserAccount userAccount) {
-        this.id = id;
-        this.name = name;
-        this.title = title;
-        this.creationTime = creationTime;
-        this.fileSize = fileSize;
-        this.md5checkSum = md5checkSum;
-        this.fileFormat = fileFormat;
         this.userAccount = userAccount;
     }
 
@@ -161,14 +137,16 @@ public class File implements Serializable {
         this.fileSize = fileSize;
     }
 
-    public String getMd5checkSum() {
-        return md5checkSum;
+    public String getMd5CheckSum() {
+        return md5CheckSum;
     }
 
-    public void setMd5checkSum(String md5checkSum) {
-        this.md5checkSum = md5checkSum;
+    public void setMd5CheckSum(String md5CheckSum) {
+        this.md5CheckSum = md5CheckSum;
     }
 
+    @XmlTransient
+    @JsonIgnore
     public FileFormat getFileFormat() {
         return fileFormat;
     }
@@ -177,22 +155,8 @@ public class File implements Serializable {
         this.fileFormat = fileFormat;
     }
 
-    public List<TetradVariableFile> getTetradVariableFiles() {
-        return tetradVariableFiles;
-    }
-
-    public void setTetradVariableFiles(List<TetradVariableFile> tetradVariableFiles) {
-        this.tetradVariableFiles = tetradVariableFiles;
-    }
-
-    public List<TetradDataFile> getTetradDataFiles() {
-        return tetradDataFiles;
-    }
-
-    public void setTetradDataFiles(List<TetradDataFile> tetradDataFiles) {
-        this.tetradDataFiles = tetradDataFiles;
-    }
-
+    @XmlTransient
+    @JsonIgnore
     public UserAccount getUserAccount() {
         return userAccount;
     }

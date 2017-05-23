@@ -19,6 +19,7 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,8 +27,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -37,25 +36,28 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "AlgorithmType", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table(name = "AlgorithmType", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name"})})
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class AlgorithmType implements Serializable {
 
     private static final long serialVersionUID = -5737496375252903506L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", unique = true, nullable = false, length = 32)
+    @Basic(optional = false)
+    @Column(name = "name", nullable = false, length = 32)
     private String name;
 
+    @Basic(optional = false)
     @Column(name = "displayName", nullable = false, length = 64)
     private String displayName;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 255)
     private String description;
 
     public AlgorithmType() {

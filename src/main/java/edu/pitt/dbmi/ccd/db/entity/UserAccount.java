@@ -21,8 +21,8 @@ package edu.pitt.dbmi.ccd.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,13 +32,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -50,65 +48,65 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "UserAccount", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "username")
-    , @UniqueConstraint(columnNames = "account")})
+    @UniqueConstraint(columnNames = {"userLoginId"})
+    , @UniqueConstraint(columnNames = {"userInfoId"})
+    , @UniqueConstraint(columnNames = {"username"})
+    , @UniqueConstraint(columnNames = {"account"})})
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class UserAccount implements Serializable {
 
     private static final long serialVersionUID = -3343178943873392333L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "username", unique = true, nullable = false)
+    @Basic(optional = false)
+    @Column(name = "username", nullable = false, length = 255)
     private String username;
 
-    @Column(name = "password", nullable = false)
-    @XmlTransient
-    @JsonIgnore
+    @Basic(optional = false)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
 
-    @Column(name = "account", unique = true, nullable = false)
+    @Basic(optional = false)
+    @Column(name = "account", nullable = false, length = 255)
     private String account;
 
+    @Basic(optional = false)
     @Column(name = "activated", nullable = false)
     private boolean activated;
 
+    @Basic(optional = false)
     @Column(name = "disabled", nullable = false)
     private boolean disabled;
 
+    @Basic(optional = false)
+    @Column(name = "registrationDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "registrationDate", nullable = false, length = 19)
     private Date registrationDate;
 
     @Column(name = "registrationLocation")
     private Long registrationLocation;
 
-    @Column(name = "actionKey")
+    @Column(name = "actionKey", length = 255)
     private String actionKey;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userInfoId", nullable = false)
-    @XmlTransient
-    @JsonIgnore
+    @JoinColumn(name = "userInfoId", referencedColumnName = "id", nullable = false)
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
     private UserInfo userInfo;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userLoginId", nullable = false)
-    @XmlTransient
-    @JsonIgnore
+    @JoinColumn(name = "userLoginId", referencedColumnName = "id", nullable = false)
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
     private UserLogin userLogin;
 
-    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
-        @JoinColumn(name = "userAccountId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userRoleId", nullable = false, updatable = false)})
-    @XmlTransient
-    @JsonIgnore
-    private List<UserRole> userRoles = new LinkedList<>();
+        @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "userRoleId", referencedColumnName = "id", nullable = false)})
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<UserRole> userRoles;
 
     public UserAccount() {
     }
@@ -122,20 +120,6 @@ public class UserAccount implements Serializable {
         this.registrationDate = registrationDate;
         this.userInfo = userInfo;
         this.userLogin = userLogin;
-    }
-
-    public UserAccount(String username, String password, String account, boolean activated, boolean disabled, Date registrationDate, Long registrationLocation, String actionKey, UserInfo userInfo, UserLogin userLogin, List<UserRole> userRoles) {
-        this.username = username;
-        this.password = password;
-        this.account = account;
-        this.activated = activated;
-        this.disabled = disabled;
-        this.registrationDate = registrationDate;
-        this.registrationLocation = registrationLocation;
-        this.actionKey = actionKey;
-        this.userInfo = userInfo;
-        this.userLogin = userLogin;
-        this.userRoles = userRoles;
     }
 
     public Long getId() {
@@ -154,6 +138,8 @@ public class UserAccount implements Serializable {
         this.username = username;
     }
 
+    @XmlTransient
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -210,6 +196,18 @@ public class UserAccount implements Serializable {
         this.actionKey = actionKey;
     }
 
+    @XmlTransient
+    @JsonIgnore
+    public List<UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(List<UserRole> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    @XmlTransient
+    @JsonIgnore
     public UserInfo getUserInfo() {
         return userInfo;
     }
@@ -218,20 +216,14 @@ public class UserAccount implements Serializable {
         this.userInfo = userInfo;
     }
 
+    @XmlTransient
+    @JsonIgnore
     public UserLogin getUserLogin() {
         return userLogin;
     }
 
     public void setUserLogin(UserLogin userLogin) {
         this.userLogin = userLogin;
-    }
-
-    public List<UserRole> getUserRoles() {
-        return userRoles;
-    }
-
-    public void setUserRoles(List<UserRole> userRoles) {
-        this.userRoles = userRoles;
     }
 
 }
