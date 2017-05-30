@@ -45,6 +45,7 @@ public class VariableTypeService {
         if (variableTypes.isEmpty()) {
             variableTypes.add(new VariableType("continuous"));
             variableTypes.add(new VariableType("discrete"));
+            variableTypes.add(new VariableType("mixed"));
 
             variableTypeRepository.save(variableTypes);
         }
