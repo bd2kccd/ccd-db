@@ -32,23 +32,6 @@ CREATE TABLE `access` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `algorithm`
---
-
-DROP TABLE IF EXISTS `algorithm`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `algorithm` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
-  `display_name` varchar(64) NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `algorithm_run_log`
 --
 
@@ -60,13 +43,9 @@ CREATE TABLE `algorithm_run_log` (
   `algo_parameter` text NOT NULL,
   `data_file_summary` text NOT NULL,
   `submit_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `algorithm_id` bigint(20) NOT NULL,
-  `user_account_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `algorithm_type_id` (`algorithm_id`),
-  KEY `user_account_id` (`user_account_id`),
-  CONSTRAINT `algorithm_run_log_ibfk_1` FOREIGN KEY (`algorithm_id`) REFERENCES `algorithm` (`id`),
-  CONSTRAINT `algorithm_run_log_ibfk_2` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`)
+  `algorithm` varchar(64) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -750,4 +729,4 @@ CREATE TABLE `vocabulary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-31 15:16:18
+-- Dump completed on 2017-06-01 15:33:11

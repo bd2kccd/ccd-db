@@ -20,10 +20,7 @@ package edu.pitt.dbmi.ccd.db.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.pitt.dbmi.ccd.db.entity.Algorithm;
 import edu.pitt.dbmi.ccd.db.entity.AlgorithmRunLog;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.repository.AlgorithmRepository;
 import edu.pitt.dbmi.ccd.db.repository.AlgorithmRunLogRepository;
 import java.util.Date;
 import java.util.Map;
@@ -40,32 +37,26 @@ import org.springframework.stereotype.Service;
 public class AlgorithmRunLogService {
 
     private final AlgorithmRunLogRepository algorithmRunLogRepository;
-    private final AlgorithmRepository algorithmRepository;
 
     @Autowired
-    public AlgorithmRunLogService(AlgorithmRunLogRepository algorithmRunLogRepository, AlgorithmRepository algorithmRepository) {
+    public AlgorithmRunLogService(AlgorithmRunLogRepository algorithmRunLogRepository) {
         this.algorithmRunLogRepository = algorithmRunLogRepository;
-        this.algorithmRepository = algorithmRepository;
     }
 
-    public AlgorithmRunLog logAlgorithmRun(String algorithmName, Map<String, String> parameters, Map<String, String> fileSummary, UserAccount userAccount) {
-        return logAlgorithmRun(parameters, fileSummary, algorithmRepository.findByName(algorithmName), userAccount);
+    public AlgorithmRunLogRepository getAlgorithmRunLogRepository() {
+        return algorithmRunLogRepository;
     }
 
-    private AlgorithmRunLog logAlgorithmRun(Map<String, String> parameters, Map<String, String> fileSummary, Algorithm algorithm, UserAccount userAccount) {
+    public AlgorithmRunLog logAlgorithmRun(Map<String, String> parameters, Map<String, String> fileSummary, String algorithm, String username) {
         try {
             String algoParameter = new ObjectMapper().writeValueAsString(parameters);
             String dataFileSummary = new ObjectMapper().writeValueAsString(fileSummary);
             Date submitDate = new Date(System.currentTimeMillis());
 
-            return algorithmRunLogRepository.save(new AlgorithmRunLog(algoParameter, dataFileSummary, submitDate, algorithm, userAccount));
+            return algorithmRunLogRepository.save(new AlgorithmRunLog(algoParameter, dataFileSummary, submitDate, algorithm, username));
         } catch (JsonProcessingException exception) {
             return null;
         }
-    }
-
-    public AlgorithmRunLogRepository getAlgorithmRunLogRepository() {
-        return algorithmRunLogRepository;
     }
 
 }

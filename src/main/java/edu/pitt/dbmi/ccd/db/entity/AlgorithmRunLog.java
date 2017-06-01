@@ -22,12 +22,9 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -59,23 +56,21 @@ public class AlgorithmRunLog implements Serializable {
     @Column(name = "submit_date", nullable = false, length = 19)
     private Date submitDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "algorithm_type_id", nullable = false)
-    private Algorithm algorithm;
+    @Column(name = "algorithm", nullable = false, length = 64)
+    private String algorithm;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_account_id", nullable = false)
-    private UserAccount userAccount;
+    @Column(name = "username", nullable = false)
+    private String username;
 
     public AlgorithmRunLog() {
     }
 
-    public AlgorithmRunLog(String algoParameter, String dataFileSummary, Date submitDate, Algorithm algorithm, UserAccount userAccount) {
-        this.algorithm = algorithm;
-        this.userAccount = userAccount;
+    public AlgorithmRunLog(String algoParameter, String dataFileSummary, Date submitDate, String algorithm, String username) {
         this.algoParameter = algoParameter;
         this.dataFileSummary = dataFileSummary;
         this.submitDate = submitDate;
+        this.algorithm = algorithm;
+        this.username = username;
     }
 
     public Long getId() {
@@ -84,22 +79,6 @@ public class AlgorithmRunLog implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Algorithm getAlgorithm() {
-        return algorithm;
-    }
-
-    public void setAlgorithm(Algorithm algorithm) {
-        this.algorithm = algorithm;
-    }
-
-    public UserAccount getUserAccount() {
-        return userAccount;
-    }
-
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
     }
 
     public String getAlgoParameter() {
@@ -124,6 +103,22 @@ public class AlgorithmRunLog implements Serializable {
 
     public void setSubmitDate(Date submitDate) {
         this.submitDate = submitDate;
+    }
+
+    public String getAlgorithm() {
+        return algorithm;
+    }
+
+    public void setAlgorithm(String algorithm) {
+        this.algorithm = algorithm;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
 }
