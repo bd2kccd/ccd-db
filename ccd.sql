@@ -1,8 +1,8 @@
--- MySQL dump 10.14  Distrib 5.5.50-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.1.21-MariaDB, for Linux (x86_64)
 --
--- Host: localhost    Database: ccd
+-- Host: localhost    Database: localhost
 -- ------------------------------------------------------
--- Server version	5.5.50-MariaDB
+-- Server version	10.1.21-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -32,6 +32,24 @@ CREATE TABLE `access` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `algorithm_run_log`
+--
+
+DROP TABLE IF EXISTS `algorithm_run_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `algorithm_run_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `algo_parameter` text NOT NULL,
+  `data_file_summary` text NOT NULL,
+  `submit_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `algorithm` varchar(64) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `annotation`
 --
 
@@ -57,7 +75,6 @@ CREATE TABLE `annotation` (
   KEY `FK40i7hlc7ffuyi1wffgi8f1iwq` (`target_id`),
   KEY `FKr1rh2xf8gdegogsdgpbbgijhy` (`user_account_id`),
   KEY `FKe2ic87fdomv1ewxcxxhca8csv` (`vocabulary_id`),
-  CONSTRAINT `FKe2ic87fdomv1ewxcxxhca8csv` FOREIGN KEY (`vocabulary_id`) REFERENCES `vocabulary` (`id`),
   CONSTRAINT `FK1y9h92iq0qrw2yadmtmakp78e` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `FK3xq2f4xjwxiwy9alkteahn0k0` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `FK40i7hlc7ffuyi1wffgi8f1iwq` FOREIGN KEY (`target_id`) REFERENCES `annotation_target` (`id`),
@@ -66,10 +83,11 @@ CREATE TABLE `annotation` (
   CONSTRAINT `FK884denh8ypoony2uvt1mj7lq1` FOREIGN KEY (`target_id`) REFERENCES `annotation_target` (`id`),
   CONSTRAINT `FKb3mdi2xxf8j13m5aw71ym0mea` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FKbrfrcxhos88op0ejuka8cnml0` FOREIGN KEY (`access_control`) REFERENCES `access` (`id`),
+  CONSTRAINT `FKe2ic87fdomv1ewxcxxhca8csv` FOREIGN KEY (`vocabulary_id`) REFERENCES `vocabulary` (`id`),
   CONSTRAINT `FKeevem0531ery9wxqh2chqel73` FOREIGN KEY (`parent_id`) REFERENCES `annotation` (`id`),
   CONSTRAINT `FKr1rh2xf8gdegogsdgpbbgijhy` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FKs4b4by304sbmamn6qs5i6vrmt` FOREIGN KEY (`access_control`) REFERENCES `access` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -92,13 +110,13 @@ CREATE TABLE `annotation_data` (
   KEY `FKmot5xx4bmk6wcqtl6v6y22q7g` (`annotation_id`),
   KEY `FKfqf14sbvddt3oelteros106sw` (`attribute_id`),
   KEY `FKg1o75oc8vwfm856uy13xrfewl` (`parent_id`),
-  CONSTRAINT `FKg1o75oc8vwfm856uy13xrfewl` FOREIGN KEY (`parent_id`) REFERENCES `annotation_data` (`id`),
   CONSTRAINT `FKfqf14sbvddt3oelteros106sw` FOREIGN KEY (`attribute_id`) REFERENCES `attribute` (`id`),
+  CONSTRAINT `FKg1o75oc8vwfm856uy13xrfewl` FOREIGN KEY (`parent_id`) REFERENCES `annotation_data` (`id`),
   CONSTRAINT `FKlanbkmouhoad9jejdvg6gdvn` FOREIGN KEY (`attribute_id`) REFERENCES `attribute` (`id`),
   CONSTRAINT `FKlgu8e5h5vuwp6mjw4utcy19ls` FOREIGN KEY (`annotation_id`) REFERENCES `annotation` (`id`),
   CONSTRAINT `FKmot5xx4bmk6wcqtl6v6y22q7g` FOREIGN KEY (`annotation_id`) REFERENCES `annotation` (`id`),
   CONSTRAINT `FKpeinv3iong1ueh84tfgjbdnxa` FOREIGN KEY (`parent_id`) REFERENCES `annotation_data` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,11 +138,11 @@ CREATE TABLE `annotation_target` (
   PRIMARY KEY (`id`),
   KEY `FK5hytknmeg31j8j489f6e10c5q` (`file_id`),
   KEY `FKp9l7v6r1n70lad6dos63mbu9` (`user_account_id`),
-  CONSTRAINT `FKp9l7v6r1n70lad6dos63mbu9` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FK5hytknmeg31j8j489f6e10c5q` FOREIGN KEY (`file_id`) REFERENCES `data_file` (`id`),
   CONSTRAINT `FKl8xrncvaasts8j7pdil68gd4a` FOREIGN KEY (`file_id`) REFERENCES `data_file` (`id`),
+  CONSTRAINT `FKp9l7v6r1n70lad6dos63mbu9` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FKpunef7srnfse8h9r4f05wc2hu` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,8 +157,8 @@ CREATE TABLE `annotation_target_references` (
   `target_id` bigint(20) NOT NULL,
   PRIMARY KEY (`annotation_id`,`target_id`),
   KEY `FK2xsx8gccnq5j548st8nrclht4` (`target_id`),
-  CONSTRAINT `FKa6eblpw5i1bp26kwivdk8hm6x` FOREIGN KEY (`annotation_id`) REFERENCES `annotation` (`id`),
   CONSTRAINT `FK2xsx8gccnq5j548st8nrclht4` FOREIGN KEY (`target_id`) REFERENCES `annotation_target` (`id`),
+  CONSTRAINT `FKa6eblpw5i1bp26kwivdk8hm6x` FOREIGN KEY (`annotation_id`) REFERENCES `annotation` (`id`),
   CONSTRAINT `FKaa1fy5rktvlvxn31d03t4r3jl` FOREIGN KEY (`target_id`) REFERENCES `annotation_target` (`id`),
   CONSTRAINT `FKgrlb0hkuadam1sfbbo3u8b97w` FOREIGN KEY (`annotation_id`) REFERENCES `annotation` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -164,10 +182,10 @@ CREATE TABLE `attribute` (
   UNIQUE KEY `UKiryxtpxtp7od24fev3naal2f1` (`vocabulary_id`,`level`,`name`),
   UNIQUE KEY `UKe7xx27l7sww6bqh0srflqup5t` (`vocabulary_id`,`level`,`name`),
   KEY `FKl5lfwq9rcdl0939jiqnufh6em` (`parent`),
-  CONSTRAINT `FKxxinw7chwgsuu5vr1n84w52l` FOREIGN KEY (`vocabulary_id`) REFERENCES `vocabulary` (`id`),
   CONSTRAINT `FK13e3fkhxh9ggxdk9h5xidr49b` FOREIGN KEY (`parent`) REFERENCES `attribute` (`id`),
   CONSTRAINT `FK1gnidyaix9e9pe56e64dtv1k` FOREIGN KEY (`vocabulary_id`) REFERENCES `vocabulary` (`id`),
-  CONSTRAINT `FKl5lfwq9rcdl0939jiqnufh6em` FOREIGN KEY (`parent`) REFERENCES `attribute` (`id`)
+  CONSTRAINT `FKl5lfwq9rcdl0939jiqnufh6em` FOREIGN KEY (`parent`) REFERENCES `attribute` (`id`),
+  CONSTRAINT `FKxxinw7chwgsuu5vr1n84w52l` FOREIGN KEY (`vocabulary_id`) REFERENCES `vocabulary` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -189,9 +207,9 @@ CREATE TABLE `data_file` (
   PRIMARY KEY (`id`),
   KEY `FK_2dydftu088ia3o9methjobma7` (`data_file_info_id`),
   CONSTRAINT `FK7cpp1nci7gbuvmvtgsyhomk33` FOREIGN KEY (`data_file_info_id`) REFERENCES `data_file_info` (`id`),
-  CONSTRAINT `FKo7elyoef2pjpg56961sd5row` FOREIGN KEY (`data_file_info_id`) REFERENCES `data_file_info` (`id`),
-  CONSTRAINT `FK_2dydftu088ia3o9methjobma7` FOREIGN KEY (`data_file_info_id`) REFERENCES `data_file_info` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=136 DEFAULT CHARSET=utf8;
+  CONSTRAINT `FK_2dydftu088ia3o9methjobma7` FOREIGN KEY (`data_file_info_id`) REFERENCES `data_file_info` (`id`),
+  CONSTRAINT `FKo7elyoef2pjpg56961sd5row` FOREIGN KEY (`data_file_info_id`) REFERENCES `data_file_info` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=231 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -212,13 +230,13 @@ CREATE TABLE `data_file_info` (
   PRIMARY KEY (`id`),
   KEY `FK_8h5y84s2x6y7j93hdppd9gqym` (`file_delimiter_id`),
   KEY `FK_5786k6x3wkj4ilkmuvd81i1m4` (`variable_type_id`),
+  CONSTRAINT `FK_5786k6x3wkj4ilkmuvd81i1m4` FOREIGN KEY (`variable_type_id`) REFERENCES `variable_type` (`id`),
+  CONSTRAINT `FK_8h5y84s2x6y7j93hdppd9gqym` FOREIGN KEY (`file_delimiter_id`) REFERENCES `file_delimiter` (`id`),
   CONSTRAINT `FKamof6wsr21aoap2c7rmx37cb8` FOREIGN KEY (`variable_type_id`) REFERENCES `variable_type` (`id`),
   CONSTRAINT `FKcgamu10jkre36qhe1d1mlgw56` FOREIGN KEY (`variable_type_id`) REFERENCES `variable_type` (`id`),
   CONSTRAINT `FKfisrujwmo8y9wopsqtyavm9oe` FOREIGN KEY (`file_delimiter_id`) REFERENCES `file_delimiter` (`id`),
-  CONSTRAINT `FKno9jvpnmu6ly8cmtiy9aapo2r` FOREIGN KEY (`file_delimiter_id`) REFERENCES `file_delimiter` (`id`),
-  CONSTRAINT `FK_5786k6x3wkj4ilkmuvd81i1m4` FOREIGN KEY (`variable_type_id`) REFERENCES `variable_type` (`id`),
-  CONSTRAINT `FK_8h5y84s2x6y7j93hdppd9gqym` FOREIGN KEY (`file_delimiter_id`) REFERENCES `file_delimiter` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=136 DEFAULT CHARSET=utf8;
+  CONSTRAINT `FKno9jvpnmu6ly8cmtiy9aapo2r` FOREIGN KEY (`file_delimiter_id`) REFERENCES `file_delimiter` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=231 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -249,9 +267,9 @@ CREATE TABLE `group_membership` (
   `user_account_id` bigint(20) NOT NULL,
   PRIMARY KEY (`group_id`,`user_account_id`),
   KEY `FKiuw6bomtdbp27o1i9cf12ihal` (`user_account_id`),
-  CONSTRAINT `FKous4cdsopr1qhhiowr9qbrhrr` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `FK12knve1s81p9bvamf27ydolvq` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FKiuw6bomtdbp27o1i9cf12ihal` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
+  CONSTRAINT `FKous4cdsopr1qhhiowr9qbrhrr` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `FKsc4ykyti548dy9kso0bd3hxf` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -268,8 +286,8 @@ CREATE TABLE `group_moderation` (
   `user_account_id` bigint(20) NOT NULL,
   PRIMARY KEY (`group_id`,`user_account_id`),
   KEY `FK91wm2bpk34dq92tpfrt9mhtx7` (`user_account_id`),
-  CONSTRAINT `FKfej00eff6o1m4a9e9jf9bqx6j` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `FK91wm2bpk34dq92tpfrt9mhtx7` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
+  CONSTRAINT `FKfej00eff6o1m4a9e9jf9bqx6j` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `FKmsvgp4sklpg3nut7f3dsku5nv` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FKsys1x9ovlamb81hlsj27n1fbf` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -287,10 +305,10 @@ CREATE TABLE `group_requests` (
   `user_account_id` bigint(20) NOT NULL,
   PRIMARY KEY (`group_id`,`user_account_id`),
   KEY `FK40yj50o0udhyyf3l89fa0h9sp` (`user_account_id`),
-  CONSTRAINT `FKinehq2ar2fympuj5uxl2lv0bj` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
   CONSTRAINT `FK3udrg4njg5nsojhnuumis72d7` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FK40yj50o0udhyyf3l89fa0h9sp` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
-  CONSTRAINT `FK8s9bpf7y2rroo0eac14xsxjsi` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
+  CONSTRAINT `FK8s9bpf7y2rroo0eac14xsxjsi` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
+  CONSTRAINT `FKinehq2ar2fympuj5uxl2lv0bj` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -311,6 +329,38 @@ CREATE TABLE `groups` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `hpc_parameter`
+--
+
+DROP TABLE IF EXISTS `hpc_parameter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hpc_parameter` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `parameter_key` varchar(255) NOT NULL,
+  `parameter_value` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `hpc_parameter_job_queue_info_rel`
+--
+
+DROP TABLE IF EXISTS `hpc_parameter_job_queue_info_rel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hpc_parameter_job_queue_info_rel` (
+  `job_queue_info_id` bigint(20) NOT NULL,
+  `hpc_parameter_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`job_queue_info_id`,`hpc_parameter_id`),
+  KEY `FKls7w1cq4xd637u4ms74rvg9l9` (`hpc_parameter_id`),
+  CONSTRAINT `FKls7w1cq4xd637u4ms74rvg9l9` FOREIGN KEY (`hpc_parameter_id`) REFERENCES `hpc_parameter` (`id`),
+  CONSTRAINT `FKs00obm77h5wigaeshx1nim53s` FOREIGN KEY (`job_queue_info_id`) REFERENCES `job_queue_info` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `job_queue_info`
 --
 
@@ -328,7 +378,7 @@ CREATE TABLE `job_queue_info` (
   `status` int(11) NOT NULL,
   `tmp_directory` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=172 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -436,7 +486,7 @@ CREATE TABLE `person` (
   `workspace` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_fwmwi44u55bo4rvwsv0cln012` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -468,8 +518,8 @@ CREATE TABLE `security_answer` (
   PRIMARY KEY (`id`),
   KEY `FK_bbyqis9yossit5dsetsjrus9h` (`security_question_id`),
   CONSTRAINT `FK482px3ssoy4xx5spku09ilw6g` FOREIGN KEY (`security_question_id`) REFERENCES `security_question` (`id`),
-  CONSTRAINT `FKsj66ipd0qcy3n5ipxtcmg6s4n` FOREIGN KEY (`security_question_id`) REFERENCES `security_question` (`id`),
-  CONSTRAINT `FK_bbyqis9yossit5dsetsjrus9h` FOREIGN KEY (`security_question_id`) REFERENCES `security_question` (`id`)
+  CONSTRAINT `FK_bbyqis9yossit5dsetsjrus9h` FOREIGN KEY (`security_question_id`) REFERENCES `security_question` (`id`),
+  CONSTRAINT `FKsj66ipd0qcy3n5ipxtcmg6s4n` FOREIGN KEY (`security_question_id`) REFERENCES `security_question` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -510,9 +560,9 @@ CREATE TABLE `user_account` (
   UNIQUE KEY `UK_castjbvpeeus0r8lbpehiu0e4` (`username`),
   KEY `FK_fqfn7sv6xx80uqwsmnal0tipj` (`person_id`),
   CONSTRAINT `FK9cxlqfb4vfj6538slq1qxns4h` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
-  CONSTRAINT `FKk0g4j0im93123k70l6c3cf0qd` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
-  CONSTRAINT `FK_fqfn7sv6xx80uqwsmnal0tipj` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
+  CONSTRAINT `FK_fqfn7sv6xx80uqwsmnal0tipj` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
+  CONSTRAINT `FKk0g4j0im93123k70l6c3cf0qd` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -527,12 +577,12 @@ CREATE TABLE `user_account_data_file_rel` (
   `user_account_id` bigint(20) NOT NULL,
   PRIMARY KEY (`user_account_id`,`data_file_id`),
   KEY `FK_r1tl1yq9ki07ud755fcuamx5e` (`data_file_id`),
-  CONSTRAINT `FK64fujs02t8ejsit9x8xpr9qvr` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FK2d8vch8093x9iwi7hrkml8qj6` FOREIGN KEY (`data_file_id`) REFERENCES `data_file` (`id`),
   CONSTRAINT `FK5juecfmhyccmti70fmnv9a3mn` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
-  CONSTRAINT `FKfx137y43kqp4wsnfnwf4qw69w` FOREIGN KEY (`data_file_id`) REFERENCES `data_file` (`id`),
+  CONSTRAINT `FK64fujs02t8ejsit9x8xpr9qvr` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FK_hwqveygcmuswlbyjdt0vr2s0g` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
-  CONSTRAINT `FK_r1tl1yq9ki07ud755fcuamx5e` FOREIGN KEY (`data_file_id`) REFERENCES `data_file` (`id`)
+  CONSTRAINT `FK_r1tl1yq9ki07ud755fcuamx5e` FOREIGN KEY (`data_file_id`) REFERENCES `data_file` (`id`),
+  CONSTRAINT `FKfx137y43kqp4wsnfnwf4qw69w` FOREIGN KEY (`data_file_id`) REFERENCES `data_file` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -550,10 +600,10 @@ CREATE TABLE `user_account_job_queue_info_rel` (
   KEY `FK_s1mvwws3a418t7vqys6ssp2wd` (`job_queue_info_id`),
   CONSTRAINT `FK3lj4p82tg37f3gb60eisrtyai` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FK5mdlmkmgg44rw5sn2gxqsfwkd` FOREIGN KEY (`job_queue_info_id`) REFERENCES `job_queue_info` (`id`),
-  CONSTRAINT `FKkj4jcrv3dpnr4xnxqf31gke5p` FOREIGN KEY (`job_queue_info_id`) REFERENCES `job_queue_info` (`id`),
-  CONSTRAINT `FKr6jkjs5cyvcs58fvlkqhkesjm` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FK_43ig88gg8un0fr2hj8e61db8f` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
-  CONSTRAINT `FK_s1mvwws3a418t7vqys6ssp2wd` FOREIGN KEY (`job_queue_info_id`) REFERENCES `job_queue_info` (`id`)
+  CONSTRAINT `FK_s1mvwws3a418t7vqys6ssp2wd` FOREIGN KEY (`job_queue_info_id`) REFERENCES `job_queue_info` (`id`),
+  CONSTRAINT `FKkj4jcrv3dpnr4xnxqf31gke5p` FOREIGN KEY (`job_queue_info_id`) REFERENCES `job_queue_info` (`id`),
+  CONSTRAINT `FKr6jkjs5cyvcs58fvlkqhkesjm` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -569,12 +619,12 @@ CREATE TABLE `user_account_security_answer_rel` (
   `user_account_id` bigint(20) NOT NULL,
   PRIMARY KEY (`user_account_id`,`security_answer_id`),
   KEY `FK_m8nsa9d7q06br6j6wo9aua5en` (`security_answer_id`),
-  CONSTRAINT `FK8hitcpaqhn65n0knuvykcmm55` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FK21x52yydij0htm4i7usfmap6w` FOREIGN KEY (`security_answer_id`) REFERENCES `security_answer` (`id`),
-  CONSTRAINT `FKe5w5iumph4g4rn2yn3d9vrp3m` FOREIGN KEY (`security_answer_id`) REFERENCES `security_answer` (`id`),
-  CONSTRAINT `FKq06i69k6pmfs28oa94js0yqys` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
+  CONSTRAINT `FK8hitcpaqhn65n0knuvykcmm55` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FK_97sjkenl8kap42mpwb7irtvrd` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
-  CONSTRAINT `FK_m8nsa9d7q06br6j6wo9aua5en` FOREIGN KEY (`security_answer_id`) REFERENCES `security_answer` (`id`)
+  CONSTRAINT `FK_m8nsa9d7q06br6j6wo9aua5en` FOREIGN KEY (`security_answer_id`) REFERENCES `security_answer` (`id`),
+  CONSTRAINT `FKe5w5iumph4g4rn2yn3d9vrp3m` FOREIGN KEY (`security_answer_id`) REFERENCES `security_answer` (`id`),
+  CONSTRAINT `FKq06i69k6pmfs28oa94js0yqys` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -590,12 +640,12 @@ CREATE TABLE `user_account_user_role_rel` (
   `user_account_id` bigint(20) NOT NULL,
   PRIMARY KEY (`user_account_id`,`user_role_id`),
   KEY `FK_ekal95wjiy0vo3oxgbtqxbil8` (`user_role_id`),
-  CONSTRAINT `FKtbv12te6qh9fyxilkq5n41kid` FOREIGN KEY (`user_role_id`) REFERENCES `user_role` (`id`),
   CONSTRAINT `FK3pnv8t6omww5p20aft8en2d9j` FOREIGN KEY (`user_role_id`) REFERENCES `user_role` (`id`),
+  CONSTRAINT `FK_ekal95wjiy0vo3oxgbtqxbil8` FOREIGN KEY (`user_role_id`) REFERENCES `user_role` (`id`),
+  CONSTRAINT `FK_gd32yxj7i2v2x33ers880ow91` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FKkiq6221axiynoc060trg5759` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
   CONSTRAINT `FKo67553d5kq825vuhtqgj9bnfh` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`),
-  CONSTRAINT `FK_ekal95wjiy0vo3oxgbtqxbil8` FOREIGN KEY (`user_role_id`) REFERENCES `user_role` (`id`),
-  CONSTRAINT `FK_gd32yxj7i2v2x33ers880ow91` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`id`)
+  CONSTRAINT `FKtbv12te6qh9fyxilkq5n41kid` FOREIGN KEY (`user_role_id`) REFERENCES `user_role` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -626,12 +676,12 @@ CREATE TABLE `user_role_role_permission_rel` (
   `role_permission_id` bigint(20) NOT NULL,
   PRIMARY KEY (`role_permission_id`,`user_role_id`),
   KEY `FK_pttd5226iumddrnuiy7re78o` (`user_role_id`),
-  CONSTRAINT `FKhsh46qbwwwuylqh05hl87e74u` FOREIGN KEY (`user_role_id`) REFERENCES `user_role` (`id`),
   CONSTRAINT `FK8d407pweghl1ayu0cvm5hgare` FOREIGN KEY (`user_role_id`) REFERENCES `user_role` (`id`),
-  CONSTRAINT `FKhyf6yf30nu062dqarr0jargiy` FOREIGN KEY (`role_permission_id`) REFERENCES `role_permission` (`id`),
-  CONSTRAINT `FKlk36a3mum2tpj1b92ts5bp451` FOREIGN KEY (`role_permission_id`) REFERENCES `role_permission` (`id`),
   CONSTRAINT `FK_lkjcutj9iwjus01c6ktv2xs7o` FOREIGN KEY (`role_permission_id`) REFERENCES `role_permission` (`id`),
-  CONSTRAINT `FK_pttd5226iumddrnuiy7re78o` FOREIGN KEY (`user_role_id`) REFERENCES `user_role` (`id`)
+  CONSTRAINT `FK_pttd5226iumddrnuiy7re78o` FOREIGN KEY (`user_role_id`) REFERENCES `user_role` (`id`),
+  CONSTRAINT `FKhsh46qbwwwuylqh05hl87e74u` FOREIGN KEY (`user_role_id`) REFERENCES `user_role` (`id`),
+  CONSTRAINT `FKhyf6yf30nu062dqarr0jargiy` FOREIGN KEY (`role_permission_id`) REFERENCES `role_permission` (`id`),
+  CONSTRAINT `FKlk36a3mum2tpj1b92ts5bp451` FOREIGN KEY (`role_permission_id`) REFERENCES `role_permission` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -679,4 +729,4 @@ CREATE TABLE `vocabulary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-14 10:31:37
+-- Dump completed on 2017-06-01 15:33:11
