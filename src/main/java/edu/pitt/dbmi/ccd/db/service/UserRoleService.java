@@ -58,7 +58,7 @@ public class UserRoleService {
         return userRoleRepository.findByName(REGULAR_ROLE_NAME);
     }
 
-    public UserRoleRepository getUserRoleRepository() {
+    public UserRoleRepository getRepository() {
         return userRoleRepository;
     }
 

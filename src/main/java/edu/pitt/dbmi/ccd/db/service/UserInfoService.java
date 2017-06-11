@@ -38,7 +38,7 @@ public class UserInfoService {
         this.userInfoRepository = userInfoRepository;
     }
 
-    public UserInfoRepository getUserInfoRepository() {
+    public UserInfoRepository getRepository() {
         return userInfoRepository;
     }
 

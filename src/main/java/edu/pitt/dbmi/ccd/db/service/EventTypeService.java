@@ -54,7 +54,7 @@ public class EventTypeService {
         }
     }
 
-    public EventTypeRepository getEventTypeRepository() {
+    public EventTypeRepository getRepository() {
         return eventTypeRepository;
     }
 

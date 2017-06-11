@@ -40,7 +40,7 @@ public class TetradDataFileService {
         this.tetradDataFileRepository = tetradDataFileRepository;
     }
 
-    public TetradDataFileRepository getTetradDataFileRepository() {
+    public TetradDataFileRepository getRepository() {
         return tetradDataFileRepository;
     }
 

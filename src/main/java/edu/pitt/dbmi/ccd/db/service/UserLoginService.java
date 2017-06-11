@@ -38,7 +38,7 @@ public class UserLoginService {
         this.userLoginRepository = userLoginRepository;
     }
 
-    public UserLoginRepository getUserLoginRepository() {
+    public UserLoginRepository getRepository() {
         return userLoginRepository;
     }
 

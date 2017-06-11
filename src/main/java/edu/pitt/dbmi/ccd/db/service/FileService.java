@@ -151,7 +151,7 @@ public class FileService {
         return sb.toString();
     }
 
-    public FileRepository getFileRepository() {
+    public FileRepository getRepository() {
         return fileRepository;
     }
 

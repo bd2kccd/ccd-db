@@ -48,7 +48,7 @@ public class UserRolePermissionService {
         }
     }
 
-    public UserRolePermissionRepository getUserRolePermissionRepository() {
+    public UserRolePermissionRepository getRepository() {
         return userRolePermissionRepository;
     }
 

@@ -117,20 +117,8 @@ public class UserAccountService {
         return userInfo;
     }
 
-    public UserAccountRepository getUserAccountRepository() {
+    public UserAccountRepository getRepository() {
         return userAccountRepository;
-    }
-
-    public UserInfoRepository getUserInfoRepository() {
-        return userInfoRepository;
-    }
-
-    public UserLoginRepository getUserLoginRepository() {
-        return userLoginRepository;
-    }
-
-    public UserRoleService getUserRoleService() {
-        return userRoleService;
     }
 
 }

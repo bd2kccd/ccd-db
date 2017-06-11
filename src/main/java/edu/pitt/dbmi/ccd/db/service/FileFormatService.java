@@ -18,7 +18,11 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.FileFormat;
+import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.repository.FileFormatRepository;
+import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
+import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,13 +48,21 @@ public class FileFormatService {
     public static final String TDI_TXT_RESULT_FMT_NAME = "tdi-txt-result";
 
     private final FileFormatRepository fileFormatRepository;
+    private final FileTypeRepository fileTypeRepository;
 
     @Autowired
-    public FileFormatService(FileFormatRepository fileFormatRepository) {
+    public FileFormatService(FileFormatRepository fileFormatRepository, FileTypeRepository fileTypeRepository) {
         this.fileFormatRepository = fileFormatRepository;
+        this.fileTypeRepository = fileTypeRepository;
     }
 
-    public FileFormatRepository getFileFormatRepository() {
+    public List<FileFormat> findByFileTypeName(String fileTypeName) {
+        FileType fileType = fileTypeRepository.findByName(fileTypeName);
+
+        return fileFormatRepository.findByFileType(fileType);
+    }
+
+    public FileFormatRepository getRepository() {
         return fileFormatRepository;
     }
 

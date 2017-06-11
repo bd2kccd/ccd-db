@@ -60,7 +60,7 @@ public class FileDelimiterTypeService {
         }
     }
 
-    public FileDelimiterTypeRepository getFileDelimiterTypeRepository() {
+    public FileDelimiterTypeRepository getRepository() {
         return fileDelimiterTypeRepository;
     }
 

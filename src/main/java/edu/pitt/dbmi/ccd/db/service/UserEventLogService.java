@@ -47,10 +47,6 @@ public class UserEventLogService {
         this.eventTypeRepository = eventTypeRepository;
     }
 
-    public UserEventLogRepository getUserEventLogRepository() {
-        return userEventLogRepository;
-    }
-
     public UserEventLog logUserLogin(UserAccount userAccount) {
         return LogUserEvent(EventTypeService.USR_LOGIN_NAME, userAccount);
     }
@@ -64,6 +60,10 @@ public class UserEventLogService {
         Date eventDate = new Date(System.currentTimeMillis());
 
         return userEventLogRepository.save(new UserEventLog(eventDate, eventType, userAccount));
+    }
+
+    public UserEventLogRepository getRepository() {
+        return userEventLogRepository;
     }
 
 }

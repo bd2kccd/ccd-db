@@ -40,7 +40,7 @@ public class TetradVariableFileService {
         this.tetradVariableFileRepository = tetradVariableFileRepository;
     }
 
-    public TetradVariableFileRepository getTetradVariableFileRepository() {
+    public TetradVariableFileRepository getRepository() {
         return tetradVariableFileRepository;
     }
 

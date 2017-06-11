@@ -50,7 +50,7 @@ public class FileVariableTypeService {
         }
     }
 
-    public FileVariableTypeRepository getFileVariableTypeRepository() {
+    public FileVariableTypeRepository getRepository() {
         return fileVariableTypeRepository;
     }
 

@@ -34,8 +34,8 @@ import org.springframework.stereotype.Service;
 public class FileTypeService {
 
     public static final String DATA_NAME = "data";
-    public static final String VARIABLE_NAME = "var";
-    public static final String KNOWLEDGE_NAME = "knwl";
+    public static final String VARIABLE_NAME = "variable";
+    public static final String KNOWLEDGE_NAME = "knowledge";
     public static final String RESULT_NAME = "result";
 
     private final FileTypeRepository fileTypeRepository;
@@ -54,7 +54,7 @@ public class FileTypeService {
         }
     }
 
-    public FileTypeRepository getFileTypeRepository() {
+    public FileTypeRepository getRepository() {
         return fileTypeRepository;
     }
 

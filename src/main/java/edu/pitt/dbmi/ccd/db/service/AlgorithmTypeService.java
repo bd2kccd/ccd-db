@@ -52,7 +52,7 @@ public class AlgorithmTypeService {
         }
     }
 
-    public AlgorithmTypeRepository getAlgorithmTypeRepository() {
+    public AlgorithmTypeRepository getRepository() {
         return algorithmTypeRepository;
     }
 

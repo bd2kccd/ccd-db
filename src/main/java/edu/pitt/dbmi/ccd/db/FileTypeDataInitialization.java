@@ -55,15 +55,15 @@ public class FileTypeDataInitialization implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        FileFormatRepository fileFormatRepo = fileFormatService.getFileFormatRepository();
+        FileFormatRepository fileFormatRepo = fileFormatService.getRepository();
         if (fileFormatRepo.findAll().isEmpty()) {
-            FileTypeRepository fileTypeRepo = fileTypeService.getFileTypeRepository();
+            FileTypeRepository fileTypeRepo = fileTypeService.getRepository();
             FileType data = fileTypeRepo.findByName(FileTypeService.DATA_NAME);
             FileType knowledge = fileTypeRepo.findByName(FileTypeService.KNOWLEDGE_NAME);
             FileType result = fileTypeRepo.findByName(FileTypeService.RESULT_NAME);
             FileType variable = fileTypeRepo.findByName(FileTypeService.VARIABLE_NAME);
 
-            AlgorithmTypeRepository algoTypeRepo = algorithmTypeService.getAlgorithmTypeRepository();
+            AlgorithmTypeRepository algoTypeRepo = algorithmTypeService.getRepository();
             AlgorithmType tetrad = algoTypeRepo.findByName(AlgorithmTypeService.TETRAD_ALGO_NAME);
             AlgorithmType tdi = algoTypeRepo.findByName(AlgorithmTypeService.TDI_ALGO_NAME);
 
