@@ -19,6 +19,7 @@
 package edu.pitt.dbmi.ccd.db.service;
 
 import edu.pitt.dbmi.ccd.db.entity.File;
+import edu.pitt.dbmi.ccd.db.entity.FileFormat;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.FileDelimiterTypeRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileFormatRepository;
@@ -66,7 +67,13 @@ public class FileService {
         this.fileVariableTypeRepository = fileVariableTypeRepository;
     }
 
-    public File retrieveFile(Long id, UserAccount userAccount) {
+    public List<File> findByUserAccountAndFileFormatName(String fileFormatName, UserAccount userAccount) {
+        FileFormat fileFormat = fileFormatRepository.findByName(fileFormatName);
+
+        return fileRepository.findByUserAccountAndFileFormat(userAccount, fileFormat);
+    }
+
+    public File findByIdAndUserAccount(Long id, UserAccount userAccount) {
         if (id == null || userAccount == null) {
             return null;
         }
