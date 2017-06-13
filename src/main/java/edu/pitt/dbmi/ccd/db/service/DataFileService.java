@@ -67,8 +67,8 @@ public class DataFileService {
         return dataFileRepository.findById(id);
     }
 
-    public DataFile findByName(String name) {
-        return dataFileRepository.findByName(name);
+    public DataFile findByNameAndUserAccounts(String name, Set<UserAccount> userAccounts) {
+        return dataFileRepository.findByNameAndUserAccounts(name, userAccounts);
     }
 
     public List<DataFile> findByAbsolutePath(String absolutePath) {
