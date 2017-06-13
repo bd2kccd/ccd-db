@@ -37,7 +37,7 @@ public interface DataFileRepository extends JpaRepository<DataFile, Long> {
 
     public DataFile findById(Long id);
 
-    public DataFile findByName(String name);
+    public DataFile findByNameAndUserAccounts(String name, Set<UserAccount> userAccounts);
 
     public List<DataFile> findByAbsolutePath(String absolutePath);
 
