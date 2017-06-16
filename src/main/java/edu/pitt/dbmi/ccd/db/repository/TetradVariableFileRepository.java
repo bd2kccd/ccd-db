@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.TetradVariableFile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -30,5 +31,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TetradVariableFileRepository extends JpaRepository<TetradVariableFile, Long> {
+
+    public TetradVariableFile findByFile(File file);
 
 }

@@ -37,15 +37,15 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class FileFormatService {
 
-    public static final String TETRAD_TAB_FMT_NAME = "tetrad-tab";
-    public static final String TETRAD_COVAR_FMT_NAME = "tetrad-covar";
-    public static final String TETRAD_VAR_FMT_NAME = "tetrad-var";
-    public static final String TETRAD_KNOWLEGE_FMT_NAME = "tetrad-knwl";
-    public static final String TETRAD_TEXT_RESULT_FMT_NAME = "tetrad-txt-result";
-    public static final String TETRAD_JSON_RESULT_FMT_NAME = "tetrad-json-result";
+    public static final String TETRAD_TABULAR = "tetrad-tabular";
+    public static final String TETRAD_COVARIANCE = "tetrad-covariance";
+    public static final String TETRAD_VARIABLE = "tetrad-variable";
+    public static final String TETRAD_KNOWLEDGE = "tetrad-knowledge";
+    public static final String TETRAD_RESULT_TXT = "tetrad-result-txt";
+    public static final String TETRAD_RESULT_JSON = "tetrad-result-json";
 
-    public static final String TDI_TAB_FMT_NAME = "tdi-tab";
-    public static final String TDI_TXT_RESULT_FMT_NAME = "tdi-txt-result";
+    public static final String TDI_TABULAR = "tdi-tabular";
+    public static final String TDI_RESULT_TXT = "tdi-result-txt";
 
     private final FileFormatRepository fileFormatRepository;
     private final FileTypeRepository fileTypeRepository;

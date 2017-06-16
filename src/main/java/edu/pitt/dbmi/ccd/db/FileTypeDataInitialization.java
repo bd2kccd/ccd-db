@@ -58,24 +58,24 @@ public class FileTypeDataInitialization implements ApplicationRunner {
         FileFormatRepository fileFormatRepo = fileFormatService.getRepository();
         if (fileFormatRepo.findAll().isEmpty()) {
             FileTypeRepository fileTypeRepo = fileTypeService.getRepository();
-            FileType data = fileTypeRepo.findByName(FileTypeService.DATA_NAME);
-            FileType knowledge = fileTypeRepo.findByName(FileTypeService.KNOWLEDGE_NAME);
-            FileType result = fileTypeRepo.findByName(FileTypeService.RESULT_NAME);
-            FileType variable = fileTypeRepo.findByName(FileTypeService.VARIABLE_NAME);
+            FileType data = fileTypeRepo.findByName(FileTypeService.DATA);
+            FileType knowledge = fileTypeRepo.findByName(FileTypeService.KNOWLEDGE);
+            FileType result = fileTypeRepo.findByName(FileTypeService.RESULT);
+            FileType variable = fileTypeRepo.findByName(FileTypeService.VARIABLE);
 
             AlgorithmTypeRepository algoTypeRepo = algorithmTypeService.getRepository();
-            AlgorithmType tetrad = algoTypeRepo.findByName(AlgorithmTypeService.TETRAD_ALGO_NAME);
-            AlgorithmType tdi = algoTypeRepo.findByName(AlgorithmTypeService.TDI_ALGO_NAME);
+            AlgorithmType tetrad = algoTypeRepo.findByName(AlgorithmTypeService.TETRAD_ALGO);
+            AlgorithmType tdi = algoTypeRepo.findByName(AlgorithmTypeService.TDI_ALGO);
 
             fileFormatRepo.save(Arrays.asList(
-                    new FileFormat(FileFormatService.TETRAD_TAB_FMT_NAME, "Tetrad Tabular", data, Arrays.asList(tetrad)),
-                    new FileFormat(FileFormatService.TETRAD_COVAR_FMT_NAME, "Tetrad Covariance", data, Arrays.asList(tetrad)),
-                    new FileFormat(FileFormatService.TETRAD_VAR_FMT_NAME, "Tetrad Variable", variable, Arrays.asList(tetrad)),
-                    new FileFormat(FileFormatService.TETRAD_KNOWLEGE_FMT_NAME, "Tetrad Knowledge", knowledge, Arrays.asList(tetrad)),
-                    new FileFormat(FileFormatService.TETRAD_TEXT_RESULT_FMT_NAME, "Tetrad Text Result", result, Arrays.asList(tetrad)),
-                    new FileFormat(FileFormatService.TETRAD_JSON_RESULT_FMT_NAME, "Tetrad JSON Result", result, Arrays.asList(tetrad)),
-                    new FileFormat(FileFormatService.TDI_TAB_FMT_NAME, "TDI Tabular", data, Arrays.asList(tdi, tetrad)),
-                    new FileFormat(FileFormatService.TDI_TXT_RESULT_FMT_NAME, "TDI Text Result", result, Arrays.asList(tdi))
+                    new FileFormat(FileFormatService.TETRAD_TABULAR, "Tetrad Tabular", data, Arrays.asList(tetrad)),
+                    new FileFormat(FileFormatService.TETRAD_COVARIANCE, "Tetrad Covariance", data, Arrays.asList(tetrad)),
+                    new FileFormat(FileFormatService.TETRAD_VARIABLE, "Tetrad Variable", variable, Arrays.asList(tetrad)),
+                    new FileFormat(FileFormatService.TETRAD_KNOWLEDGE, "Tetrad Knowledge", knowledge, Arrays.asList(tetrad)),
+                    new FileFormat(FileFormatService.TETRAD_RESULT_TXT, "Tetrad Text Result", result, Arrays.asList(tetrad)),
+                    new FileFormat(FileFormatService.TETRAD_RESULT_JSON, "Tetrad JSON Result", result, Arrays.asList(tetrad)),
+                    new FileFormat(FileFormatService.TDI_TABULAR, "TDI Tabular", data, Arrays.asList(tdi, tetrad)),
+                    new FileFormat(FileFormatService.TDI_RESULT_TXT, "TDI Text Result", result, Arrays.asList(tdi))
             ));
         }
     }

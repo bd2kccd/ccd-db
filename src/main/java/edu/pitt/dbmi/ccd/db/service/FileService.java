@@ -68,9 +68,13 @@ public class FileService {
     }
 
     public List<File> findByUserAccountAndFileFormatName(String fileFormatName, UserAccount userAccount) {
-        FileFormat fileFormat = fileFormatRepository.findByName(fileFormatName);
+        FileFormat fileFormat = (fileFormatName == null)
+                ? null
+                : fileFormatRepository.findByName(fileFormatName);
 
-        return fileRepository.findByUserAccountAndFileFormat(userAccount, fileFormat);
+        return (fileFormat == null)
+                ? fileRepository.findByUserAccountAndFileFormatIsNull(userAccount)
+                : fileRepository.findByUserAccountAndFileFormat(userAccount, fileFormat);
     }
 
     public File findByIdAndUserAccount(Long id, UserAccount userAccount) {
