@@ -21,7 +21,10 @@ package edu.pitt.dbmi.ccd.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,6 +33,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -86,6 +90,12 @@ public class File implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private UserAccount userAccount;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.REMOVE)
+    private List<TetradVariableFile> tetradVariableFiles = new LinkedList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.REMOVE)
+    private List<TetradDataFile> tetradDataFiles = new LinkedList<>();
+
     public File() {
     }
 
@@ -95,6 +105,19 @@ public class File implements Serializable {
         this.creationTime = creationTime;
         this.fileSize = fileSize;
         this.userAccount = userAccount;
+    }
+
+    public File(Long id, String name, String title, Date creationTime, long fileSize, String md5CheckSum, FileFormat fileFormat, UserAccount userAccount, List<TetradVariableFile> tetradVariableFiles, List<TetradDataFile> tetradDataFiles) {
+        this.id = id;
+        this.name = name;
+        this.title = title;
+        this.creationTime = creationTime;
+        this.fileSize = fileSize;
+        this.md5CheckSum = md5CheckSum;
+        this.fileFormat = fileFormat;
+        this.userAccount = userAccount;
+        this.tetradVariableFiles = tetradVariableFiles;
+        this.tetradDataFiles = tetradDataFiles;
     }
 
     public Long getId() {
@@ -163,6 +186,26 @@ public class File implements Serializable {
 
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<TetradVariableFile> getTetradVariableFiles() {
+        return tetradVariableFiles;
+    }
+
+    public void setTetradVariableFiles(List<TetradVariableFile> tetradVariableFiles) {
+        this.tetradVariableFiles = tetradVariableFiles;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<TetradDataFile> getTetradDataFiles() {
+        return tetradDataFiles;
+    }
+
+    public void setTetradDataFiles(List<TetradDataFile> tetradDataFiles) {
+        this.tetradDataFiles = tetradDataFiles;
     }
 
 }

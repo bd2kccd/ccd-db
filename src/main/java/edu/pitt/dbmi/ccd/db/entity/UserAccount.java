@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -95,11 +96,11 @@ public class UserAccount implements Serializable {
     private String actionKey;
 
     @JoinColumn(name = "userInfoId", referencedColumnName = "id", nullable = false)
-    @OneToOne(optional = false, fetch = FetchType.EAGER)
+    @OneToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private UserInfo userInfo;
 
     @JoinColumn(name = "userLoginId", referencedColumnName = "id", nullable = false)
-    @OneToOne(optional = false, fetch = FetchType.EAGER)
+    @OneToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private UserLogin userLogin;
 
     @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {

@@ -21,10 +21,10 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.FileFormat;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.repository.FileDelimiterTypeRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileFormatRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileRepository;
-import edu.pitt.dbmi.ccd.db.repository.FileVariableTypeRepository;
+import edu.pitt.dbmi.ccd.db.repository.TetradDataFileRepository;
+import edu.pitt.dbmi.ccd.db.repository.TetradVariableFileRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -34,10 +34,9 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,15 +55,36 @@ public class FileService {
 
     private final FileRepository fileRepository;
     private final FileFormatRepository fileFormatRepository;
-    private final FileDelimiterTypeRepository fileDelimiterTypeRepository;
-    private final FileVariableTypeRepository fileVariableTypeRepository;
+    private final TetradDataFileRepository tetradDataFileRepository;
+    private final TetradVariableFileRepository tetradVariableFileRepository;
 
     @Autowired
-    public FileService(FileRepository fileRepository, FileFormatRepository fileFormatRepository, FileDelimiterTypeRepository fileDelimiterTypeRepository, FileVariableTypeRepository fileVariableTypeRepository) {
+    public FileService(FileRepository fileRepository, FileFormatRepository fileFormatRepository, TetradDataFileRepository tetradDataFileRepository, TetradVariableFileRepository tetradVariableFileRepository) {
         this.fileRepository = fileRepository;
         this.fileFormatRepository = fileFormatRepository;
-        this.fileDelimiterTypeRepository = fileDelimiterTypeRepository;
-        this.fileVariableTypeRepository = fileVariableTypeRepository;
+        this.tetradDataFileRepository = tetradDataFileRepository;
+        this.tetradVariableFileRepository = tetradVariableFileRepository;
+    }
+
+    @Transactional
+    public File updateFileFormat(File file, FileFormat fileFormat) {
+        if (file == null) {
+            return file;
+        }
+
+        FileFormat oldFileFmt = file.getFileFormat();
+        String oldFmtName = (oldFileFmt == null) ? "" : oldFileFmt.getName();
+        String currFmtName = (fileFormat == null) ? "" : fileFormat.getName();
+        if (oldFmtName.equals(currFmtName)) {
+            return file;
+        }
+
+        tetradDataFileRepository.deleteByFile(file);
+        tetradVariableFileRepository.deleteByFile(file);
+
+        file.setFileFormat(fileFormat);
+
+        return fileRepository.save(file);
     }
 
     public List<File> findByUserAccountAndFileFormatName(String fileFormatName, UserAccount userAccount) {
@@ -83,17 +103,6 @@ public class FileService {
         }
 
         return fileRepository.findByIdAndUserAccount(id, userAccount);
-    }
-
-    public Map<String, File> getUserFiles(UserAccount userAccount) {
-        Map<String, File> files = new HashMap<>();
-
-        List<File> dbFileList = fileRepository.findByUserAccount(userAccount);
-        dbFileList.forEach(file -> {
-            files.put(file.getName(), file);
-        });
-
-        return files;
     }
 
     public List<File> persistLocalFiles(List<Path> files, UserAccount userAccount) {

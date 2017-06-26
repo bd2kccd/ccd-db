@@ -18,7 +18,12 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.File;
+import edu.pitt.dbmi.ccd.db.entity.TetradDataFile;
+import edu.pitt.dbmi.ccd.db.repository.FileFormatRepository;
+import edu.pitt.dbmi.ccd.db.repository.FileRepository;
 import edu.pitt.dbmi.ccd.db.repository.TetradDataFileRepository;
+import edu.pitt.dbmi.ccd.db.repository.TetradVariableFileRepository;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,14 +35,43 @@ import org.springframework.stereotype.Service;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-@Transactional
 public class TetradDataFileService {
 
+    private final FileRepository fileRepository;
+    private final FileFormatRepository fileFormatRepository;
     private final TetradDataFileRepository tetradDataFileRepository;
+    private final TetradVariableFileRepository tetradVariableFileRepository;
 
     @Autowired
-    public TetradDataFileService(TetradDataFileRepository tetradDataFileRepository) {
+    public TetradDataFileService(FileRepository fileRepository, FileFormatRepository fileFormatRepository, TetradDataFileRepository tetradDataFileRepository, TetradVariableFileRepository tetradVariableFileRepository) {
+        this.fileRepository = fileRepository;
+        this.fileFormatRepository = fileFormatRepository;
         this.tetradDataFileRepository = tetradDataFileRepository;
+        this.tetradVariableFileRepository = tetradVariableFileRepository;
+    }
+
+    @Transactional
+    public TetradDataFile save(TetradDataFile tetradDataFile) {
+        File file = tetradDataFile.getFile();
+        TetradDataFile dataFile = tetradDataFileRepository.findByFile(file);
+        if (dataFile == null) {
+            file.setFileFormat(fileFormatRepository.findByName(FileFormatService.TETRAD_TABULAR));
+            file = fileRepository.save(file);
+
+            tetradVariableFileRepository.deleteByFile(file);
+
+            tetradDataFile.setFile(file);
+            dataFile = tetradDataFile;
+        } else {
+            dataFile.setFileDelimiterType(tetradDataFile.getFileDelimiterType());
+            dataFile.setFileVariableType(tetradDataFile.getFileVariableType());
+            dataFile.setMissingValueMarker(tetradDataFile.getMissingValueMarker());
+            dataFile.setNumOfColumns(tetradDataFile.getNumOfColumns());
+            dataFile.setNumOfRows(tetradDataFile.getNumOfRows());
+            dataFile.setQuoteChar(tetradDataFile.getQuoteChar());
+        }
+
+        return tetradDataFileRepository.save(dataFile);
     }
 
     public TetradDataFileRepository getRepository() {

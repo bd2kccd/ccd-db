@@ -33,8 +33,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class FileVariableTypeService {
 
-    public static final String CONTINUOUS_NAME = "cont";
+    public static final String CONTINUOUS_NAME = "continuous";
     public static final String DISCRETE_NAME = "discrete";
+    public static final String MIXED_NAME = "mixed";
 
     private final FileVariableTypeRepository fileVariableTypeRepository;
 
@@ -45,7 +46,8 @@ public class FileVariableTypeService {
         if (fileVariableTypeRepository.findAll().isEmpty()) {
             fileVariableTypeRepository.save(Arrays.asList(
                     new FileVariableType(CONTINUOUS_NAME, "Continuous"),
-                    new FileVariableType(DISCRETE_NAME, "Discrete")
+                    new FileVariableType(DISCRETE_NAME, "Discrete"),
+                    new FileVariableType(MIXED_NAME, "Mixed")
             ));
         }
     }
