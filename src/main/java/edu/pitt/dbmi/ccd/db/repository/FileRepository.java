@@ -50,6 +50,9 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     public Long countByFileFormatAndUserAccount(FileFormat fileFormat, UserAccount userAccount);
 
+    @Query("SELECT COUNT(f) FROM File f WHERE f.fileFormat.name = ?1 AND f.userAccount = ?2")
+    public Long countByFileFormatNameAndUserAccount(String fileFormatName, UserAccount userAccount);
+
     public Long countByUserAccountAndFileFormatIsNull(UserAccount userAccount);
 
     public boolean existsByTitleAndUserAccount(String title, UserAccount userAccount);
