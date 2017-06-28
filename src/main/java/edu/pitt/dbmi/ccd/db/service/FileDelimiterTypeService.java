@@ -21,7 +21,9 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.FileDelimiterType;
 import edu.pitt.dbmi.ccd.db.repository.FileDelimiterTypeRepository;
 import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -58,6 +60,11 @@ public class FileDelimiterTypeService {
                     new FileDelimiterType(PIPE_DELIM_NAME, "Pipe")
             ));
         }
+    }
+
+    @Cacheable("findAllFileDelimiterTypes")
+    public List<FileDelimiterType> findAll() {
+        return fileDelimiterTypeRepository.findAll();
     }
 
     public FileDelimiterTypeRepository getRepository() {

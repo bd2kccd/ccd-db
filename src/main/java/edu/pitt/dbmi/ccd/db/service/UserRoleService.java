@@ -21,7 +21,9 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.UserRole;
 import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
 import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -56,6 +58,11 @@ public class UserRoleService {
 
     public UserRole getRegularRole() {
         return userRoleRepository.findByName(REGULAR_ROLE_NAME);
+    }
+
+    @Cacheable("findAllUserRoles")
+    public List<UserRole> findAll() {
+        return userRoleRepository.findAll();
     }
 
     public UserRoleRepository getRepository() {

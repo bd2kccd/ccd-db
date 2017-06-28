@@ -21,8 +21,10 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.UserRolePermission;
 import edu.pitt.dbmi.ccd.db.repository.UserRolePermissionRepository;
 import java.util.Arrays;
+import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -46,6 +48,11 @@ public class UserRolePermissionService {
         if (userRolePermissionRepository.findAll().isEmpty()) {
             userRolePermissionRepository.save(Arrays.asList(new UserRolePermission(PERMISSION_ALL, "All")));
         }
+    }
+
+    @Cacheable("findAllUserRolePermissions")
+    public List<UserRolePermission> findAll() {
+        return userRolePermissionRepository.findAll();
     }
 
     public UserRolePermissionRepository getRepository() {

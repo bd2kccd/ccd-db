@@ -21,7 +21,9 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
 import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -52,6 +54,11 @@ public class FileTypeService {
                     new FileType(RESULT, "Result")
             ));
         }
+    }
+
+    @Cacheable("findAllFileTypes")
+    public List<FileType> findAll() {
+        return fileTypeRepository.findAll();
     }
 
     public FileTypeRepository getRepository() {

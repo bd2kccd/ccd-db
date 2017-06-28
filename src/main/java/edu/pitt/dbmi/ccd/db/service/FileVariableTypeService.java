@@ -21,7 +21,9 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.FileVariableType;
 import edu.pitt.dbmi.ccd.db.repository.FileVariableTypeRepository;
 import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -50,6 +52,11 @@ public class FileVariableTypeService {
                     new FileVariableType(MIXED_NAME, "Mixed")
             ));
         }
+    }
+
+    @Cacheable("findAllFileVariableTypes")
+    public List<FileVariableType> findAll() {
+        return fileVariableTypeRepository.findAll();
     }
 
     public FileVariableTypeRepository getRepository() {

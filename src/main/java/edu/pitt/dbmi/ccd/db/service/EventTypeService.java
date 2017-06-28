@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -52,6 +53,11 @@ public class EventTypeService {
                     new EventType(USR_REGSTR_NAME, "User Registration")
             ));
         }
+    }
+
+    @Cacheable("findAllEventTypes")
+    public List<EventType> findAll() {
+        return eventTypeRepository.findAll();
     }
 
     public EventTypeRepository getRepository() {
