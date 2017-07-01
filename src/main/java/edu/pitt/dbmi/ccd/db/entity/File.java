@@ -32,6 +32,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -96,6 +98,12 @@ public class File implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.REMOVE)
     private List<TetradDataFile> tetradDataFiles = new LinkedList<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "FileGroupFileRel", joinColumns = {
+        @JoinColumn(name = "fileId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "fileGroupId", nullable = false, updatable = false)})
+    private List<FileGroup> fileGroups = new LinkedList<>();
+
     public File() {
     }
 
@@ -107,7 +115,7 @@ public class File implements Serializable {
         this.userAccount = userAccount;
     }
 
-    public File(Long id, String name, String title, Date creationTime, long fileSize, String md5CheckSum, FileFormat fileFormat, UserAccount userAccount, List<TetradVariableFile> tetradVariableFiles, List<TetradDataFile> tetradDataFiles) {
+    public File(Long id, String name, String title, Date creationTime, long fileSize, String md5CheckSum, FileFormat fileFormat, UserAccount userAccount, List<TetradVariableFile> tetradVariableFiles, List<TetradDataFile> tetradDataFiles, List<FileGroup> fileGroups) {
         this.id = id;
         this.name = name;
         this.title = title;
@@ -118,6 +126,7 @@ public class File implements Serializable {
         this.userAccount = userAccount;
         this.tetradVariableFiles = tetradVariableFiles;
         this.tetradDataFiles = tetradDataFiles;
+        this.fileGroups = fileGroups;
     }
 
     public Long getId() {
@@ -206,6 +215,16 @@ public class File implements Serializable {
 
     public void setTetradDataFiles(List<TetradDataFile> tetradDataFiles) {
         this.tetradDataFiles = tetradDataFiles;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<FileGroup> getFileGroups() {
+        return fileGroups;
+    }
+
+    public void setFileGroups(List<FileGroup> fileGroups) {
+        this.fileGroups = fileGroups;
     }
 
 }

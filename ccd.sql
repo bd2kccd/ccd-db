@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.1.21-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.1.24-MariaDB, for Linux (x86_64)
 --
--- Host: localhost    Database: localhost
+-- Host: localhost    Database: ccd
 -- ------------------------------------------------------
--- Server version	10.1.21-MariaDB
+-- Server version	10.1.24-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -124,6 +124,44 @@ CREATE TABLE `FileFormatAlgorithmRel` (
   KEY `algorithmTypeId` (`algorithmTypeId`),
   CONSTRAINT `FileFormatAlgorithmRel_ibfk_1` FOREIGN KEY (`fileFormatId`) REFERENCES `FileFormat` (`id`),
   CONSTRAINT `FileFormatAlgorithmRel_ibfk_2` FOREIGN KEY (`algorithmTypeId`) REFERENCES `AlgorithmType` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `FileGroup`
+--
+
+DROP TABLE IF EXISTS `FileGroup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `FileGroup` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fileTypeId` bigint(20) NOT NULL,
+  `userAccountId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fileTypeId` (`fileTypeId`),
+  KEY `userAccountId` (`userAccountId`),
+  CONSTRAINT `FileGroup_ibfk_1` FOREIGN KEY (`fileTypeId`) REFERENCES `FileType` (`id`),
+  CONSTRAINT `FileGroup_ibfk_2` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `FileGroupFileRel`
+--
+
+DROP TABLE IF EXISTS `FileGroupFileRel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `FileGroupFileRel` (
+  `fileGroupId` bigint(20) NOT NULL,
+  `fileId` bigint(20) NOT NULL,
+  PRIMARY KEY (`fileGroupId`,`fileId`),
+  KEY `fileId` (`fileId`),
+  CONSTRAINT `FileGroupFileRel_ibfk_1` FOREIGN KEY (`fileGroupId`) REFERENCES `FileGroup` (`id`),
+  CONSTRAINT `FileGroupFileRel_ibfk_2` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -362,4 +400,4 @@ CREATE TABLE `UserRoleUserRolePermissionRel` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-22 18:43:57
+-- Dump completed on 2017-06-30 22:18:55
