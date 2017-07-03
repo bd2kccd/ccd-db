@@ -37,4 +37,6 @@ public interface FileGroupRepository extends JpaRepository<FileGroup, Long> {
 
     public List<FileGroup> findByUserAccount(UserAccount userAccount);
 
+    public boolean existsByNameAndUserAccount(String name, UserAccount userAccount);
+
 }

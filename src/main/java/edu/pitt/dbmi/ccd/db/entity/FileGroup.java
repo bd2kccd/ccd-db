@@ -36,6 +36,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -45,7 +46,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "FileGroup")
+@Table(name = "FileGroup", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "userAccountId"}))
 public class FileGroup implements Serializable {
 
     private static final long serialVersionUID = 4496287795412165524L;

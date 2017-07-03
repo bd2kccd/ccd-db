@@ -141,6 +141,7 @@ CREATE TABLE `FileGroup` (
   `fileTypeId` bigint(20) NOT NULL,
   `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`,`userAccountId`),
   KEY `fileTypeId` (`fileTypeId`),
   KEY `userAccountId` (`userAccountId`),
   CONSTRAINT `FileGroup_ibfk_1` FOREIGN KEY (`fileTypeId`) REFERENCES `FileType` (`id`),
@@ -400,4 +401,4 @@ CREATE TABLE `UserRoleUserRolePermissionRel` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-30 22:18:55
+-- Dump completed on 2017-07-03 11:06:15
