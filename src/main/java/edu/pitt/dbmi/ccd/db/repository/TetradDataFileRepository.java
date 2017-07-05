@@ -19,9 +19,12 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.File;
+import edu.pitt.dbmi.ccd.db.entity.FileVariableType;
 import edu.pitt.dbmi.ccd.db.entity.TetradDataFile;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -40,5 +43,11 @@ public interface TetradDataFileRepository extends JpaRepository<TetradDataFile, 
     public void deleteByFile(File file);
 
     public void deleteByFileIn(List<File> files);
+
+    @Query("SELECT tdf FROM TetradDataFile tdf WHERE tdf.file.userAccount = ?1")
+    public List<TetradDataFile> findByUserAccount(UserAccount userAccount);
+
+    @Query("SELECT tdf FROM TetradDataFile tdf WHERE tdf.fileVariableType = ?1 AND tdf.file.id IN ?2 AND tdf.file.userAccount = ?3")
+    public List<TetradDataFile> findByFileVariableTypeAndAndFileIdsAndUserAccount(FileVariableType fileVariableType, List<Long> ids, UserAccount userAccount);
 
 }
