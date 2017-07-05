@@ -21,6 +21,7 @@ package edu.pitt.dbmi.ccd.db.repository;
 import edu.pitt.dbmi.ccd.db.entity.FileGroup;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -40,5 +41,10 @@ public interface FileGroupRepository extends JpaRepository<FileGroup, Long> {
     public List<FileGroup> findByUserAccount(UserAccount userAccount);
 
     public boolean existsByNameAndUserAccount(String name, UserAccount userAccount);
+
+    public boolean existsByIdAndUserAccount(Long id, UserAccount userAccount);
+
+    @Transactional
+    public Long deleteByIdAndUserAccount(Long id, UserAccount userAccount);
 
 }
