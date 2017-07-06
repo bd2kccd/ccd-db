@@ -21,7 +21,6 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.FileFormat;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.repository.FileFormatRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileRepository;
 import edu.pitt.dbmi.ccd.db.repository.TetradDataFileRepository;
 import edu.pitt.dbmi.ccd.db.repository.TetradVariableFileRepository;
@@ -54,14 +53,12 @@ public class FileService {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileService.class);
 
     private final FileRepository fileRepository;
-    private final FileFormatRepository fileFormatRepository;
     private final TetradDataFileRepository tetradDataFileRepository;
     private final TetradVariableFileRepository tetradVariableFileRepository;
 
     @Autowired
-    public FileService(FileRepository fileRepository, FileFormatRepository fileFormatRepository, TetradDataFileRepository tetradDataFileRepository, TetradVariableFileRepository tetradVariableFileRepository) {
+    public FileService(FileRepository fileRepository, TetradDataFileRepository tetradDataFileRepository, TetradVariableFileRepository tetradVariableFileRepository) {
         this.fileRepository = fileRepository;
-        this.fileFormatRepository = fileFormatRepository;
         this.tetradDataFileRepository = tetradDataFileRepository;
         this.tetradVariableFileRepository = tetradVariableFileRepository;
     }
@@ -85,24 +82,6 @@ public class FileService {
         file.setFileFormat(fileFormat);
 
         return fileRepository.save(file);
-    }
-
-    public List<File> findByUserAccountAndFileFormatName(String fileFormatName, UserAccount userAccount) {
-        FileFormat fileFormat = (fileFormatName == null)
-                ? null
-                : fileFormatRepository.findByName(fileFormatName);
-
-        return (fileFormat == null)
-                ? fileRepository.findByUserAccountAndFileFormatIsNull(userAccount)
-                : fileRepository.findByUserAccountAndFileFormat(userAccount, fileFormat);
-    }
-
-    public File findByIdAndUserAccount(Long id, UserAccount userAccount) {
-        if (id == null || userAccount == null) {
-            return null;
-        }
-
-        return fileRepository.findByIdAndUserAccount(id, userAccount);
     }
 
     public List<File> persistLocalFiles(List<Path> files, UserAccount userAccount) {

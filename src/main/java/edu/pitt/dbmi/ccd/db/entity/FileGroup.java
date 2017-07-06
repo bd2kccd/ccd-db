@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,6 +38,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -47,28 +49,32 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "FileGroup", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "userAccountId"}))
+@XmlRootElement
 public class FileGroup implements Serializable {
 
     private static final long serialVersionUID = 4496287795412165524L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
+    @Basic(optional = false)
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Basic(optional = false)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "creationTime", nullable = false, length = 19)
     private Date creationTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fileTypeId", nullable = false)
+    @JoinColumn(name = "fileTypeId", referencedColumnName = "id", nullable = false)
     private FileType fileType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userAccountId", nullable = false)
+    @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
     private UserAccount userAccount;
 
     @ManyToMany(fetch = FetchType.LAZY)
