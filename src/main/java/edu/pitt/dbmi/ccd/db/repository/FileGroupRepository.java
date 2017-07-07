@@ -42,6 +42,8 @@ public interface FileGroupRepository extends JpaRepository<FileGroup, Long> {
 
     public boolean existsByNameAndUserAccount(String name, UserAccount userAccount);
 
+    public boolean existsByNameAndUserAccountAndIdNot(String name, UserAccount userAccount, Long id);
+
     public boolean existsByIdAndUserAccount(Long id, UserAccount userAccount);
 
     @Transactional
