@@ -60,6 +60,11 @@ public class EventTypeService {
         return eventTypeRepository.findAll();
     }
 
+    @Cacheable("eventTypeByName")
+    public EventType findByName(String name) {
+        return eventTypeRepository.findByName(name);
+    }
+
     public EventTypeRepository getRepository() {
         return eventTypeRepository;
     }

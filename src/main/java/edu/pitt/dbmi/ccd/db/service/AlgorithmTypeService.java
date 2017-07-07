@@ -57,6 +57,11 @@ public class AlgorithmTypeService {
         return algorithmTypeRepository.findAll();
     }
 
+    @Cacheable("algorithmTypeByName")
+    public AlgorithmType findByName(String name) {
+        return algorithmTypeRepository.findByName(name);
+    }
+
     public AlgorithmTypeRepository getRepository() {
         return algorithmTypeRepository;
     }

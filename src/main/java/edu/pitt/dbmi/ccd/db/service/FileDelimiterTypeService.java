@@ -67,6 +67,11 @@ public class FileDelimiterTypeService {
         return fileDelimiterTypeRepository.findAll();
     }
 
+    @Cacheable("fileDelimiterTypeByName")
+    public FileDelimiterType findByName(String name) {
+        return fileDelimiterTypeRepository.findByName(name);
+    }
+
     public FileDelimiterTypeRepository getRepository() {
         return fileDelimiterTypeRepository;
     }

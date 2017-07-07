@@ -19,7 +19,6 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.FileDelimiterType;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -32,7 +31,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FileDelimiterTypeRepository extends JpaRepository<FileDelimiterType, Long> {
 
-    @Cacheable("fileDelimiterTypeByName")
     public FileDelimiterType findByName(String name);
 
 }

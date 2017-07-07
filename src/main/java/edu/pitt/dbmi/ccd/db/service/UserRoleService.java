@@ -65,6 +65,11 @@ public class UserRoleService {
         return userRoleRepository.findAll();
     }
 
+    @Cacheable("userRoleByName")
+    public UserRole findByName(String name) {
+        return userRoleRepository.findByName(name);
+    }
+
     public UserRoleRepository getRepository() {
         return userRoleRepository;
     }

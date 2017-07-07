@@ -61,6 +61,11 @@ public class FileTypeService {
         return fileTypeRepository.findAll();
     }
 
+    @Cacheable("fileTypeByName")
+    public FileType findByName(String name) {
+        return fileTypeRepository.findByName(name);
+    }
+
     public FileTypeRepository getRepository() {
         return fileTypeRepository;
     }

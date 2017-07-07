@@ -58,6 +58,11 @@ public class FileFormatService {
         return fileFormatRepository.findAll();
     }
 
+    @Cacheable("fileFormatByName")
+    public FileFormat findByName(String name) {
+        return fileFormatRepository.findByName(name);
+    }
+
     public FileFormatRepository getRepository() {
         return fileFormatRepository;
     }

@@ -59,6 +59,11 @@ public class FileVariableTypeService {
         return fileVariableTypeRepository.findAll();
     }
 
+    @Cacheable("fileVariableTypeByName")
+    public FileVariableType findByName(String name) {
+        return fileVariableTypeRepository.findByName(name);
+    }
+
     public FileVariableTypeRepository getRepository() {
         return fileVariableTypeRepository;
     }
