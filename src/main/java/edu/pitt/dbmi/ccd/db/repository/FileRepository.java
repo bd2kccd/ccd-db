@@ -46,15 +46,9 @@ public interface FileRepository extends JpaRepository<File, Long> {
     @Query("SELECT f FROM File f WHERE f.id IN ?1 AND f.userAccount = ?2")
     public List<File> findByIdsAndUserAccount(List<Long> ids, UserAccount userAccount);
 
-    @Query("SELECT f FROM File f WHERE f.userAccount = ?1 AND f.fileFormat.name = ?2")
-    public List<File> findByUserAccountAndFileFormatName(UserAccount userAccount, String fileFormatName);
-
     public Long countByUserAccount(UserAccount userAccount);
 
     public Long countByFileFormatAndUserAccount(FileFormat fileFormat, UserAccount userAccount);
-
-    @Query("SELECT COUNT(f) FROM File f WHERE f.fileFormat.name = ?1 AND f.userAccount = ?2")
-    public Long countByFileFormatNameAndUserAccount(String fileFormatName, UserAccount userAccount);
 
     public Long countByUserAccountAndFileFormatIsNull(UserAccount userAccount);
 
