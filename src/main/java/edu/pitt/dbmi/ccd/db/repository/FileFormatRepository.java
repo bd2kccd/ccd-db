@@ -19,6 +19,7 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.FileFormat;
+import edu.pitt.dbmi.ccd.db.entity.FileType;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -37,5 +38,9 @@ public interface FileFormatRepository extends JpaRepository<FileFormat, Long> {
 
     @Query("SELECT ff FROM FileFormat ff WHERE ff.fileType.name = ?1")
     public List<FileFormat> findByFileTypeName(String fileTypeName);
+
+    public List<FileFormat> findByFileType(FileType fileType);
+
+    public List<FileFormat> findByFileTypeNot(FileType fileType);
 
 }

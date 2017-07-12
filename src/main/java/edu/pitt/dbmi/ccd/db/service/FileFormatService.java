@@ -19,6 +19,7 @@
 package edu.pitt.dbmi.ccd.db.service;
 
 import edu.pitt.dbmi.ccd.db.entity.FileFormat;
+import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.repository.FileFormatRepository;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -53,7 +54,7 @@ public class FileFormatService {
         this.fileFormatRepository = fileFormatRepository;
     }
 
-    @Cacheable("findAllFileFormats")
+    @Cacheable("fileFormatAll")
     public List<FileFormat> findAll() {
         return fileFormatRepository.findAll();
     }
@@ -61,6 +62,11 @@ public class FileFormatService {
     @Cacheable("fileFormatByName")
     public FileFormat findByName(String name) {
         return fileFormatRepository.findByName(name);
+    }
+
+    @Cacheable("fileFormatByFileTypeNot")
+    public List<FileFormat> findByFileTypeNot(FileType fileType) {
+        return fileFormatRepository.findByFileTypeNot(fileType);
     }
 
     public FileFormatRepository getRepository() {

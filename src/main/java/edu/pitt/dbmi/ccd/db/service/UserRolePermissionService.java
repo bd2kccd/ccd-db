@@ -50,7 +50,7 @@ public class UserRolePermissionService {
         }
     }
 
-    @Cacheable("findAllUserRolePermissions")
+    @Cacheable("userRolePermissionAll")
     public List<UserRolePermission> findAll() {
         return userRolePermissionRepository.findAll();
     }

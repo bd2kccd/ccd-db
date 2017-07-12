@@ -54,7 +54,7 @@ public class FileVariableTypeService {
         }
     }
 
-    @Cacheable("findAllFileVariableTypes")
+    @Cacheable("fileVariableTypeAll")
     public List<FileVariableType> findAll() {
         return fileVariableTypeRepository.findAll();
     }

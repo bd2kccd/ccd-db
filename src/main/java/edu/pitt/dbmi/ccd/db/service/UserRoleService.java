@@ -60,7 +60,7 @@ public class UserRoleService {
         return userRoleRepository.findByName(REGULAR_ROLE_NAME);
     }
 
-    @Cacheable("findAllUserRoles")
+    @Cacheable("userRoleAll")
     public List<UserRole> findAll() {
         return userRoleRepository.findAll();
     }

@@ -52,7 +52,7 @@ public class AlgorithmTypeService {
         }
     }
 
-    @Cacheable("findAllAlgorithmTypes")
+    @Cacheable("algorithmTypeAll")
     public List<AlgorithmType> findAll() {
         return algorithmTypeRepository.findAll();
     }

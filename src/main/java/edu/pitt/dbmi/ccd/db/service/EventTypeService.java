@@ -55,7 +55,7 @@ public class EventTypeService {
         }
     }
 
-    @Cacheable("findAllEventTypes")
+    @Cacheable("eventTypeAll")
     public List<EventType> findAll() {
         return eventTypeRepository.findAll();
     }

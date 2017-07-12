@@ -62,7 +62,7 @@ public class FileDelimiterTypeService {
         }
     }
 
-    @Cacheable("findAllFileDelimiterTypes")
+    @Cacheable("fileDelimiterAll")
     public List<FileDelimiterType> findAll() {
         return fileDelimiterTypeRepository.findAll();
     }

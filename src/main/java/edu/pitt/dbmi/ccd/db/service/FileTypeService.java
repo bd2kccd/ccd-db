@@ -56,7 +56,7 @@ public class FileTypeService {
         }
     }
 
-    @Cacheable("findAllFileTypes")
+    @Cacheable("fileTypeAll")
     public List<FileType> findAll() {
         return fileTypeRepository.findAll();
     }
