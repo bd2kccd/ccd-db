@@ -49,13 +49,13 @@ public class TetradVariableFile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @Column(name = "numOfVariables")
     private Integer numOfVariables;
 
-    @JoinColumn(name = "fileId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "fileId", unique = true, referencedColumnName = "id", nullable = false)
     @OneToOne(optional = false, fetch = FetchType.EAGER)
     private File file;
 

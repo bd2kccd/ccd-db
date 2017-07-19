@@ -61,11 +61,11 @@ public class UserAccount implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "username", nullable = false, length = 255)
+    @Column(name = "username", unique = true, nullable = false, length = 255)
     private String username;
 
     @Basic(optional = false)
@@ -73,7 +73,7 @@ public class UserAccount implements Serializable {
     private String password;
 
     @Basic(optional = false)
-    @Column(name = "account", nullable = false, length = 255)
+    @Column(name = "account", unique = true, nullable = false, length = 255)
     private String account;
 
     @Basic(optional = false)
@@ -95,11 +95,11 @@ public class UserAccount implements Serializable {
     @Column(name = "actionKey", length = 255)
     private String actionKey;
 
-    @JoinColumn(name = "userInfoId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "userInfoId", unique = true, referencedColumnName = "id", nullable = false)
     @OneToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private UserInfo userInfo;
 
-    @JoinColumn(name = "userLoginId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "userLoginId", unique = true, referencedColumnName = "id", nullable = false)
     @OneToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private UserLogin userLogin;
 

@@ -50,7 +50,7 @@ public class TetradDataFile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     @Column(name = "quoteChar")
@@ -68,7 +68,7 @@ public class TetradDataFile implements Serializable {
     @Column(name = "numOfColumns")
     private Integer numOfColumns;
 
-    @JoinColumn(name = "fileId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "fileId", unique = true, referencedColumnName = "id", nullable = false)
     @OneToOne(optional = false, fetch = FetchType.EAGER)
     private File file;
 

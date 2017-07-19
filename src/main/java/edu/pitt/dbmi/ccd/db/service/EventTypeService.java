@@ -22,7 +22,6 @@ import edu.pitt.dbmi.ccd.db.entity.EventType;
 import edu.pitt.dbmi.ccd.db.repository.EventTypeRepository;
 import java.util.Arrays;
 import java.util.List;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,6 @@ import org.springframework.stereotype.Service;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-@Transactional
 public class EventTypeService {
 
     public static final String USR_LOGIN_NAME = "usr-login";

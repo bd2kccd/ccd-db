@@ -22,26 +22,29 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * May 10, 2017 12:20:44 PM
+ * Jul 19, 2017 12:17:54 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "AlgorithmType", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name"})})
 @XmlRootElement
-public class AlgorithmType implements Serializable {
+@Table(name = "Algorithm", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name"})})
+public class Algorithm implements Serializable {
 
-    private static final long serialVersionUID = -5737496375252903506L;
+    private static final long serialVersionUID = -1648477051201124058L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,18 +57,22 @@ public class AlgorithmType implements Serializable {
     private String name;
 
     @Basic(optional = false)
-    @Column(name = "displayName", nullable = false, length = 64)
-    private String displayName;
+    @Column(name = "title", nullable = false)
+    private String title;
 
-    @Column(name = "description", length = 255)
+    @Basic(optional = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
-    public AlgorithmType() {
-    }
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "algorithmTypeId", referencedColumnName = "id", nullable = false)
+    private AlgorithmType algorithmType;
 
-    public AlgorithmType(String name, String displayName) {
-        this.name = name;
-        this.displayName = displayName;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "fileVariableTypeId", referencedColumnName = "id", nullable = false)
+    private FileVariableType fileVariableType;
+
+    public Algorithm() {
     }
 
     public Long getId() {
@@ -84,12 +91,12 @@ public class AlgorithmType implements Serializable {
         this.name = name;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getTitle() {
+        return title;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -98,6 +105,22 @@ public class AlgorithmType implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public AlgorithmType getAlgorithmType() {
+        return algorithmType;
+    }
+
+    public void setAlgorithmType(AlgorithmType algorithmType) {
+        this.algorithmType = algorithmType;
+    }
+
+    public FileVariableType getFileVariableType() {
+        return fileVariableType;
+    }
+
+    public void setFileVariableType(FileVariableType fileVariableType) {
+        this.fileVariableType = fileVariableType;
     }
 
 }
