@@ -22,7 +22,6 @@ import edu.pitt.dbmi.ccd.db.entity.UserRolePermission;
 import edu.pitt.dbmi.ccd.db.repository.UserRolePermissionRepository;
 import java.util.Arrays;
 import java.util.List;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -34,10 +33,9 @@ import org.springframework.stereotype.Service;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-@Transactional
 public class UserRolePermissionService {
 
-    public static final String PERMISSION_ALL = "*";
+    public static final String PERMISSION_ALL_NAME = "*";
 
     private final UserRolePermissionRepository userRolePermissionRepository;
 
@@ -46,7 +44,7 @@ public class UserRolePermissionService {
         this.userRolePermissionRepository = userRolePermissionRepository;
 
         if (userRolePermissionRepository.findAll().isEmpty()) {
-            userRolePermissionRepository.save(Arrays.asList(new UserRolePermission(PERMISSION_ALL, "All")));
+            userRolePermissionRepository.save(Arrays.asList(new UserRolePermission(PERMISSION_ALL_NAME, "All")));
         }
     }
 

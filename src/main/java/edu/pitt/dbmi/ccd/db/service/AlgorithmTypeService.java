@@ -35,8 +35,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AlgorithmTypeService {
 
-    public static final String TDI_ALGO = "tdi";
-    public static final String TETRAD_ALGO = "tetrad";
+    public static final String TDI_NAME = "tdi";
+    public static final String TETRAD_NAME = "tetrad";
 
     private final AlgorithmTypeRepository algorithmTypeRepository;
 
@@ -46,8 +46,8 @@ public class AlgorithmTypeService {
 
         if (algorithmTypeRepository.findAll().isEmpty()) {
             algorithmTypeRepository.save(Arrays.asList(
-                    new AlgorithmType(TDI_ALGO, "TDI"),
-                    new AlgorithmType(TETRAD_ALGO, "Tetrad")
+                    new AlgorithmType(TDI_NAME, "TDI"),
+                    new AlgorithmType(TETRAD_NAME, "Tetrad")
             ));
         }
     }

@@ -35,10 +35,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class FileTypeService {
 
-    public static final String DATA = "data";
-    public static final String VARIABLE = "variable";
-    public static final String KNOWLEDGE = "knowledge";
-    public static final String RESULT = "result";
+    public static final String DATA_NAME = "data";
+    public static final String VARIABLE_NAME = "variable";
+    public static final String KNOWLEDGE_NAME = "knowledge";
+    public static final String RESULT_NAME = "result";
 
     private final FileTypeRepository fileTypeRepository;
 
@@ -48,10 +48,10 @@ public class FileTypeService {
 
         if (fileTypeRepository.findAll().isEmpty()) {
             fileTypeRepository.save(Arrays.asList(
-                    new FileType(DATA, "Data"),
-                    new FileType(VARIABLE, "Variable"),
-                    new FileType(KNOWLEDGE, "Knowledge"),
-                    new FileType(RESULT, "Result")
+                    new FileType(DATA_NAME, "Data"),
+                    new FileType(VARIABLE_NAME, "Variable"),
+                    new FileType(KNOWLEDGE_NAME, "Knowledge"),
+                    new FileType(RESULT_NAME, "Result")
             ));
         }
     }

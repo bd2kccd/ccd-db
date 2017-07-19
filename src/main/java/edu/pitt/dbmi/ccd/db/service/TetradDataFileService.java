@@ -55,7 +55,7 @@ public class TetradDataFileService {
         File file = tetradDataFile.getFile();
         TetradDataFile dataFile = tetradDataFileRepository.findByFile(file);
         if (dataFile == null) {
-            file.setFileFormat(fileFormatRepository.findByName(FileFormatService.TETRAD_TABULAR));
+            file.setFileFormat(fileFormatRepository.findByName(FileFormatService.TETRAD_TABULAR_NAME));
             file = fileRepository.save(file);
 
             tetradVariableFileRepository.deleteByFile(file);

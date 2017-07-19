@@ -34,6 +34,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class AlgorithmService {
 
+    public static final String FGES_CONTINUOUS_NAME = "fgesc";
+    public static final String FGES_DISCRETE_NAME = "fgesd";
+    public static final String FGES_MIXED_NAME = "fgesm";
+
+    public static final String GFCI_CONTINUOUS_NAME = "gfcic";
+    public static final String GFCI_DISCRETE_NAME = "gfcid";
+    public static final String GFCI_MIXED_NAME = "gfcim";
+
     private final AlgorithmRepository algorithmRepository;
 
     @Autowired
@@ -46,7 +54,7 @@ public class AlgorithmService {
         return algorithmRepository.findAll();
     }
 
-    @Cacheable("algorithmFindByName")
+    @Cacheable("algorithmByName")
     public Algorithm findByName(String name) {
         return algorithmRepository.findByName(name);
     }

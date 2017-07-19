@@ -35,8 +35,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserRoleService {
 
-    private static final String ADMIN_ROLE_NAME = "admin";
-    private static final String REGULAR_ROLE_NAME = "regular";
+    private static final String ADMIN_NAME = "admin";
+    private static final String REGULAR_NAME = "regular";
 
     private final UserRoleRepository userRoleRepository;
 
@@ -46,18 +46,18 @@ public class UserRoleService {
 
         if (userRoleRepository.findAll().isEmpty()) {
             userRoleRepository.save(Arrays.asList(
-                    new UserRole(ADMIN_ROLE_NAME, "Admin"),
-                    new UserRole(REGULAR_ROLE_NAME, "Regular")
+                    new UserRole(ADMIN_NAME, "Admin"),
+                    new UserRole(REGULAR_NAME, "Regular")
             ));
         }
     }
 
     public UserRole getAdminRole() {
-        return userRoleRepository.findByName(ADMIN_ROLE_NAME);
+        return userRoleRepository.findByName(ADMIN_NAME);
     }
 
     public UserRole getRegularRole() {
-        return userRoleRepository.findByName(REGULAR_ROLE_NAME);
+        return userRoleRepository.findByName(REGULAR_NAME);
     }
 
     @Cacheable("userRoleAll")

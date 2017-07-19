@@ -75,6 +75,14 @@ public class Algorithm implements Serializable {
     public Algorithm() {
     }
 
+    public Algorithm(String name, String title, String description, AlgorithmType algorithmType, FileVariableType fileVariableType) {
+        this.name = name;
+        this.title = title;
+        this.description = description;
+        this.algorithmType = algorithmType;
+        this.fileVariableType = fileVariableType;
+    }
+
     public Long getId() {
         return id;
     }

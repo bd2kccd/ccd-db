@@ -56,7 +56,7 @@ public class TetradVariableFileService {
 
         TetradVariableFile varFile = tetradVariableFileRepository.findByFile(file);
         if (varFile == null) {
-            file.setFileFormat(fileFormatRepository.findByName(FileFormatService.TETRAD_VARIABLE));
+            file.setFileFormat(fileFormatRepository.findByName(FileFormatService.TETRAD_VARIABLE_NAME));
             fileRepository.save(file);
 
             tetradDataFileRepository.deleteByFile(file);

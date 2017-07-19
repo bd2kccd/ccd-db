@@ -22,7 +22,6 @@ import edu.pitt.dbmi.ccd.db.entity.FileFormat;
 import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.repository.FileFormatRepository;
 import java.util.List;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -34,18 +33,17 @@ import org.springframework.stereotype.Service;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-@Transactional
 public class FileFormatService {
 
-    public static final String TETRAD_TABULAR = "tetrad-tabular";
-    public static final String TETRAD_COVARIANCE = "tetrad-covariance";
-    public static final String TETRAD_VARIABLE = "tetrad-variable";
-    public static final String TETRAD_KNOWLEDGE = "tetrad-knowledge";
-    public static final String TETRAD_RESULT_TXT = "tetrad-result-txt";
-    public static final String TETRAD_RESULT_JSON = "tetrad-result-json";
+    public static final String TETRAD_TABULAR_NAME = "tetrad-tabular";
+    public static final String TETRAD_COVARIANCE_NAME = "tetrad-covariance";
+    public static final String TETRAD_VARIABLE_NAME = "tetrad-variable";
+    public static final String TETRAD_KNOWLEDGE_NAME = "tetrad-knowledge";
+    public static final String TETRAD_RESULT_TXT_NAME = "tetrad-result-txt";
+    public static final String TETRAD_RESULT_JSON_NAME = "tetrad-result-json";
 
-    public static final String TDI_TABULAR = "tdi-tabular";
-    public static final String TDI_RESULT_TXT = "tdi-result-txt";
+    public static final String TDI_TABULAR_NAME = "tdi-tabular";
+    public static final String TDI_RESULT_TXT_NAME = "tdi-result-txt";
 
     private final FileFormatRepository fileFormatRepository;
 
