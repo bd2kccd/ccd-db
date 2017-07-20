@@ -16,29 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `Algorithm`
---
-
-DROP TABLE IF EXISTS `Algorithm`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Algorithm` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `algorithmTypeId` bigint(20) NOT NULL,
-  `fileVariableTypeId` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  KEY `algorithmTypeId` (`algorithmTypeId`),
-  KEY `fileVariableTypeId` (`fileVariableTypeId`),
-  CONSTRAINT `Algorithm_ibfk_1` FOREIGN KEY (`algorithmTypeId`) REFERENCES `AlgorithmType` (`id`),
-  CONSTRAINT `Algorithm_ibfk_2` FOREIGN KEY (`fileVariableTypeId`) REFERENCES `FileVariableType` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `AlgorithmType`
 --
 
@@ -424,4 +401,4 @@ CREATE TABLE `UserRoleUserRolePermissionRel` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-19 12:26:40
+-- Dump completed on 2017-07-03 11:06:15
