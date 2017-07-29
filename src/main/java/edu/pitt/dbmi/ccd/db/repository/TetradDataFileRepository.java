@@ -47,6 +47,9 @@ public interface TetradDataFileRepository extends JpaRepository<TetradDataFile, 
     @Query("SELECT tdf FROM TetradDataFile tdf WHERE tdf.file.userAccount = ?1")
     public List<TetradDataFile> findByUserAccount(UserAccount userAccount);
 
+    @Query("SELECT tdf FROM TetradDataFile tdf WHERE tdf.fileVariableType = ?1 AND tdf.file.userAccount = ?2")
+    public List<TetradDataFile> findByFileVariableTypeAndAndUserAccount(FileVariableType fileVariableType, UserAccount userAccount);
+
     @Query("SELECT tdf FROM TetradDataFile tdf WHERE tdf.fileVariableType = ?1 AND tdf.file.id IN ?2 AND tdf.file.userAccount = ?3")
     public List<TetradDataFile> findByFileVariableTypeAndAndFileIdsAndUserAccount(FileVariableType fileVariableType, List<Long> ids, UserAccount userAccount);
 
