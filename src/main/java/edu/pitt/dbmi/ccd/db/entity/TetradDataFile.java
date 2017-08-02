@@ -53,6 +53,10 @@ public class TetradDataFile implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
+    @Basic(optional = false)
+    @Column(name = "hasHeader", nullable = false)
+    private boolean hasHeader;
+
     @Column(name = "quoteChar")
     private Character quoteChar;
 
@@ -83,10 +87,11 @@ public class TetradDataFile implements Serializable {
     public TetradDataFile() {
     }
 
-    public TetradDataFile(File file, FileDelimiterType fileDelimiterType, FileVariableType fileVariableType) {
+    public TetradDataFile(File file, FileDelimiterType fileDelimiterType, FileVariableType fileVariableType, boolean hasHeader) {
         this.file = file;
         this.fileDelimiterType = fileDelimiterType;
         this.fileVariableType = fileVariableType;
+        this.hasHeader = hasHeader;
     }
 
     public Long getId() {
@@ -95,6 +100,14 @@ public class TetradDataFile implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isHasHeader() {
+        return hasHeader;
+    }
+
+    public void setHasHeader(boolean hasHeader) {
+        this.hasHeader = hasHeader;
     }
 
     public Character getQuoteChar() {

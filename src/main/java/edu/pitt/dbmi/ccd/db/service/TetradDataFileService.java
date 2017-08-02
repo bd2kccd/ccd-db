@@ -65,6 +65,7 @@ public class TetradDataFileService {
         } else {
             dataFile.setFileDelimiterType(tetradDataFile.getFileDelimiterType());
             dataFile.setFileVariableType(tetradDataFile.getFileVariableType());
+            dataFile.setHasHeader(tetradDataFile.isHasHeader());
             dataFile.setMissingValueMarker(tetradDataFile.getMissingValueMarker());
             dataFile.setNumOfColumns(tetradDataFile.getNumOfColumns());
             dataFile.setNumOfRows(tetradDataFile.getNumOfRows());

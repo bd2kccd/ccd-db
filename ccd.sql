@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.1.24-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.1.25-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: ccd
 -- ------------------------------------------------------
--- Server version	10.1.24-MariaDB
+-- Server version	10.1.25-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -207,6 +207,7 @@ DROP TABLE IF EXISTS `TetradDataFile`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `TetradDataFile` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `hasHeader` tinyint(1) NOT NULL DEFAULT '0',
   `quoteChar` char(1) DEFAULT NULL,
   `missingValueMarker` varchar(8) DEFAULT NULL,
   `commentMarker` varchar(8) DEFAULT NULL,
@@ -401,4 +402,4 @@ CREATE TABLE `UserRoleUserRolePermissionRel` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-03 11:06:15
+-- Dump completed on 2017-08-02 15:58:45
