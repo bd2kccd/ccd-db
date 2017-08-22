@@ -62,6 +62,11 @@ public class FileFormatService {
         return fileFormatRepository.findByName(name);
     }
 
+    @Cacheable("fileFormatByNameAndFileTypeNot")
+    public FileFormat findByNameAndFileTypeNot(String name, FileType fileType) {
+        return fileFormatRepository.findByNameAndFileTypeNot(name, fileType);
+    }
+
     @Cacheable("fileFormatByFileTypeNot")
     public List<FileFormat> findByFileTypeNot(FileType fileType) {
         return fileFormatRepository.findByFileTypeNot(fileType);

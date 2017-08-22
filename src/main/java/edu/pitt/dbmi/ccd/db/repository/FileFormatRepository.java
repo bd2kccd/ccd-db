@@ -36,6 +36,8 @@ public interface FileFormatRepository extends JpaRepository<FileFormat, Long> {
 
     public FileFormat findByName(String name);
 
+    public FileFormat findByNameAndFileTypeNot(String name, FileType fileType);
+
     @Query("SELECT ff FROM FileFormat ff WHERE ff.fileType.name = ?1")
     public List<FileFormat> findByFileTypeName(String fileTypeName);
 
