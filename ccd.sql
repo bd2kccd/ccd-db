@@ -199,6 +199,126 @@ CREATE TABLE `FileVariableType` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `JobFile`
+--
+
+DROP TABLE IF EXISTS `JobFile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobFile` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `fileId` bigint(20) NOT NULL,
+  `fileTypeId` bigint(20) NOT NULL,
+  `jobSubmissionId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fileId` (`fileId`),
+  KEY `fileTypeId` (`fileTypeId`),
+  KEY `jobSubmissionId` (`jobSubmissionId`),
+  CONSTRAINT `JobFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`),
+  CONSTRAINT `JobFile_ibfk_2` FOREIGN KEY (`fileTypeId`) REFERENCES `FileType` (`id`),
+  CONSTRAINT `JobFile_ibfk_3` FOREIGN KEY (`jobSubmissionId`) REFERENCES `JobSubmission` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `JobLocation`
+--
+
+DROP TABLE IF EXISTS `JobLocation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobLocation` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `displayName` varchar(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `JobParameter`
+--
+
+DROP TABLE IF EXISTS `JobParameter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobParameter` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `parameter` varchar(64) NOT NULL,
+  `value` varchar(64) DEFAULT NULL,
+  `jobParameterTypeId` bigint(20) NOT NULL,
+  `jobSubmissionId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobParameterTypeId` (`jobParameterTypeId`),
+  KEY `jobSubmissionId` (`jobSubmissionId`),
+  CONSTRAINT `JobParameter_ibfk_1` FOREIGN KEY (`jobParameterTypeId`) REFERENCES `JobParameterType` (`id`),
+  CONSTRAINT `JobParameter_ibfk_2` FOREIGN KEY (`jobSubmissionId`) REFERENCES `JobSubmission` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `JobParameterType`
+--
+
+DROP TABLE IF EXISTS `JobParameterType`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobParameterType` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `JobStatus`
+--
+
+DROP TABLE IF EXISTS `JobStatus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobStatus` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `status` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `JobSubmission`
+--
+
+DROP TABLE IF EXISTS `JobSubmission`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobSubmission` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) DEFAULT NULL,
+  `submitDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `startDate` timestamp NULL DEFAULT NULL,
+  `endDate` timestamp NULL DEFAULT NULL,
+  `jobLocationId` bigint(20) NOT NULL,
+  `jobStatusId` bigint(20) NOT NULL,
+  `algorithmTypeId` bigint(20) NOT NULL,
+  `userAccountId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobLocationId` (`jobLocationId`),
+  KEY `jobStatusId` (`jobStatusId`),
+  KEY `algorithmTypeId` (`algorithmTypeId`),
+  KEY `userAccountId` (`userAccountId`),
+  CONSTRAINT `JobSubmission_ibfk_1` FOREIGN KEY (`jobLocationId`) REFERENCES `JobLocation` (`id`),
+  CONSTRAINT `JobSubmission_ibfk_2` FOREIGN KEY (`jobStatusId`) REFERENCES `JobStatus` (`id`),
+  CONSTRAINT `JobSubmission_ibfk_3` FOREIGN KEY (`algorithmTypeId`) REFERENCES `AlgorithmType` (`id`),
+  CONSTRAINT `JobSubmission_ibfk_4` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `TetradDataFile`
 --
 
@@ -402,4 +522,4 @@ CREATE TABLE `UserRoleUserRolePermissionRel` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-08-02 15:58:45
+-- Dump completed on 2017-08-22 18:33:56
