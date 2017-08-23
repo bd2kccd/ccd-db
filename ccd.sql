@@ -245,8 +245,8 @@ DROP TABLE IF EXISTS `JobParameter`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `JobParameter` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `parameter` varchar(64) NOT NULL,
-  `value` varchar(64) DEFAULT NULL,
+  `param` varchar(64) NOT NULL,
+  `paramValue` varchar(64) DEFAULT NULL,
   `jobParameterTypeId` bigint(20) NOT NULL,
   `jobSubmissionId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
