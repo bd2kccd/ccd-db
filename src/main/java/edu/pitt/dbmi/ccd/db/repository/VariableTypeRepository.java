@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,17 +18,19 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.UserEventLog;
+import edu.pitt.dbmi.ccd.db.entity.VariableType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * May 10, 2017 3:02:19 PM
+ * Feb 9, 2018 6:29:01 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
-public interface UserEventLogRepository extends JpaRepository<UserEventLog, Long> {
+public interface VariableTypeRepository extends JpaRepository<VariableType, Long> {
+
+    public VariableType findByShortName(String shortName);
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,24 +22,29 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * Mar 19, 2017 7:00:37 PM
+ * Jan 28, 2018 4:45:17 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "UserInfo")
+@Table(name = "UserInformation", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"userAccountId"})})
 @XmlRootElement
-public class UserInfo implements Serializable {
+public class UserInformation implements Serializable {
 
-    private static final long serialVersionUID = 8097039983207404926L;
+    private static final long serialVersionUID = -7308060872694692982L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,10 +61,28 @@ public class UserInfo implements Serializable {
     @Column(name = "lastName", length = 255)
     private String lastName;
 
-    @Column(name = "email", length = 255)
+    @Basic(optional = false)
+    @Column(name = "email", nullable = false, length = 255)
     private String email;
 
-    public UserInfo() {
+    @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    private UserAccount userAccount;
+
+    public UserInformation() {
+    }
+
+    public UserInformation(String email, UserAccount userAccount) {
+        this.email = email;
+        this.userAccount = userAccount;
+    }
+
+    public UserInformation(String firstName, String middleName, String lastName, String email, UserAccount userAccount) {
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.email = email;
+        this.userAccount = userAccount;
     }
 
     public Long getId() {
@@ -100,6 +123,14 @@ public class UserInfo implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 
 }

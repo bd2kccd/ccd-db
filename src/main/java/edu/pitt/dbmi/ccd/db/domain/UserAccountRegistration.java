@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,51 +16,62 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.model;
+package edu.pitt.dbmi.ccd.db.domain;
 
 /**
  *
- * Apr 1, 2017 4:09:18 PM
+ * Jan 28, 2018 9:22:12 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class AccountRegistration {
+public class UserAccountRegistration {
 
-    private String username;
-    private String password;
+    private final String email;
+
+    private final String username;
+
+    private final String password;
+
     private boolean activated;
 
     private String firstName;
+
     private String middleName;
+
     private String lastName;
-    private String email;
 
-    private Long registrationLocation;
+    private String ipAddress;
 
-    public AccountRegistration() {
+    public UserAccountRegistration(String email, String password) {
+        this(email, email, password);
     }
 
-    public AccountRegistration(String username, String password, boolean activated, String email) {
+    public UserAccountRegistration(String email, String username, String password) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("Email is required.");
+        }
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username is required.");
+        }
+        if (password == null || password.trim().isEmpty()) {
+            throw new IllegalArgumentException("Password is required.");
+        }
+
+        this.email = email;
         this.username = username;
         this.password = password;
-        this.activated = activated;
-        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public boolean isActivated() {
@@ -95,20 +106,12 @@ public class AccountRegistration {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getIpAddress() {
+        return ipAddress;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Long getRegistrationLocation() {
-        return registrationLocation;
-    }
-
-    public void setRegistrationLocation(Long registrationLocation) {
-        this.registrationLocation = registrationLocation;
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,17 +31,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * Apr 27, 2017 4:21:47 PM
+ * Feb 9, 2018 5:59:17 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
 @Table(name = "FileType", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name"})})
+    @UniqueConstraint(columnNames = {"shortName"})})
 @XmlRootElement
 public class FileType implements Serializable {
 
-    private static final long serialVersionUID = -3146122016288565052L;
+    private static final long serialVersionUID = 7735456313013536725L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,19 +50,19 @@ public class FileType implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 32)
+    @Column(name = "name", nullable = false, length = 64)
     private String name;
 
     @Basic(optional = false)
-    @Column(name = "displayName", nullable = false, length = 64)
-    private String displayName;
+    @Column(name = "shortName", nullable = false, length = 32)
+    private String shortName;
 
     public FileType() {
     }
 
-    public FileType(String name, String displayName) {
+    public FileType(String name, String shortName) {
         this.name = name;
-        this.displayName = displayName;
+        this.shortName = shortName;
     }
 
     public Long getId() {
@@ -81,12 +81,12 @@ public class FileType implements Serializable {
         this.name = name;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getShortName() {
+        return shortName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
 }

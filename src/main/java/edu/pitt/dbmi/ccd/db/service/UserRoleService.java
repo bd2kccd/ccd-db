@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,20 +21,22 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.UserRole;
 import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
 import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Mar 31, 2017 5:22:24 PM
+ * Jan 15, 2018 3:25:15 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
 public class UserRoleService {
 
-    private static final String ADMIN_ROLE_NAME = "admin";
-    private static final String REGULAR_ROLE_NAME = "regular";
+    private static final String ADMIN_SHORT_NAME = "admin";
+    private static final String REGULAR_SHORT_NAME = "regular";
 
     private final UserRoleRepository userRoleRepository;
 
@@ -42,23 +44,34 @@ public class UserRoleService {
     public UserRoleService(UserRoleRepository userRoleRepository) {
         this.userRoleRepository = userRoleRepository;
 
+        // initialize database
         if (userRoleRepository.findAll().isEmpty()) {
             userRoleRepository.save(Arrays.asList(
-                    new UserRole(ADMIN_ROLE_NAME, "Admin"),
-                    new UserRole(REGULAR_ROLE_NAME, "Regular")
+                    new UserRole("Admin", ADMIN_SHORT_NAME),
+                    new UserRole("Regular", REGULAR_SHORT_NAME)
             ));
         }
     }
 
     public UserRole getAdminRole() {
-        return userRoleRepository.findByName(ADMIN_ROLE_NAME);
+        return findByShortName(ADMIN_SHORT_NAME);
     }
 
     public UserRole getRegularRole() {
-        return userRoleRepository.findByName(REGULAR_ROLE_NAME);
+        return findByShortName(REGULAR_SHORT_NAME);
     }
 
-    public UserRoleRepository getUserRoleRepository() {
+    @Cacheable("userRoleAll")
+    public List<UserRole> findAll() {
+        return userRoleRepository.findAll();
+    }
+
+    @Cacheable("userRoleByShortName")
+    public UserRole findByShortName(String shortName) {
+        return userRoleRepository.findByShortName(shortName);
+    }
+
+    public UserRoleRepository getRepository() {
         return userRoleRepository;
     }
 

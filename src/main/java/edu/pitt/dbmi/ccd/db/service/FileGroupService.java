@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,38 +18,28 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.UserRolePermission;
-import edu.pitt.dbmi.ccd.db.repository.UserRolePermissionRepository;
-import java.util.Arrays;
-import javax.transaction.Transactional;
+import edu.pitt.dbmi.ccd.db.repository.FileGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * May 10, 2017 3:04:23 PM
+ * Jun 30, 2017 10:58:56 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-@Transactional
-public class UserRolePermissionService {
+public class FileGroupService {
 
-    public static final String PERMISSION_ALL = "*";
-
-    private final UserRolePermissionRepository userRolePermissionRepository;
+    private final FileGroupRepository fileGroupRepository;
 
     @Autowired
-    public UserRolePermissionService(UserRolePermissionRepository userRolePermissionRepository) {
-        this.userRolePermissionRepository = userRolePermissionRepository;
-
-        if (userRolePermissionRepository.findAll().isEmpty()) {
-            userRolePermissionRepository.save(Arrays.asList(new UserRolePermission(PERMISSION_ALL, "All")));
-        }
+    public FileGroupService(FileGroupRepository fileGroupRepository) {
+        this.fileGroupRepository = fileGroupRepository;
     }
 
-    public UserRolePermissionRepository getUserRolePermissionRepository() {
-        return userRolePermissionRepository;
+    public FileGroupRepository getRepository() {
+        return fileGroupRepository;
     }
 
 }

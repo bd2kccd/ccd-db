@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -32,30 +32,25 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * Mar 19, 2017 7:00:21 PM
+ * Jan 28, 2018 4:32:55 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
 @Table(name = "UserAccount", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"userLoginId"})
-    , @UniqueConstraint(columnNames = {"userInfoId"})
-    , @UniqueConstraint(columnNames = {"username"})
+    @UniqueConstraint(columnNames = {"username"})
     , @UniqueConstraint(columnNames = {"account"})})
 @XmlRootElement
 public class UserAccount implements Serializable {
 
-    private static final long serialVersionUID = -3343178943873392333L;
+    private static final long serialVersionUID = 1515341631013388861L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,43 +78,34 @@ public class UserAccount implements Serializable {
     @Column(name = "disabled", nullable = false)
     private boolean disabled;
 
-    @Basic(optional = false)
-    @Column(name = "registrationDate", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date registrationDate;
-
-    @Column(name = "registrationLocation")
-    private Long registrationLocation;
-
     @Column(name = "actionKey", length = 255)
     private String actionKey;
-
-    @JoinColumn(name = "userInfoId", referencedColumnName = "id", nullable = false)
-    @OneToOne(optional = false, fetch = FetchType.EAGER)
-    private UserInfo userInfo;
-
-    @JoinColumn(name = "userLoginId", referencedColumnName = "id", nullable = false)
-    @OneToOne(optional = false, fetch = FetchType.EAGER)
-    private UserLogin userLogin;
 
     @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
         @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userRoleId", referencedColumnName = "id", nullable = false)})
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<UserRole> userRoles;
+    private List<UserRole> userRoles = new LinkedList<>();
 
     public UserAccount() {
     }
 
-    public UserAccount(String username, String password, String account, boolean activated, boolean disabled, Date registrationDate, UserInfo userInfo, UserLogin userLogin) {
+    public UserAccount(String username, String password, String account, boolean activated, boolean disabled) {
         this.username = username;
         this.password = password;
         this.account = account;
         this.activated = activated;
         this.disabled = disabled;
-        this.registrationDate = registrationDate;
-        this.userInfo = userInfo;
-        this.userLogin = userLogin;
+    }
+
+    public UserAccount(String username, String password, String account, boolean activated, boolean disabled, String actionKey, List<UserRole> userRoles) {
+        this.username = username;
+        this.password = password;
+        this.account = account;
+        this.activated = activated;
+        this.disabled = disabled;
+        this.actionKey = actionKey;
+        this.userRoles = userRoles;
     }
 
     public Long getId() {
@@ -138,8 +124,8 @@ public class UserAccount implements Serializable {
         this.username = username;
     }
 
-    @XmlTransient
     @JsonIgnore
+    @XmlTransient
     public String getPassword() {
         return password;
     }
@@ -172,22 +158,6 @@ public class UserAccount implements Serializable {
         this.disabled = disabled;
     }
 
-    public Date getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public Long getRegistrationLocation() {
-        return registrationLocation;
-    }
-
-    public void setRegistrationLocation(Long registrationLocation) {
-        this.registrationLocation = registrationLocation;
-    }
-
     public String getActionKey() {
         return actionKey;
     }
@@ -196,34 +166,12 @@ public class UserAccount implements Serializable {
         this.actionKey = actionKey;
     }
 
-    @XmlTransient
-    @JsonIgnore
     public List<UserRole> getUserRoles() {
         return userRoles;
     }
 
     public void setUserRoles(List<UserRole> userRoles) {
         this.userRoles = userRoles;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public UserInfo getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public UserLogin getUserLogin() {
-        return userLogin;
-    }
-
-    public void setUserLogin(UserLogin userLogin) {
-        this.userLogin = userLogin;
     }
 
 }

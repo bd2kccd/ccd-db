@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,12 +20,11 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * Mar 20, 2017 6:25:43 AM
+ * Jan 15, 2018 3:20:20 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -34,17 +33,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     public UserAccount findByUsername(String username);
 
-    public UserAccount findByAccount(String account);
-
     public UserAccount findByActionKey(String actionKey);
 
-    public Long countByUsername(String username);
-
-    @Query("SELECT ua FROM UserAccount ua WHERE ua.userInfo.email = ?1")
-    public UserAccount findByEmail(String email);
-
     public boolean existsByUsername(String username);
-
-    public boolean existsByActionKey(String actionKey);
 
 }

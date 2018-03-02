@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,17 +31,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * May 10, 2017 12:23:14 PM
+ * Feb 9, 2018 5:57:43 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "EventType", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name"})})
+@Table(name = "DataDelimiter", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"shortName"})})
 @XmlRootElement
-public class EventType implements Serializable {
+public class DataDelimiter implements Serializable {
 
-    private static final long serialVersionUID = 1296085044556959880L;
+    private static final long serialVersionUID = 2175878101157048600L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,19 +50,19 @@ public class EventType implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 32)
+    @Column(name = "name", nullable = false, length = 64)
     private String name;
 
     @Basic(optional = false)
-    @Column(name = "displayName", nullable = false, length = 64)
-    private String displayName;
+    @Column(name = "shortName", nullable = false, length = 32)
+    private String shortName;
 
-    public EventType() {
+    public DataDelimiter() {
     }
 
-    public EventType(String name, String displayName) {
+    public DataDelimiter(String name, String shortName) {
         this.name = name;
-        this.displayName = displayName;
+        this.shortName = shortName;
     }
 
     public Long getId() {
@@ -81,12 +81,12 @@ public class EventType implements Serializable {
         this.name = name;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getShortName() {
+        return shortName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
 }

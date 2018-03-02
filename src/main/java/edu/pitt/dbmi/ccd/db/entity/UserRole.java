@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,34 +19,27 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * Mar 19, 2017 7:00:50 PM
+ * Jan 28, 2018 4:36:29 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "UserRole", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name"})})
+@Table(name = "UserRole")
 @XmlRootElement
 public class UserRole implements Serializable {
 
-    private static final long serialVersionUID = 7543174854846867790L;
+    private static final long serialVersionUID = 1977905891772732766L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,28 +48,19 @@ public class UserRole implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 32)
+    @Column(name = "name", nullable = false, length = 64)
     private String name;
 
     @Basic(optional = false)
-    @Column(name = "displayName", nullable = false, length = 64)
-    private String displayName;
-
-    @Column(name = "description", length = 255)
-    private String description;
-
-    @JoinTable(name = "UserRoleUserRolePermissionRel", joinColumns = {
-        @JoinColumn(name = "userRoleId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "userRolePermissionId", referencedColumnName = "id", nullable = false)})
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<UserRolePermission> userRolePermissions;
+    @Column(name = "shortName", nullable = false, length = 32)
+    private String shortName;
 
     public UserRole() {
     }
 
-    public UserRole(String name, String displayName) {
+    public UserRole(String name, String shortName) {
         this.name = name;
-        this.displayName = displayName;
+        this.shortName = shortName;
     }
 
     public Long getId() {
@@ -95,28 +79,12 @@ public class UserRole implements Serializable {
         this.name = name;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getShortName() {
+        return shortName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<UserRolePermission> getUserRolePermissions() {
-        return userRolePermissions;
-    }
-
-    public void setUserRolePermissions(List<UserRolePermission> userRolePermissions) {
-        this.userRolePermissions = userRolePermissions;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
 }

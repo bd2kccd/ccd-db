@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,21 +18,35 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.entity.EventType;
-import org.springframework.cache.annotation.Cacheable;
+import edu.pitt.dbmi.ccd.db.entity.FileGroup;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * May 10, 2017 2:44:41 PM
+ * Jun 30, 2017 10:54:20 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
-public interface EventTypeRepository extends JpaRepository<EventType, Long> {
+public interface FileGroupRepository extends JpaRepository<FileGroup, Long> {
 
-    @Cacheable("eventTypeByName")
-    public EventType findByName(String name);
+    public FileGroup findByName(String name);
+
+    public FileGroup findByIdAndUserAccount(Long id, UserAccount userAccount);
+
+    public List<FileGroup> findByUserAccount(UserAccount userAccount);
+
+    public boolean existsByNameAndUserAccount(String name, UserAccount userAccount);
+
+    public boolean existsByNameAndUserAccountAndIdNot(String name, UserAccount userAccount, Long id);
+
+    public boolean existsByIdAndUserAccount(Long id, UserAccount userAccount);
+
+    @Transactional
+    public Long deleteByIdAndUserAccount(Long id, UserAccount userAccount);
 
 }

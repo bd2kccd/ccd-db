@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  *
- * Apr 27, 2017 4:49:17 PM
+ * Jan 28, 2018 7:29:23 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -39,17 +39,20 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     public List<File> findByUserAccountAndFileFormatIsNull(UserAccount userAccount);
 
+    public List<File> findByUserAccountAndFileFormat(UserAccount userAccount, FileFormat fileFormat);
+
     public File findByIdAndUserAccount(Long id, UserAccount userAccount);
 
     @Query("SELECT f FROM File f WHERE f.id IN ?1 AND f.userAccount = ?2")
     public List<File> findByIdsAndUserAccount(List<Long> ids, UserAccount userAccount);
 
-    public Long countByUserAccount(UserAccount userAccount);
-
-    public Long countByFileFormatAndUserAccount(FileFormat fileFormat, UserAccount userAccount);
-
     public Long countByUserAccountAndFileFormatIsNull(UserAccount userAccount);
 
+    public Long countByUserAccountAndFileFormat(UserAccount userAccount, FileFormat fileFormat);
+
+//    @Query("SELECT new map(f.fileFormat, COUNT(f)) "
+//            + "FROM File f WHERE f.userAccount = ?1 GROUP BY f.fileFormat")
+//    public Map<FileFormat, Long> countGroupByFileFormat(UserAccount userAccount);
     public boolean existsByTitleAndUserAccount(String title, UserAccount userAccount);
 
 }

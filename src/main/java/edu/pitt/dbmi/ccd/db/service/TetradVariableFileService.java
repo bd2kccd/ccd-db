@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,10 +18,14 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.File;
+import edu.pitt.dbmi.ccd.db.entity.FileFormat;
+import edu.pitt.dbmi.ccd.db.entity.TetradVariableFile;
+import edu.pitt.dbmi.ccd.db.repository.TetradDataFileRepository;
 import edu.pitt.dbmi.ccd.db.repository.TetradVariableFileRepository;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -30,17 +34,58 @@ import org.springframework.stereotype.Service;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-@Transactional
 public class TetradVariableFileService {
 
+    private final TetradDataFileRepository tetradDataFileRepository;
     private final TetradVariableFileRepository tetradVariableFileRepository;
+    private final FileService fileService;
+    private final FileFormatService fileFormatService;
 
     @Autowired
-    public TetradVariableFileService(TetradVariableFileRepository tetradVariableFileRepository) {
+    public TetradVariableFileService(TetradDataFileRepository tetradDataFileRepository, TetradVariableFileRepository tetradVariableFileRepository, FileService fileService, FileFormatService fileFormatService) {
+        this.tetradDataFileRepository = tetradDataFileRepository;
         this.tetradVariableFileRepository = tetradVariableFileRepository;
+        this.fileService = fileService;
+        this.fileFormatService = fileFormatService;
     }
 
-    public TetradVariableFileRepository getTetradVariableFileRepository() {
+    private TetradVariableFile saveAsNew(TetradVariableFile tetradVariableFile) {
+        File file = tetradVariableFile.getFile();
+
+        // update file format
+        FileFormat fileFormat = fileFormatService.findByShortName(FileFormatService.TETRAD_VAR_SHORT_NAME);
+        file.setFileFormat(fileFormat);
+        file = fileService.getRepository().save(file);
+
+        tetradVariableFile.setFile(file);
+
+        return tetradVariableFileRepository.save(tetradVariableFile);
+    }
+
+    @Transactional
+    public TetradVariableFile save(TetradVariableFile tetradVariableFile) {
+        File file = tetradVariableFile.getFile();
+        FileFormat prevFileFormat = file.getFileFormat();
+        if (prevFileFormat == null) {
+            return saveAsNew(tetradVariableFile);
+        } else {
+            switch (prevFileFormat.getShortName()) {
+                case FileFormatService.TETRAD_TAB_SHORT_NAME:
+                    tetradDataFileRepository.deleteByFile(file);
+
+                    return saveAsNew(tetradVariableFile);
+                case FileFormatService.TETRAD_VAR_SHORT_NAME:
+                    TetradVariableFile varFile = tetradVariableFileRepository.findByFile(file);
+                    varFile.setNumOfVariables(tetradVariableFile.getNumOfVariables());
+
+                    return tetradVariableFileRepository.save(varFile);
+                default:
+                    return saveAsNew(tetradVariableFile);
+            }
+        }
+    }
+
+    public TetradVariableFileRepository getRepository() {
         return tetradVariableFileRepository;
     }
 

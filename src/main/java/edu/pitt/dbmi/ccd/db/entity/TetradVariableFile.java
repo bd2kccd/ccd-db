@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -31,6 +32,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -44,7 +46,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class TetradVariableFile implements Serializable {
 
-    private static final long serialVersionUID = -6626880099132750795L;
+    private static final long serialVersionUID = 564704246069425855L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,8 +57,8 @@ public class TetradVariableFile implements Serializable {
     @Column(name = "numOfVariables")
     private Integer numOfVariables;
 
-    @JoinColumn(name = "fileId", referencedColumnName = "id", nullable = false)
-    @OneToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "fileId", referencedColumnName = "id", unique = true, nullable = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     private File file;
 
     public TetradVariableFile() {
@@ -82,6 +84,8 @@ public class TetradVariableFile implements Serializable {
         this.numOfVariables = numOfVariables;
     }
 
+    @JsonIgnore
+    @XmlTransient
     public File getFile() {
         return file;
     }

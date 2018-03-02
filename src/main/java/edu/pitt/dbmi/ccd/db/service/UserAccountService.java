@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,119 +18,103 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.domain.UserAccountRegistration;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.entity.UserInfo;
-import edu.pitt.dbmi.ccd.db.entity.UserLogin;
+import edu.pitt.dbmi.ccd.db.entity.UserInformation;
+import edu.pitt.dbmi.ccd.db.entity.UserRegistration;
 import edu.pitt.dbmi.ccd.db.entity.UserRole;
-import edu.pitt.dbmi.ccd.db.model.AccountRegistration;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
-import edu.pitt.dbmi.ccd.db.repository.UserInfoRepository;
-import edu.pitt.dbmi.ccd.db.repository.UserLoginRepository;
+import edu.pitt.dbmi.ccd.db.util.InetUtils;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * Mar 20, 2017 6:44:21 AM
+ * Jan 15, 2018 3:23:30 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-@Transactional
 public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
-    private final UserInfoRepository userInfoRepository;
-    private final UserLoginRepository userLoginRepository;
+
     private final UserRoleService userRoleService;
+    private final UserInformationService userInformationService;
+    private final UserRegistrationService userRegistrationService;
 
     @Autowired
-    public UserAccountService(
-            UserAccountRepository userAccountRepository,
-            UserInfoRepository userInfoRepository,
-            UserLoginRepository userLoginRepository,
-            UserRoleService userRoleService) {
+    public UserAccountService(UserAccountRepository userAccountRepository, UserRoleService userRoleService, UserInformationService userInformationService, UserRegistrationService userRegistrationService) {
         this.userAccountRepository = userAccountRepository;
-        this.userInfoRepository = userInfoRepository;
-        this.userLoginRepository = userLoginRepository;
         this.userRoleService = userRoleService;
+        this.userInformationService = userInformationService;
+        this.userRegistrationService = userRegistrationService;
     }
 
-    public UserAccount findByEmail(String email) {
-        return userAccountRepository.findByEmail(email);
+    public void clearActionKey(UserAccount userAccount) {
+        if (userAccount.getActionKey() != null) {
+            userAccount.setActionKey(null);
+            userAccountRepository.save(userAccount);
+        }
     }
 
-    public UserAccount createRegularUser(AccountRegistration accountRegistration) {
-        UserInfo userInfo = createUserInfo(accountRegistration);
+    @Transactional
+    public UserAccount registerRegularUser(UserAccountRegistration registration) {
         UserRole userRole = userRoleService.getRegularRole();
-        UserLogin userLogin = new UserLogin();
 
-        userInfo = userInfoRepository.save(userInfo);
-        userLogin = userLoginRepository.save(userLogin);
-
-        UserAccount userAccount = createUserAccount(accountRegistration);
-        userAccount.setUserInfo(userInfo);
-        userAccount.setUserLogin(userLogin);
-        userAccount.setUserRoles(Collections.singletonList(userRole));
-
-        return userAccountRepository.save(userAccount);
-    }
-
-    private UserAccount createUserAccount(AccountRegistration accountRegistration) {
-        String username = accountRegistration.getUsername();
-        String password = accountRegistration.getPassword();
-        boolean activated = accountRegistration.isActivated();
-        Long registrationLocation = accountRegistration.getRegistrationLocation();
-
-        String activationKey = activated ? null : UUID.randomUUID().toString();
-        String account = UUID.randomUUID().toString();
-        Date registrationDate = new Date(System.currentTimeMillis());
-
-        UserAccount userAccount = new UserAccount();
-        userAccount.setAccount(account);
-        userAccount.setActionKey(activationKey);
-        userAccount.setActivated(activated);
-        userAccount.setPassword(password);
-        userAccount.setRegistrationDate(registrationDate);
-        userAccount.setRegistrationLocation(registrationLocation);
-        userAccount.setUsername(username);
+        UserAccount userAccount = persistUserAccount(registration, Collections.singletonList(userRole));
+        persistUserInformation(registration, userAccount);
+        persistUserRegistration(registration, userAccount);
 
         return userAccount;
     }
 
-    private UserInfo createUserInfo(AccountRegistration accountRegistration) {
-        String firstName = accountRegistration.getFirstName();
-        String middleName = accountRegistration.getMiddleName();
-        String lastName = accountRegistration.getLastName();
-        String email = accountRegistration.getEmail();
+    protected UserRegistration persistUserRegistration(UserAccountRegistration registration, UserAccount userAccount) {
+        String ipAddress = registration.getIpAddress();
 
-        UserInfo userInfo = new UserInfo();
-        userInfo.setEmail(email);
-        userInfo.setFirstName(firstName);
-        userInfo.setMiddleName(middleName);
-        userInfo.setLastName(lastName);
+        UserRegistration userRegistration = new UserRegistration(new Date(), userAccount);
+        userRegistration.setRegistrationLocation(InetUtils.getInetNTOA(ipAddress));
 
-        return userInfo;
+        return userRegistrationService.getRepository().save(userRegistration);
     }
 
-    public UserAccountRepository getUserAccountRepository() {
+    protected UserInformation persistUserInformation(UserAccountRegistration registration, UserAccount userAccount) {
+        String email = registration.getEmail();
+        String firstName = registration.getFirstName();
+        String middleName = registration.getMiddleName();
+        String lastName = registration.getLastName();
+
+        UserInformation userInformation = new UserInformation(email, userAccount);
+        userInformation.setFirstName(firstName);
+        userInformation.setMiddleName(middleName);
+        userInformation.setLastName(lastName);
+
+        return userInformationService.getRepository().save(userInformation);
+    }
+
+    protected UserAccount persistUserAccount(UserAccountRegistration registration, List<UserRole> userRoles) {
+        String username = registration.getUsername();
+        String password = registration.getPassword();
+        boolean activated = registration.isActivated();
+
+        String account = UUID.randomUUID().toString();
+        String activationKey = activated ? null : UUID.randomUUID().toString();
+        boolean disabled = false;
+
+        UserAccount userAccount = new UserAccount(username, password, account, activated, disabled);
+        userAccount.setActionKey(activationKey);
+        userAccount.setUserRoles(userRoles);
+
+        return userAccountRepository.save(userAccount);
+    }
+
+    public UserAccountRepository getRepository() {
         return userAccountRepository;
-    }
-
-    public UserInfoRepository getUserInfoRepository() {
-        return userInfoRepository;
-    }
-
-    public UserLoginRepository getUserLoginRepository() {
-        return userLoginRepository;
-    }
-
-    public UserRoleService getUserRoleService() {
-        return userRoleService;
     }
 
 }

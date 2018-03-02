@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,20 +19,18 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * May 10, 2017 2:42:45 PM
+ * Feb 9, 2018 6:27:32 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
 public interface AlgorithmTypeRepository extends JpaRepository<AlgorithmType, Long> {
 
-    @Cacheable("algorithmTypeByName")
-    public AlgorithmType findByName(String name);
+    public AlgorithmType findByShortName(String shortName);
 
 }

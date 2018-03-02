@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,17 +31,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * May 10, 2017 12:20:44 PM
+ * Feb 9, 2018 5:56:04 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
 @Table(name = "AlgorithmType", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name"})})
+    @UniqueConstraint(columnNames = {"shortName"})})
 @XmlRootElement
 public class AlgorithmType implements Serializable {
 
-    private static final long serialVersionUID = -5737496375252903506L;
+    private static final long serialVersionUID = 6950247588109853707L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,22 +50,19 @@ public class AlgorithmType implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 32)
+    @Column(name = "name", nullable = false, length = 64)
     private String name;
 
     @Basic(optional = false)
-    @Column(name = "displayName", nullable = false, length = 64)
-    private String displayName;
-
-    @Column(name = "description", length = 255)
-    private String description;
+    @Column(name = "shortName", nullable = false, length = 32)
+    private String shortName;
 
     public AlgorithmType() {
     }
 
-    public AlgorithmType(String name, String displayName) {
+    public AlgorithmType(String name, String shortName) {
         this.name = name;
-        this.displayName = displayName;
+        this.shortName = shortName;
     }
 
     public Long getId() {
@@ -84,20 +81,12 @@ public class AlgorithmType implements Serializable {
         this.name = name;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getShortName() {
+        return shortName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,28 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db;
+package edu.pitt.dbmi.ccd.db.repository;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import edu.pitt.dbmi.ccd.db.entity.DataDelimiter;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
- * Mar 19, 2017 6:53:45 PM
+ * Feb 9, 2018 6:28:01 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class CcdDbApplicationTest {
+@Repository
+public interface DataDelimiterRepository extends JpaRepository<DataDelimiter, Long> {
 
-    /**
-     * Test of main method, of class CcdDbApplication.
-     */
-    @Test
-    public void contextLoads() {
-    }
+    public DataDelimiter findByShortName(String shortName);
 
 }

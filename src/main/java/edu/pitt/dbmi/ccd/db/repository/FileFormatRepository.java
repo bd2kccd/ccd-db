@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,26 +18,23 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
 import edu.pitt.dbmi.ccd.db.entity.FileFormat;
-import edu.pitt.dbmi.ccd.db.entity.FileType;
 import java.util.List;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * May 10, 2017 2:46:35 PM
+ * Feb 9, 2018 6:28:23 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
 public interface FileFormatRepository extends JpaRepository<FileFormat, Long> {
 
-    @Cacheable("fileFormatByName")
-    public FileFormat findByName(String name);
+    public FileFormat findByShortName(String shortName);
 
-    @Cacheable("fileFormatsByFileType")
-    public List<FileFormat> findByFileType(FileType fileType);
+    public List<FileFormat> findByAlgorithmType(AlgorithmType algorithmType);
 
 }

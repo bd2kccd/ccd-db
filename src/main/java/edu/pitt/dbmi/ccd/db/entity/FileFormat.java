@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,8 +18,8 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,21 +28,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * May 10, 2017 12:27:02 PM
+ * Feb 9, 2018 6:00:36 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "FileFormat", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table(name = "FileFormat", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"fileTypeId", "algorithmTypeId"})
+    , @UniqueConstraint(columnNames = {"shortName"})})
 @XmlRootElement
 public class FileFormat implements Serializable {
 
@@ -55,37 +56,29 @@ public class FileFormat implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 32)
+    @Column(name = "name", nullable = false, length = 64)
     private String name;
 
     @Basic(optional = false)
-    @Column(name = "displayName", nullable = false, length = 64)
-    private String displayName;
+    @Column(name = "shortName", nullable = false, length = 32)
+    private String shortName;
 
     @JoinColumn(name = "fileTypeId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private FileType fileType;
 
-    @JoinTable(name = "FileFormatAlgorithmRel", joinColumns = {
-        @JoinColumn(name = "fileFormatId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "algorithmTypeId", referencedColumnName = "id", nullable = false)})
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<AlgorithmType> algorithmTypes;
+    @JoinColumn(name = "algorithmTypeId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private AlgorithmType algorithmType;
 
     public FileFormat() {
     }
 
-    public FileFormat(String name, String displayName, FileType fileType) {
+    public FileFormat(String name, String shortName, FileType fileType, AlgorithmType algorithmType) {
         this.name = name;
-        this.displayName = displayName;
+        this.shortName = shortName;
         this.fileType = fileType;
-    }
-
-    public FileFormat(String name, String displayName, FileType fileType, List<AlgorithmType> algorithmTypes) {
-        this.name = name;
-        this.displayName = displayName;
-        this.fileType = fileType;
-        this.algorithmTypes = algorithmTypes;
+        this.algorithmType = algorithmType;
     }
 
     public Long getId() {
@@ -104,28 +97,32 @@ public class FileFormat implements Serializable {
         this.name = name;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getShortName() {
+        return shortName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
-    public List<AlgorithmType> getAlgorithmTypes() {
-        return algorithmTypes;
-    }
-
-    public void setAlgorithmTypes(List<AlgorithmType> algorithmTypes) {
-        this.algorithmTypes = algorithmTypes;
-    }
-
+    @JsonIgnore
+    @XmlTransient
     public FileType getFileType() {
         return fileType;
     }
 
     public void setFileType(FileType fileType) {
         this.fileType = fileType;
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    public AlgorithmType getAlgorithmType() {
+        return algorithmType;
+    }
+
+    public void setAlgorithmType(AlgorithmType algorithmType) {
+        this.algorithmType = algorithmType;
     }
 
 }

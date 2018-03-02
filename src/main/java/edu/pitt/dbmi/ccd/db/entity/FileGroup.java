@@ -21,6 +21,7 @@ package edu.pitt.dbmi.ccd.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,6 +30,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -39,72 +42,63 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * Jan 28, 2018 4:58:46 PM
+ * Jun 29, 2017 5:19:10 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "File", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name", "userAccountId"})
-    , @UniqueConstraint(columnNames = {"title", "userAccountId"})})
+@Table(uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name", "userAccountId"})})
 @XmlRootElement
-public class File implements Serializable {
+public class FileGroup implements Serializable {
 
-    private static final long serialVersionUID = -8323975281387418754L;
+    private static final long serialVersionUID = -2212881295372876665L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false)
+    @Column(nullable = false)
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(nullable = false, length = 255)
     private String name;
 
     @Basic(optional = false)
-    @Column(name = "title", nullable = false, length = 255)
-    private String title;
-
-    @Basic(optional = false)
-    @Column(name = "creationTime", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationTime;
 
-    @Basic(optional = false)
-    @Column(name = "fileSize", nullable = false)
-    private long fileSize;
-
-    @Column(name = "md5CheckSum", length = 32)
-    private String md5CheckSum;
+    @JoinColumn(name = "fileTypeId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private FileType fileType;
 
     @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private UserAccount userAccount;
 
-    @JoinColumn(name = "fileFormatId", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.EAGER)
-    private FileFormat fileFormat;
+    @JoinTable(name = "FileGroupFileRel", joinColumns = {
+        @JoinColumn(name = "fileGroupId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "fileId", referencedColumnName = "id", nullable = false)})
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<File> files;
 
-    public File() {
+    public FileGroup() {
     }
 
-    public File(String name, String title, Date creationTime, long fileSize, UserAccount userAccount) {
+    public FileGroup(String name, Date creationTime, FileType fileType, UserAccount userAccount) {
         this.name = name;
-        this.title = title;
         this.creationTime = creationTime;
-        this.fileSize = fileSize;
+        this.fileType = fileType;
         this.userAccount = userAccount;
     }
 
-    public File(String name, String title, Date creationTime, long fileSize, String md5CheckSum, UserAccount userAccount, FileFormat fileFormat) {
+    public FileGroup(String name, Date creationTime, FileType fileType, UserAccount userAccount, List<File> files) {
         this.name = name;
-        this.title = title;
         this.creationTime = creationTime;
-        this.fileSize = fileSize;
-        this.md5CheckSum = md5CheckSum;
+        this.fileType = fileType;
         this.userAccount = userAccount;
-        this.fileFormat = fileFormat;
+        this.files = files;
     }
 
     public Long getId() {
@@ -123,14 +117,6 @@ public class File implements Serializable {
         this.name = name;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public Date getCreationTime() {
         return creationTime;
     }
@@ -139,24 +125,18 @@ public class File implements Serializable {
         this.creationTime = creationTime;
     }
 
-    public long getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(long fileSize) {
-        this.fileSize = fileSize;
-    }
-
-    public String getMd5CheckSum() {
-        return md5CheckSum;
-    }
-
-    public void setMd5CheckSum(String md5CheckSum) {
-        this.md5CheckSum = md5CheckSum;
-    }
-
-    @JsonIgnore
     @XmlTransient
+    @JsonIgnore
+    public FileType getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(FileType fileType) {
+        this.fileType = fileType;
+    }
+
+    @XmlTransient
+    @JsonIgnore
     public UserAccount getUserAccount() {
         return userAccount;
     }
@@ -165,14 +145,14 @@ public class File implements Serializable {
         this.userAccount = userAccount;
     }
 
-    @JsonIgnore
     @XmlTransient
-    public FileFormat getFileFormat() {
-        return fileFormat;
+    @JsonIgnore
+    public List<File> getFiles() {
+        return files;
     }
 
-    public void setFileFormat(FileFormat fileFormat) {
-        this.fileFormat = fileFormat;
+    public void setFiles(List<File> files) {
+        this.files = files;
     }
 
 }

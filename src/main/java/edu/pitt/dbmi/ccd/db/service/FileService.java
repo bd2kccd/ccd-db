@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,22 +18,23 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
 import edu.pitt.dbmi.ccd.db.entity.File;
+import edu.pitt.dbmi.ccd.db.entity.FileFormat;
+import edu.pitt.dbmi.ccd.db.entity.TetradDataFile;
+import edu.pitt.dbmi.ccd.db.entity.TetradVariableFile;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.repository.FileDelimiterTypeRepository;
-import edu.pitt.dbmi.ccd.db.repository.FileFormatRepository;
 import edu.pitt.dbmi.ccd.db.repository.FileRepository;
-import edu.pitt.dbmi.ccd.db.repository.FileVariableTypeRepository;
+import edu.pitt.dbmi.ccd.db.repository.TetradDataFileRepository;
+import edu.pitt.dbmi.ccd.db.repository.TetradVariableFileRepository;
+import edu.pitt.dbmi.ccd.db.util.FileUtils;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -41,10 +42,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * Apr 27, 2017 4:50:10 PM
+ * Jan 28, 2018 7:30:10 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
@@ -54,35 +56,92 @@ public class FileService {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileService.class);
 
     private final FileRepository fileRepository;
-    private final FileFormatRepository fileFormatRepository;
-    private final FileDelimiterTypeRepository fileDelimiterTypeRepository;
-    private final FileVariableTypeRepository fileVariableTypeRepository;
+    private final TetradDataFileRepository tetradDataFileRepository;
+    private final TetradVariableFileRepository tetradVariableFileRepository;
+    private final FileFormatService fileFormatService;
+    private final AlgorithmTypeService algorithmTypeService;
 
     @Autowired
-    public FileService(FileRepository fileRepository, FileFormatRepository fileFormatRepository, FileDelimiterTypeRepository fileDelimiterTypeRepository, FileVariableTypeRepository fileVariableTypeRepository) {
+    public FileService(
+            FileRepository fileRepository,
+            TetradDataFileRepository tetradDataFileRepository,
+            TetradVariableFileRepository tetradVariableFileRepository,
+            FileFormatService fileFormatService,
+            AlgorithmTypeService algorithmTypeService) {
         this.fileRepository = fileRepository;
-        this.fileFormatRepository = fileFormatRepository;
-        this.fileDelimiterTypeRepository = fileDelimiterTypeRepository;
-        this.fileVariableTypeRepository = fileVariableTypeRepository;
+        this.tetradDataFileRepository = tetradDataFileRepository;
+        this.tetradVariableFileRepository = tetradVariableFileRepository;
+        this.fileFormatService = fileFormatService;
+        this.algorithmTypeService = algorithmTypeService;
     }
 
-    public File retrieveFile(Long id, UserAccount userAccount) {
-        if (id == null || userAccount == null) {
-            return null;
+    public Map<String, String> getAdditionalInfo(File file) {
+        Map<String, String> addInfo = new LinkedHashMap<>();
+
+        FileFormat fileFormat = file.getFileFormat();
+        if (fileFormat != null) {
+            switch (fileFormat.getShortName()) {
+                case FileFormatService.TETRAD_TAB_SHORT_NAME:
+                    TetradDataFile dataFile = tetradDataFileRepository.findByFile(file);
+                    if (dataFile != null) {
+                        addInfo.put("Number of Columns", String.valueOf(dataFile.getNumOfCols()));
+                        addInfo.put("Number of Lines", String.valueOf(dataFile.getNumOfLines()));
+                        addInfo.put("Delimiter", dataFile.getDataDelimiter().getName());
+                        addInfo.put("Variable Type", dataFile.getVariableType().getName());
+                        addInfo.put("Has Header", dataFile.isHasHeader() ? "Yes" : "No");
+                        addInfo.put("Quote Character", String.valueOf(dataFile.getQuoteChar()));
+                        addInfo.put("Missing Value Marker", dataFile.getMissingMarker());
+                        addInfo.put("Comment Marker", dataFile.getCommentMarker());
+                    }
+                    break;
+                case FileFormatService.TETRAD_VAR_SHORT_NAME:
+                    TetradVariableFile varFile = tetradVariableFileRepository.findByFile(file);
+                    if (varFile != null) {
+                        addInfo.put("Number of Variables", String.valueOf(varFile.getNumOfVariables()));
+                    }
+                    break;
+            }
         }
 
-        return fileRepository.findByIdAndUserAccount(id, userAccount);
+        return addInfo;
     }
 
-    public Map<String, File> getUserFiles(UserAccount userAccount) {
-        Map<String, File> files = new HashMap<>();
+    @Transactional
+    public File changeFileFormat(File file, FileFormat fileFormat) {
+        FileFormat prevFileFormat = file.getFileFormat();
+        if (prevFileFormat != null) {
+            switch (prevFileFormat.getShortName()) {
+                case FileFormatService.TETRAD_TAB_SHORT_NAME:
+                    tetradDataFileRepository.deleteByFile(file);
+                    break;
+                case FileFormatService.TETRAD_VAR_SHORT_NAME:
+                    tetradVariableFileRepository.deleteByFile(file);
+                    break;
+            }
+        }
 
-        List<File> dbFileList = fileRepository.findByUserAccount(userAccount);
-        dbFileList.forEach(file -> {
-            files.put(file.getName(), file);
+        file.setFileFormat(fileFormat);
+
+        return fileRepository.save(file);
+    }
+
+    public Map<FileFormat, Long> countGroupByFileFormat(UserAccount userAccount) {
+        Map<FileFormat, Long> countMap = new LinkedHashMap<>();
+
+        // get counts of uncategorized files
+        Long count = fileRepository
+                .countByUserAccountAndFileFormatIsNull(userAccount);
+        countMap.put(null, count);
+
+        // order by algorithm types
+        List<AlgorithmType> algoTypes = algorithmTypeService.findAll();
+        algoTypes.forEach(algoType -> {
+            fileFormatService.findByAlgorithmType(algoType).stream()
+                    .filter(e -> !FileTypeService.RESULT_SHORT_NAME.equals(e.getFileType().getShortName()))
+                    .forEach(fmt -> countMap.put(fmt, fileRepository.countByUserAccountAndFileFormat(userAccount, fmt)));
         });
 
-        return files;
+        return countMap;
     }
 
     public List<File> persistLocalFiles(List<Path> files, UserAccount userAccount) {
@@ -107,51 +166,30 @@ public class FileService {
     }
 
     public File createFileEntity(Path file, UserAccount userAccount) {
-        File fileEntity = null;
-
         try {
             BasicFileAttributes attrs = Files.readAttributes(file, BasicFileAttributes.class);
             String name = file.getFileName().toString();
             Date creationTime = new Date(attrs.creationTime().toMillis());
             long fileSize = attrs.size();
-            String md5checkSum = getFileChecksum(file);
+            String md5checkSum = FileUtils.computeMD5Hash(file);
 
-            fileEntity = new File();
+            File fileEntity = new File();
             fileEntity.setCreationTime(creationTime);
             fileEntity.setFileSize(fileSize);
             fileEntity.setMd5CheckSum(md5checkSum);
             fileEntity.setName(name);
             fileEntity.setTitle(name);
             fileEntity.setUserAccount(userAccount);
+
+            return fileEntity;
         } catch (IOException | NoSuchAlgorithmException exception) {
             LOGGER.error("Unable to persist physical file information", exception);
-        }
 
-        return fileEntity;
+            return null;
+        }
     }
 
-    private String getFileChecksum(Path file) throws IOException, NoSuchAlgorithmException {
-        StringBuilder sb = new StringBuilder();
-
-        MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-        try (InputStream is = Files.newInputStream(file)) {
-            DigestInputStream dis = new DigestInputStream(is, messageDigest);
-            dis.on(true); // no need to call md.update(buffer) when set ON
-            byte[] buffer = new byte[8192];
-            while (dis.read(buffer) != -1) {
-                // a call to the read method results in an update on the message digest
-            }
-
-            byte[] digest = messageDigest.digest();
-            for (byte b : digest) {
-                sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-            }
-        }
-
-        return sb.toString();
-    }
-
-    public FileRepository getFileRepository() {
+    public FileRepository getRepository() {
         return fileRepository;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -32,6 +33,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -45,7 +47,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class TetradDataFile implements Serializable {
 
-    private static final long serialVersionUID = 151820174223230277L;
+    private static final long serialVersionUID = -2758636916004378451L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,40 +55,57 @@ public class TetradDataFile implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Basic(optional = false)
+    @Column(name = "hasHeader", nullable = false)
+    private boolean hasHeader;
+
     @Column(name = "quoteChar")
     private Character quoteChar;
 
-    @Column(name = "missingValueMarker", length = 8)
-    private String missingValueMarker;
+    @Column(name = "missingMarker", length = 8)
+    private String missingMarker;
 
     @Column(name = "commentMarker", length = 8)
     private String commentMarker;
 
-    @Column(name = "numOfRows")
-    private Integer numOfRows;
+    @Column(name = "numOfLines")
+    private Integer numOfLines;
 
-    @Column(name = "numOfColumns")
-    private Integer numOfColumns;
+    @Column(name = "numOfCols")
+    private Integer numOfCols;
 
-    @JoinColumn(name = "fileId", referencedColumnName = "id", nullable = false)
-    @OneToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "fileId", referencedColumnName = "id", unique = true, nullable = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     private File file;
 
-    @JoinColumn(name = "fileDelimiterTypeId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "dataDelimiterId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private FileDelimiterType fileDelimiterType;
+    private DataDelimiter dataDelimiter;
 
-    @JoinColumn(name = "fileVariableTypeId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "variableTypeId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private FileVariableType fileVariableType;
+    private VariableType variableType;
 
     public TetradDataFile() {
     }
 
-    public TetradDataFile(File file, FileDelimiterType fileDelimiterType, FileVariableType fileVariableType) {
+    public TetradDataFile(boolean hasHeader, File file, DataDelimiter dataDelimiter, VariableType variableType) {
+        this.hasHeader = hasHeader;
         this.file = file;
-        this.fileDelimiterType = fileDelimiterType;
-        this.fileVariableType = fileVariableType;
+        this.dataDelimiter = dataDelimiter;
+        this.variableType = variableType;
+    }
+
+    public TetradDataFile(boolean hasHeader, Character quoteChar, String missingMarker, String commentMarker, Integer numOfLines, Integer numOfCols, File file, DataDelimiter dataDelimiter, VariableType variableType) {
+        this.hasHeader = hasHeader;
+        this.quoteChar = quoteChar;
+        this.missingMarker = missingMarker;
+        this.commentMarker = commentMarker;
+        this.numOfLines = numOfLines;
+        this.numOfCols = numOfCols;
+        this.file = file;
+        this.dataDelimiter = dataDelimiter;
+        this.variableType = variableType;
     }
 
     public Long getId() {
@@ -97,6 +116,14 @@ public class TetradDataFile implements Serializable {
         this.id = id;
     }
 
+    public boolean isHasHeader() {
+        return hasHeader;
+    }
+
+    public void setHasHeader(boolean hasHeader) {
+        this.hasHeader = hasHeader;
+    }
+
     public Character getQuoteChar() {
         return quoteChar;
     }
@@ -105,12 +132,12 @@ public class TetradDataFile implements Serializable {
         this.quoteChar = quoteChar;
     }
 
-    public String getMissingValueMarker() {
-        return missingValueMarker;
+    public String getMissingMarker() {
+        return missingMarker;
     }
 
-    public void setMissingValueMarker(String missingValueMarker) {
-        this.missingValueMarker = missingValueMarker;
+    public void setMissingMarker(String missingMarker) {
+        this.missingMarker = missingMarker;
     }
 
     public String getCommentMarker() {
@@ -121,22 +148,24 @@ public class TetradDataFile implements Serializable {
         this.commentMarker = commentMarker;
     }
 
-    public Integer getNumOfRows() {
-        return numOfRows;
+    public Integer getNumOfLines() {
+        return numOfLines;
     }
 
-    public void setNumOfRows(Integer numOfRows) {
-        this.numOfRows = numOfRows;
+    public void setNumOfLines(Integer numOfLines) {
+        this.numOfLines = numOfLines;
     }
 
-    public Integer getNumOfColumns() {
-        return numOfColumns;
+    public Integer getNumOfCols() {
+        return numOfCols;
     }
 
-    public void setNumOfColumns(Integer numOfColumns) {
-        this.numOfColumns = numOfColumns;
+    public void setNumOfCols(Integer numOfCols) {
+        this.numOfCols = numOfCols;
     }
 
+    @JsonIgnore
+    @XmlTransient
     public File getFile() {
         return file;
     }
@@ -145,20 +174,20 @@ public class TetradDataFile implements Serializable {
         this.file = file;
     }
 
-    public FileDelimiterType getFileDelimiterType() {
-        return fileDelimiterType;
+    public DataDelimiter getDataDelimiter() {
+        return dataDelimiter;
     }
 
-    public void setFileDelimiterType(FileDelimiterType fileDelimiterType) {
-        this.fileDelimiterType = fileDelimiterType;
+    public void setDataDelimiter(DataDelimiter dataDelimiter) {
+        this.dataDelimiter = dataDelimiter;
     }
 
-    public FileVariableType getFileVariableType() {
-        return fileVariableType;
+    public VariableType getVariableType() {
+        return variableType;
     }
 
-    public void setFileVariableType(FileVariableType fileVariableType) {
-        this.fileVariableType = fileVariableType;
+    public void setVariableType(VariableType variableType) {
+        this.variableType = variableType;
     }
 
 }
