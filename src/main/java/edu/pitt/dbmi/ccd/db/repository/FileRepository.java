@@ -39,6 +39,8 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     public List<File> findByUserAccountAndFileFormatIsNull(UserAccount userAccount);
 
+    public List<File> findByUserAccountAndFileFormatNotNull(UserAccount userAccount);
+
     public List<File> findByUserAccountAndFileFormat(UserAccount userAccount, FileFormat fileFormat);
 
     public File findByIdAndUserAccount(Long id, UserAccount userAccount);
@@ -46,13 +48,12 @@ public interface FileRepository extends JpaRepository<File, Long> {
     @Query("SELECT f FROM File f WHERE f.id IN ?1 AND f.userAccount = ?2")
     public List<File> findByIdsAndUserAccount(List<Long> ids, UserAccount userAccount);
 
+    public Long countByUserAccount(UserAccount userAccount);
+
     public Long countByUserAccountAndFileFormatIsNull(UserAccount userAccount);
 
     public Long countByUserAccountAndFileFormat(UserAccount userAccount, FileFormat fileFormat);
 
-//    @Query("SELECT new map(f.fileFormat, COUNT(f)) "
-//            + "FROM File f WHERE f.userAccount = ?1 GROUP BY f.fileFormat")
-//    public Map<FileFormat, Long> countGroupByFileFormat(UserAccount userAccount);
     public boolean existsByTitleAndUserAccount(String title, UserAccount userAccount);
 
 }

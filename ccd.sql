@@ -106,13 +106,13 @@ CREATE TABLE `FileGroup` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `creationTime` timestamp NOT NULL DEFAULT current_timestamp(),
-  `fileTypeId` bigint(20) NOT NULL,
+  `variableTypeId` bigint(20) NOT NULL,
   `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`,`userAccountId`),
-  KEY `fileTypeId` (`fileTypeId`),
+  KEY `fileTypeId` (`variableTypeId`),
   KEY `userAccountId` (`userAccountId`),
-  CONSTRAINT `FileGroup_ibfk_1` FOREIGN KEY (`fileTypeId`) REFERENCES `FileType` (`id`),
+  CONSTRAINT `FileGroup_ibfk_1` FOREIGN KEY (`variableTypeId`) REFERENCES `VariableType` (`id`),
   CONSTRAINT `FileGroup_ibfk_2` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -163,18 +163,21 @@ CREATE TABLE `TetradDataFile` (
   `quoteChar` char(1) DEFAULT NULL,
   `missingMarker` varchar(8) DEFAULT NULL,
   `commentMarker` varchar(8) DEFAULT NULL,
-  `numOfLines` int(11) DEFAULT NULL,
-  `numOfCols` int(11) DEFAULT NULL,
+  `numOfCases` int(11) DEFAULT NULL,
+  `numOfVars` int(11) DEFAULT NULL,
   `fileId` bigint(20) NOT NULL,
   `dataDelimiterId` bigint(20) NOT NULL,
   `variableTypeId` bigint(20) NOT NULL,
+  `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `fileId` (`fileId`),
   KEY `dataDelimiterId` (`dataDelimiterId`),
   KEY `variableTypeId` (`variableTypeId`),
+  KEY `userAccountId` (`userAccountId`),
   CONSTRAINT `TetradDataFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`),
   CONSTRAINT `TetradDataFile_ibfk_2` FOREIGN KEY (`dataDelimiterId`) REFERENCES `DataDelimiter` (`id`),
-  CONSTRAINT `TetradDataFile_ibfk_3` FOREIGN KEY (`variableTypeId`) REFERENCES `VariableType` (`id`)
+  CONSTRAINT `TetradDataFile_ibfk_3` FOREIGN KEY (`variableTypeId`) REFERENCES `VariableType` (`id`),
+  CONSTRAINT `TetradDataFile_ibfk_4` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -187,11 +190,14 @@ DROP TABLE IF EXISTS `TetradVariableFile`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `TetradVariableFile` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `numOfVariables` int(11) DEFAULT NULL,
+  `numOfVars` int(11) DEFAULT NULL,
   `fileId` bigint(20) NOT NULL,
+  `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `fileId` (`fileId`),
-  CONSTRAINT `TetradVariableFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`)
+  KEY `userAccountId` (`userAccountId`),
+  CONSTRAINT `TetradVariableFile_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`),
+  CONSTRAINT `TetradVariableFile_ibfk_2` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -330,4 +336,4 @@ CREATE TABLE `VariableType` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-02-28 11:43:22
+-- Dump completed on 2018-03-13 11:02:34

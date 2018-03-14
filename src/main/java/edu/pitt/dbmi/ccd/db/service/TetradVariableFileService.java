@@ -76,7 +76,7 @@ public class TetradVariableFileService {
                     return saveAsNew(tetradVariableFile);
                 case FileFormatService.TETRAD_VAR_SHORT_NAME:
                     TetradVariableFile varFile = tetradVariableFileRepository.findByFile(file);
-                    varFile.setNumOfVariables(tetradVariableFile.getNumOfVariables());
+                    varFile.setNumOfVars(tetradVariableFile.getNumOfVars());
 
                     return tetradVariableFileRepository.save(varFile);
                 default:

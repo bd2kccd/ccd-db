@@ -69,9 +69,9 @@ public class FileGroup implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationTime;
 
-    @JoinColumn(name = "fileTypeId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private FileType fileType;
+    @JoinColumn(name = "variableTypeId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private VariableType variableType;
 
     @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -86,17 +86,10 @@ public class FileGroup implements Serializable {
     public FileGroup() {
     }
 
-    public FileGroup(String name, Date creationTime, FileType fileType, UserAccount userAccount) {
+    public FileGroup(String name, Date creationTime, VariableType variableType, UserAccount userAccount, List<File> files) {
         this.name = name;
         this.creationTime = creationTime;
-        this.fileType = fileType;
-        this.userAccount = userAccount;
-    }
-
-    public FileGroup(String name, Date creationTime, FileType fileType, UserAccount userAccount, List<File> files) {
-        this.name = name;
-        this.creationTime = creationTime;
-        this.fileType = fileType;
+        this.variableType = variableType;
         this.userAccount = userAccount;
         this.files = files;
     }
@@ -125,14 +118,12 @@ public class FileGroup implements Serializable {
         this.creationTime = creationTime;
     }
 
-    @XmlTransient
-    @JsonIgnore
-    public FileType getFileType() {
-        return fileType;
+    public VariableType getVariableType() {
+        return variableType;
     }
 
-    public void setFileType(FileType fileType) {
-        this.fileType = fileType;
+    public void setVariableType(VariableType variableType) {
+        this.variableType = variableType;
     }
 
     @XmlTransient

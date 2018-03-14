@@ -84,8 +84,8 @@ public class FileService {
                 case FileFormatService.TETRAD_TAB_SHORT_NAME:
                     TetradDataFile dataFile = tetradDataFileRepository.findByFile(file);
                     if (dataFile != null) {
-                        addInfo.put("Number of Columns", String.valueOf(dataFile.getNumOfCols()));
-                        addInfo.put("Number of Lines", String.valueOf(dataFile.getNumOfLines()));
+                        addInfo.put("Number of Variables", String.valueOf(dataFile.getNumOfVars()));
+                        addInfo.put("Number of Cases", String.valueOf(dataFile.getNumOfCases()));
                         addInfo.put("Delimiter", dataFile.getDataDelimiter().getName());
                         addInfo.put("Variable Type", dataFile.getVariableType().getName());
                         addInfo.put("Has Header", dataFile.isHasHeader() ? "Yes" : "No");
@@ -97,7 +97,7 @@ public class FileService {
                 case FileFormatService.TETRAD_VAR_SHORT_NAME:
                     TetradVariableFile varFile = tetradVariableFileRepository.findByFile(file);
                     if (varFile != null) {
-                        addInfo.put("Number of Variables", String.valueOf(varFile.getNumOfVariables()));
+                        addInfo.put("Number of Variables", String.valueOf(varFile.getNumOfVars()));
                     }
                     break;
             }

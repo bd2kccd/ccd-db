@@ -28,6 +28,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -54,18 +55,23 @@ public class TetradVariableFile implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "numOfVariables")
-    private Integer numOfVariables;
+    @Column(name = "numOfVars")
+    private Integer numOfVars;
 
     @JoinColumn(name = "fileId", referencedColumnName = "id", unique = true, nullable = false)
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     private File file;
 
+    @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private UserAccount userAccount;
+
     public TetradVariableFile() {
     }
 
-    public TetradVariableFile(File file) {
+    public TetradVariableFile(File file, UserAccount userAccount) {
         this.file = file;
+        this.userAccount = userAccount;
     }
 
     public Long getId() {
@@ -76,12 +82,12 @@ public class TetradVariableFile implements Serializable {
         this.id = id;
     }
 
-    public Integer getNumOfVariables() {
-        return numOfVariables;
+    public Integer getNumOfVars() {
+        return numOfVars;
     }
 
-    public void setNumOfVariables(Integer numOfVariables) {
-        this.numOfVariables = numOfVariables;
+    public void setNumOfVars(Integer numOfVars) {
+        this.numOfVars = numOfVars;
     }
 
     @JsonIgnore
@@ -92,6 +98,16 @@ public class TetradVariableFile implements Serializable {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 
 }

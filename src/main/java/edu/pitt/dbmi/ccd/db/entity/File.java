@@ -21,7 +21,9 @@ package edu.pitt.dbmi.ccd.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,7 +31,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -86,6 +91,18 @@ public class File implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     private FileFormat fileFormat;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
+    private List<TetradVariableFile> tetradVariableFiles;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
+    private List<TetradDataFile> tetradDataFiles;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "FileGroupFileRel", joinColumns = {
+        @JoinColumn(name = "fileId", nullable = false, updatable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "fileGroupId", nullable = false, updatable = false)})
+    private List<FileGroup> fileGroups;
+
     public File() {
     }
 
@@ -95,16 +112,6 @@ public class File implements Serializable {
         this.creationTime = creationTime;
         this.fileSize = fileSize;
         this.userAccount = userAccount;
-    }
-
-    public File(String name, String title, Date creationTime, long fileSize, String md5CheckSum, UserAccount userAccount, FileFormat fileFormat) {
-        this.name = name;
-        this.title = title;
-        this.creationTime = creationTime;
-        this.fileSize = fileSize;
-        this.md5CheckSum = md5CheckSum;
-        this.userAccount = userAccount;
-        this.fileFormat = fileFormat;
     }
 
     public Long getId() {
@@ -173,6 +180,36 @@ public class File implements Serializable {
 
     public void setFileFormat(FileFormat fileFormat) {
         this.fileFormat = fileFormat;
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    public List<TetradVariableFile> getTetradVariableFiles() {
+        return tetradVariableFiles;
+    }
+
+    public void setTetradVariableFiles(List<TetradVariableFile> tetradVariableFiles) {
+        this.tetradVariableFiles = tetradVariableFiles;
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    public List<TetradDataFile> getTetradDataFiles() {
+        return tetradDataFiles;
+    }
+
+    public void setTetradDataFiles(List<TetradDataFile> tetradDataFiles) {
+        this.tetradDataFiles = tetradDataFiles;
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    public List<FileGroup> getFileGroups() {
+        return fileGroups;
+    }
+
+    public void setFileGroups(List<FileGroup> fileGroups) {
+        this.fileGroups = fileGroups;
     }
 
 }

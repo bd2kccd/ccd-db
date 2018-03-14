@@ -21,6 +21,7 @@ package edu.pitt.dbmi.ccd.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -68,14 +69,14 @@ public class TetradDataFile implements Serializable {
     @Column(name = "commentMarker", length = 8)
     private String commentMarker;
 
-    @Column(name = "numOfLines")
-    private Integer numOfLines;
+    @Column(name = "numOfCases")
+    private Integer numOfCases;
 
-    @Column(name = "numOfCols")
-    private Integer numOfCols;
+    @Column(name = "numOfVars")
+    private Integer numOfVars;
 
     @JoinColumn(name = "fileId", referencedColumnName = "id", unique = true, nullable = false)
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private File file;
 
     @JoinColumn(name = "dataDelimiterId", referencedColumnName = "id", nullable = false)
@@ -86,26 +87,19 @@ public class TetradDataFile implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private VariableType variableType;
 
+    @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private UserAccount userAccount;
+
     public TetradDataFile() {
     }
 
-    public TetradDataFile(boolean hasHeader, File file, DataDelimiter dataDelimiter, VariableType variableType) {
+    public TetradDataFile(boolean hasHeader, File file, DataDelimiter dataDelimiter, VariableType variableType, UserAccount userAccount) {
         this.hasHeader = hasHeader;
         this.file = file;
         this.dataDelimiter = dataDelimiter;
         this.variableType = variableType;
-    }
-
-    public TetradDataFile(boolean hasHeader, Character quoteChar, String missingMarker, String commentMarker, Integer numOfLines, Integer numOfCols, File file, DataDelimiter dataDelimiter, VariableType variableType) {
-        this.hasHeader = hasHeader;
-        this.quoteChar = quoteChar;
-        this.missingMarker = missingMarker;
-        this.commentMarker = commentMarker;
-        this.numOfLines = numOfLines;
-        this.numOfCols = numOfCols;
-        this.file = file;
-        this.dataDelimiter = dataDelimiter;
-        this.variableType = variableType;
+        this.userAccount = userAccount;
     }
 
     public Long getId() {
@@ -148,24 +142,22 @@ public class TetradDataFile implements Serializable {
         this.commentMarker = commentMarker;
     }
 
-    public Integer getNumOfLines() {
-        return numOfLines;
+    public Integer getNumOfCases() {
+        return numOfCases;
     }
 
-    public void setNumOfLines(Integer numOfLines) {
-        this.numOfLines = numOfLines;
+    public void setNumOfCases(Integer numOfCases) {
+        this.numOfCases = numOfCases;
     }
 
-    public Integer getNumOfCols() {
-        return numOfCols;
+    public Integer getNumOfVars() {
+        return numOfVars;
     }
 
-    public void setNumOfCols(Integer numOfCols) {
-        this.numOfCols = numOfCols;
+    public void setNumOfVars(Integer numOfVars) {
+        this.numOfVars = numOfVars;
     }
 
-    @JsonIgnore
-    @XmlTransient
     public File getFile() {
         return file;
     }
@@ -188,6 +180,16 @@ public class TetradDataFile implements Serializable {
 
     public void setVariableType(VariableType variableType) {
         this.variableType = variableType;
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 
 }

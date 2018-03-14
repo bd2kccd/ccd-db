@@ -18,7 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.domain.UserAccountRegistration;
+import edu.pitt.dbmi.ccd.db.domain.account.UserAccountRegistration;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.entity.UserInformation;
 import edu.pitt.dbmi.ccd.db.entity.UserRegistration;

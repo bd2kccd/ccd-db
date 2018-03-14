@@ -103,8 +103,8 @@ public class TetradDataFileService {
                     dataFile.setVariableType(tetradDataFile.getVariableType());
                     dataFile.setHasHeader(tetradDataFile.isHasHeader());
                     dataFile.setMissingMarker(tetradDataFile.getMissingMarker());
-                    dataFile.setNumOfCols(tetradDataFile.getNumOfCols());
-                    dataFile.setNumOfLines(tetradDataFile.getNumOfLines());
+                    dataFile.setNumOfVars(tetradDataFile.getNumOfVars());
+                    dataFile.setNumOfCases(tetradDataFile.getNumOfCases());
                     dataFile.setQuoteChar(tetradDataFile.getQuoteChar());
                     dataFile.setCommentMarker(tetradDataFile.getCommentMarker());
 

@@ -16,32 +16,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
+package edu.pitt.dbmi.ccd.db.domain.file;
 
-import edu.pitt.dbmi.ccd.db.entity.File;
-import edu.pitt.dbmi.ccd.db.entity.TetradVariableFile;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import java.util.List;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.Date;
 
 /**
  *
- * May 10, 2017 2:59:17 PM
+ * Mar 12, 2018 4:48:11 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
-public interface TetradVariableFileRepository extends JpaRepository<TetradVariableFile, Long> {
+public class FileGroupListItem {
 
-    public TetradVariableFile findByFile(File file);
+    private final Long fileGroupId;
 
-    public TetradVariableFile findByUserAccount(UserAccount userAccount);
+    private final String name;
 
-    public List<TetradVariableFile> findByFileIn(List<File> files);
+    private final Date creationTime;
 
-    public void deleteByFile(File file);
+    public FileGroupListItem(Long fileGroupId, String name, Date creationTime) {
+        this.fileGroupId = fileGroupId;
+        this.name = name;
+        this.creationTime = creationTime;
+    }
 
-    public void deleteByFileIn(List<File> files);
+    public Long getFileGroupId() {
+        return fileGroupId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Date getCreationTime() {
+        return creationTime;
+    }
 
 }
