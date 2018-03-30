@@ -21,7 +21,6 @@ package edu.pitt.dbmi.ccd.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -76,7 +75,7 @@ public class TetradDataFile implements Serializable {
     private Integer numOfVars;
 
     @JoinColumn(name = "fileId", referencedColumnName = "id", unique = true, nullable = false)
-    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     private File file;
 
     @JoinColumn(name = "dataDelimiterId", referencedColumnName = "id", nullable = false)
