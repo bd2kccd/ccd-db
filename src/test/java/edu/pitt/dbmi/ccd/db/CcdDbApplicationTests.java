@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,21 +16,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
+package edu.pitt.dbmi.ccd.db;
 
-import edu.pitt.dbmi.ccd.db.entity.FileDelimiter;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  *
- * Jul 23, 2015 5:33:23 PM
+ * Mar 30, 2018 1:40:14 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
-public interface FileDelimiterRepository extends JpaRepository<FileDelimiter, Long> {
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class CcdDbApplicationTests {
 
-    public FileDelimiter findByName(String name);
+    @Test
+    public void contextLoads() {
+    }
 
 }

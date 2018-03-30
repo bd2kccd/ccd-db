@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 University of Pittsburgh.
+ * Copyright (C) 2018 University of Pittsburgh.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,19 +16,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
+package edu.pitt.dbmi.ccd.db;
 
-import edu.pitt.dbmi.ccd.db.entity.DataFileInfo;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  *
- * Jul 23, 2015 5:33:07 PM
+ * Mar 30, 2018 1:39:26 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
-public interface DataFileInfoRepository extends JpaRepository<DataFileInfo, Long> {
+@SpringBootApplication
+public class CcdDbApplication {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(CcdDbApplication.class, args);
+    }
 
 }
