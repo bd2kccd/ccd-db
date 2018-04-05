@@ -31,4 +31,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 
+    public UserAccount findByUsername(String username);
+
+    public UserAccount findByActionKey(String actionKey);
+
+    public boolean existsByUsername(String username);
+
 }

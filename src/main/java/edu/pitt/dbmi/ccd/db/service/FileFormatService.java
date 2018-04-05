@@ -18,8 +18,18 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
+import edu.pitt.dbmi.ccd.db.entity.FileFormat;
+import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.repository.FileFormatRepository;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,8 +51,67 @@ public class FileFormatService {
     private final FileFormatRepository fileFormatRepository;
 
     @Autowired
-    public FileFormatService(FileFormatRepository fileFormatRepository) {
+    public FileFormatService(
+            FileFormatRepository fileFormatRepository,
+            FileTypeService fileTypeService,
+            AlgorithmTypeService algorithmTypeService) {
         this.fileFormatRepository = fileFormatRepository;
+
+        AlgorithmType tetrad = algorithmTypeService
+                .findByShortName(AlgorithmTypeService.TETRAD_SHORT_NAME);
+        AlgorithmType tdi = algorithmTypeService
+                .findByShortName(AlgorithmTypeService.TDI_SHORT_NAME);
+
+        FileType tabData = fileTypeService
+                .findByShortName(FileTypeService.DATA_SHORT_NAME);
+        FileType var = fileTypeService
+                .findByShortName(FileTypeService.VARIABLE_SHORT_NAME);
+        FileType knowledge = fileTypeService
+                .findByShortName(FileTypeService.KNOWLEDGE_SHORT_NAME);
+        FileType result = fileTypeService
+                .findByShortName(FileTypeService.RESULT_SHORT_NAME);
+
+        // initialize database
+        if (fileFormatRepository.findAll().isEmpty()) {
+            fileFormatRepository.saveAll(Arrays.asList(
+                    new FileFormat("Tetrad Tabular Data", TETRAD_TAB_SHORT_NAME, tabData, tetrad),
+                    new FileFormat("Tetrad Variable", TETRAD_VAR_SHORT_NAME, var, tetrad),
+                    new FileFormat("Tetrad Knowledge", TETRAD_KNWL_SHORT_NAME, knowledge, tetrad),
+                    new FileFormat("Tetrad Result", TETRAD_RESULT_SHORT_NAME, result, tetrad),
+                    new FileFormat("TDI Tabular Data", TDI_TAB_SHORT_NAME, tabData, tdi),
+                    new FileFormat("TDI Result", TDI_RESULT_SHORT_NAME, result, tdi)
+            ));
+        }
+    }
+
+    @Cacheable("fileFormatAll")
+    public List<FileFormat> findAll() {
+        return fileFormatRepository.findAll();
+    }
+
+    @Cacheable("fileFormatOpts")
+    public Map<FileType, List<FileFormat>> getFileFormatOptions() {
+        return fileFormatRepository.findAll().stream()
+                .filter(e -> !FileTypeService.RESULT_SHORT_NAME.equals(e.getFileType().getShortName()))
+                .collect(Collectors.groupingBy(FileFormat::getFileType))
+                .entrySet().stream()
+                .sorted((e1, e2) -> e1.getKey().getShortName().compareTo(e2.getKey().getShortName()))
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue(), (e1, e2) -> e2, LinkedHashMap::new));
+    }
+
+    @Cacheable("fileFormatById")
+    public Optional<FileFormat> findById(Long id) {
+        return fileFormatRepository.findById(id);
+    }
+
+    @Cacheable("fileFormatByShortName")
+    public FileFormat findByShortName(String shortName) {
+        return fileFormatRepository.findByShortName(shortName);
+    }
+
+    @Cacheable("fileFormatsByAlgorithmType")
+    public List<FileFormat> findByAlgorithmType(AlgorithmType algorithmType) {
+        return fileFormatRepository.findByAlgorithmType(algorithmType);
     }
 
     public FileFormatRepository getRepository() {

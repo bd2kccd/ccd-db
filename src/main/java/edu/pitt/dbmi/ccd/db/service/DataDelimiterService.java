@@ -18,8 +18,13 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.DataDelimiter;
 import edu.pitt.dbmi.ccd.db.repository.DataDelimiterRepository;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -44,6 +49,34 @@ public class DataDelimiterService {
     @Autowired
     public DataDelimiterService(DataDelimiterRepository dataDelimiterRepository) {
         this.dataDelimiterRepository = dataDelimiterRepository;
+
+        // initialize database
+        if (dataDelimiterRepository.findAll().isEmpty()) {
+            dataDelimiterRepository.saveAll(Arrays.asList(
+                    new DataDelimiter("Tab", TAB_DELIM_SHORT_NAME),
+                    new DataDelimiter("Space", SPACE_DELIM_SHORT_NAME),
+                    new DataDelimiter("Whitespace", WHITESPACE_DELIM_SHORT_NAME),
+                    new DataDelimiter("Comma", COMMA_DELIM_SHORT_NAME),
+                    new DataDelimiter("Colon", COLON_DELIM_SHORT_NAME),
+                    new DataDelimiter("Semicolon", SEMICOLON_DELIM_SHORT_NAME),
+                    new DataDelimiter("Pipe", PIPE_DELIM_SHORT_NAME)
+            ));
+        }
+    }
+
+    @Cacheable("dataDelimiterAll")
+    public List<DataDelimiter> findAll() {
+        return dataDelimiterRepository.findAll();
+    }
+
+    @Cacheable("dataDelimiterById")
+    public Optional<DataDelimiter> findById(Long id) {
+        return dataDelimiterRepository.findById(id);
+    }
+
+    @Cacheable("dataDelimiterByShortName")
+    public DataDelimiter findByShortName(String shortName) {
+        return dataDelimiterRepository.findByShortName(shortName);
     }
 
     public DataDelimiterRepository getRepository() {

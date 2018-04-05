@@ -18,8 +18,15 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.domain.ListItem;
+import edu.pitt.dbmi.ccd.db.domain.file.TetradDataListItem;
+import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.TetradDataFile;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.VariableType;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,5 +37,30 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TetradDataFileRepository extends JpaRepository<TetradDataFile, Long> {
+
+    public TetradDataFile findByFile(File file);
+
+    public List<TetradDataFile> findByFileIn(List<File> files);
+
+    public void deleteByFile(File file);
+
+    public void deleteByFileIn(List<File> files);
+
+    public List<TetradDataFile> findByUserAccount(UserAccount userAccount);
+
+    @Query("SELECT tdf"
+            + " FROM TetradDataFile tdf"
+            + " WHERE tdf.userAccount = ?1 AND tdf.variableType = ?2 AND tdf.file.id IN ?3")
+    public List<TetradDataFile> find(UserAccount userAccount, VariableType variableType, List<Long> ids);
+
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.file.TetradDataListItem(tdf.file.id,tdf.file.title,tdf.file.creationTime,tdf.numOfCases,tdf.numOfVars)"
+            + " FROM TetradDataFile tdf"
+            + " WHERE tdf.userAccount = ?1 AND tdf.variableType = ?2")
+    public List<TetradDataListItem> getTetradDataListFiles(UserAccount userAccount, VariableType variableType);
+
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.ListItem(tdf.file.id,tdf.file.title)"
+            + " FROM TetradDataFile tdf"
+            + " WHERE tdf.file.userAccount = ?1 AND tdf.variableType = ?2")
+    public List<ListItem> getTetradDataListItem(UserAccount userAccount, VariableType variableType);
 
 }

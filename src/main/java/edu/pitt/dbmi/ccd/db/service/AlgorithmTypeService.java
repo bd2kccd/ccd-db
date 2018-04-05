@@ -18,8 +18,12 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
 import edu.pitt.dbmi.ccd.db.repository.AlgorithmTypeRepository;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -39,6 +43,24 @@ public class AlgorithmTypeService {
     @Autowired
     public AlgorithmTypeService(AlgorithmTypeRepository algorithmTypeRepository) {
         this.algorithmTypeRepository = algorithmTypeRepository;
+
+        // initialize database
+        if (algorithmTypeRepository.findAll().isEmpty()) {
+            algorithmTypeRepository.saveAll(Arrays.asList(
+                    new AlgorithmType("TDI", TDI_SHORT_NAME),
+                    new AlgorithmType("Tetrad", TETRAD_SHORT_NAME)
+            ));
+        }
+    }
+
+    @Cacheable("algorithmTypeAll")
+    public List<AlgorithmType> findAll() {
+        return algorithmTypeRepository.findAll();
+    }
+
+    @Cacheable("algorithmTypeByShortName")
+    public AlgorithmType findByShortName(String shortName) {
+        return algorithmTypeRepository.findByShortName(shortName);
     }
 
     public AlgorithmTypeRepository getRepository() {

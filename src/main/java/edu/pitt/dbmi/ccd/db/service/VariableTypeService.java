@@ -18,8 +18,13 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.VariableType;
 import edu.pitt.dbmi.ccd.db.repository.VariableTypeRepository;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -40,6 +45,30 @@ public class VariableTypeService {
     @Autowired
     public VariableTypeService(VariableTypeRepository variableTypeRepository) {
         this.variableTypeRepository = variableTypeRepository;
+
+        // initialize database
+        if (variableTypeRepository.findAll().isEmpty()) {
+            variableTypeRepository.saveAll(Arrays.asList(
+                    new VariableType("Continuous", CONTINUOUS_SHORT_NAME),
+                    new VariableType("Discrete", DISCRETE_SHORT_NAME),
+                    new VariableType("Mixed", MIXED_SHORT_NAME)
+            ));
+        }
+    }
+
+    @Cacheable("variableTypeAll")
+    public List<VariableType> findAll() {
+        return variableTypeRepository.findAll();
+    }
+
+    @Cacheable("variableTypeById")
+    public Optional<VariableType> findById(Long id) {
+        return variableTypeRepository.findById(id);
+    }
+
+    @Cacheable("variableTypeByShortName")
+    public VariableType findByShortName(String shortName) {
+        return variableTypeRepository.findByShortName(shortName);
     }
 
     public VariableTypeRepository getRepository() {

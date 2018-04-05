@@ -18,8 +18,10 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.entity.UserLogin;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,5 +32,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserLoginRepository extends JpaRepository<UserLogin, Long> {
+
+    @Query("SELECT ul FROM UserLogin ul WHERE ul.userAccount = ?1 AND ul.loginDate = (SELECT MAX(ul.loginDate) FROM UserLogin ul WHERE ul.userAccount = ?1)")
+    public UserLogin getLastUserLogin(UserAccount userAccount);
 
 }

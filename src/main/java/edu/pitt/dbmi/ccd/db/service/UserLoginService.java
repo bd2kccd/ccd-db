@@ -18,7 +18,11 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.UserLogin;
 import edu.pitt.dbmi.ccd.db.repository.UserLoginRepository;
+import edu.pitt.dbmi.ccd.db.util.InetUtils;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +40,22 @@ public class UserLoginService {
     @Autowired
     public UserLoginService(UserLoginRepository userLoginRepository) {
         this.userLoginRepository = userLoginRepository;
+    }
+
+    /**
+     * Log user's current login and get the last login.
+     *
+     * @param userAccount
+     * @param ipAddress
+     * @return user's last login
+     */
+    public UserLogin logUserLogin(UserAccount userAccount, String ipAddress) {
+        UserLogin lastLogin = userLoginRepository
+                .getLastUserLogin(userAccount);
+        UserLogin currentLogin = userLoginRepository
+                .save(new UserLogin(new Date(), InetUtils.getInetNTOA(ipAddress), userAccount));
+
+        return (lastLogin == null) ? currentLogin : lastLogin;
     }
 
     public UserLoginRepository getRepository() {

@@ -18,8 +18,12 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,6 +45,26 @@ public class FileTypeService {
     @Autowired
     public FileTypeService(FileTypeRepository fileTypeRepository) {
         this.fileTypeRepository = fileTypeRepository;
+
+        // initialize database
+        if (fileTypeRepository.findAll().isEmpty()) {
+            fileTypeRepository.saveAll(Arrays.asList(
+                    new FileType("Data", DATA_SHORT_NAME),
+                    new FileType("Variable", VARIABLE_SHORT_NAME),
+                    new FileType("Knowledge", KNOWLEDGE_SHORT_NAME),
+                    new FileType("Result", RESULT_SHORT_NAME)
+            ));
+        }
+    }
+
+    @Cacheable("fileTypeAll")
+    public List<FileType> findAll() {
+        return fileTypeRepository.findAll();
+    }
+
+    @Cacheable("fileTypeByShortName")
+    public FileType findByShortName(String shortName) {
+        return fileTypeRepository.findByShortName(shortName);
     }
 
     public FileTypeRepository getRepository() {

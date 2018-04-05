@@ -18,10 +18,14 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.File;
+import edu.pitt.dbmi.ccd.db.entity.FileFormat;
+import edu.pitt.dbmi.ccd.db.entity.TetradVariableFile;
 import edu.pitt.dbmi.ccd.db.repository.TetradDataFileRepository;
 import edu.pitt.dbmi.ccd.db.repository.TetradVariableFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -43,6 +47,42 @@ public class TetradVariableFileService {
         this.tetradVariableFileRepository = tetradVariableFileRepository;
         this.fileService = fileService;
         this.fileFormatService = fileFormatService;
+    }
+
+    private TetradVariableFile saveAsNew(TetradVariableFile tetradVariableFile) {
+        File file = tetradVariableFile.getFile();
+
+        // update file format
+        FileFormat fileFormat = fileFormatService.findByShortName(FileFormatService.TETRAD_VAR_SHORT_NAME);
+        file.setFileFormat(fileFormat);
+        file = fileService.getRepository().save(file);
+
+        tetradVariableFile.setFile(file);
+
+        return tetradVariableFileRepository.save(tetradVariableFile);
+    }
+
+    @Transactional
+    public TetradVariableFile save(TetradVariableFile tetradVariableFile) {
+        File file = tetradVariableFile.getFile();
+        FileFormat prevFileFormat = file.getFileFormat();
+        if (prevFileFormat == null) {
+            return saveAsNew(tetradVariableFile);
+        } else {
+            switch (prevFileFormat.getShortName()) {
+                case FileFormatService.TETRAD_TAB_SHORT_NAME:
+                    tetradDataFileRepository.deleteByFile(file);
+
+                    return saveAsNew(tetradVariableFile);
+                case FileFormatService.TETRAD_VAR_SHORT_NAME:
+                    TetradVariableFile varFile = tetradVariableFileRepository.findByFile(file);
+                    varFile.setNumOfVars(tetradVariableFile.getNumOfVars());
+
+                    return tetradVariableFileRepository.save(varFile);
+                default:
+                    return saveAsNew(tetradVariableFile);
+            }
+        }
     }
 
     public TetradVariableFileRepository getRepository() {

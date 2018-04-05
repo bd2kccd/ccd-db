@@ -16,21 +16,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
-
-import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+package edu.pitt.dbmi.ccd.db.domain;
 
 /**
  *
- * Feb 9, 2018 6:27:32 PM
+ * Mar 12, 2018 6:31:54 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
-public interface AlgorithmTypeRepository extends JpaRepository<AlgorithmType, Long> {
+public class ListItem {
 
-    public AlgorithmType findByShortName(String shortName);
+    private final Long id;
+
+    private final String name;
+
+    public ListItem(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 
 }

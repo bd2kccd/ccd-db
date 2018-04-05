@@ -18,8 +18,12 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.UserRole;
 import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -39,6 +43,32 @@ public class UserRoleService {
     @Autowired
     public UserRoleService(UserRoleRepository userRoleRepository) {
         this.userRoleRepository = userRoleRepository;
+
+        // initialize database
+        if (userRoleRepository.findAll().isEmpty()) {
+            userRoleRepository.saveAll(Arrays.asList(
+                    new UserRole("Admin", ADMIN_SHORT_NAME),
+                    new UserRole("Regular", REGULAR_SHORT_NAME)
+            ));
+        }
+    }
+
+    public UserRole getAdminRole() {
+        return findByShortName(ADMIN_SHORT_NAME);
+    }
+
+    public UserRole getRegularRole() {
+        return findByShortName(REGULAR_SHORT_NAME);
+    }
+
+    @Cacheable("userRoleAll")
+    public List<UserRole> findAll() {
+        return userRoleRepository.findAll();
+    }
+
+    @Cacheable("userRoleByShortName")
+    public UserRole findByShortName(String shortName) {
+        return userRoleRepository.findByShortName(shortName);
     }
 
     public UserRoleRepository getRepository() {

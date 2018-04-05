@@ -19,7 +19,11 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.File;
+import edu.pitt.dbmi.ccd.db.entity.FileFormat;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,5 +34,26 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface FileRepository extends JpaRepository<File, Long> {
+
+    public List<File> findByUserAccount(UserAccount userAccount);
+
+    public List<File> findByUserAccountAndFileFormatIsNull(UserAccount userAccount);
+
+    public List<File> findByUserAccountAndFileFormatNotNull(UserAccount userAccount);
+
+    public List<File> findByUserAccountAndFileFormat(UserAccount userAccount, FileFormat fileFormat);
+
+    public File findByIdAndUserAccount(Long id, UserAccount userAccount);
+
+    @Query("SELECT f FROM File f WHERE f.id IN ?1 AND f.userAccount = ?2")
+    public List<File> findByIdsAndUserAccount(List<Long> ids, UserAccount userAccount);
+
+    public Long countByUserAccount(UserAccount userAccount);
+
+    public Long countByUserAccountAndFileFormatIsNull(UserAccount userAccount);
+
+    public Long countByUserAccountAndFileFormat(UserAccount userAccount, FileFormat fileFormat);
+
+    public boolean existsByTitleAndUserAccount(String title, UserAccount userAccount);
 
 }
