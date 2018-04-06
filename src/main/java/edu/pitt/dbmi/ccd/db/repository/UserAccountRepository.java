@@ -37,4 +37,6 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     public boolean existsByUsername(String username);
 
+    public boolean existsByActionKey(String actionKey);
+
 }
