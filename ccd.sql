@@ -151,6 +151,37 @@ CREATE TABLE `FileType` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `JobInfo`
+--
+
+DROP TABLE IF EXISTS `JobInfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobInfo` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `algoParam` text DEFAULT NULL,
+  `datasetId` bigint(20) NOT NULL,
+  `singleDataset` tinyint(1) NOT NULL DEFAULT 0,
+  `creationTime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `startTime` timestamp NULL DEFAULT NULL,
+  `endTime` timestamp NULL DEFAULT NULL,
+  `jobStatusId` bigint(20) NOT NULL,
+  `jobLocationId` bigint(20) NOT NULL,
+  `algorithmTypeId` bigint(20) NOT NULL,
+  `userAccountId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `algorithmTypeId` (`algorithmTypeId`),
+  KEY `jobLocationId` (`jobLocationId`),
+  KEY `jobStatusId` (`jobStatusId`),
+  KEY `userAccountId` (`userAccountId`),
+  CONSTRAINT `JobInfo_ibfk_1` FOREIGN KEY (`algorithmTypeId`) REFERENCES `AlgorithmType` (`id`),
+  CONSTRAINT `JobInfo_ibfk_2` FOREIGN KEY (`jobLocationId`) REFERENCES `JobLocation` (`id`),
+  CONSTRAINT `JobInfo_ibfk_3` FOREIGN KEY (`jobStatusId`) REFERENCES `JobStatus` (`id`),
+  CONSTRAINT `JobInfo_ibfk_4` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `JobLocation`
 --
 
@@ -175,25 +206,15 @@ DROP TABLE IF EXISTS `JobQueue`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `JobQueue` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `algoParam` text DEFAULT NULL,
-  `datasetId` bigint(20) NOT NULL,
-  `singleDataset` tinyint(1) NOT NULL DEFAULT 0,
-  `creationTime` timestamp NOT NULL DEFAULT current_timestamp(),
-  `startTime` timestamp NULL DEFAULT NULL,
-  `endTime` timestamp NULL DEFAULT NULL,
-  `jobStatusId` bigint(20) NOT NULL,
-  `jobLocationId` bigint(20) NOT NULL,
-  `algorithmTypeId` bigint(20) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `pid` bigint(20) DEFAULT NULL,
+  `jobInfoId` bigint(20) NOT NULL,
   `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `jobLocationId` (`jobLocationId`),
-  KEY `algorithmTypeId` (`algorithmTypeId`),
+  UNIQUE KEY `jobInfoId` (`jobInfoId`),
   KEY `userAccountId` (`userAccountId`),
-  KEY `jobStatusId` (`jobStatusId`),
-  CONSTRAINT `JobQueue_ibfk_1` FOREIGN KEY (`jobStatusId`) REFERENCES `JobStatus` (`id`),
-  CONSTRAINT `JobQueue_ibfk_2` FOREIGN KEY (`jobLocationId`) REFERENCES `JobLocation` (`id`),
-  CONSTRAINT `JobQueue_ibfk_3` FOREIGN KEY (`algorithmTypeId`) REFERENCES `AlgorithmType` (`id`),
-  CONSTRAINT `JobQueue_ibfk_4` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
+  CONSTRAINT `JobQueue_ibfk_1` FOREIGN KEY (`jobInfoId`) REFERENCES `JobInfo` (`id`),
+  CONSTRAINT `JobQueue_ibfk_2` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -399,4 +420,4 @@ CREATE TABLE `VariableType` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-11 12:26:12
+-- Dump completed on 2018-04-11 17:23:22

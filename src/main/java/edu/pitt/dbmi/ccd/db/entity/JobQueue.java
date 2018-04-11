@@ -19,7 +19,7 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.math.BigInteger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,11 +28,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -42,7 +41,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "JobQueue")
+@Table(name = "JobQueue", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"jobInfoId"})})
 @XmlRootElement
 public class JobQueue implements Serializable {
 
@@ -54,42 +54,16 @@ public class JobQueue implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Lob
-    @Column(name = "algoParam", length = 65535)
-    private String algoParam;
-
     @Basic(optional = false)
-    @Column(name = "datasetId", nullable = false)
-    private Long datasetId;
+    @Column(name = "name", nullable = false, length = 255)
+    private String name;
 
-    @Basic(optional = false)
-    @Column(name = "singleDataset", nullable = false)
-    private boolean singleDataset;
+    @Column(name = "pid")
+    private BigInteger pid;
 
-    @Basic(optional = false)
-    @Column(name = "creationTime", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date creationTime;
-
-    @Column(name = "startTime")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startTime;
-
-    @Column(name = "endTime")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endTime;
-
-    @JoinColumn(name = "jobStatusId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private JobStatus jobStatus;
-
-    @JoinColumn(name = "jobLocationId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private JobLocation jobLocation;
-
-    @JoinColumn(name = "algorithmTypeId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private AlgorithmType algorithmType;
+    @JoinColumn(name = "jobInfoId", referencedColumnName = "id", nullable = false)
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
+    private JobInfo jobInfo;
 
     @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -98,13 +72,9 @@ public class JobQueue implements Serializable {
     public JobQueue() {
     }
 
-    public JobQueue(Long datasetId, boolean singleDataset, Date creationTime, JobStatus jobStatus, JobLocation jobLocation, AlgorithmType algorithmType, UserAccount userAccount) {
-        this.datasetId = datasetId;
-        this.singleDataset = singleDataset;
-        this.creationTime = creationTime;
-        this.jobStatus = jobStatus;
-        this.jobLocation = jobLocation;
-        this.algorithmType = algorithmType;
+    public JobQueue(String name, JobInfo jobInfo, UserAccount userAccount) {
+        this.name = name;
+        this.jobInfo = jobInfo;
         this.userAccount = userAccount;
     }
 
@@ -116,76 +86,28 @@ public class JobQueue implements Serializable {
         this.id = id;
     }
 
-    public String getAlgoParam() {
-        return algoParam;
+    public String getName() {
+        return name;
     }
 
-    public void setAlgoParam(String algoParam) {
-        this.algoParam = algoParam;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Long getDatasetId() {
-        return datasetId;
+    public BigInteger getPid() {
+        return pid;
     }
 
-    public void setDatasetId(Long datasetId) {
-        this.datasetId = datasetId;
+    public void setPid(BigInteger pid) {
+        this.pid = pid;
     }
 
-    public boolean isSingleDataset() {
-        return singleDataset;
+    public JobInfo getJobInfo() {
+        return jobInfo;
     }
 
-    public void setSingleDataset(boolean singleDataset) {
-        this.singleDataset = singleDataset;
-    }
-
-    public Date getCreationTime() {
-        return creationTime;
-    }
-
-    public void setCreationTime(Date creationTime) {
-        this.creationTime = creationTime;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public JobStatus getJobStatus() {
-        return jobStatus;
-    }
-
-    public void setJobStatus(JobStatus jobStatus) {
-        this.jobStatus = jobStatus;
-    }
-
-    public JobLocation getJobLocation() {
-        return jobLocation;
-    }
-
-    public void setJobLocation(JobLocation jobLocation) {
-        this.jobLocation = jobLocation;
-    }
-
-    public AlgorithmType getAlgorithmType() {
-        return algorithmType;
-    }
-
-    public void setAlgorithmType(AlgorithmType algorithmType) {
-        this.algorithmType = algorithmType;
+    public void setJobInfo(JobInfo jobInfo) {
+        this.jobInfo = jobInfo;
     }
 
     public UserAccount getUserAccount() {

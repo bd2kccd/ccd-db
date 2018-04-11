@@ -18,9 +18,17 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
+import edu.pitt.dbmi.ccd.db.entity.JobInfo;
+import edu.pitt.dbmi.ccd.db.entity.JobLocation;
+import edu.pitt.dbmi.ccd.db.entity.JobQueue;
+import edu.pitt.dbmi.ccd.db.entity.JobStatus;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.JobQueueRepository;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -32,10 +40,32 @@ import org.springframework.stereotype.Service;
 public class JobQueueService {
 
     private final JobQueueRepository jobQueueRepository;
+    private final JobLocationService jobLocationService;
+    private final JobStatusService jobStatusService;
+    private final JobInfoService jobInfoService;
+    private final AlgorithmTypeService algorithmTypeService;
 
     @Autowired
-    public JobQueueService(JobQueueRepository jobQueueRepository) {
+    public JobQueueService(JobQueueRepository jobQueueRepository, JobLocationService jobLocationService, JobStatusService jobStatusService, JobInfoService jobInfoService, AlgorithmTypeService algorithmTypeService) {
         this.jobQueueRepository = jobQueueRepository;
+        this.jobLocationService = jobLocationService;
+        this.jobStatusService = jobStatusService;
+        this.jobInfoService = jobInfoService;
+        this.algorithmTypeService = algorithmTypeService;
+    }
+
+    @Transactional
+    public JobQueue submitLocalTetradJob(String jobQueueName, Long datasetId, boolean isSingleFile, String parameter, UserAccount userAccount) {
+        JobLocation location = jobLocationService.findByShortName(JobLocationService.LOCAL_SHORT_NAME);
+        JobStatus status = jobStatusService.findByShortName(JobStatusService.QUEUE_SHORT_NAME);
+        AlgorithmType algoType = algorithmTypeService.findByShortName(AlgorithmTypeService.TETRAD_SHORT_NAME);
+
+        JobInfo jobInfo = new JobInfo(datasetId, isSingleFile, new Date(), algoType, location, status, userAccount);
+        jobInfo.setAlgoParam(parameter);
+
+        jobInfo = jobInfoService.getRepository().save(jobInfo);
+
+        return jobQueueRepository.save(new JobQueue(jobQueueName, jobInfo, userAccount));
     }
 
     public JobQueueRepository getRepository() {
