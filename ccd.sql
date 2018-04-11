@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.2.12-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.2.14-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: ccd
 -- ------------------------------------------------------
--- Server version	10.2.12-MariaDB
+-- Server version	10.2.14-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -142,6 +142,69 @@ DROP TABLE IF EXISTS `FileType`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `FileType` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `shortName` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `shortName` (`shortName`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `JobLocation`
+--
+
+DROP TABLE IF EXISTS `JobLocation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobLocation` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `shortName` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `shortName` (`shortName`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `JobQueue`
+--
+
+DROP TABLE IF EXISTS `JobQueue`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobQueue` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `algoParam` text DEFAULT NULL,
+  `datasetId` bigint(20) NOT NULL,
+  `singleDataset` tinyint(1) NOT NULL DEFAULT 0,
+  `creationTime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `startTime` timestamp NULL DEFAULT NULL,
+  `endTime` timestamp NULL DEFAULT NULL,
+  `jobStatusId` bigint(20) NOT NULL,
+  `jobLocationId` bigint(20) NOT NULL,
+  `algorithmTypeId` bigint(20) NOT NULL,
+  `userAccountId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobLocationId` (`jobLocationId`),
+  KEY `algorithmTypeId` (`algorithmTypeId`),
+  KEY `userAccountId` (`userAccountId`),
+  KEY `jobStatusId` (`jobStatusId`),
+  CONSTRAINT `JobQueue_ibfk_1` FOREIGN KEY (`jobStatusId`) REFERENCES `JobStatus` (`id`),
+  CONSTRAINT `JobQueue_ibfk_2` FOREIGN KEY (`jobLocationId`) REFERENCES `JobLocation` (`id`),
+  CONSTRAINT `JobQueue_ibfk_3` FOREIGN KEY (`algorithmTypeId`) REFERENCES `AlgorithmType` (`id`),
+  CONSTRAINT `JobQueue_ibfk_4` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `JobStatus`
+--
+
+DROP TABLE IF EXISTS `JobStatus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobStatus` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   `shortName` varchar(32) NOT NULL,
@@ -336,4 +399,4 @@ CREATE TABLE `VariableType` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-13 11:02:34
+-- Dump completed on 2018-04-11 12:26:12
