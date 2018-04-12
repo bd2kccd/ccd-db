@@ -50,11 +50,11 @@ public class JobStatusService {
         // initialize database
         if (JobStatusRepository.findAll().isEmpty()) {
             JobStatusRepository.saveAll(Arrays.asList(
-                    new JobStatus("Job Queued", QUEUE_SHORT_NAME),
-                    new JobStatus("Job Started", STARTED_SHORT_NAME),
-                    new JobStatus("Job Finished", FINISHED_SHORT_NAME),
-                    new JobStatus("Job Cancelled", CANCELLED_SHORT_NAME),
-                    new JobStatus("Job Terminated", TERMINATED_SHORT_NAME)
+                    new JobStatus("In Queued", QUEUE_SHORT_NAME),
+                    new JobStatus("Running", STARTED_SHORT_NAME),
+                    new JobStatus("Finished", FINISHED_SHORT_NAME),
+                    new JobStatus("Cancelled", CANCELLED_SHORT_NAME),
+                    new JobStatus("Terminated", TERMINATED_SHORT_NAME)
             ));
         }
     }
