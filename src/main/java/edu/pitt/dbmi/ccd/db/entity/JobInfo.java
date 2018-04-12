@@ -54,6 +54,10 @@ public class JobInfo implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Basic(optional = false)
+    @Column(name = "name", nullable = false, length = 255)
+    private String name;
+
     @Lob
     @Column(name = "algoParam", length = 65535)
     private String algoParam;
@@ -98,7 +102,8 @@ public class JobInfo implements Serializable {
     public JobInfo() {
     }
 
-    public JobInfo(Long datasetId, boolean singleDataset, Date creationTime, AlgorithmType algorithmType, JobLocation jobLocation, JobStatus jobStatus, UserAccount userAccount) {
+    public JobInfo(String name, Long datasetId, boolean singleDataset, Date creationTime, AlgorithmType algorithmType, JobLocation jobLocation, JobStatus jobStatus, UserAccount userAccount) {
+        this.name = name;
         this.datasetId = datasetId;
         this.singleDataset = singleDataset;
         this.creationTime = creationTime;
@@ -114,6 +119,14 @@ public class JobInfo implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAlgoParam() {

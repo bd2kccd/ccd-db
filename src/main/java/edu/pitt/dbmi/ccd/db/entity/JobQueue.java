@@ -54,10 +54,6 @@ public class JobQueue implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 255)
-    private String name;
-
     @Column(name = "pid")
     private BigInteger pid;
 
@@ -72,8 +68,7 @@ public class JobQueue implements Serializable {
     public JobQueue() {
     }
 
-    public JobQueue(String name, JobInfo jobInfo, UserAccount userAccount) {
-        this.name = name;
+    public JobQueue(JobInfo jobInfo, UserAccount userAccount) {
         this.jobInfo = jobInfo;
         this.userAccount = userAccount;
     }
@@ -84,14 +79,6 @@ public class JobQueue implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public BigInteger getPid() {

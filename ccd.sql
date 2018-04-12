@@ -159,6 +159,7 @@ DROP TABLE IF EXISTS `JobInfo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `JobInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
   `algoParam` text DEFAULT NULL,
   `datasetId` bigint(20) NOT NULL,
   `singleDataset` tinyint(1) NOT NULL DEFAULT 0,
@@ -206,7 +207,6 @@ DROP TABLE IF EXISTS `JobQueue`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `JobQueue` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
   `pid` bigint(20) DEFAULT NULL,
   `jobInfoId` bigint(20) NOT NULL,
   `userAccountId` bigint(20) NOT NULL,
@@ -420,4 +420,4 @@ CREATE TABLE `VariableType` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-11 17:23:22
+-- Dump completed on 2018-04-12 16:05:32

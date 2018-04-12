@@ -55,17 +55,17 @@ public class JobQueueService {
     }
 
     @Transactional
-    public JobQueue submitLocalTetradJob(String jobQueueName, Long datasetId, boolean isSingleFile, String parameter, UserAccount userAccount) {
+    public JobQueue submitLocalTetradJob(String name, Long datasetId, boolean isSingleFile, String parameter, UserAccount userAccount) {
         JobLocation location = jobLocationService.findByShortName(JobLocationService.LOCAL_SHORT_NAME);
         JobStatus status = jobStatusService.findByShortName(JobStatusService.QUEUE_SHORT_NAME);
         AlgorithmType algoType = algorithmTypeService.findByShortName(AlgorithmTypeService.TETRAD_SHORT_NAME);
 
-        JobInfo jobInfo = new JobInfo(datasetId, isSingleFile, new Date(), algoType, location, status, userAccount);
+        JobInfo jobInfo = new JobInfo(name, datasetId, isSingleFile, new Date(), algoType, location, status, userAccount);
         jobInfo.setAlgoParam(parameter);
 
         jobInfo = jobInfoService.getRepository().save(jobInfo);
 
-        return jobQueueRepository.save(new JobQueue(jobQueueName, jobInfo, userAccount));
+        return jobQueueRepository.save(new JobQueue(jobInfo, userAccount));
     }
 
     public JobQueueRepository getRepository() {
