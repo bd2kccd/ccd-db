@@ -84,15 +84,15 @@ public class JobInfo implements Serializable {
     private Date endTime;
 
     @JoinColumn(name = "algorithmTypeId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private AlgorithmType algorithmType;
 
     @JoinColumn(name = "jobLocationId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private JobLocation jobLocation;
 
     @JoinColumn(name = "jobStatusId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private JobStatus jobStatus;
 
     @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)

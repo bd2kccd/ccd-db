@@ -18,10 +18,12 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.domain.job.JobQueueListItem;
 import edu.pitt.dbmi.ccd.db.entity.JobQueue;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -34,5 +36,10 @@ import org.springframework.stereotype.Repository;
 public interface JobQueueRepository extends JpaRepository<JobQueue, Long> {
 
     public List<JobQueue> findByUserAccount(UserAccount userAccount);
+
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.job.JobQueueListItem(jq.id, jq.jobInfo.name, jq.jobInfo.creationTime, jq.jobInfo.jobStatus.name, jq.jobInfo.jobLocation.name) "
+            + "FROM JobQueue jq "
+            + "WHERE jq.userAccount = ?1")
+    public List<JobQueueListItem> getJobQueueListItems(UserAccount userAccount);
 
 }
