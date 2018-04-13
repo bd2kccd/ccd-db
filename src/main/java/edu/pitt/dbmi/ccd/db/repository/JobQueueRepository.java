@@ -37,9 +37,13 @@ public interface JobQueueRepository extends JpaRepository<JobQueue, Long> {
 
     public List<JobQueue> findByUserAccount(UserAccount userAccount);
 
+    public JobQueue findByIdAndUserAccount(Long id, UserAccount userAccount);
+
     @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.job.JobQueueListItem(jq.id, jq.jobInfo.name, jq.jobInfo.creationTime, jq.jobInfo.jobStatus.name, jq.jobInfo.jobLocation.name) "
             + "FROM JobQueue jq "
             + "WHERE jq.userAccount = ?1")
     public List<JobQueueListItem> getJobQueueListItems(UserAccount userAccount);
+
+    public boolean existsByIdAndUserAccount(Long id, UserAccount userAccount);
 
 }

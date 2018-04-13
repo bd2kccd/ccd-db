@@ -26,6 +26,8 @@ import edu.pitt.dbmi.ccd.db.entity.JobStatus;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.JobQueueRepository;
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class JobQueueService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobQueueService.class);
 
     private final JobQueueRepository jobQueueRepository;
     private final JobLocationService jobLocationService;
@@ -52,6 +56,26 @@ public class JobQueueService {
         this.jobStatusService = jobStatusService;
         this.jobInfoService = jobInfoService;
         this.algorithmTypeService = algorithmTypeService;
+    }
+
+    @Transactional
+    public boolean cancelJob(Long id, UserAccount userAccount) {
+        JobQueue jobQueue = jobQueueRepository.findByIdAndUserAccount(id, userAccount);
+
+        JobStatus status = jobStatusService.findByShortName(JobStatusService.CANCELLED_SHORT_NAME);
+
+        JobInfo jobInfo = jobQueue.getJobInfo();
+        jobInfo.setJobStatus(status);
+
+        try {
+            jobInfoService.getRepository().save(jobInfo);
+        } catch (Exception exception) {
+            LOGGER.error("Unable to udate job queue status.", exception);
+
+            return false;
+        }
+
+        return true;
     }
 
     @Transactional
