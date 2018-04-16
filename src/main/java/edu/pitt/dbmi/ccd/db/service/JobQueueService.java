@@ -58,15 +58,11 @@ public class JobQueueService {
         this.algorithmTypeService = algorithmTypeService;
     }
 
-    @Transactional
-    public boolean cancelJob(Long id, UserAccount userAccount) {
-        JobQueue jobQueue = jobQueueRepository.findByIdAndUserAccount(id, userAccount);
-
+    public boolean cancelJob(JobQueue jobQueue) {
         JobStatus status = jobStatusService.findByShortName(JobStatusService.CANCELLED_SHORT_NAME);
 
         JobInfo jobInfo = jobQueue.getJobInfo();
         jobInfo.setJobStatus(status);
-
         try {
             jobInfoService.getRepository().save(jobInfo);
         } catch (Exception exception) {
