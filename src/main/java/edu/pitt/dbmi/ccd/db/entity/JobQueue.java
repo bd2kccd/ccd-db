@@ -62,7 +62,7 @@ public class JobQueue implements Serializable {
     private JobInfo jobInfo;
 
     @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private UserAccount userAccount;
 
     public JobQueue() {
