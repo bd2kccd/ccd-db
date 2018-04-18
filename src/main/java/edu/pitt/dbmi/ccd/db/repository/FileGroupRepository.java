@@ -19,6 +19,7 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.domain.file.FileGroupListItem;
+import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.FileGroup;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.entity.VariableType;
@@ -58,5 +59,8 @@ public interface FileGroupRepository extends JpaRepository<FileGroup, Long> {
     public Long deleteByIdAndUserAccount(Long id, UserAccount userAccount);
 
     public Long countByUserAccount(UserAccount userAccount);
+
+    @Query("SELECT fg.files FROM FileGroup fg WHERE fg.id = ?1 AND fg.userAccount = ?2")
+    public List<File> getFiles(Long id, UserAccount userAccount);
 
 }

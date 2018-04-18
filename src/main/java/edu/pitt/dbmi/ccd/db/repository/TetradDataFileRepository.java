@@ -60,7 +60,10 @@ public interface TetradDataFileRepository extends JpaRepository<TetradDataFile, 
 
     @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.ListItem(tdf.file.id,tdf.file.title)"
             + " FROM TetradDataFile tdf"
-            + " WHERE tdf.file.userAccount = ?1 AND tdf.variableType = ?2")
+            + " WHERE tdf.userAccount = ?1 AND tdf.variableType = ?2")
     public List<ListItem> getTetradDataListItem(UserAccount userAccount, VariableType variableType);
+
+    @Query("SELECT tdf.file FROM TetradDataFile tdf WHERE tdf.id = ?1 AND tdf.userAccount = ?2")
+    public File getFile(Long id, UserAccount userAccount);
 
 }
