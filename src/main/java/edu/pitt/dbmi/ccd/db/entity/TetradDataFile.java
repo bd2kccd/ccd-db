@@ -75,7 +75,7 @@ public class TetradDataFile implements Serializable {
     private Integer numOfVars;
 
     @JoinColumn(name = "fileId", referencedColumnName = "id", unique = true, nullable = false)
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
     private File file;
 
     @JoinColumn(name = "dataDelimiterId", referencedColumnName = "id", nullable = false)

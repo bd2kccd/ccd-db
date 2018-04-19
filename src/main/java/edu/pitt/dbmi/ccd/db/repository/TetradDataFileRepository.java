@@ -38,6 +38,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TetradDataFileRepository extends JpaRepository<TetradDataFile, Long> {
 
+    public TetradDataFile findByIdAndUserAccount(Long id, UserAccount userAccount);
+
     public TetradDataFile findByFile(File file);
 
     public List<TetradDataFile> findByFileIn(List<File> files);
@@ -62,8 +64,5 @@ public interface TetradDataFileRepository extends JpaRepository<TetradDataFile, 
             + " FROM TetradDataFile tdf"
             + " WHERE tdf.userAccount = ?1 AND tdf.variableType = ?2")
     public List<ListItem> getTetradDataListItem(UserAccount userAccount, VariableType variableType);
-
-    @Query("SELECT tdf.file FROM TetradDataFile tdf WHERE tdf.id = ?1 AND tdf.userAccount = ?2")
-    public File getFile(Long id, UserAccount userAccount);
 
 }
