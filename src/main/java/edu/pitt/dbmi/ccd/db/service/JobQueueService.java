@@ -58,13 +58,15 @@ public class JobQueueService {
         this.algorithmTypeService = algorithmTypeService;
     }
 
-    public boolean cancelJob(JobQueue jobQueue) {
-        JobStatus status = jobStatusService.findByShortName(JobStatusService.CANCELLED_SHORT_NAME);
+    public JobQueue setPID(Long pid, JobQueue jobQueue) {
+        jobQueue.setPid(pid);
 
-        JobInfo jobInfo = jobQueue.getJobInfo();
-        jobInfo.setJobStatus(status);
+        return jobQueueRepository.save(jobQueue);
+    }
+
+    public boolean cancelJob(JobQueue jobQueue) {
         try {
-            jobInfoService.getRepository().save(jobInfo);
+            jobInfoService.setCancelJob(jobQueue.getJobInfo());
         } catch (Exception exception) {
             LOGGER.error("Unable to udate job queue status.", exception);
 

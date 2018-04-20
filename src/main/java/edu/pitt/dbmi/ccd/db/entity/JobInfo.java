@@ -96,7 +96,7 @@ public class JobInfo implements Serializable {
     private JobStatus jobStatus;
 
     @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private UserAccount userAccount;
 
     public JobInfo() {

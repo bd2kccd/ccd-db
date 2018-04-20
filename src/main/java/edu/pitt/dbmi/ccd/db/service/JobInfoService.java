@@ -18,7 +18,9 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.entity.JobInfo;
 import edu.pitt.dbmi.ccd.db.repository.JobInfoRepository;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +34,40 @@ import org.springframework.stereotype.Service;
 public class JobInfoService {
 
     private final JobInfoRepository jobInfoRepository;
+    private final JobStatusService jobStatusService;
 
     @Autowired
-    public JobInfoService(JobInfoRepository jobInfoRepository) {
+    public JobInfoService(JobInfoRepository jobInfoRepository, JobStatusService jobStatusService) {
         this.jobInfoRepository = jobInfoRepository;
+        this.jobStatusService = jobStatusService;
+    }
+
+    public JobInfo setStartJob(JobInfo jobInfo) {
+        jobInfo.setStartTime(new Date());
+        jobInfo.setJobStatus(jobStatusService.findByShortName(JobStatusService.STARTED_SHORT_NAME));
+
+        return jobInfoRepository.save(jobInfo);
+    }
+
+    public JobInfo setEndJob(JobInfo jobInfo) {
+        jobInfo.setEndTime(new Date());
+        jobInfo.setJobStatus(jobStatusService.findByShortName(JobStatusService.FINISHED_SHORT_NAME));
+
+        return jobInfoRepository.save(jobInfo);
+    }
+
+    public JobInfo setCancelJob(JobInfo jobInfo) {
+        jobInfo.setEndTime(new Date());
+        jobInfo.setJobStatus(jobStatusService.findByShortName(JobStatusService.CANCELLED_SHORT_NAME));
+
+        return jobInfoRepository.save(jobInfo);
+    }
+
+    public JobInfo setTerminateJob(JobInfo jobInfo) {
+        jobInfo.setEndTime(new Date());
+        jobInfo.setJobStatus(jobStatusService.findByShortName(JobStatusService.TERMINATED_SHORT_NAME));
+
+        return jobInfoRepository.save(jobInfo);
     }
 
     public JobInfoRepository getRepository() {

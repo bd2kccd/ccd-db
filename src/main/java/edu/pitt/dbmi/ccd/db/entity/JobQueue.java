@@ -19,7 +19,6 @@
 package edu.pitt.dbmi.ccd.db.entity;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,14 +54,14 @@ public class JobQueue implements Serializable {
     private Long id;
 
     @Column(name = "pid")
-    private BigInteger pid;
+    private Long pid;
 
     @JoinColumn(name = "jobInfoId", referencedColumnName = "id", nullable = false)
     @OneToOne(optional = false, fetch = FetchType.EAGER)
     private JobInfo jobInfo;
 
     @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private UserAccount userAccount;
 
     public JobQueue() {
@@ -81,11 +80,11 @@ public class JobQueue implements Serializable {
         this.id = id;
     }
 
-    public BigInteger getPid() {
+    public Long getPid() {
         return pid;
     }
 
-    public void setPid(BigInteger pid) {
+    public void setPid(Long pid) {
         this.pid = pid;
     }
 
