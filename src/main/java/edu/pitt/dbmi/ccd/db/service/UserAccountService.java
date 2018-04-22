@@ -63,6 +63,10 @@ public class UserAccountService {
         }
     }
 
+    public UserAccount findByUsername(String username) {
+        return userAccountRepository.findByUsername(username);
+    }
+
     @Transactional
     public UserAccount registerRegularUser(UserAccountRegistration registration) {
         UserRole userRole = userRoleService.getRegularRole();
