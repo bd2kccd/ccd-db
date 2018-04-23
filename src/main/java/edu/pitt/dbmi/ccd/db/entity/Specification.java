@@ -121,6 +121,10 @@ public class Specification implements Serializable {
         return modified;
     }
 
+    public Set<Attribute> getAttributes() {
+        return this.attributes;
+    }
+
     public void addAttribute(Attribute attribute) {
         this.attributes.add(attribute);
     }

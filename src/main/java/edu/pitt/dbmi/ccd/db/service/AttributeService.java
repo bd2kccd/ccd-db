@@ -30,9 +30,9 @@ public class AttributeService {
         return repository.save(attribute);
     }
 
-    public List<Attribute> saveAll(Set<Attribute> attributes) {
-        return repository.saveAll(attributes);
-    }
+//    public List<Attribute> saveAll(Set<Attribute> attributes) {
+//        return repository.saveAll(attributes);
+//    }
 
     public Page<Attribute> search(Specification specification, String name, String level, Boolean required, Pageable pageable) {
         return repository.search(specification.getId(), name, level, required, pageable);

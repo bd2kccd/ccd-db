@@ -54,8 +54,6 @@ public class SpecificationService {
 
             specifications.add(hcls);
             specifications.add(plaintext);
-
-            repository.saveAll(specifications);
         }
     }
 
@@ -63,9 +61,9 @@ public class SpecificationService {
         return repository.save(spec);
     }
 
-    public List<Specification> saveAll(Set<Specification> specs) {
-        return repository.saveAll(specs);
-    }
+//    public List<Specification> saveAll(Set<Specification> specs) {
+//        return repository.saveAll(specs);
+//    }
 
     public Specification findById(Long id) {
         return repository.getOne(id);
