@@ -35,11 +35,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class JobStatusService {
 
-    public static final String QUEUE_SHORT_NAME = "queued";
+    public static final String QUEUED_SHORT_NAME = "queued";
     public static final String STARTED_SHORT_NAME = "started";
     public static final String FINISHED_SHORT_NAME = "finished";
-    public static final String CANCELLED_SHORT_NAME = "cancelled";
-    public static final String TERMINATED_SHORT_NAME = "terminated";
+    public static final String CANCELED_SHORT_NAME = "canceled";
+    public static final String FAILED_SHORT_NAME = "failed";
 
     private final JobStatusRepository jobStatusRepository;
 
@@ -50,11 +50,11 @@ public class JobStatusService {
         // initialize database
         if (JobStatusRepository.findAll().isEmpty()) {
             JobStatusRepository.saveAll(Arrays.asList(
-                    new JobStatus("In Queued", QUEUE_SHORT_NAME),
-                    new JobStatus("Running", STARTED_SHORT_NAME),
+                    new JobStatus("Queued", QUEUED_SHORT_NAME),
+                    new JobStatus("Started", STARTED_SHORT_NAME),
                     new JobStatus("Finished", FINISHED_SHORT_NAME),
-                    new JobStatus("Cancelled", CANCELLED_SHORT_NAME),
-                    new JobStatus("Terminated", TERMINATED_SHORT_NAME)
+                    new JobStatus("Canceled", CANCELED_SHORT_NAME),
+                    new JobStatus("Terminated", FAILED_SHORT_NAME)
             ));
         }
     }

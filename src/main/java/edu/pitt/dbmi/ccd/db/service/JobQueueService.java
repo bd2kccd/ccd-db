@@ -64,22 +64,42 @@ public class JobQueueService {
         return jobQueueRepository.save(jobQueue);
     }
 
-    public boolean cancelJob(JobQueue jobQueue) {
-        try {
-            jobInfoService.setCancelJob(jobQueue.getJobInfo());
-        } catch (Exception exception) {
-            LOGGER.error("Unable to udate job queue status.", exception);
+    public void setStatusStarted(JobQueue jobQueue) {
+        JobInfo jobInfo = jobQueue.getJobInfo();
+        jobInfo.setStartTime(new Date());
+        jobInfo.setJobStatus(jobStatusService.findByShortName(JobStatusService.STARTED_SHORT_NAME));
 
-            return false;
-        }
+        jobInfoService.getRepository().save(jobInfo);
+    }
 
-        return true;
+    public void setStatusFinished(JobQueue jobQueue) {
+        JobInfo jobInfo = jobQueue.getJobInfo();
+        jobInfo.setEndTime(new Date());
+        jobInfo.setJobStatus(jobStatusService.findByShortName(JobStatusService.FINISHED_SHORT_NAME));
+
+        jobInfoService.getRepository().save(jobInfo);
+    }
+
+    public void setStatusCanceled(JobQueue jobQueue) {
+        JobInfo jobInfo = jobQueue.getJobInfo();
+        jobInfo.setEndTime(new Date());
+        jobInfo.setJobStatus(jobStatusService.findByShortName(JobStatusService.CANCELED_SHORT_NAME));
+
+        jobInfoService.getRepository().save(jobInfo);
+    }
+
+    public void setStatusFailed(JobQueue jobQueue) {
+        JobInfo jobInfo = jobQueue.getJobInfo();
+        jobInfo.setEndTime(new Date());
+        jobInfo.setJobStatus(jobStatusService.findByShortName(JobStatusService.FAILED_SHORT_NAME));
+
+        jobInfoService.getRepository().save(jobInfo);
     }
 
     @Transactional
     public JobQueue submitLocalTetradJob(String name, Long datasetId, boolean isSingleFile, String parameter, UserAccount userAccount) {
         JobLocation location = jobLocationService.findByShortName(JobLocationService.LOCAL_SHORT_NAME);
-        JobStatus status = jobStatusService.findByShortName(JobStatusService.QUEUE_SHORT_NAME);
+        JobStatus status = jobStatusService.findByShortName(JobStatusService.QUEUED_SHORT_NAME);
         AlgorithmType algoType = algorithmTypeService.findByShortName(AlgorithmTypeService.TETRAD_SHORT_NAME);
 
         JobInfo jobInfo = new JobInfo(name, datasetId, isSingleFile, new Date(), algoType, location, status, userAccount);
