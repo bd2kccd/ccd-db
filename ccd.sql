@@ -219,6 +219,42 @@ CREATE TABLE `JobQueue` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `JobResult`
+--
+
+DROP TABLE IF EXISTS `JobResult`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobResult` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `jobInfoId` bigint(20) NOT NULL,
+  `userAccountId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobInfoId` (`jobInfoId`),
+  KEY `userAccountId` (`userAccountId`),
+  CONSTRAINT `JobResult_ibfk_1` FOREIGN KEY (`jobInfoId`) REFERENCES `JobInfo` (`id`),
+  CONSTRAINT `JobResult_ibfk_2` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `JobResultFileRel`
+--
+
+DROP TABLE IF EXISTS `JobResultFileRel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobResultFileRel` (
+  `jobResultId` bigint(20) NOT NULL,
+  `fileId` bigint(20) NOT NULL,
+  PRIMARY KEY (`jobResultId`,`fileId`),
+  KEY `fileId` (`fileId`),
+  CONSTRAINT `JobResultFileRel_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`),
+  CONSTRAINT `JobResultFileRel_ibfk_2` FOREIGN KEY (`jobResultId`) REFERENCES `JobResult` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `JobStatus`
 --
 
@@ -420,4 +456,4 @@ CREATE TABLE `VariableType` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-12 16:05:32
+-- Dump completed on 2018-04-25 17:39:21

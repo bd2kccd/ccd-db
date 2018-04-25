@@ -156,6 +156,19 @@ public class FileService {
         return fileRepository.saveAll(fileEntities);
     }
 
+    public List<File> persistLocalFiles(List<Path> files, FileFormat fileFormat, UserAccount userAccount) {
+        List<File> fileEntities = new LinkedList<>();
+        files.forEach(file -> {
+            File fileEntity = createFileEntity(file, userAccount);
+            if (fileEntity != null) {
+                fileEntity.setFileFormat(fileFormat);
+                fileEntities.add(fileEntity);
+            }
+        });
+
+        return fileRepository.saveAll(fileEntities);
+    }
+
     public File persistLocalFile(Path file, UserAccount userAccount) {
         File fileEntity = createFileEntity(file, userAccount);
         if (fileEntity != null) {
