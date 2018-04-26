@@ -77,9 +77,9 @@ public class FileFormatService {
                     new FileFormat("Tetrad Tabular Data", TETRAD_TAB_SHORT_NAME, tabData, tetrad),
                     new FileFormat("Tetrad Variable", TETRAD_VAR_SHORT_NAME, var, tetrad),
                     new FileFormat("Tetrad Knowledge", TETRAD_KNWL_SHORT_NAME, knowledge, tetrad),
-                    new FileFormat("Tetrad Result", TETRAD_RESULT_SHORT_NAME, result, tetrad),
-                    new FileFormat("TDI Tabular Data", TDI_TAB_SHORT_NAME, tabData, tdi),
-                    new FileFormat("TDI Result", TDI_RESULT_SHORT_NAME, result, tdi)
+                    new FileFormat("Tetrad Result", TETRAD_RESULT_SHORT_NAME, result, tetrad)
+            //                    new FileFormat("TDI Tabular Data", TDI_TAB_SHORT_NAME, tabData, tdi),
+            //                    new FileFormat("TDI Result", TDI_RESULT_SHORT_NAME, result, tdi)
             ));
         }
     }

@@ -47,7 +47,7 @@ public class AlgorithmTypeService {
         // initialize database
         if (algorithmTypeRepository.findAll().isEmpty()) {
             algorithmTypeRepository.saveAll(Arrays.asList(
-                    new AlgorithmType("TDI", TDI_SHORT_NAME),
+                    //                    new AlgorithmType("TDI", TDI_SHORT_NAME),
                     new AlgorithmType("Tetrad", TETRAD_SHORT_NAME)
             ));
         }
