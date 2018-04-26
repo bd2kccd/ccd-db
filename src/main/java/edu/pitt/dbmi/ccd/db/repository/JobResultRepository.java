@@ -21,9 +21,9 @@ package edu.pitt.dbmi.ccd.db.repository;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.JobInfo;
 import edu.pitt.dbmi.ccd.db.entity.JobResult;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -35,7 +35,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface JobResultRepository extends JpaRepository<JobResult, Long> {
 
-    @Query("SELECT jr.files FROM JobResult jr WHERE jr.jobInfo = ?1")
-    public List<File> getFiles(JobInfo jobInfo);
+    public List<File> findByJobInfoAndUserAccount(JobInfo jobInfo, UserAccount userAccount);
 
 }
