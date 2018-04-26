@@ -21,6 +21,7 @@ package edu.pitt.dbmi.ccd.db.entity;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,6 +32,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -40,6 +43,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
+@Table(name = "JobResult", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"jobInfoId"})})
 @XmlRootElement
 public class JobResult implements Serializable {
 
@@ -48,13 +53,13 @@ public class JobResult implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @JoinTable(name = "JobResultFileRel", joinColumns = {
         @JoinColumn(name = "jobResultId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "fileId", referencedColumnName = "id", nullable = false)})
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<File> files;
 
     @JoinColumn(name = "jobInfoId", referencedColumnName = "id", nullable = false)

@@ -35,6 +35,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -102,6 +103,9 @@ public class File implements Serializable {
         @JoinColumn(name = "fileId", nullable = false, updatable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "fileGroupId", nullable = false, updatable = false)})
     private List<FileGroup> fileGroups;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "jobInfo", cascade = CascadeType.ALL)
+    private JobResult jobResult;
 
     public File() {
     }
@@ -210,6 +214,16 @@ public class File implements Serializable {
 
     public void setFileGroups(List<FileGroup> fileGroups) {
         this.fileGroups = fileGroups;
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    public JobResult getJobResult() {
+        return jobResult;
+    }
+
+    public void setJobResult(JobResult jobResult) {
+        this.jobResult = jobResult;
     }
 
 }

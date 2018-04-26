@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.2.14-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.14  Distrib 5.5.56-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: ccd
 -- ------------------------------------------------------
--- Server version	10.2.14-MariaDB
+-- Server version	5.5.56-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -58,7 +58,7 @@ CREATE TABLE `File` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `creationTime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `fileSize` bigint(20) NOT NULL,
   `md5CheckSum` varchar(32) DEFAULT NULL,
   `userAccountId` bigint(20) NOT NULL,
@@ -105,7 +105,7 @@ DROP TABLE IF EXISTS `FileGroup`;
 CREATE TABLE `FileGroup` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `creationTime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `variableTypeId` bigint(20) NOT NULL,
   `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -128,6 +128,7 @@ CREATE TABLE `FileGroupFileRel` (
   `fileGroupId` bigint(20) NOT NULL,
   `fileId` bigint(20) NOT NULL,
   PRIMARY KEY (`fileGroupId`,`fileId`),
+  KEY `fileGroupId` (`fileGroupId`),
   KEY `fileId` (`fileId`),
   CONSTRAINT `FileGroupFileRel_ibfk_1` FOREIGN KEY (`fileGroupId`) REFERENCES `FileGroup` (`id`),
   CONSTRAINT `FileGroupFileRel_ibfk_2` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`)
@@ -160,10 +161,10 @@ DROP TABLE IF EXISTS `JobInfo`;
 CREATE TABLE `JobInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `algoParam` text DEFAULT NULL,
+  `algoParam` text,
   `datasetId` bigint(20) NOT NULL,
-  `singleDataset` tinyint(1) NOT NULL DEFAULT 0,
-  `creationTime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `singleDataset` tinyint(1) NOT NULL DEFAULT '0',
+  `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `startTime` timestamp NULL DEFAULT NULL,
   `endTime` timestamp NULL DEFAULT NULL,
   `jobStatusId` bigint(20) NOT NULL,
@@ -230,6 +231,7 @@ CREATE TABLE `JobResult` (
   `jobInfoId` bigint(20) NOT NULL,
   `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `jobInfoId_2` (`jobInfoId`),
   KEY `jobInfoId` (`jobInfoId`),
   KEY `userAccountId` (`userAccountId`),
   CONSTRAINT `JobResult_ibfk_1` FOREIGN KEY (`jobInfoId`) REFERENCES `JobInfo` (`id`),
@@ -248,9 +250,10 @@ CREATE TABLE `JobResultFileRel` (
   `jobResultId` bigint(20) NOT NULL,
   `fileId` bigint(20) NOT NULL,
   PRIMARY KEY (`jobResultId`,`fileId`),
+  KEY `jobResultId` (`jobResultId`),
   KEY `fileId` (`fileId`),
-  CONSTRAINT `JobResultFileRel_ibfk_1` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`),
-  CONSTRAINT `JobResultFileRel_ibfk_2` FOREIGN KEY (`jobResultId`) REFERENCES `JobResult` (`id`)
+  CONSTRAINT `JobResultFileRel_ibfk_1` FOREIGN KEY (`jobResultId`) REFERENCES `JobResult` (`id`),
+  CONSTRAINT `JobResultFileRel_ibfk_2` FOREIGN KEY (`fileId`) REFERENCES `File` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -279,7 +282,7 @@ DROP TABLE IF EXISTS `TetradDataFile`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `TetradDataFile` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `hasHeader` tinyint(1) NOT NULL DEFAULT 0,
+  `hasHeader` tinyint(1) NOT NULL DEFAULT '0',
   `quoteChar` char(1) DEFAULT NULL,
   `missingMarker` varchar(8) DEFAULT NULL,
   `commentMarker` varchar(8) DEFAULT NULL,
@@ -333,8 +336,8 @@ CREATE TABLE `UserAccount` (
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `account` varchar(255) NOT NULL,
-  `activated` tinyint(1) NOT NULL DEFAULT 0,
-  `disabled` tinyint(1) NOT NULL DEFAULT 0,
+  `activated` tinyint(1) NOT NULL DEFAULT '0',
+  `disabled` tinyint(1) NOT NULL DEFAULT '0',
   `actionKey` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
@@ -388,7 +391,7 @@ DROP TABLE IF EXISTS `UserLogin`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `UserLogin` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `loginDate` timestamp NOT NULL DEFAULT current_timestamp(),
+  `loginDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `loginLocation` bigint(20) DEFAULT NULL,
   `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -406,7 +409,7 @@ DROP TABLE IF EXISTS `UserRegistration`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `UserRegistration` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `registrationDate` timestamp NOT NULL DEFAULT current_timestamp(),
+  `registrationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `registrationLocation` bigint(20) DEFAULT NULL,
   `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -456,4 +459,4 @@ CREATE TABLE `VariableType` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-25 17:39:21
+-- Dump completed on 2018-04-26  0:22:12
