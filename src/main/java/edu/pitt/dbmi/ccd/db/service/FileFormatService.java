@@ -41,12 +41,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class FileFormatService {
 
-    public static final String TETRAD_TAB_SHORT_NAME = "tetrad-tab";
-    public static final String TETRAD_VAR_SHORT_NAME = "tetrad-var";
-    public static final String TETRAD_KNWL_SHORT_NAME = "tetrad-knwl";
-    public static final String TETRAD_RESULT_SHORT_NAME = "tetrad-result";
-    public static final String TDI_TAB_SHORT_NAME = "tdi-tab";
-    public static final String TDI_RESULT_SHORT_NAME = "tdi-result";
+    public static final Long TETRAD_TAB_ID = 1L;
+    public static final Long TETRAD_VAR_ID = 2L;
+    public static final Long TETRAD_KNWL_ID = 3L;
+    public static final Long TETRAD_RESULT_ID = 4L;
 
     private final FileFormatRepository fileFormatRepository;
 
@@ -57,61 +55,49 @@ public class FileFormatService {
             AlgorithmTypeService algorithmTypeService) {
         this.fileFormatRepository = fileFormatRepository;
 
-        AlgorithmType tetrad = algorithmTypeService
-                .findByShortName(AlgorithmTypeService.TETRAD_SHORT_NAME);
-        AlgorithmType tdi = algorithmTypeService
-                .findByShortName(AlgorithmTypeService.TDI_SHORT_NAME);
+        AlgorithmType tetrad = algorithmTypeService.findById(AlgorithmTypeService.TETRAD_ID);
 
-        FileType tabData = fileTypeService
-                .findByShortName(FileTypeService.DATA_SHORT_NAME);
-        FileType var = fileTypeService
-                .findByShortName(FileTypeService.VARIABLE_SHORT_NAME);
-        FileType knowledge = fileTypeService
-                .findByShortName(FileTypeService.KNOWLEDGE_SHORT_NAME);
-        FileType result = fileTypeService
-                .findByShortName(FileTypeService.RESULT_SHORT_NAME);
+        FileType tabData = fileTypeService.findById(FileTypeService.DATA_ID);
+        FileType var = fileTypeService.findById(FileTypeService.VARIABLE_ID);
+        FileType knowledge = fileTypeService.findById(FileTypeService.KNOWLEDGE_ID);
+        FileType result = fileTypeService.findById(FileTypeService.RESULT_ID);
 
         // initialize database
         if (fileFormatRepository.findAll().isEmpty()) {
             fileFormatRepository.saveAll(Arrays.asList(
-                    new FileFormat("Tetrad Tabular Data", TETRAD_TAB_SHORT_NAME, tabData, tetrad),
-                    new FileFormat("Tetrad Variable", TETRAD_VAR_SHORT_NAME, var, tetrad),
-                    new FileFormat("Tetrad Knowledge", TETRAD_KNWL_SHORT_NAME, knowledge, tetrad),
-                    new FileFormat("Tetrad Result", TETRAD_RESULT_SHORT_NAME, result, tetrad)
-            //                    new FileFormat("TDI Tabular Data", TDI_TAB_SHORT_NAME, tabData, tdi),
-            //                    new FileFormat("TDI Result", TDI_RESULT_SHORT_NAME, result, tdi)
+                    new FileFormat(TETRAD_TAB_ID, "Tetrad Tabular Data", tabData, tetrad),
+                    new FileFormat(TETRAD_VAR_ID, "Tetrad Variable", var, tetrad),
+                    new FileFormat(TETRAD_KNWL_ID, "Tetrad Knowledge", knowledge, tetrad),
+                    new FileFormat(TETRAD_RESULT_ID, "Tetrad Result", result, tetrad)
             ));
         }
     }
 
-    @Cacheable("fileFormatAll")
+    @Cacheable("FileFormatById")
+    public FileFormat findById(Long id) {
+        Optional<FileFormat> opt = fileFormatRepository.findById(id);
+
+        return opt.isPresent() ? opt.get() : null;
+    }
+
+    @Cacheable("FileFormatAll")
     public List<FileFormat> findAll() {
         return fileFormatRepository.findAll();
     }
 
-    @Cacheable("fileFormatOpts")
-    public Map<FileType, List<FileFormat>> getFileFormatOptions() {
-        return fileFormatRepository.findAll().stream()
-                .filter(e -> !FileTypeService.RESULT_SHORT_NAME.equals(e.getFileType().getShortName()))
-                .collect(Collectors.groupingBy(FileFormat::getFileType))
-                .entrySet().stream()
-                .sorted((e1, e2) -> e1.getKey().getShortName().compareTo(e2.getKey().getShortName()))
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue(), (e1, e2) -> e2, LinkedHashMap::new));
-    }
-
-    @Cacheable("fileFormatById")
-    public Optional<FileFormat> findById(Long id) {
-        return fileFormatRepository.findById(id);
-    }
-
-    @Cacheable("fileFormatByShortName")
-    public FileFormat findByShortName(String shortName) {
-        return fileFormatRepository.findByShortName(shortName);
-    }
-
-    @Cacheable("fileFormatsByAlgorithmType")
+    @Cacheable("FileFormatsByAlgorithmType")
     public List<FileFormat> findByAlgorithmType(AlgorithmType algorithmType) {
         return fileFormatRepository.findByAlgorithmType(algorithmType);
+    }
+
+    @Cacheable("FileFormatOpts")
+    public Map<FileType, List<FileFormat>> getFileFormatOptions() {
+        return fileFormatRepository.findAll().stream()
+                .filter(e -> e.getFileType().getId().longValue() != FileTypeService.RESULT_ID)
+                .collect(Collectors.groupingBy(FileFormat::getFileType))
+                .entrySet().stream()
+                .sorted((e1, e2) -> e1.getKey().getName().compareTo(e2.getKey().getName()))
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue(), (e1, e2) -> e2, LinkedHashMap::new));
     }
 
     public FileFormatRepository getRepository() {

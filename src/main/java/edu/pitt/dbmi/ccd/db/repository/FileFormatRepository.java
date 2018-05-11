@@ -33,8 +33,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FileFormatRepository extends JpaRepository<FileFormat, Long> {
 
-    public FileFormat findByShortName(String shortName);
-
     public List<FileFormat> findByAlgorithmType(AlgorithmType algorithmType);
 
 }

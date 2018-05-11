@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(uniqueConstraints = {
+@Table(name = "FileGroup", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"name", "userAccountId"})})
 @XmlRootElement
 public class FileGroup implements Serializable {
@@ -57,15 +57,15 @@ public class FileGroup implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Basic(optional = false)
-    @Column(nullable = false, length = 255)
+    @Column(name = "name", nullable = false, length = 255)
     private String name;
 
     @Basic(optional = false)
-    @Column(nullable = false)
+    @Column(name = "creationTime", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationTime;
 
@@ -86,12 +86,11 @@ public class FileGroup implements Serializable {
     public FileGroup() {
     }
 
-    public FileGroup(String name, Date creationTime, VariableType variableType, UserAccount userAccount, List<File> files) {
+    public FileGroup(String name, Date creationTime, VariableType variableType, UserAccount userAccount) {
         this.name = name;
         this.creationTime = creationTime;
         this.variableType = variableType;
         this.userAccount = userAccount;
-        this.files = files;
     }
 
     public Long getId() {
@@ -118,6 +117,8 @@ public class FileGroup implements Serializable {
         this.creationTime = creationTime;
     }
 
+    @JsonIgnore
+    @XmlTransient
     public VariableType getVariableType() {
         return variableType;
     }
@@ -126,8 +127,8 @@ public class FileGroup implements Serializable {
         this.variableType = variableType;
     }
 
-    @XmlTransient
     @JsonIgnore
+    @XmlTransient
     public UserAccount getUserAccount() {
         return userAccount;
     }
@@ -136,8 +137,8 @@ public class FileGroup implements Serializable {
         this.userAccount = userAccount;
     }
 
-    @XmlTransient
     @JsonIgnore
+    @XmlTransient
     public List<File> getFiles() {
         return files;
     }

@@ -36,13 +36,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class DataDelimiterService {
 
-    public static final String TAB_DELIM_SHORT_NAME = "tab";
-    public static final String SPACE_DELIM_SHORT_NAME = "space";
-    public static final String WHITESPACE_DELIM_SHORT_NAME = "whitespace";
-    public static final String COMMA_DELIM_SHORT_NAME = "comma";
-    public static final String COLON_DELIM_SHORT_NAME = "colon";
-    public static final String SEMICOLON_DELIM_SHORT_NAME = "semicolon";
-    public static final String PIPE_DELIM_SHORT_NAME = "pipe";
+    public static final Long TAB_DELIM_ID = 1L;
+    public static final Long SPACE_DELIM_ID = 2L;
+    public static final Long WHITESPACE_DELIM_ID = 3L;
+    public static final Long COMMA_DELIM_ID = 4L;
+    public static final Long COLON_DELIM_ID = 5L;
+    public static final Long SEMICOLON_DELIM_ID = 6L;
+    public static final Long PIPE_DELIM_ID = 7L;
 
     private final DataDelimiterRepository dataDelimiterRepository;
 
@@ -53,30 +53,27 @@ public class DataDelimiterService {
         // initialize database
         if (dataDelimiterRepository.findAll().isEmpty()) {
             dataDelimiterRepository.saveAll(Arrays.asList(
-                    new DataDelimiter("Tab", TAB_DELIM_SHORT_NAME),
-                    new DataDelimiter("Space", SPACE_DELIM_SHORT_NAME),
-                    new DataDelimiter("Whitespace", WHITESPACE_DELIM_SHORT_NAME),
-                    new DataDelimiter("Comma", COMMA_DELIM_SHORT_NAME),
-                    new DataDelimiter("Colon", COLON_DELIM_SHORT_NAME),
-                    new DataDelimiter("Semicolon", SEMICOLON_DELIM_SHORT_NAME),
-                    new DataDelimiter("Pipe", PIPE_DELIM_SHORT_NAME)
+                    new DataDelimiter(TAB_DELIM_ID, "Tab"),
+                    new DataDelimiter(SPACE_DELIM_ID, "Space"),
+                    new DataDelimiter(WHITESPACE_DELIM_ID, "Whitespace"),
+                    new DataDelimiter(COMMA_DELIM_ID, "Comma"),
+                    new DataDelimiter(COLON_DELIM_ID, "Colon"),
+                    new DataDelimiter(SEMICOLON_DELIM_ID, "Semicolon"),
+                    new DataDelimiter(PIPE_DELIM_ID, "Pipe")
             ));
         }
     }
 
-    @Cacheable("dataDelimiterAll")
+    @Cacheable("DataDelimiterById")
+    public DataDelimiter findById(Long id) {
+        Optional<DataDelimiter> opt = dataDelimiterRepository.findById(id);
+
+        return opt.isPresent() ? opt.get() : null;
+    }
+
+    @Cacheable("DataDelimiterAll")
     public List<DataDelimiter> findAll() {
         return dataDelimiterRepository.findAll();
-    }
-
-    @Cacheable("dataDelimiterById")
-    public Optional<DataDelimiter> findById(Long id) {
-        return dataDelimiterRepository.findById(id);
-    }
-
-    @Cacheable("dataDelimiterByShortName")
-    public DataDelimiter findByShortName(String shortName) {
-        return dataDelimiterRepository.findByShortName(shortName);
     }
 
     public DataDelimiterRepository getRepository() {

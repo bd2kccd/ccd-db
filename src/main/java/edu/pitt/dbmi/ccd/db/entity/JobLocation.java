@@ -36,8 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"shortName"})})
+@Table(name = "JobLocation", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name"})})
 @XmlRootElement
 public class JobLocation implements Serializable {
 
@@ -53,16 +53,16 @@ public class JobLocation implements Serializable {
     @Column(name = "name", nullable = false, length = 64)
     private String name;
 
-    @Basic(optional = false)
-    @Column(name = "shortName", nullable = false, length = 32)
-    private String shortName;
-
     public JobLocation() {
     }
 
-    public JobLocation(String name, String shortName) {
+    public JobLocation(String name) {
         this.name = name;
-        this.shortName = shortName;
+    }
+
+    public JobLocation(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public Long getId() {
@@ -79,14 +79,6 @@ public class JobLocation implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getShortName() {
-        return shortName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
     }
 
 }

@@ -22,6 +22,7 @@ import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
 import edu.pitt.dbmi.ccd.db.repository.AlgorithmTypeRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AlgorithmTypeService {
 
-    public static final String TDI_SHORT_NAME = "tdi";
-    public static final String TETRAD_SHORT_NAME = "tetrad";
+    public static final Long TETRAD_ID = 1L;
 
     private final AlgorithmTypeRepository algorithmTypeRepository;
 
@@ -47,20 +47,21 @@ public class AlgorithmTypeService {
         // initialize database
         if (algorithmTypeRepository.findAll().isEmpty()) {
             algorithmTypeRepository.saveAll(Arrays.asList(
-                    //                    new AlgorithmType("TDI", TDI_SHORT_NAME),
-                    new AlgorithmType("Tetrad", TETRAD_SHORT_NAME)
+                    new AlgorithmType(TETRAD_ID, "Tetrad")
             ));
         }
     }
 
-    @Cacheable("algorithmTypeAll")
-    public List<AlgorithmType> findAll() {
-        return algorithmTypeRepository.findAll();
+    @Cacheable("AlgorithmTypeById")
+    public AlgorithmType findById(Long id) {
+        Optional<AlgorithmType> opt = algorithmTypeRepository.findById(id);
+
+        return opt.isPresent() ? opt.get() : null;
     }
 
-    @Cacheable("algorithmTypeByShortName")
-    public AlgorithmType findByShortName(String shortName) {
-        return algorithmTypeRepository.findByShortName(shortName);
+    @Cacheable("AlgorithmTypeAll")
+    public List<AlgorithmType> findAll() {
+        return algorithmTypeRepository.findAll();
     }
 
     public AlgorithmTypeRepository getRepository() {

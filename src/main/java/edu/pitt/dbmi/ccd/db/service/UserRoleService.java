@@ -21,7 +21,7 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.UserRole;
 import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -35,8 +35,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserRoleService {
 
-    private static final String ADMIN_SHORT_NAME = "admin";
-    private static final String REGULAR_SHORT_NAME = "regular";
+    private static final Long ADMIN_ID = 1L;
+    private static final Long REGULAR_ID = 2L;
 
     private final UserRoleRepository userRoleRepository;
 
@@ -47,28 +47,25 @@ public class UserRoleService {
         // initialize database
         if (userRoleRepository.findAll().isEmpty()) {
             userRoleRepository.saveAll(Arrays.asList(
-                    new UserRole("Admin", ADMIN_SHORT_NAME),
-                    new UserRole("Regular", REGULAR_SHORT_NAME)
+                    new UserRole(ADMIN_ID, "Admin"),
+                    new UserRole(REGULAR_ID, "Regular")
             ));
         }
     }
 
+    @Cacheable("UserRoleById")
+    public UserRole findById(Long id) {
+        Optional<UserRole> opt = userRoleRepository.findById(id);
+
+        return opt.isPresent() ? opt.get() : null;
+    }
+
     public UserRole getAdminRole() {
-        return findByShortName(ADMIN_SHORT_NAME);
+        return findById(ADMIN_ID);
     }
 
     public UserRole getRegularRole() {
-        return findByShortName(REGULAR_SHORT_NAME);
-    }
-
-    @Cacheable("userRoleAll")
-    public List<UserRole> findAll() {
-        return userRoleRepository.findAll();
-    }
-
-    @Cacheable("userRoleByShortName")
-    public UserRole findByShortName(String shortName) {
-        return userRoleRepository.findByShortName(shortName);
+        return findById(REGULAR_ID);
     }
 
     public UserRoleRepository getRepository() {

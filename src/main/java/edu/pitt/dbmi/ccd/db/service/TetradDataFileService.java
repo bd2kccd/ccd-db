@@ -80,8 +80,10 @@ public class TetradDataFileService {
         File file = tetradDataFile.getFile();
 
         // update file format
-        FileFormat fileFormat = fileFormatService.findByShortName(FileFormatService.TETRAD_TAB_SHORT_NAME);
+        FileFormat fileFormat = fileFormatService.findById(FileFormatService.TETRAD_TAB_ID);
         file.setFileFormat(fileFormat);
+        file.setTetradDataFile(null);
+        file.setTetradVariableFile(null);
         file = fileService.getRepository().save(file);
 
         tetradDataFile.setFile(file);
@@ -91,32 +93,35 @@ public class TetradDataFileService {
 
     @Transactional
     public TetradDataFile save(TetradDataFile tetradDataFile) {
+        TetradDataFile savedDataFile;
+
         File file = tetradDataFile.getFile();
-        FileFormat prevFileFormat = file.getFileFormat();
-        if (prevFileFormat == null) {
-            return saveAsNew(tetradDataFile);
+        FileFormat prevFileFmt = file.getFileFormat();
+        if (prevFileFmt == null) {
+            savedDataFile = saveAsNew(tetradDataFile);
         } else {
-            switch (prevFileFormat.getShortName()) {
-                case FileFormatService.TETRAD_TAB_SHORT_NAME:
-                    TetradDataFile dataFile = tetradDataFileRepository.findByFile(file);
-                    dataFile.setDataDelimiter(tetradDataFile.getDataDelimiter());
-                    dataFile.setVariableType(tetradDataFile.getVariableType());
-                    dataFile.setHasHeader(tetradDataFile.isHasHeader());
-                    dataFile.setMissingMarker(tetradDataFile.getMissingMarker());
-                    dataFile.setNumOfVars(tetradDataFile.getNumOfVars());
-                    dataFile.setNumOfCases(tetradDataFile.getNumOfCases());
-                    dataFile.setQuoteChar(tetradDataFile.getQuoteChar());
-                    dataFile.setCommentMarker(tetradDataFile.getCommentMarker());
+            long id = prevFileFmt.getId();
+            if (id == FileFormatService.TETRAD_TAB_ID) {
+                TetradDataFile dataFile = tetradDataFileRepository.findByFile(file);
+                dataFile.setDataDelimiter(tetradDataFile.getDataDelimiter());
+                dataFile.setVariableType(tetradDataFile.getVariableType());
+                dataFile.setHasHeader(tetradDataFile.isHasHeader());
+                dataFile.setMissingMarker(tetradDataFile.getMissingMarker());
+                dataFile.setNumOfVars(tetradDataFile.getNumOfVars());
+                dataFile.setNumOfCases(tetradDataFile.getNumOfCases());
+                dataFile.setQuoteChar(tetradDataFile.getQuoteChar());
+                dataFile.setCommentMarker(tetradDataFile.getCommentMarker());
 
-                    return tetradDataFileRepository.save(dataFile);
-                case FileFormatService.TETRAD_VAR_SHORT_NAME:
-                    tetradVariableFileRepository.deleteByFile(file);
-
-                    return saveAsNew(tetradDataFile);
-                default:
-                    return saveAsNew(tetradDataFile);
+                savedDataFile = tetradDataFileRepository.save(dataFile);
+            } else if (id == FileFormatService.TETRAD_VAR_ID) {
+                savedDataFile = saveAsNew(tetradDataFile);
+                tetradVariableFileRepository.deleteByFile(file);
+            } else {
+                savedDataFile = saveAsNew(tetradDataFile);
             }
         }
+
+        return savedDataFile;
     }
 
     public TetradDataFileRepository getRepository() {

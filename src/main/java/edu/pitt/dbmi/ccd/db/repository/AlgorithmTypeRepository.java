@@ -31,6 +31,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AlgorithmTypeRepository extends JpaRepository<AlgorithmType, Long> {
 
-    public AlgorithmType findByShortName(String shortName);
-
 }

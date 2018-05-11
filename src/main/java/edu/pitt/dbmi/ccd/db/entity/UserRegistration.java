@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -34,7 +35,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.hibernate.annotations.CreationTimestamp;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -59,7 +60,6 @@ public class UserRegistration implements Serializable {
     @Basic(optional = false)
     @Column(name = "registrationDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
     private Date registrationDate;
 
     @Column(name = "registrationLocation")
@@ -74,12 +74,6 @@ public class UserRegistration implements Serializable {
 
     public UserRegistration(Date registrationDate, UserAccount userAccount) {
         this.registrationDate = registrationDate;
-        this.userAccount = userAccount;
-    }
-
-    public UserRegistration(Date registrationDate, Long registrationLocation, UserAccount userAccount) {
-        this.registrationDate = registrationDate;
-        this.registrationLocation = registrationLocation;
         this.userAccount = userAccount;
     }
 
@@ -107,6 +101,8 @@ public class UserRegistration implements Serializable {
         this.registrationLocation = registrationLocation;
     }
 
+    @JsonIgnore
+    @XmlTransient
     public UserAccount getUserAccount() {
         return userAccount;
     }

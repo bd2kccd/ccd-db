@@ -53,8 +53,10 @@ public class TetradVariableFileService {
         File file = tetradVariableFile.getFile();
 
         // update file format
-        FileFormat fileFormat = fileFormatService.findByShortName(FileFormatService.TETRAD_VAR_SHORT_NAME);
+        FileFormat fileFormat = fileFormatService.findById(FileFormatService.TETRAD_VAR_ID);
         file.setFileFormat(fileFormat);
+        file.setTetradDataFile(null);
+        file.setTetradVariableFile(null);
         file = fileService.getRepository().save(file);
 
         tetradVariableFile.setFile(file);
@@ -64,25 +66,28 @@ public class TetradVariableFileService {
 
     @Transactional
     public TetradVariableFile save(TetradVariableFile tetradVariableFile) {
+        TetradVariableFile savedVarFile;
+
         File file = tetradVariableFile.getFile();
-        FileFormat prevFileFormat = file.getFileFormat();
-        if (prevFileFormat == null) {
-            return saveAsNew(tetradVariableFile);
+        FileFormat prevFileFmt = file.getFileFormat();
+        if (prevFileFmt == null) {
+            savedVarFile = saveAsNew(tetradVariableFile);
         } else {
-            switch (prevFileFormat.getShortName()) {
-                case FileFormatService.TETRAD_TAB_SHORT_NAME:
-                    tetradDataFileRepository.deleteByFile(file);
+            long id = prevFileFmt.getId();
+            if (id == FileFormatService.TETRAD_TAB_ID) {
+                savedVarFile = saveAsNew(tetradVariableFile);
+                tetradDataFileRepository.deleteByFile(file);
+            } else if (id == FileFormatService.TETRAD_VAR_ID) {
+                TetradVariableFile varFile = tetradVariableFileRepository.findByFile(file);
+                varFile.setNumOfVars(tetradVariableFile.getNumOfVars());
 
-                    return saveAsNew(tetradVariableFile);
-                case FileFormatService.TETRAD_VAR_SHORT_NAME:
-                    TetradVariableFile varFile = tetradVariableFileRepository.findByFile(file);
-                    varFile.setNumOfVars(tetradVariableFile.getNumOfVars());
-
-                    return tetradVariableFileRepository.save(varFile);
-                default:
-                    return saveAsNew(tetradVariableFile);
+                savedVarFile = tetradVariableFileRepository.save(varFile);
+            } else {
+                savedVarFile = saveAsNew(tetradVariableFile);
             }
         }
+
+        return savedVarFile;
     }
 
     public TetradVariableFileRepository getRepository() {

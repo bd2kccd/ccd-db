@@ -21,7 +21,7 @@ package edu.pitt.dbmi.ccd.db.service;
 import edu.pitt.dbmi.ccd.db.entity.JobStatus;
 import edu.pitt.dbmi.ccd.db.repository.JobStatusRepository;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -35,11 +35,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class JobStatusService {
 
-    public static final String QUEUED_SHORT_NAME = "queued";
-    public static final String STARTED_SHORT_NAME = "started";
-    public static final String FINISHED_SHORT_NAME = "finished";
-    public static final String CANCELED_SHORT_NAME = "canceled";
-    public static final String FAILED_SHORT_NAME = "failed";
+    public static final Long QUEUED_ID = 1L;
+    public static final Long STARTED_ID = 2L;
+    public static final Long FINISHED_ID = 3L;
+    public static final Long CANCELED_ID = 4L;
+    public static final Long FAILED_ID = 5L;
 
     private final JobStatusRepository jobStatusRepository;
 
@@ -50,23 +50,20 @@ public class JobStatusService {
         // initialize database
         if (JobStatusRepository.findAll().isEmpty()) {
             JobStatusRepository.saveAll(Arrays.asList(
-                    new JobStatus("Queued", QUEUED_SHORT_NAME),
-                    new JobStatus("Started", STARTED_SHORT_NAME),
-                    new JobStatus("Finished", FINISHED_SHORT_NAME),
-                    new JobStatus("Canceled", CANCELED_SHORT_NAME),
-                    new JobStatus("Terminated", FAILED_SHORT_NAME)
+                    new JobStatus(QUEUED_ID, "Queued"),
+                    new JobStatus(STARTED_ID, "Started"),
+                    new JobStatus(FINISHED_ID, "Finished"),
+                    new JobStatus(CANCELED_ID, "Cancel"),
+                    new JobStatus(FAILED_ID, "Failed")
             ));
         }
     }
 
-    @Cacheable("jobStatusAll")
-    public List<JobStatus> findAll() {
-        return jobStatusRepository.findAll();
-    }
+    @Cacheable("JobStatusById")
+    public JobStatus findById(Long id) {
+        Optional<JobStatus> opt = jobStatusRepository.findById(id);
 
-    @Cacheable("jobStatusByShortName")
-    public JobStatus findByShortName(String shortName) {
-        return jobStatusRepository.findByShortName(shortName);
+        return opt.isPresent() ? opt.get() : null;
     }
 
     public JobStatusRepository getRepository() {

@@ -26,6 +26,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -35,7 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "UserRole")
+@Table(name = "UserRole", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name"})})
 @XmlRootElement
 public class UserRole implements Serializable {
 
@@ -51,16 +53,16 @@ public class UserRole implements Serializable {
     @Column(name = "name", nullable = false, length = 64)
     private String name;
 
-    @Basic(optional = false)
-    @Column(name = "shortName", nullable = false, length = 32)
-    private String shortName;
-
     public UserRole() {
     }
 
-    public UserRole(String name, String shortName) {
+    public UserRole(String name) {
         this.name = name;
-        this.shortName = shortName;
+    }
+
+    public UserRole(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public Long getId() {
@@ -77,14 +79,6 @@ public class UserRole implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getShortName() {
-        return shortName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
     }
 
 }

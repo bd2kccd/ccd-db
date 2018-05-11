@@ -31,6 +31,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FileTypeRepository extends JpaRepository<FileType, Long> {
 
-    public FileType findByShortName(String shortName);
-
 }

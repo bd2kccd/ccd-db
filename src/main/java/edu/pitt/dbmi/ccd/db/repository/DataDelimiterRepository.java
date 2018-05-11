@@ -31,6 +31,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DataDelimiterRepository extends JpaRepository<DataDelimiter, Long> {
 
-    public DataDelimiter findByShortName(String shortName);
-
 }

@@ -67,44 +67,43 @@ public class JobQueueService {
     public void setStatusStarted(JobQueue jobQueue) {
         JobInfo jobInfo = jobQueue.getJobInfo();
         jobInfo.setStartTime(new Date());
-        jobInfo.setJobStatus(jobStatusService.findByShortName(JobStatusService.STARTED_SHORT_NAME));
+        jobInfo.setJobStatus(jobStatusService.findById(JobStatusService.STARTED_ID));
 
-        jobInfoService.getRepository().save(jobInfo);
+        jobQueue.setJobInfo(jobInfoService.getRepository().save(jobInfo));
     }
 
     public void setStatusFinished(JobQueue jobQueue) {
         JobInfo jobInfo = jobQueue.getJobInfo();
         jobInfo.setEndTime(new Date());
-        jobInfo.setJobStatus(jobStatusService.findByShortName(JobStatusService.FINISHED_SHORT_NAME));
+        jobInfo.setJobStatus(jobStatusService.findById(JobStatusService.FINISHED_ID));
 
-        jobInfoService.getRepository().save(jobInfo);
+        jobQueue.setJobInfo(jobInfoService.getRepository().save(jobInfo));
     }
 
     public void setStatusCanceled(JobQueue jobQueue) {
         JobInfo jobInfo = jobQueue.getJobInfo();
         jobInfo.setEndTime(new Date());
-        jobInfo.setJobStatus(jobStatusService.findByShortName(JobStatusService.CANCELED_SHORT_NAME));
+        jobInfo.setJobStatus(jobStatusService.findById(JobStatusService.CANCELED_ID));
 
-        jobInfoService.getRepository().save(jobInfo);
+        jobQueue.setJobInfo(jobInfoService.getRepository().save(jobInfo));
     }
 
     public void setStatusFailed(JobQueue jobQueue) {
         JobInfo jobInfo = jobQueue.getJobInfo();
         jobInfo.setEndTime(new Date());
-        jobInfo.setJobStatus(jobStatusService.findByShortName(JobStatusService.FAILED_SHORT_NAME));
+        jobInfo.setJobStatus(jobStatusService.findById(JobStatusService.FAILED_ID));
 
-        jobInfoService.getRepository().save(jobInfo);
+        jobQueue.setJobInfo(jobInfoService.getRepository().save(jobInfo));
     }
 
     @Transactional
     public JobQueue submitLocalTetradJob(String name, Long datasetId, boolean isSingleFile, String parameter, UserAccount userAccount) {
-        JobLocation location = jobLocationService.findByShortName(JobLocationService.LOCAL_SHORT_NAME);
-        JobStatus status = jobStatusService.findByShortName(JobStatusService.QUEUED_SHORT_NAME);
-        AlgorithmType algoType = algorithmTypeService.findByShortName(AlgorithmTypeService.TETRAD_SHORT_NAME);
+        JobLocation location = jobLocationService.findById(JobLocationService.LOCAL_ID);
+        JobStatus status = jobStatusService.findById(JobStatusService.QUEUED_ID);
+        AlgorithmType algoType = algorithmTypeService.findById(AlgorithmTypeService.TETRAD_ID);
 
-        JobInfo jobInfo = new JobInfo(name, datasetId, isSingleFile, new Date(), algoType, location, status, userAccount);
+        JobInfo jobInfo = new JobInfo(name, name, parameter, datasetId, isSingleFile, new Date(), algoType, location, status, userAccount);
         jobInfo.setAlgoParam(parameter);
-
         jobInfo = jobInfoService.getRepository().save(jobInfo);
 
         return jobQueueRepository.save(new JobQueue(jobInfo, userAccount));

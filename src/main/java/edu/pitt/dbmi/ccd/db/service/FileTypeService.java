@@ -22,6 +22,7 @@ import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -35,10 +36,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class FileTypeService {
 
-    public static final String DATA_SHORT_NAME = "data";
-    public static final String VARIABLE_SHORT_NAME = "var";
-    public static final String KNOWLEDGE_SHORT_NAME = "knwl";
-    public static final String RESULT_SHORT_NAME = "result";
+    public static final Long DATA_ID = 1L;
+    public static final Long VARIABLE_ID = 2L;
+    public static final Long KNOWLEDGE_ID = 3L;
+    public static final Long RESULT_ID = 4L;
 
     private final FileTypeRepository fileTypeRepository;
 
@@ -49,22 +50,24 @@ public class FileTypeService {
         // initialize database
         if (fileTypeRepository.findAll().isEmpty()) {
             fileTypeRepository.saveAll(Arrays.asList(
-                    new FileType("Data", DATA_SHORT_NAME),
-                    new FileType("Variable", VARIABLE_SHORT_NAME),
-                    new FileType("Knowledge", KNOWLEDGE_SHORT_NAME),
-                    new FileType("Result", RESULT_SHORT_NAME)
+                    new FileType(DATA_ID, "Data"),
+                    new FileType(VARIABLE_ID, "Variable"),
+                    new FileType(KNOWLEDGE_ID, "Knowledge"),
+                    new FileType(RESULT_ID, "Result")
             ));
         }
     }
 
-    @Cacheable("fileTypeAll")
-    public List<FileType> findAll() {
-        return fileTypeRepository.findAll();
+    @Cacheable("FileTypeById")
+    public FileType findById(Long id) {
+        Optional<FileType> opt = fileTypeRepository.findById(id);
+
+        return opt.isPresent() ? opt.get() : null;
     }
 
-    @Cacheable("fileTypeByShortName")
-    public FileType findByShortName(String shortName) {
-        return fileTypeRepository.findByShortName(shortName);
+    @Cacheable("FileTypeAll")
+    public List<FileType> findAll() {
+        return fileTypeRepository.findAll();
     }
 
     public FileTypeRepository getRepository() {

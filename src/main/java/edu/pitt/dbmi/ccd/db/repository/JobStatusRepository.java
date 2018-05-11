@@ -31,6 +31,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface JobStatusRepository extends JpaRepository<JobStatus, Long> {
 
-    public JobStatus findByShortName(String shortName);
-
 }

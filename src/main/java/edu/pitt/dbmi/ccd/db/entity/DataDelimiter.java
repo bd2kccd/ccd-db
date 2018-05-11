@@ -36,8 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "DataDelimiter", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"shortName"})})
+@Table(name = "DataDelimiter", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 @XmlRootElement
 public class DataDelimiter implements Serializable {
 
@@ -53,16 +52,16 @@ public class DataDelimiter implements Serializable {
     @Column(name = "name", nullable = false, length = 64)
     private String name;
 
-    @Basic(optional = false)
-    @Column(name = "shortName", nullable = false, length = 32)
-    private String shortName;
-
     public DataDelimiter() {
     }
 
-    public DataDelimiter(String name, String shortName) {
+    public DataDelimiter(String name) {
         this.name = name;
-        this.shortName = shortName;
+    }
+
+    public DataDelimiter(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public Long getId() {
@@ -79,14 +78,6 @@ public class DataDelimiter implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getShortName() {
-        return shortName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
     }
 
 }

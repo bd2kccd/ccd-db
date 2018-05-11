@@ -31,10 +31,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -84,37 +82,36 @@ public class File implements Serializable {
     @Column(name = "md5CheckSum", length = 32)
     private String md5CheckSum;
 
-    @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private UserAccount userAccount;
+    @Basic(optional = false)
+    @Column(name = "filePath", nullable = false, length = 255)
+    private String filePath;
 
     @JoinColumn(name = "fileFormatId", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private FileFormat fileFormat;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
-    private List<TetradVariableFile> tetradVariableFiles;
+    @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private UserAccount userAccount;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "file", cascade = CascadeType.ALL)
-    private List<TetradDataFile> tetradDataFiles;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "FileGroupFileRel", joinColumns = {
-        @JoinColumn(name = "fileId", nullable = false, updatable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "fileGroupId", nullable = false, updatable = false)})
+    @ManyToMany(mappedBy = "files", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FileGroup> fileGroups;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "jobInfo", cascade = CascadeType.ALL)
-    private JobResult jobResult;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "file", fetch = FetchType.LAZY)
+    private TetradDataFile tetradDataFile;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "file", fetch = FetchType.LAZY)
+    private TetradVariableFile tetradVariableFile;
 
     public File() {
     }
 
-    public File(String name, String title, Date creationTime, long fileSize, UserAccount userAccount) {
+    public File(String name, String title, Date creationTime, long fileSize, String filePath, UserAccount userAccount) {
         this.name = name;
         this.title = title;
         this.creationTime = creationTime;
         this.fileSize = fileSize;
+        this.filePath = filePath;
         this.userAccount = userAccount;
     }
 
@@ -168,12 +165,12 @@ public class File implements Serializable {
 
     @JsonIgnore
     @XmlTransient
-    public UserAccount getUserAccount() {
-        return userAccount;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     @JsonIgnore
@@ -188,22 +185,12 @@ public class File implements Serializable {
 
     @JsonIgnore
     @XmlTransient
-    public List<TetradVariableFile> getTetradVariableFiles() {
-        return tetradVariableFiles;
+    public UserAccount getUserAccount() {
+        return userAccount;
     }
 
-    public void setTetradVariableFiles(List<TetradVariableFile> tetradVariableFiles) {
-        this.tetradVariableFiles = tetradVariableFiles;
-    }
-
-    @JsonIgnore
-    @XmlTransient
-    public List<TetradDataFile> getTetradDataFiles() {
-        return tetradDataFiles;
-    }
-
-    public void setTetradDataFiles(List<TetradDataFile> tetradDataFiles) {
-        this.tetradDataFiles = tetradDataFiles;
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 
     @JsonIgnore
@@ -218,12 +205,22 @@ public class File implements Serializable {
 
     @JsonIgnore
     @XmlTransient
-    public JobResult getJobResult() {
-        return jobResult;
+    public TetradDataFile getTetradDataFile() {
+        return tetradDataFile;
     }
 
-    public void setJobResult(JobResult jobResult) {
-        this.jobResult = jobResult;
+    public void setTetradDataFile(TetradDataFile tetradDataFile) {
+        this.tetradDataFile = tetradDataFile;
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    public TetradVariableFile getTetradVariableFile() {
+        return tetradVariableFile;
+    }
+
+    public void setTetradVariableFile(TetradVariableFile tetradVariableFile) {
+        this.tetradVariableFile = tetradVariableFile;
     }
 
 }

@@ -22,6 +22,7 @@ import edu.pitt.dbmi.ccd.db.entity.JobLocation;
 import edu.pitt.dbmi.ccd.db.repository.JobLocationRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -35,9 +36,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class JobLocationService {
 
-    public static final String LOCAL_SHORT_NAME = "local";
-    public static final String PSC_BRIDGES_SHORT_NAME = "psc-bridges";
-    public static final String AWS_EC2_SHORT_NAME = "aws-ec2";
+    public static final Long LOCAL_ID = 1L;
+    public static final Long PSC_BRIDGES_ID = 2L;
+    public static final Long AWS_EC2_ID = 3L;
 
     private final JobLocationRepository jobLocationRepository;
 
@@ -48,21 +49,23 @@ public class JobLocationService {
         // initialize database
         if (jobLocationRepository.findAll().isEmpty()) {
             jobLocationRepository.saveAll(Arrays.asList(
-                    new JobLocation("Local", LOCAL_SHORT_NAME),
-                    new JobLocation("PSC Bridges", PSC_BRIDGES_SHORT_NAME),
-                    new JobLocation("AWS EC2", AWS_EC2_SHORT_NAME)
+                    new JobLocation(LOCAL_ID, "Local"),
+                    new JobLocation(PSC_BRIDGES_ID, "PSC Bridges"),
+                    new JobLocation(AWS_EC2_ID, "AWS EC2")
             ));
         }
     }
 
-    @Cacheable("jobLocationAll")
-    public List<JobLocation> findAll() {
-        return jobLocationRepository.findAll();
+    @Cacheable("JobLocationById")
+    public JobLocation findById(Long id) {
+        Optional<JobLocation> opt = jobLocationRepository.findById(id);
+
+        return opt.isPresent() ? opt.get() : null;
     }
 
-    @Cacheable("jobLocationByShortName")
-    public JobLocation findByShortName(String shortName) {
-        return jobLocationRepository.findByShortName(shortName);
+    @Cacheable("JobLocationAll")
+    public List<JobLocation> findAll() {
+        return jobLocationRepository.findAll();
     }
 
     public JobLocationRepository getRepository() {

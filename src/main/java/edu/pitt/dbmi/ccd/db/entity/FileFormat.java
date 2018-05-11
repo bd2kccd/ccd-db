@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "FileFormat", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"fileTypeId", "algorithmTypeId"})
-    , @UniqueConstraint(columnNames = {"shortName"})})
+    , @UniqueConstraint(columnNames = {"name"})})
 @XmlRootElement
 public class FileFormat implements Serializable {
 
@@ -59,10 +59,6 @@ public class FileFormat implements Serializable {
     @Column(name = "name", nullable = false, length = 64)
     private String name;
 
-    @Basic(optional = false)
-    @Column(name = "shortName", nullable = false, length = 32)
-    private String shortName;
-
     @JoinColumn(name = "fileTypeId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private FileType fileType;
@@ -74,9 +70,15 @@ public class FileFormat implements Serializable {
     public FileFormat() {
     }
 
-    public FileFormat(String name, String shortName, FileType fileType, AlgorithmType algorithmType) {
+    public FileFormat(String name, FileType fileType, AlgorithmType algorithmType) {
         this.name = name;
-        this.shortName = shortName;
+        this.fileType = fileType;
+        this.algorithmType = algorithmType;
+    }
+
+    public FileFormat(Long id, String name, FileType fileType, AlgorithmType algorithmType) {
+        this.id = id;
+        this.name = name;
         this.fileType = fileType;
         this.algorithmType = algorithmType;
     }
@@ -95,14 +97,6 @@ public class FileFormat implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getShortName() {
-        return shortName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
     }
 
     @JsonIgnore

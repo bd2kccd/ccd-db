@@ -20,8 +20,7 @@ package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.TetradVariableFile;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import java.util.List;
+import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -36,12 +35,8 @@ public interface TetradVariableFileRepository extends JpaRepository<TetradVariab
 
     public TetradVariableFile findByFile(File file);
 
-    public TetradVariableFile findByUserAccount(UserAccount userAccount);
-
-    public List<TetradVariableFile> findByFileIn(List<File> files);
-
     public void deleteByFile(File file);
 
-    public void deleteByFileIn(List<File> files);
+    public void deleteByFileIn(Set<File> files);
 
 }

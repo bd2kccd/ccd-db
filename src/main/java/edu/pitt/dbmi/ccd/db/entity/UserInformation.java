@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -31,6 +32,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -40,7 +42,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "UserInformation", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"userAccountId"})})
+    @UniqueConstraint(columnNames = {"userAccountId"})
+    , @UniqueConstraint(columnNames = {"email"})})
 @XmlRootElement
 public class UserInformation implements Serializable {
 
@@ -73,14 +76,6 @@ public class UserInformation implements Serializable {
     }
 
     public UserInformation(String email, UserAccount userAccount) {
-        this.email = email;
-        this.userAccount = userAccount;
-    }
-
-    public UserInformation(String firstName, String middleName, String lastName, String email, UserAccount userAccount) {
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
         this.email = email;
         this.userAccount = userAccount;
     }
@@ -125,6 +120,8 @@ public class UserInformation implements Serializable {
         this.email = email;
     }
 
+    @JsonIgnore
+    @XmlTransient
     public UserAccount getUserAccount() {
         return userAccount;
     }

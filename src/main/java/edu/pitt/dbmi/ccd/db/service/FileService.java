@@ -80,26 +80,24 @@ public class FileService {
 
         FileFormat fileFormat = file.getFileFormat();
         if (fileFormat != null) {
-            switch (fileFormat.getShortName()) {
-                case FileFormatService.TETRAD_TAB_SHORT_NAME:
-                    TetradDataFile dataFile = tetradDataFileRepository.findByFile(file);
-                    if (dataFile != null) {
-                        addInfo.put("Number of Variables", String.valueOf(dataFile.getNumOfVars()));
-                        addInfo.put("Number of Cases", String.valueOf(dataFile.getNumOfCases()));
-                        addInfo.put("Delimiter", dataFile.getDataDelimiter().getName());
-                        addInfo.put("Variable Type", dataFile.getVariableType().getName());
-                        addInfo.put("Has Header", dataFile.isHasHeader() ? "Yes" : "No");
-                        addInfo.put("Quote Character", String.valueOf(dataFile.getQuoteChar()));
-                        addInfo.put("Missing Value Marker", dataFile.getMissingMarker());
-                        addInfo.put("Comment Marker", dataFile.getCommentMarker());
-                    }
-                    break;
-                case FileFormatService.TETRAD_VAR_SHORT_NAME:
-                    TetradVariableFile varFile = tetradVariableFileRepository.findByFile(file);
-                    if (varFile != null) {
-                        addInfo.put("Number of Variables", String.valueOf(varFile.getNumOfVars()));
-                    }
-                    break;
+            long id = fileFormat.getId();
+            if (id == FileFormatService.TETRAD_TAB_ID) {
+                TetradDataFile dataFile = tetradDataFileRepository.findByFile(file);
+                if (dataFile != null) {
+                    addInfo.put("Number of Variables", String.valueOf(dataFile.getNumOfVars()));
+                    addInfo.put("Number of Cases", String.valueOf(dataFile.getNumOfCases()));
+                    addInfo.put("Delimiter", dataFile.getDataDelimiter().getName());
+                    addInfo.put("Variable Type", dataFile.getVariableType().getName());
+                    addInfo.put("Has Header", dataFile.isHasHeader() ? "Yes" : "No");
+                    addInfo.put("Quote Character", String.valueOf(dataFile.getQuoteChar()));
+                    addInfo.put("Missing Value Marker", dataFile.getMissingMarker());
+                    addInfo.put("Comment Marker", dataFile.getCommentMarker());
+                }
+            } else if (id == FileFormatService.TETRAD_VAR_ID) {
+                TetradVariableFile varFile = tetradVariableFileRepository.findByFile(file);
+                if (varFile != null) {
+                    addInfo.put("Number of Variables", String.valueOf(varFile.getNumOfVars()));
+                }
             }
         }
 
@@ -108,21 +106,23 @@ public class FileService {
 
     @Transactional
     public File changeFileFormat(File file, FileFormat fileFormat) {
-        FileFormat prevFileFormat = file.getFileFormat();
-        if (prevFileFormat != null) {
-            switch (prevFileFormat.getShortName()) {
-                case FileFormatService.TETRAD_TAB_SHORT_NAME:
-                    tetradDataFileRepository.deleteByFile(file);
-                    break;
-                case FileFormatService.TETRAD_VAR_SHORT_NAME:
-                    tetradVariableFileRepository.deleteByFile(file);
-                    break;
+        FileFormat prevFileFmt = file.getFileFormat();
+
+        file.setFileFormat(fileFormat);
+        file.setTetradDataFile(null);
+        file.setTetradVariableFile(null);
+        file = fileRepository.save(file);
+
+        if (prevFileFmt != null) {
+            long id = prevFileFmt.getId();
+            if (id == FileFormatService.TETRAD_TAB_ID) {
+                tetradDataFileRepository.deleteByFile(file);
+            } else if (id == FileFormatService.TETRAD_VAR_ID) {
+                tetradVariableFileRepository.deleteByFile(file);
             }
         }
 
-        file.setFileFormat(fileFormat);
-
-        return fileRepository.save(file);
+        return file;
     }
 
     public Map<FileFormat, Long> countGroupByFileFormat(UserAccount userAccount) {
@@ -137,17 +137,17 @@ public class FileService {
         List<AlgorithmType> algoTypes = algorithmTypeService.findAll();
         algoTypes.forEach(algoType -> {
             fileFormatService.findByAlgorithmType(algoType).stream()
-                    .filter(e -> !FileTypeService.RESULT_SHORT_NAME.equals(e.getFileType().getShortName()))
+                    .filter(e -> FileTypeService.RESULT_ID != e.getFileType().getId().longValue())
                     .forEach(fmt -> countMap.put(fmt, fileRepository.countByUserAccountAndFileFormat(userAccount, fmt)));
         });
 
         return countMap;
     }
 
-    public List<File> persistLocalFiles(List<Path> files, UserAccount userAccount) {
+    public List<File> persistLocalFiles(List<Path> files, String filePath, UserAccount userAccount) {
         List<File> fileEntities = new LinkedList<>();
         files.forEach(file -> {
-            File fileEntity = createFileEntity(file, userAccount);
+            File fileEntity = createFileEntity(file, filePath, userAccount);
             if (fileEntity != null) {
                 fileEntities.add(fileEntity);
             }
@@ -156,10 +156,10 @@ public class FileService {
         return fileRepository.saveAll(fileEntities);
     }
 
-    public List<File> persistLocalFiles(List<Path> files, FileFormat fileFormat, UserAccount userAccount) {
+    public List<File> persistLocalFiles(List<Path> files, String filePath, FileFormat fileFormat, UserAccount userAccount) {
         List<File> fileEntities = new LinkedList<>();
         files.forEach(file -> {
-            File fileEntity = createFileEntity(file, userAccount);
+            File fileEntity = createFileEntity(file, filePath, userAccount);
             if (fileEntity != null) {
                 fileEntity.setFileFormat(fileFormat);
                 fileEntities.add(fileEntity);
@@ -169,8 +169,8 @@ public class FileService {
         return fileRepository.saveAll(fileEntities);
     }
 
-    public File persistLocalFile(Path file, UserAccount userAccount) {
-        File fileEntity = createFileEntity(file, userAccount);
+    public File persistLocalFile(Path file, String filePath, UserAccount userAccount) {
+        File fileEntity = createFileEntity(file, filePath, userAccount);
         if (fileEntity != null) {
             fileEntity = fileRepository.save(fileEntity);
         }
@@ -178,18 +178,19 @@ public class FileService {
         return fileEntity;
     }
 
-    public File createFileEntity(Path file, UserAccount userAccount) {
+    public File createFileEntity(Path file, String filePath, UserAccount userAccount) {
         try {
             BasicFileAttributes attrs = Files.readAttributes(file, BasicFileAttributes.class);
             String name = file.getFileName().toString();
             Date creationTime = new Date(attrs.creationTime().toMillis());
             long fileSize = attrs.size();
-            String md5checkSum = FileUtils.computeMD5Hash(file);
+            String md5CheckSum = FileUtils.computeMD5Hash(file);
 
             File fileEntity = new File();
             fileEntity.setCreationTime(creationTime);
+            fileEntity.setFilePath(filePath);
             fileEntity.setFileSize(fileSize);
-            fileEntity.setMd5CheckSum(md5checkSum);
+            fileEntity.setMd5CheckSum(md5CheckSum);
             fileEntity.setName(name);
             fileEntity.setTitle(name);
             fileEntity.setUserAccount(userAccount);

@@ -36,9 +36,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class VariableTypeService {
 
-    public static final String CONTINUOUS_SHORT_NAME = "continuous";
-    public static final String DISCRETE_SHORT_NAME = "discrete";
-    public static final String MIXED_SHORT_NAME = "mixed";
+    public static final Long CONTINUOUS_ID = 1L;
+    public static final Long DISCRETE_ID = 2L;
+    public static final Long MIXED_ID = 3L;
 
     private final VariableTypeRepository variableTypeRepository;
 
@@ -49,26 +49,23 @@ public class VariableTypeService {
         // initialize database
         if (variableTypeRepository.findAll().isEmpty()) {
             variableTypeRepository.saveAll(Arrays.asList(
-                    new VariableType("Continuous", CONTINUOUS_SHORT_NAME),
-                    new VariableType("Discrete", DISCRETE_SHORT_NAME),
-                    new VariableType("Mixed", MIXED_SHORT_NAME)
+                    new VariableType(CONTINUOUS_ID, "Continuous"),
+                    new VariableType(DISCRETE_ID, "Discrete"),
+                    new VariableType(MIXED_ID, "Mixed")
             ));
         }
     }
 
-    @Cacheable("variableTypeAll")
+    @Cacheable("VariableTypeById")
+    public VariableType findById(Long id) {
+        Optional<VariableType> opt = variableTypeRepository.findById(id);
+
+        return opt.isPresent() ? opt.get() : null;
+    }
+
+    @Cacheable("VariableTypeAll")
     public List<VariableType> findAll() {
         return variableTypeRepository.findAll();
-    }
-
-    @Cacheable("variableTypeById")
-    public Optional<VariableType> findById(Long id) {
-        return variableTypeRepository.findById(id);
-    }
-
-    @Cacheable("variableTypeByShortName")
-    public VariableType findByShortName(String shortName) {
-        return variableTypeRepository.findByShortName(shortName);
     }
 
     public VariableTypeRepository getRepository() {

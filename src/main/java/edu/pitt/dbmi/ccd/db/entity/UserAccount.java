@@ -20,7 +20,6 @@ package edu.pitt.dbmi.ccd.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -85,7 +84,7 @@ public class UserAccount implements Serializable {
         @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "userRoleId", referencedColumnName = "id", nullable = false)})
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<UserRole> userRoles = new LinkedList<>();
+    private List<UserRole> userRoles;
 
     public UserAccount() {
     }
@@ -96,16 +95,6 @@ public class UserAccount implements Serializable {
         this.account = account;
         this.activated = activated;
         this.disabled = disabled;
-    }
-
-    public UserAccount(String username, String password, String account, boolean activated, boolean disabled, String actionKey, List<UserRole> userRoles) {
-        this.username = username;
-        this.password = password;
-        this.account = account;
-        this.activated = activated;
-        this.disabled = disabled;
-        this.actionKey = actionKey;
-        this.userRoles = userRoles;
     }
 
     public Long getId() {
@@ -166,6 +155,8 @@ public class UserAccount implements Serializable {
         this.actionKey = actionKey;
     }
 
+    @JsonIgnore
+    @XmlTransient
     public List<UserRole> getUserRoles() {
         return userRoles;
     }

@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -33,7 +34,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -42,7 +45,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "JobInfo")
+@Table(name = "JobInfo", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name", "userAccountId"})
+    , @UniqueConstraint(columnNames = {"title", "userAccountId"})})
 @XmlRootElement
 public class JobInfo implements Serializable {
 
@@ -58,13 +63,18 @@ public class JobInfo implements Serializable {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
+    @Basic(optional = false)
+    @Column(name = "title", nullable = false, length = 255)
+    private String title;
+
+    @Basic(optional = false)
     @Lob
-    @Column(name = "algoParam", length = 65535)
+    @Column(name = "algoParam", nullable = false, length = 65535)
     private String algoParam;
 
     @Basic(optional = false)
-    @Column(name = "datasetId", nullable = false)
-    private Long datasetId;
+    @Column(name = "datasetFileId", nullable = false)
+    private long datasetFileId;
 
     @Basic(optional = false)
     @Column(name = "singleDataset", nullable = false)
@@ -83,17 +93,17 @@ public class JobInfo implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
-    @JoinColumn(name = "algorithmTypeId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "jobStatusId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private AlgorithmType algorithmType;
+    private JobStatus jobStatus;
 
     @JoinColumn(name = "jobLocationId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private JobLocation jobLocation;
 
-    @JoinColumn(name = "jobStatusId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "algorithmTypeId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private JobStatus jobStatus;
+    private AlgorithmType algorithmType;
 
     @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -102,9 +112,11 @@ public class JobInfo implements Serializable {
     public JobInfo() {
     }
 
-    public JobInfo(String name, Long datasetId, boolean singleDataset, Date creationTime, AlgorithmType algorithmType, JobLocation jobLocation, JobStatus jobStatus, UserAccount userAccount) {
+    public JobInfo(String name, String title, String algoParam, long datasetFileId, boolean singleDataset, Date creationTime, AlgorithmType algorithmType, JobLocation jobLocation, JobStatus jobStatus, UserAccount userAccount) {
         this.name = name;
-        this.datasetId = datasetId;
+        this.title = title;
+        this.algoParam = algoParam;
+        this.datasetFileId = datasetFileId;
         this.singleDataset = singleDataset;
         this.creationTime = creationTime;
         this.algorithmType = algorithmType;
@@ -129,6 +141,14 @@ public class JobInfo implements Serializable {
         this.name = name;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getAlgoParam() {
         return algoParam;
     }
@@ -137,12 +157,12 @@ public class JobInfo implements Serializable {
         this.algoParam = algoParam;
     }
 
-    public Long getDatasetId() {
-        return datasetId;
+    public long getDatasetFileId() {
+        return datasetFileId;
     }
 
-    public void setDatasetId(Long datasetId) {
-        this.datasetId = datasetId;
+    public void setDatasetFileId(long datasetFileId) {
+        this.datasetFileId = datasetFileId;
     }
 
     public boolean isSingleDataset() {
@@ -177,12 +197,12 @@ public class JobInfo implements Serializable {
         this.endTime = endTime;
     }
 
-    public AlgorithmType getAlgorithmType() {
-        return algorithmType;
+    public JobStatus getJobStatus() {
+        return jobStatus;
     }
 
-    public void setAlgorithmType(AlgorithmType algorithmType) {
-        this.algorithmType = algorithmType;
+    public void setJobStatus(JobStatus jobStatus) {
+        this.jobStatus = jobStatus;
     }
 
     public JobLocation getJobLocation() {
@@ -193,14 +213,16 @@ public class JobInfo implements Serializable {
         this.jobLocation = jobLocation;
     }
 
-    public JobStatus getJobStatus() {
-        return jobStatus;
+    public AlgorithmType getAlgorithmType() {
+        return algorithmType;
     }
 
-    public void setJobStatus(JobStatus jobStatus) {
-        this.jobStatus = jobStatus;
+    public void setAlgorithmType(AlgorithmType algorithmType) {
+        this.algorithmType = algorithmType;
     }
 
+    @JsonIgnore
+    @XmlTransient
     public UserAccount getUserAccount() {
         return userAccount;
     }
