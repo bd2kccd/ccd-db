@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.JobQueueException;
 import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
 import edu.pitt.dbmi.ccd.db.entity.JobInfo;
 import edu.pitt.dbmi.ccd.db.entity.JobLocation;
@@ -80,12 +81,25 @@ public class JobQueueService {
         jobQueue.setJobInfo(jobInfoService.getRepository().save(jobInfo));
     }
 
-    public void setStatusCanceled(JobQueue jobQueue) {
-        JobInfo jobInfo = jobQueue.getJobInfo();
-        jobInfo.setEndTime(new Date());
-        jobInfo.setJobStatus(jobStatusService.findById(JobStatusService.CANCELED_ID));
+    public void setStatusCanceled(JobQueue jobQueue) throws JobQueueException {
+        if (jobQueue == null) {
+            throw new JobQueueException("Job no longer exists in queue.");
+        }
 
-        jobQueue.setJobInfo(jobInfoService.getRepository().save(jobInfo));
+        JobInfo jobInfo = jobQueue.getJobInfo();
+        long statusId = jobInfo.getJobStatus().getId();
+        if (statusId != JobStatusService.CANCELED_ID) {
+            if (statusId != JobStatusService.STARTED_ID
+                    || statusId != JobStatusService.QUEUED_ID) {
+                jobInfo.setEndTime(new Date());
+                jobInfo.setJobStatus(jobStatusService.findById(JobStatusService.CANCELED_ID));
+                jobInfo = jobInfoService.getRepository().save(jobInfo);
+
+                jobQueue.setJobInfo(jobInfo);
+            } else {
+                throw new JobQueueException("Unable to cancel job.  Job has completed.");
+            }
+        }
     }
 
     public void setStatusFailed(JobQueue jobQueue) {
