@@ -16,11 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.domain.account;
+package edu.pitt.dbmi.ccd.db.dto;
 
 /**
  *
- * Jan 28, 2018 9:22:12 PM
+ * May 20, 2018 2:10:49 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */

@@ -16,32 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.service;
-
-import edu.pitt.dbmi.ccd.db.repository.JobInfoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+package edu.pitt.dbmi.ccd.db.code;
 
 /**
  *
- * Apr 11, 2018 5:43:19 PM
+ * May 22, 2018 4:18:02 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Service
-public class JobInfoService {
+public class FileTypeCodes {
 
-    private final JobInfoRepository jobInfoRepository;
-    private final JobStatusService jobStatusService;
+    public static final short DATA = 1;
+    public static final short VARIABLE = 2;
+    public static final short KNOWLEDGE = 3;
 
-    @Autowired
-    public JobInfoService(JobInfoRepository jobInfoRepository, JobStatusService jobStatusService) {
-        this.jobInfoRepository = jobInfoRepository;
-        this.jobStatusService = jobStatusService;
-    }
-
-    public JobInfoRepository getRepository() {
-        return jobInfoRepository;
+    private FileTypeCodes() {
     }
 
 }

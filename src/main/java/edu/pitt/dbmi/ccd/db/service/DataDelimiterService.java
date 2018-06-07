@@ -18,11 +18,11 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.code.DataDelimiterCodes;
 import edu.pitt.dbmi.ccd.db.entity.DataDelimiter;
 import edu.pitt.dbmi.ccd.db.repository.DataDelimiterRepository;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -36,48 +36,38 @@ import org.springframework.stereotype.Service;
 @Service
 public class DataDelimiterService {
 
-    public static final Long TAB_DELIM_ID = 1L;
-    public static final Long SPACE_DELIM_ID = 2L;
-    public static final Long WHITESPACE_DELIM_ID = 3L;
-    public static final Long COMMA_DELIM_ID = 4L;
-    public static final Long COLON_DELIM_ID = 5L;
-    public static final Long SEMICOLON_DELIM_ID = 6L;
-    public static final Long PIPE_DELIM_ID = 7L;
-
-    private final DataDelimiterRepository dataDelimiterRepository;
+    private final DataDelimiterRepository repository;
 
     @Autowired
-    public DataDelimiterService(DataDelimiterRepository dataDelimiterRepository) {
-        this.dataDelimiterRepository = dataDelimiterRepository;
+    public DataDelimiterService(DataDelimiterRepository repository) {
+        this.repository = repository;
 
         // initialize database
-        if (dataDelimiterRepository.findAll().isEmpty()) {
-            dataDelimiterRepository.saveAll(Arrays.asList(
-                    new DataDelimiter(TAB_DELIM_ID, "Tab"),
-                    new DataDelimiter(SPACE_DELIM_ID, "Space"),
-                    new DataDelimiter(WHITESPACE_DELIM_ID, "Whitespace"),
-                    new DataDelimiter(COMMA_DELIM_ID, "Comma"),
-                    new DataDelimiter(COLON_DELIM_ID, "Colon"),
-                    new DataDelimiter(SEMICOLON_DELIM_ID, "Semicolon"),
-                    new DataDelimiter(PIPE_DELIM_ID, "Pipe")
+        if (repository.findAll().isEmpty()) {
+            repository.saveAll(Arrays.asList(
+                    new DataDelimiter("Tab", DataDelimiterCodes.TAB),
+                    new DataDelimiter("Space", DataDelimiterCodes.SPACE),
+                    new DataDelimiter("Whitespace", DataDelimiterCodes.WHITESPACE),
+                    new DataDelimiter("Comma", DataDelimiterCodes.COMMA),
+                    new DataDelimiter("Colon", DataDelimiterCodes.COLON),
+                    new DataDelimiter("Semicolon", DataDelimiterCodes.SEMICOLON),
+                    new DataDelimiter("Pipe", DataDelimiterCodes.PIPE)
             ));
         }
     }
 
-    @Cacheable("DataDelimiterById")
-    public DataDelimiter findById(Long id) {
-        Optional<DataDelimiter> opt = dataDelimiterRepository.findById(id);
-
-        return opt.isPresent() ? opt.get() : null;
+    @Cacheable("DataDelimiterByCode")
+    public DataDelimiter findByCode(short code) {
+        return repository.findByCode(code);
     }
 
     @Cacheable("DataDelimiterAll")
     public List<DataDelimiter> findAll() {
-        return dataDelimiterRepository.findAll();
+        return repository.findAll();
     }
 
     public DataDelimiterRepository getRepository() {
-        return dataDelimiterRepository;
+        return repository;
     }
 
 }

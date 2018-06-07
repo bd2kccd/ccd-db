@@ -16,31 +16,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.domain;
+package edu.pitt.dbmi.ccd.db.code;
 
 /**
  *
- * Mar 12, 2018 6:31:54 PM
+ * May 20, 2018 12:46:33 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class ListItem {
+public class UserRoleCodes {
 
-    private final Long id;
+    public static final short ADMIN = 1;
+    public static final short REGULAR = 2;
 
-    private final String name;
-
-    public ListItem(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
+    private UserRoleCodes() {
     }
 
 }

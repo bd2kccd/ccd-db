@@ -37,11 +37,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "UserRole", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name"})})
+    @UniqueConstraint(columnNames = {"code"})
+    , @UniqueConstraint(columnNames = {"name"})})
 @XmlRootElement
 public class UserRole implements Serializable {
 
-    private static final long serialVersionUID = 1977905891772732766L;
+    private static final long serialVersionUID = 1230761484283602053L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,19 +51,19 @@ public class UserRole implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 64)
+    @Column(name = "name", nullable = false, length = 32)
     private String name;
+
+    @Basic(optional = false)
+    @Column(name = "code", nullable = false)
+    private short code;
 
     public UserRole() {
     }
 
-    public UserRole(String name) {
+    public UserRole(String name, short code) {
         this.name = name;
-    }
-
-    public UserRole(Long id, String name) {
-        this.id = id;
-        this.name = name;
+        this.code = code;
     }
 
     public Long getId() {
@@ -79,6 +80,14 @@ public class UserRole implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public short getCode() {
+        return code;
+    }
+
+    public void setCode(short code) {
+        this.code = code;
     }
 
 }

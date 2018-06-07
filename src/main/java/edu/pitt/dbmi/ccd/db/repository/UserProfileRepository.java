@@ -18,36 +18,20 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.domain.job.JobQueueListItem;
-import edu.pitt.dbmi.ccd.db.entity.JobQueue;
-import edu.pitt.dbmi.ccd.db.entity.JobStatus;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import java.util.List;
+import edu.pitt.dbmi.ccd.db.entity.UserProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
  *
- * Apr 11, 2018 2:10:00 PM
+ * May 20, 2018 1:08:46 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Repository
-public interface JobQueueRepository extends JpaRepository<JobQueue, Long> {
+public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
 
-    public List<JobQueue> findByUserAccount(UserAccount userAccount);
-
-    @Query("SELECT jq FROM JobQueue jq WHERE jq.jobInfo.jobStatus = ?1")
-    public List<JobQueue> findByJobStatus(JobStatus jobStatus);
-
-    public JobQueue findByIdAndUserAccount(Long id, UserAccount userAccount);
-
-    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.job.JobQueueListItem(jq.id, jq.jobInfo.name, jq.jobInfo.creationTime, jq.jobInfo.jobStatus.name, jq.jobInfo.jobLocation.name) "
-            + "FROM JobQueue jq "
-            + "WHERE jq.userAccount = ?1")
-    public List<JobQueueListItem> getJobQueueListItems(UserAccount userAccount);
-
-    public boolean existsByIdAndUserAccount(Long id, UserAccount userAccount);
+    public UserProfile findByUserAccount(UserAccount userAccount);
 
 }

@@ -31,15 +31,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserRegistrationService {
 
-    private final UserRegistrationRepository userRegistrationRepository;
+    private final UserRegistrationRepository repository;
 
     @Autowired
-    public UserRegistrationService(UserRegistrationRepository userRegistrationRepository) {
-        this.userRegistrationRepository = userRegistrationRepository;
+    public UserRegistrationService(UserRegistrationRepository repository) {
+        this.repository = repository;
     }
 
     public UserRegistrationRepository getRepository() {
-        return userRegistrationRepository;
+        return repository;
     }
 
 }

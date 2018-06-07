@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 public class UserLogin implements Serializable {
 
-    private static final long serialVersionUID = 7238635854719257217L;
+    private static final long serialVersionUID = 2852673190168508153L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,12 +75,6 @@ public class UserLogin implements Serializable {
         this.userAccount = userAccount;
     }
 
-    public UserLogin(Date loginDate, Long loginLocation, UserAccount userAccount) {
-        this.loginDate = loginDate;
-        this.loginLocation = loginLocation;
-        this.userAccount = userAccount;
-    }
-
     public Long getId() {
         return id;
     }
@@ -97,6 +91,8 @@ public class UserLogin implements Serializable {
         this.loginDate = loginDate;
     }
 
+    @JsonIgnore
+    @XmlTransient
     public Long getLoginLocation() {
         return loginLocation;
     }

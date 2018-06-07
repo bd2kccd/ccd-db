@@ -31,4 +31,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VariableTypeRepository extends JpaRepository<VariableType, Long> {
 
+    public VariableType findByCode(short code);
+
 }

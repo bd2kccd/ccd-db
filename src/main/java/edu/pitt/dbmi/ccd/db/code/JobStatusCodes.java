@@ -16,50 +16,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.domain.job;
-
-import java.util.Date;
+package edu.pitt.dbmi.ccd.db.code;
 
 /**
  *
- * Apr 12, 2018 12:06:51 PM
+ * May 22, 2018 4:20:03 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class JobQueueListItem {
+public class JobStatusCodes {
 
-    private final Long id;
-    private final String name;
-    private final Date creationTime;
-    private final String status;
-    private final String location;
+    public static final short QUEUED = 1;
+    public static final short STARTED = 2;
+    public static final short FINISHED = 3;
+    public static final short CANCELED = 4;
+    public static final short FAILED = 5;
 
-    public JobQueueListItem(Long id, String name, Date creationTime, String status, String location) {
-        this.id = id;
-        this.name = name;
-        this.creationTime = creationTime;
-        this.status = status;
-        this.location = location;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Date getCreationTime() {
-        return creationTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String getLocation() {
-        return location;
+    private JobStatusCodes() {
     }
 
 }

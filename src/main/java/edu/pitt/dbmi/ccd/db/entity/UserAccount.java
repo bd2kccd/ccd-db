@@ -77,8 +77,8 @@ public class UserAccount implements Serializable {
     @Column(name = "disabled", nullable = false)
     private boolean disabled;
 
-    @Column(name = "actionKey", length = 255)
-    private String actionKey;
+    @Column(name = "activationKey", length = 255)
+    private String activationKey;
 
     @JoinTable(name = "UserAccountUserRoleRel", joinColumns = {
         @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
@@ -147,12 +147,12 @@ public class UserAccount implements Serializable {
         this.disabled = disabled;
     }
 
-    public String getActionKey() {
-        return actionKey;
+    public String getActivationKey() {
+        return activationKey;
     }
 
-    public void setActionKey(String actionKey) {
-        this.actionKey = actionKey;
+    public void setActivationKey(String activationKey) {
+        this.activationKey = activationKey;
     }
 
     @JsonIgnore

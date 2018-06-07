@@ -16,19 +16,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
-
-import edu.pitt.dbmi.ccd.db.entity.JobLocation;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+package edu.pitt.dbmi.ccd.db.code;
 
 /**
  *
- * Apr 11, 2018 2:09:20 PM
+ * May 22, 2018 4:15:46 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
-public interface JobLocationRepository extends JpaRepository<JobLocation, Long> {
+public class DataDelimiterCodes {
+
+    public static final short TAB = 1;
+    public static final short SPACE = 2;
+    public static final short WHITESPACE = 3;
+    public static final short COMMA = 4;
+    public static final short COLON = 5;
+    public static final short SEMICOLON = 6;
+    public static final short PIPE = 7;
+
+    private DataDelimiterCodes() {
+    }
 
 }

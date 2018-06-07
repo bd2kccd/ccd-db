@@ -31,6 +31,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -50,11 +51,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "File", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"name", "userAccountId"})
-    , @UniqueConstraint(columnNames = {"title", "userAccountId"})})
+    , @UniqueConstraint(columnNames = {"fileName", "userAccountId"})})
 @XmlRootElement
 public class File implements Serializable {
 
-    private static final long serialVersionUID = -8323975281387418754L;
+    private static final long serialVersionUID = -5133608873242264691L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,12 +64,16 @@ public class File implements Serializable {
     private Long id;
 
     @Basic(optional = false)
+    @Column(name = "fileName", nullable = false, length = 255)
+    private String fileName;
+
+    @Basic(optional = false)
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Basic(optional = false)
-    @Column(name = "title", nullable = false, length = 255)
-    private String title;
+    @Lob
+    @Column(name = "description", length = 65535)
+    private String description;
 
     @Basic(optional = false)
     @Column(name = "creationTime", nullable = false)
@@ -83,8 +88,8 @@ public class File implements Serializable {
     private String md5CheckSum;
 
     @Basic(optional = false)
-    @Column(name = "filePath", nullable = false, length = 255)
-    private String filePath;
+    @Column(name = "relativePath", nullable = false, length = 255)
+    private String relativePath;
 
     @JoinColumn(name = "fileFormatId", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
@@ -94,7 +99,7 @@ public class File implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private UserAccount userAccount;
 
-    @ManyToMany(mappedBy = "files", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "files", fetch = FetchType.LAZY)
     private List<FileGroup> fileGroups;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "file", fetch = FetchType.LAZY)
@@ -106,12 +111,12 @@ public class File implements Serializable {
     public File() {
     }
 
-    public File(String name, String title, Date creationTime, long fileSize, String filePath, UserAccount userAccount) {
+    public File(String fileName, String name, Date creationTime, long fileSize, String relativePath, UserAccount userAccount) {
+        this.fileName = fileName;
         this.name = name;
-        this.title = title;
         this.creationTime = creationTime;
         this.fileSize = fileSize;
-        this.filePath = filePath;
+        this.relativePath = relativePath;
         this.userAccount = userAccount;
     }
 
@@ -123,6 +128,14 @@ public class File implements Serializable {
         this.id = id;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     public String getName() {
         return name;
     }
@@ -131,12 +144,12 @@ public class File implements Serializable {
         this.name = name;
     }
 
-    public String getTitle() {
-        return title;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getCreationTime() {
@@ -165,12 +178,12 @@ public class File implements Serializable {
 
     @JsonIgnore
     @XmlTransient
-    public String getFilePath() {
-        return filePath;
+    public String getRelativePath() {
+        return relativePath;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setRelativePath(String relativePath) {
+        this.relativePath = relativePath;
     }
 
     @JsonIgnore

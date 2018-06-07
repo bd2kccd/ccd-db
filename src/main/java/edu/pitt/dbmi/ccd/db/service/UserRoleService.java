@@ -18,10 +18,11 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.code.UserRoleCodes;
 import edu.pitt.dbmi.ccd.db.entity.UserRole;
 import edu.pitt.dbmi.ccd.db.repository.UserRoleRepository;
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -35,41 +36,41 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserRoleService {
 
-    private static final Long ADMIN_ID = 1L;
-    private static final Long REGULAR_ID = 2L;
-
-    private final UserRoleRepository userRoleRepository;
+    private final UserRoleRepository repository;
 
     @Autowired
-    public UserRoleService(UserRoleRepository userRoleRepository) {
-        this.userRoleRepository = userRoleRepository;
+    public UserRoleService(UserRoleRepository repository) {
+        this.repository = repository;
 
         // initialize database
-        if (userRoleRepository.findAll().isEmpty()) {
-            userRoleRepository.saveAll(Arrays.asList(
-                    new UserRole(ADMIN_ID, "Admin"),
-                    new UserRole(REGULAR_ID, "Regular")
+        if (repository.findAll().isEmpty()) {
+            repository.saveAll(Arrays.asList(
+                    new UserRole("Admin", UserRoleCodes.ADMIN),
+                    new UserRole("Regular", UserRoleCodes.REGULAR)
             ));
         }
     }
 
-    @Cacheable("UserRoleById")
-    public UserRole findById(Long id) {
-        Optional<UserRole> opt = userRoleRepository.findById(id);
-
-        return opt.isPresent() ? opt.get() : null;
+    @Cacheable("UserRoleByCode")
+    public UserRole findByCode(short code) {
+        return repository.findByCode(code);
     }
 
-    public UserRole getAdminRole() {
-        return findById(ADMIN_ID);
+    @Cacheable("UserRoleAll")
+    public List<UserRole> findAll() {
+        return repository.findAll();
     }
 
     public UserRole getRegularRole() {
-        return findById(REGULAR_ID);
+        return findByCode(UserRoleCodes.REGULAR);
+    }
+
+    public UserRole getAdminRole() {
+        return findByCode(UserRoleCodes.ADMIN);
     }
 
     public UserRoleRepository getRepository() {
-        return userRoleRepository;
+        return repository;
     }
 
 }

@@ -18,16 +18,12 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.code.FileFormatCodes;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.FileFormat;
 import edu.pitt.dbmi.ccd.db.entity.TetradDataFile;
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.TetradDataFileRepository;
 import edu.pitt.dbmi.ccd.db.repository.TetradVariableFileRepository;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,46 +37,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TetradDataFileService {
 
-    private final TetradDataFileRepository tetradDataFileRepository;
+    private final TetradDataFileRepository repository;
     private final TetradVariableFileRepository tetradVariableFileRepository;
     private final FileService fileService;
     private final FileFormatService fileFormatService;
-    private final VariableTypeService variableTypeService;
 
     @Autowired
-    public TetradDataFileService(TetradDataFileRepository tetradDataFileRepository, TetradVariableFileRepository tetradVariableFileRepository, FileService fileService, FileFormatService fileFormatService, VariableTypeService variableTypeService) {
-        this.tetradDataFileRepository = tetradDataFileRepository;
+    public TetradDataFileService(TetradDataFileRepository repository, TetradVariableFileRepository tetradVariableFileRepository, FileService fileService, FileFormatService fileFormatService) {
+        this.repository = repository;
         this.tetradVariableFileRepository = tetradVariableFileRepository;
         this.fileService = fileService;
         this.fileFormatService = fileFormatService;
-        this.variableTypeService = variableTypeService;
-    }
-
-    /**
-     * Get a Tetrad tabular files grouped by variable type ids.
-     *
-     * @param userAccount
-     * @return map where key is VariableType ID, value is a list of files
-     */
-    public Map<Long, List<File>> getFileGroupedByVariableTypeId(UserAccount userAccount) {
-        Map<Long, List<File>> map = new HashMap<>();
-
-        // initialize map
-        variableTypeService.findAll()
-                .forEach(e -> map.put(e.getId(), new LinkedList<>()));
-
-        tetradDataFileRepository
-                .findByUserAccount(userAccount)
-                .forEach(e -> map.get(e.getVariableType().getId()).add(e.getFile()));
-
-        return map;
     }
 
     private TetradDataFile saveAsNew(TetradDataFile tetradDataFile) {
         File file = tetradDataFile.getFile();
 
         // update file format
-        FileFormat fileFormat = fileFormatService.findById(FileFormatService.TETRAD_TAB_ID);
+        FileFormat fileFormat = fileFormatService.findByCode(FileFormatCodes.TETRAD_TAB);
         file.setFileFormat(fileFormat);
         file.setTetradDataFile(null);
         file.setTetradVariableFile(null);
@@ -88,7 +62,7 @@ public class TetradDataFileService {
 
         tetradDataFile.setFile(file);
 
-        return tetradDataFileRepository.save(tetradDataFile);
+        return repository.save(tetradDataFile);
     }
 
     @Transactional
@@ -100,24 +74,26 @@ public class TetradDataFileService {
         if (prevFileFmt == null) {
             savedDataFile = saveAsNew(tetradDataFile);
         } else {
-            long id = prevFileFmt.getId();
-            if (id == FileFormatService.TETRAD_TAB_ID) {
-                TetradDataFile dataFile = tetradDataFileRepository.findByFile(file);
-                dataFile.setDataDelimiter(tetradDataFile.getDataDelimiter());
-                dataFile.setVariableType(tetradDataFile.getVariableType());
-                dataFile.setHasHeader(tetradDataFile.isHasHeader());
-                dataFile.setMissingMarker(tetradDataFile.getMissingMarker());
-                dataFile.setNumOfVars(tetradDataFile.getNumOfVars());
-                dataFile.setNumOfCases(tetradDataFile.getNumOfCases());
-                dataFile.setQuoteChar(tetradDataFile.getQuoteChar());
-                dataFile.setCommentMarker(tetradDataFile.getCommentMarker());
+            switch (prevFileFmt.getCode()) {
+                case FileFormatCodes.TETRAD_TAB:
+                    TetradDataFile dataFile = repository.findByFile(file);
+                    dataFile.setDataDelimiter(tetradDataFile.getDataDelimiter());
+                    dataFile.setVariableType(tetradDataFile.getVariableType());
+                    dataFile.setHasHeader(tetradDataFile.isHasHeader());
+                    dataFile.setMissingMarker(tetradDataFile.getMissingMarker());
+                    dataFile.setNumOfVars(tetradDataFile.getNumOfVars());
+                    dataFile.setNumOfCases(tetradDataFile.getNumOfCases());
+                    dataFile.setQuoteChar(tetradDataFile.getQuoteChar());
+                    dataFile.setCommentMarker(tetradDataFile.getCommentMarker());
 
-                savedDataFile = tetradDataFileRepository.save(dataFile);
-            } else if (id == FileFormatService.TETRAD_VAR_ID) {
-                savedDataFile = saveAsNew(tetradDataFile);
-                tetradVariableFileRepository.deleteByFile(file);
-            } else {
-                savedDataFile = saveAsNew(tetradDataFile);
+                    savedDataFile = repository.save(dataFile);
+                    break;
+                case FileFormatCodes.TETRAD_VAR:
+                    savedDataFile = saveAsNew(tetradDataFile);
+                    tetradVariableFileRepository.deleteByFile(file);
+                    break;
+                default:
+                    savedDataFile = saveAsNew(tetradDataFile);
             }
         }
 
@@ -125,7 +101,7 @@ public class TetradDataFileService {
     }
 
     public TetradDataFileRepository getRepository() {
-        return tetradDataFileRepository;
+        return repository;
     }
 
 }

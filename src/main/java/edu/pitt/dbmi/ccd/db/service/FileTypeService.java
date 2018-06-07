@@ -18,60 +18,52 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.code.FileTypeCodes;
 import edu.pitt.dbmi.ccd.db.entity.FileType;
 import edu.pitt.dbmi.ccd.db.repository.FileTypeRepository;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Feb 9, 2018 6:31:05 PM
+ * Feb 9, 2018 6:30:41 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
 public class FileTypeService {
 
-    public static final Long DATA_ID = 1L;
-    public static final Long VARIABLE_ID = 2L;
-    public static final Long KNOWLEDGE_ID = 3L;
-    public static final Long RESULT_ID = 4L;
-
-    private final FileTypeRepository fileTypeRepository;
+    private final FileTypeRepository repository;
 
     @Autowired
-    public FileTypeService(FileTypeRepository fileTypeRepository) {
-        this.fileTypeRepository = fileTypeRepository;
+    public FileTypeService(FileTypeRepository repository) {
+        this.repository = repository;
 
         // initialize database
-        if (fileTypeRepository.findAll().isEmpty()) {
-            fileTypeRepository.saveAll(Arrays.asList(
-                    new FileType(DATA_ID, "Data"),
-                    new FileType(VARIABLE_ID, "Variable"),
-                    new FileType(KNOWLEDGE_ID, "Knowledge"),
-                    new FileType(RESULT_ID, "Result")
+        if (repository.findAll().isEmpty()) {
+            repository.saveAll(Arrays.asList(
+                    new FileType("Data", FileTypeCodes.DATA),
+                    new FileType("Variable", FileTypeCodes.VARIABLE),
+                    new FileType("Knowledge", FileTypeCodes.KNOWLEDGE)
             ));
         }
     }
 
-    @Cacheable("FileTypeById")
-    public FileType findById(Long id) {
-        Optional<FileType> opt = fileTypeRepository.findById(id);
-
-        return opt.isPresent() ? opt.get() : null;
+    @Cacheable("FileTypeByCode")
+    public FileType findByCode(short code) {
+        return repository.findByCode(code);
     }
 
     @Cacheable("FileTypeAll")
     public List<FileType> findAll() {
-        return fileTypeRepository.findAll();
+        return repository.findAll();
     }
 
     public FileTypeRepository getRepository() {
-        return fileTypeRepository;
+        return repository;
     }
 
 }

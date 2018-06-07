@@ -18,11 +18,11 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
+import edu.pitt.dbmi.ccd.db.code.AlgorithmTypeCodes;
 import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
 import edu.pitt.dbmi.ccd.db.repository.AlgorithmTypeRepository;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -36,36 +36,32 @@ import org.springframework.stereotype.Service;
 @Service
 public class AlgorithmTypeService {
 
-    public static final Long TETRAD_ID = 1L;
-
-    private final AlgorithmTypeRepository algorithmTypeRepository;
+    private final AlgorithmTypeRepository repository;
 
     @Autowired
-    public AlgorithmTypeService(AlgorithmTypeRepository algorithmTypeRepository) {
-        this.algorithmTypeRepository = algorithmTypeRepository;
+    public AlgorithmTypeService(AlgorithmTypeRepository repository) {
+        this.repository = repository;
 
         // initialize database
-        if (algorithmTypeRepository.findAll().isEmpty()) {
-            algorithmTypeRepository.saveAll(Arrays.asList(
-                    new AlgorithmType(TETRAD_ID, "Tetrad")
+        if (repository.findAll().isEmpty()) {
+            repository.saveAll(Arrays.asList(
+                    new AlgorithmType("Tetrad", AlgorithmTypeCodes.TETRAD)
             ));
         }
     }
 
-    @Cacheable("AlgorithmTypeById")
-    public AlgorithmType findById(Long id) {
-        Optional<AlgorithmType> opt = algorithmTypeRepository.findById(id);
-
-        return opt.isPresent() ? opt.get() : null;
+    @Cacheable("AlgorithmTypeByCode")
+    public AlgorithmType findByCode(short code) {
+        return repository.findByCode(code);
     }
 
     @Cacheable("AlgorithmTypeAll")
     public List<AlgorithmType> findAll() {
-        return algorithmTypeRepository.findAll();
+        return repository.findAll();
     }
 
     public AlgorithmTypeRepository getRepository() {
-        return algorithmTypeRepository;
+        return repository;
     }
 
 }

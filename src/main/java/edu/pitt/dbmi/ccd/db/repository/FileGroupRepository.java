@@ -18,11 +18,9 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
-import edu.pitt.dbmi.ccd.db.domain.file.FileGroupListItem;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.FileGroup;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.entity.VariableType;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -38,22 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface FileGroupRepository extends JpaRepository<FileGroup, Long> {
 
-    public FileGroup findByName(String name);
-
-    public FileGroup findByIdAndUserAccount(Long id, UserAccount userAccount);
-
-    public List<FileGroup> findByUserAccount(UserAccount userAccount);
-
-    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.file.FileGroupListItem(fg.id,fg.name,fg.creationTime) "
-            + "FROM FileGroup fg "
-            + "WHERE fg.userAccount = ?1 AND fg.variableType = ?2")
-    public List<FileGroupListItem> getFileGroupListItems(UserAccount userAccount, VariableType variableType);
-
     public boolean existsByNameAndUserAccount(String name, UserAccount userAccount);
-
-    public boolean existsByNameAndUserAccountAndIdNot(String name, UserAccount userAccount, Long id);
-
-    public boolean existsByIdAndUserAccount(Long id, UserAccount userAccount);
 
     @Transactional
     public Long deleteByIdAndUserAccount(Long id, UserAccount userAccount);

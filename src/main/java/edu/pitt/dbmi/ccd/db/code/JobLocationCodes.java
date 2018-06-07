@@ -16,40 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.domain.file;
-
-import java.util.Date;
+package edu.pitt.dbmi.ccd.db.code;
 
 /**
  *
- * Mar 12, 2018 4:48:11 PM
+ * May 22, 2018 4:19:23 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class FileGroupListItem {
+public class JobLocationCodes {
 
-    private final Long fileGroupId;
+    public static final short LOCAL = 1;
+    public static final short PSC = 2;
+    public static final short AWS = 3;
 
-    private final String name;
-
-    private final Date creationTime;
-
-    public FileGroupListItem(Long fileGroupId, String name, Date creationTime) {
-        this.fileGroupId = fileGroupId;
-        this.name = name;
-        this.creationTime = creationTime;
-    }
-
-    public Long getFileGroupId() {
-        return fileGroupId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Date getCreationTime() {
-        return creationTime;
+    private JobLocationCodes() {
     }
 
 }

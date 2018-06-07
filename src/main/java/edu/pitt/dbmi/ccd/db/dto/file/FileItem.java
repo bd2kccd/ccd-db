@@ -16,54 +16,50 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.domain.file;
+package edu.pitt.dbmi.ccd.db.dto.file;
 
 import java.util.Date;
 
 /**
  *
- * Mar 12, 2018 4:00:57 PM
+ * May 23, 2018 4:55:07 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class TetradDataListItem {
+public class FileItem {
 
-    private final Long fileId;
-
-    private final String title;
-
+    private final Long id;
+    private final String name;
+    private final long size;
     private final Date creationTime;
+    private final boolean categorized;
 
-    private final Integer numOfCases;
-
-    private final Integer numOfVars;
-
-    public TetradDataListItem(Long fileId, String title, Date creationTime, Integer numOfCases, Integer numOfVars) {
-        this.fileId = fileId;
-        this.title = title;
+    public FileItem(Long id, String name, long size, Date creationTime, boolean categorized) {
+        this.id = id;
+        this.name = name;
+        this.size = size;
         this.creationTime = creationTime;
-        this.numOfCases = numOfCases;
-        this.numOfVars = numOfVars;
+        this.categorized = categorized;
     }
 
-    public Long getFileId() {
-        return fileId;
+    public Long getId() {
+        return id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
+    }
+
+    public long getSize() {
+        return size;
     }
 
     public Date getCreationTime() {
         return creationTime;
     }
 
-    public Integer getNumOfCases() {
-        return numOfCases;
-    }
-
-    public Integer getNumOfVars() {
-        return numOfVars;
+    public boolean isCategorized() {
+        return categorized;
     }
 
 }

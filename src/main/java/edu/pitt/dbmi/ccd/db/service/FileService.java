@@ -18,11 +18,9 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
+import edu.pitt.dbmi.ccd.db.code.FileFormatCodes;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.FileFormat;
-import edu.pitt.dbmi.ccd.db.entity.TetradDataFile;
-import edu.pitt.dbmi.ccd.db.entity.TetradVariableFile;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.FileRepository;
 import edu.pitt.dbmi.ccd.db.repository.TetradDataFileRepository;
@@ -34,10 +32,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,53 +51,19 @@ public class FileService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileService.class);
 
-    private final FileRepository fileRepository;
-    private final TetradDataFileRepository tetradDataFileRepository;
-    private final TetradVariableFileRepository tetradVariableFileRepository;
+    private final FileRepository repository;
     private final FileFormatService fileFormatService;
     private final AlgorithmTypeService algorithmTypeService;
+    private final TetradDataFileRepository tetradDataFileRepository;
+    private final TetradVariableFileRepository tetradVariableFileRepository;
 
     @Autowired
-    public FileService(
-            FileRepository fileRepository,
-            TetradDataFileRepository tetradDataFileRepository,
-            TetradVariableFileRepository tetradVariableFileRepository,
-            FileFormatService fileFormatService,
-            AlgorithmTypeService algorithmTypeService) {
-        this.fileRepository = fileRepository;
-        this.tetradDataFileRepository = tetradDataFileRepository;
-        this.tetradVariableFileRepository = tetradVariableFileRepository;
+    public FileService(FileRepository repository, FileFormatService fileFormatService, AlgorithmTypeService algorithmTypeService, TetradDataFileRepository tetradDataFileRepository, TetradVariableFileRepository tetradVariableFileRepository) {
+        this.repository = repository;
         this.fileFormatService = fileFormatService;
         this.algorithmTypeService = algorithmTypeService;
-    }
-
-    public Map<String, String> getAdditionalInfo(File file) {
-        Map<String, String> addInfo = new LinkedHashMap<>();
-
-        FileFormat fileFormat = file.getFileFormat();
-        if (fileFormat != null) {
-            long id = fileFormat.getId();
-            if (id == FileFormatService.TETRAD_TAB_ID) {
-                TetradDataFile dataFile = tetradDataFileRepository.findByFile(file);
-                if (dataFile != null) {
-                    addInfo.put("Number of Variables", String.valueOf(dataFile.getNumOfVars()));
-                    addInfo.put("Number of Cases", String.valueOf(dataFile.getNumOfCases()));
-                    addInfo.put("Delimiter", dataFile.getDataDelimiter().getName());
-                    addInfo.put("Variable Type", dataFile.getVariableType().getName());
-                    addInfo.put("Has Header", dataFile.isHasHeader() ? "Yes" : "No");
-                    addInfo.put("Quote Character", String.valueOf(dataFile.getQuoteChar()));
-                    addInfo.put("Missing Value Marker", dataFile.getMissingMarker());
-                    addInfo.put("Comment Marker", dataFile.getCommentMarker());
-                }
-            } else if (id == FileFormatService.TETRAD_VAR_ID) {
-                TetradVariableFile varFile = tetradVariableFileRepository.findByFile(file);
-                if (varFile != null) {
-                    addInfo.put("Number of Variables", String.valueOf(varFile.getNumOfVars()));
-                }
-            }
-        }
-
-        return addInfo;
+        this.tetradDataFileRepository = tetradDataFileRepository;
+        this.tetradVariableFileRepository = tetradVariableFileRepository;
     }
 
     @Transactional
@@ -111,100 +73,84 @@ public class FileService {
         file.setFileFormat(fileFormat);
         file.setTetradDataFile(null);
         file.setTetradVariableFile(null);
-        file = fileRepository.save(file);
+        file = repository.save(file);
 
         if (prevFileFmt != null) {
-            long id = prevFileFmt.getId();
-            if (id == FileFormatService.TETRAD_TAB_ID) {
-                tetradDataFileRepository.deleteByFile(file);
-            } else if (id == FileFormatService.TETRAD_VAR_ID) {
-                tetradVariableFileRepository.deleteByFile(file);
+            switch (prevFileFmt.getCode()) {
+                case FileFormatCodes.TETRAD_TAB:
+                    tetradDataFileRepository.deleteByFile(file);
+                    break;
+                case FileFormatCodes.TETRAD_VAR:
+                    tetradVariableFileRepository.deleteByFile(file);
+                    break;
             }
         }
 
         return file;
     }
 
-    public Map<FileFormat, Long> countGroupByFileFormat(UserAccount userAccount) {
-        Map<FileFormat, Long> countMap = new LinkedHashMap<>();
+    private void setFileAttributes(File entity, Path file, String relativePath, UserAccount userAccount) {
+        entity.setRelativePath(relativePath);
+        entity.setUserAccount(userAccount);
 
-        // get counts of uncategorized files
-        Long count = fileRepository
-                .countByUserAccountAndFileFormatIsNull(userAccount);
-        countMap.put(null, count);
-
-        // order by algorithm types
-        List<AlgorithmType> algoTypes = algorithmTypeService.findAll();
-        algoTypes.forEach(algoType -> {
-            fileFormatService.findByAlgorithmType(algoType).stream()
-                    .filter(e -> FileTypeService.RESULT_ID != e.getFileType().getId().longValue())
-                    .forEach(fmt -> countMap.put(fmt, fileRepository.countByUserAccountAndFileFormat(userAccount, fmt)));
-        });
-
-        return countMap;
-    }
-
-    public List<File> persistLocalFiles(List<Path> files, String filePath, UserAccount userAccount) {
-        List<File> fileEntities = new LinkedList<>();
-        files.forEach(file -> {
-            File fileEntity = createFileEntity(file, filePath, userAccount);
-            if (fileEntity != null) {
-                fileEntities.add(fileEntity);
-            }
-        });
-
-        return fileRepository.saveAll(fileEntities);
-    }
-
-    public List<File> persistLocalFiles(List<Path> files, String filePath, FileFormat fileFormat, UserAccount userAccount) {
-        List<File> fileEntities = new LinkedList<>();
-        files.forEach(file -> {
-            File fileEntity = createFileEntity(file, filePath, userAccount);
-            if (fileEntity != null) {
-                fileEntity.setFileFormat(fileFormat);
-                fileEntities.add(fileEntity);
-            }
-        });
-
-        return fileRepository.saveAll(fileEntities);
-    }
-
-    public File persistLocalFile(Path file, String filePath, UserAccount userAccount) {
-        File fileEntity = createFileEntity(file, filePath, userAccount);
-        if (fileEntity != null) {
-            fileEntity = fileRepository.save(fileEntity);
-        }
-
-        return fileEntity;
-    }
-
-    public File createFileEntity(Path file, String filePath, UserAccount userAccount) {
         try {
             BasicFileAttributes attrs = Files.readAttributes(file, BasicFileAttributes.class);
-            String name = file.getFileName().toString();
-            Date creationTime = new Date(attrs.creationTime().toMillis());
+
             long fileSize = attrs.size();
-            String md5CheckSum = FileUtils.computeMD5Hash(file);
+            Date creationTime = new Date(attrs.creationTime().toMillis());
 
-            File fileEntity = new File();
-            fileEntity.setCreationTime(creationTime);
-            fileEntity.setFilePath(filePath);
-            fileEntity.setFileSize(fileSize);
-            fileEntity.setMd5CheckSum(md5CheckSum);
-            fileEntity.setName(name);
-            fileEntity.setTitle(name);
-            fileEntity.setUserAccount(userAccount);
+            entity.setCreationTime(creationTime);
 
-            return fileEntity;
-        } catch (IOException | NoSuchAlgorithmException exception) {
-            LOGGER.error("Unable to persist physical file information", exception);
-
-            return null;
+            entity.setFileSize(fileSize);
+        } catch (IOException exception) {
+            String msg = String.format("Failed to get attributes for file %s.", file.toString());
+            LOGGER.error(msg, exception);
         }
+
+        try {
+            entity.setMd5CheckSum(FileUtils.computeMD5Hash(file));
+        } catch (IOException | NoSuchAlgorithmException exception) {
+            String msg = String.format("Failed to compute MD5 hash for file %s.", file.toString());
+            LOGGER.error(msg, exception);
+        }
+    }
+
+    public File persistLocalFile(Path file, String relativePath, UserAccount userAccount) {
+        String fileName = file.getFileName().toString();
+        File entity = repository.findByFileNameAndUserAccount(fileName, userAccount);
+        if (entity == null) {
+            entity = new File();
+            entity.setFileName(fileName);
+            entity.setName(fileName);
+        }
+
+        setFileAttributes(entity, file, relativePath, userAccount);
+
+        return repository.save(entity);
+    }
+
+    public List<File> persistLocalFiles(List<Path> files, String relativePath, UserAccount userAccount) {
+        List<File> entites = new LinkedList<>();
+
+        files.forEach(file -> {
+            String fileName = file.getFileName().toString();
+            File entity = repository.findByFileNameAndUserAccount(fileName, userAccount);
+            if (entity == null) {
+                entity = new File();
+                entity.setFileName(fileName);
+                entity.setName(fileName);
+            }
+
+            setFileAttributes(entity, file, relativePath, userAccount);
+
+            entites.add(entity);
+        });
+
+        return repository.saveAll(entites);
     }
 
     public FileRepository getRepository() {
-        return fileRepository;
+        return repository;
     }
 
 }

@@ -31,6 +31,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -64,24 +65,28 @@ public class FileGroup implements Serializable {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
+    @Lob
+    @Column(name = "description", length = 65535)
+    private String description;
+
     @Basic(optional = false)
     @Column(name = "creationTime", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationTime;
 
+    @JoinTable(name = "FileGroupFileRel", joinColumns = {
+        @JoinColumn(name = "fileGroupId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "fileId", referencedColumnName = "id", nullable = false)})
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<File> files;
+
     @JoinColumn(name = "variableTypeId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private VariableType variableType;
 
     @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private UserAccount userAccount;
-
-    @JoinTable(name = "FileGroupFileRel", joinColumns = {
-        @JoinColumn(name = "fileGroupId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "fileId", referencedColumnName = "id", nullable = false)})
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<File> files;
 
     public FileGroup() {
     }
@@ -109,12 +114,30 @@ public class FileGroup implements Serializable {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Date getCreationTime() {
         return creationTime;
     }
 
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    public List<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<File> files) {
+        this.files = files;
     }
 
     @JsonIgnore
@@ -135,16 +158,6 @@ public class FileGroup implements Serializable {
 
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
-    }
-
-    @JsonIgnore
-    @XmlTransient
-    public List<File> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<File> files) {
-        this.files = files;
     }
 
 }

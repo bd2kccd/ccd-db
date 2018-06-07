@@ -18,16 +18,15 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.domain.account.UserAccountRegistration;
+import edu.pitt.dbmi.ccd.db.dto.UserAccountRegistration;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.entity.UserInformation;
+import edu.pitt.dbmi.ccd.db.entity.UserProfile;
 import edu.pitt.dbmi.ccd.db.entity.UserRegistration;
 import edu.pitt.dbmi.ccd.db.entity.UserRole;
 import edu.pitt.dbmi.ccd.db.repository.UserAccountRepository;
 import edu.pitt.dbmi.ccd.db.util.InetUtils;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,24 +41,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserAccountService {
 
-    private final UserAccountRepository userAccountRepository;
-
-    private final UserRoleService userRoleService;
-    private final UserInformationService userInformationService;
+    private final UserAccountRepository repository;
+    private final UserProfileService userProfileService;
     private final UserRegistrationService userRegistrationService;
+    private final UserRoleService userRoleService;
 
     @Autowired
-    public UserAccountService(UserAccountRepository userAccountRepository, UserRoleService userRoleService, UserInformationService userInformationService, UserRegistrationService userRegistrationService) {
-        this.userAccountRepository = userAccountRepository;
-        this.userRoleService = userRoleService;
-        this.userInformationService = userInformationService;
+    public UserAccountService(UserAccountRepository repository, UserProfileService userProfileService, UserRegistrationService userRegistrationService, UserRoleService userRoleService) {
+        this.repository = repository;
+        this.userProfileService = userProfileService;
         this.userRegistrationService = userRegistrationService;
+        this.userRoleService = userRoleService;
     }
 
-    public void clearActionKey(UserAccount userAccount) {
-        if (userAccount.getActionKey() != null) {
-            userAccount.setActionKey(null);
-            userAccountRepository.save(userAccount);
+    public void clearActivationKey(UserAccount userAccount) {
+        if (userAccount.getActivationKey() != null) {
+            userAccount.setActivationKey(null);
+            repository.save(userAccount);
         }
     }
 
@@ -67,37 +65,22 @@ public class UserAccountService {
     public UserAccount registerRegularUser(UserAccountRegistration registration) {
         UserRole userRole = userRoleService.getRegularRole();
 
-        UserAccount userAccount = persistUserAccount(registration, Collections.singletonList(userRole));
-        persistUserInformation(registration, userAccount);
-        persistUserRegistration(registration, userAccount);
+        UserAccount userAccount = createUserAccount(registration);
+        userAccount.setUserRoles(Collections.singletonList(userRole));
+        userAccount = repository.save(userAccount);
+
+        UserProfile userProfile = createUserProfile(registration);
+        userProfile.setUserAccount(userAccount);
+        userProfileService.getRepository().save(userProfile);
+
+        UserRegistration userRegistration = createUserRegistration(registration);
+        userRegistration.setUserAccount(userAccount);
+        userRegistrationService.getRepository().save(userRegistration);
 
         return userAccount;
     }
 
-    protected UserRegistration persistUserRegistration(UserAccountRegistration registration, UserAccount userAccount) {
-        String ipAddress = registration.getIpAddress();
-
-        UserRegistration userRegistration = new UserRegistration(new Date(), userAccount);
-        userRegistration.setRegistrationLocation(InetUtils.getInetNTOA(ipAddress));
-
-        return userRegistrationService.getRepository().save(userRegistration);
-    }
-
-    protected UserInformation persistUserInformation(UserAccountRegistration registration, UserAccount userAccount) {
-        String email = registration.getEmail();
-        String firstName = registration.getFirstName();
-        String middleName = registration.getMiddleName();
-        String lastName = registration.getLastName();
-
-        UserInformation userInformation = new UserInformation(email, userAccount);
-        userInformation.setFirstName(firstName);
-        userInformation.setMiddleName(middleName);
-        userInformation.setLastName(lastName);
-
-        return userInformationService.getRepository().save(userInformation);
-    }
-
-    protected UserAccount persistUserAccount(UserAccountRegistration registration, List<UserRole> userRoles) {
+    private UserAccount createUserAccount(UserAccountRegistration registration) {
         String username = registration.getUsername();
         String password = registration.getPassword();
         boolean activated = registration.isActivated();
@@ -106,15 +89,44 @@ public class UserAccountService {
         String activationKey = activated ? null : UUID.randomUUID().toString();
         boolean disabled = false;
 
-        UserAccount userAccount = new UserAccount(username, password, account, activated, disabled);
-        userAccount.setActionKey(activationKey);
-        userAccount.setUserRoles(userRoles);
+        UserAccount userAccount = new UserAccount();
+        userAccount.setAccount(account);
+        userAccount.setActivated(activated);
+        userAccount.setActivationKey(activationKey);
+        userAccount.setDisabled(disabled);
+        userAccount.setPassword(password);
+        userAccount.setUsername(username);
 
-        return userAccountRepository.save(userAccount);
+        return userAccount;
+    }
+
+    private UserProfile createUserProfile(UserAccountRegistration registration) {
+        String email = registration.getEmail();
+        String firstName = registration.getFirstName();
+        String middleName = registration.getMiddleName();
+        String lastName = registration.getLastName();
+
+        UserProfile userProfile = new UserProfile();
+        userProfile.setEmail(email);
+        userProfile.setFirstName(firstName);
+        userProfile.setMiddleName(middleName);
+        userProfile.setLastName(lastName);
+
+        return userProfile;
+    }
+
+    private UserRegistration createUserRegistration(UserAccountRegistration registration) {
+        String ipAddress = registration.getIpAddress();
+
+        UserRegistration userRegistration = new UserRegistration();
+        userRegistration.setRegistrationDate(new Date());
+        userRegistration.setRegistrationLocation(InetUtils.getInetNTOA(ipAddress));
+
+        return userRegistration;
     }
 
     public UserAccountRepository getRepository() {
-        return userAccountRepository;
+        return repository;
     }
 
 }

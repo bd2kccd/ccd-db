@@ -16,35 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db;
+package edu.pitt.dbmi.ccd.db.service;
+
+import edu.pitt.dbmi.ccd.db.repository.UserProfileRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
- * May 14, 2018 12:04:46 PM
+ * May 20, 2018 1:09:36 AM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class JobQueueException extends Exception {
+@Service
+public class UserProfileService {
 
-    private static final long serialVersionUID = -5376197570295477197L;
+    private final UserProfileRepository repository;
 
-    public JobQueueException() {
+    @Autowired
+    public UserProfileService(UserProfileRepository repository) {
+        this.repository = repository;
     }
 
-    public JobQueueException(String message) {
-        super(message);
-    }
-
-    public JobQueueException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public JobQueueException(Throwable cause) {
-        super(cause);
-    }
-
-    public JobQueueException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public UserProfileRepository getRepository() {
+        return repository;
     }
 
 }

@@ -49,7 +49,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 public class UserRegistration implements Serializable {
 
-    private static final long serialVersionUID = -2857794724493223367L;
+    private static final long serialVersionUID = 7392209512791034351L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -93,6 +93,8 @@ public class UserRegistration implements Serializable {
         this.registrationDate = registrationDate;
     }
 
+    @JsonIgnore
+    @XmlTransient
     public Long getRegistrationLocation() {
         return registrationLocation;
     }

@@ -24,9 +24,11 @@ DROP TABLE IF EXISTS `AlgorithmType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `AlgorithmType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `code` smallint(6) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -39,9 +41,11 @@ DROP TABLE IF EXISTS `DataDelimiter`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `DataDelimiter` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `code` smallint(6) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -54,17 +58,18 @@ DROP TABLE IF EXISTS `File`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `File` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `fileName` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
+  `description` text,
   `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `fileSize` bigint(20) NOT NULL,
   `md5CheckSum` varchar(32) DEFAULT NULL,
-  `filePath` varchar(255) NOT NULL,
+  `relativePath` varchar(255) NOT NULL,
   `fileFormatId` bigint(20) DEFAULT NULL,
   `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `fileName` (`fileName`,`userAccountId`),
   UNIQUE KEY `name` (`name`,`userAccountId`),
-  UNIQUE KEY `title` (`title`,`userAccountId`),
   KEY `fileFormatId` (`fileFormatId`),
   KEY `userAccountId` (`userAccountId`),
   CONSTRAINT `File_ibfk_1` FOREIGN KEY (`fileFormatId`) REFERENCES `FileFormat` (`id`),
@@ -81,16 +86,18 @@ DROP TABLE IF EXISTS `FileFormat`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `FileFormat` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `code` smallint(6) NOT NULL,
   `fileTypeId` bigint(20) NOT NULL,
   `algorithmTypeId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `code` (`code`),
   UNIQUE KEY `fileTypeId_2` (`fileTypeId`,`algorithmTypeId`),
   KEY `fileTypeId` (`fileTypeId`),
   KEY `algorithmTypeId` (`algorithmTypeId`),
-  CONSTRAINT `FileFormat_ibfk_1` FOREIGN KEY (`fileTypeId`) REFERENCES `FileType` (`id`),
-  CONSTRAINT `FileFormat_ibfk_2` FOREIGN KEY (`algorithmTypeId`) REFERENCES `AlgorithmType` (`id`)
+  CONSTRAINT `FileFormat_ibfk_2` FOREIGN KEY (`algorithmTypeId`) REFERENCES `AlgorithmType` (`id`),
+  CONSTRAINT `FileFormat_ibfk_1` FOREIGN KEY (`fileTypeId`) REFERENCES `FileType` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -104,6 +111,7 @@ DROP TABLE IF EXISTS `FileGroup`;
 CREATE TABLE `FileGroup` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `description` text,
   `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `variableTypeId` bigint(20) NOT NULL,
   `userAccountId` bigint(20) NOT NULL,
@@ -143,95 +151,11 @@ DROP TABLE IF EXISTS `FileType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `FileType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `code` smallint(6) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `JobInfo`
---
-
-DROP TABLE IF EXISTS `JobInfo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JobInfo` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `algoParam` text NOT NULL,
-  `datasetFileId` bigint(20) NOT NULL,
-  `singleDataset` tinyint(1) NOT NULL DEFAULT '0',
-  `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `startTime` timestamp NULL DEFAULT NULL,
-  `endTime` timestamp NULL DEFAULT NULL,
-  `jobStatusId` bigint(20) NOT NULL,
-  `jobLocationId` bigint(20) NOT NULL,
-  `algorithmTypeId` bigint(20) NOT NULL,
-  `userAccountId` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`,`userAccountId`),
-  UNIQUE KEY `title` (`title`,`userAccountId`),
-  KEY `jobStatusId` (`jobStatusId`),
-  KEY `jobLocationId` (`jobLocationId`),
-  KEY `algorithmTypeId` (`algorithmTypeId`),
-  KEY `userAccountId` (`userAccountId`),
-  CONSTRAINT `JobInfo_ibfk_1` FOREIGN KEY (`jobStatusId`) REFERENCES `JobStatus` (`id`),
-  CONSTRAINT `JobInfo_ibfk_2` FOREIGN KEY (`jobLocationId`) REFERENCES `JobLocation` (`id`),
-  CONSTRAINT `JobInfo_ibfk_3` FOREIGN KEY (`algorithmTypeId`) REFERENCES `AlgorithmType` (`id`),
-  CONSTRAINT `JobInfo_ibfk_4` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `JobLocation`
---
-
-DROP TABLE IF EXISTS `JobLocation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JobLocation` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `JobQueue`
---
-
-DROP TABLE IF EXISTS `JobQueue`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JobQueue` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `pid` bigint(20) DEFAULT NULL,
-  `jobInfoId` bigint(20) NOT NULL,
-  `userAccountId` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `jobInfoId_2` (`jobInfoId`),
-  KEY `jobInfoId` (`jobInfoId`),
-  KEY `userAccountId` (`userAccountId`),
-  CONSTRAINT `JobQueue_ibfk_1` FOREIGN KEY (`jobInfoId`) REFERENCES `JobInfo` (`id`),
-  CONSTRAINT `JobQueue_ibfk_2` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `JobStatus`
---
-
-DROP TABLE IF EXISTS `JobStatus`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JobStatus` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -302,7 +226,7 @@ CREATE TABLE `UserAccount` (
   `account` varchar(255) NOT NULL,
   `activated` tinyint(1) NOT NULL DEFAULT '0',
   `disabled` tinyint(1) NOT NULL DEFAULT '0',
-  `actionKey` varchar(255) DEFAULT NULL,
+  `activationKey` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `account` (`account`)
@@ -328,28 +252,6 @@ CREATE TABLE `UserAccountUserRoleRel` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `UserInformation`
---
-
-DROP TABLE IF EXISTS `UserInformation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `UserInformation` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `firstName` varchar(255) DEFAULT NULL,
-  `middleName` varchar(255) DEFAULT NULL,
-  `lastName` varchar(255) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
-  `userAccountId` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `userAccountId_2` (`userAccountId`),
-  KEY `userAccountId` (`userAccountId`),
-  CONSTRAINT `UserInformation_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `UserLogin`
 --
 
@@ -364,6 +266,28 @@ CREATE TABLE `UserLogin` (
   PRIMARY KEY (`id`),
   KEY `userAccountId` (`userAccountId`),
   CONSTRAINT `UserLogin_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `UserProfile`
+--
+
+DROP TABLE IF EXISTS `UserProfile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `UserProfile` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(128) DEFAULT NULL,
+  `middleName` varchar(128) DEFAULT NULL,
+  `lastName` varchar(128) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  `userAccountId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `userAccountId_2` (`userAccountId`),
+  KEY `userAccountId` (`userAccountId`),
+  CONSTRAINT `UserProfile_ibfk_1` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -395,9 +319,11 @@ DROP TABLE IF EXISTS `UserRole`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `UserRole` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `code` smallint(6) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -410,9 +336,11 @@ DROP TABLE IF EXISTS `VariableType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `VariableType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `code` smallint(6) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -425,4 +353,4 @@ CREATE TABLE `VariableType` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-09 10:21:48
+-- Dump completed on 2018-05-22 15:01:37

@@ -36,11 +36,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "DataDelimiter", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
+@Table(name = "DataDelimiter", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"code"})
+    , @UniqueConstraint(columnNames = {"name"})})
 @XmlRootElement
 public class DataDelimiter implements Serializable {
 
-    private static final long serialVersionUID = 2175878101157048600L;
+    private static final long serialVersionUID = 1230761484283602053L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,19 +51,19 @@ public class DataDelimiter implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 64)
+    @Column(name = "name", nullable = false, length = 32)
     private String name;
+
+    @Basic(optional = false)
+    @Column(name = "code", nullable = false)
+    private short code;
 
     public DataDelimiter() {
     }
 
-    public DataDelimiter(String name) {
+    public DataDelimiter(String name, short code) {
         this.name = name;
-    }
-
-    public DataDelimiter(Long id, String name) {
-        this.id = id;
-        this.name = name;
+        this.code = code;
     }
 
     public Long getId() {
@@ -78,6 +80,14 @@ public class DataDelimiter implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public short getCode() {
+        return code;
+    }
+
+    public void setCode(short code) {
+        this.code = code;
     }
 
 }

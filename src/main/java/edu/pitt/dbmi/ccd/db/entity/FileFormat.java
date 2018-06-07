@@ -43,6 +43,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "FileFormat", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"fileTypeId", "algorithmTypeId"})
+    , @UniqueConstraint(columnNames = {"code"})
     , @UniqueConstraint(columnNames = {"name"})})
 @XmlRootElement
 public class FileFormat implements Serializable {
@@ -56,29 +57,27 @@ public class FileFormat implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 64)
+    @Column(name = "name", nullable = false, length = 32)
     private String name;
 
-    @JoinColumn(name = "fileTypeId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private FileType fileType;
+    @Basic(optional = false)
+    @Column(name = "code", nullable = false)
+    private short code;
 
     @JoinColumn(name = "algorithmTypeId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private AlgorithmType algorithmType;
 
+    @JoinColumn(name = "fileTypeId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private FileType fileType;
+
     public FileFormat() {
     }
 
-    public FileFormat(String name, FileType fileType, AlgorithmType algorithmType) {
+    public FileFormat(String name, short code, FileType fileType, AlgorithmType algorithmType) {
         this.name = name;
-        this.fileType = fileType;
-        this.algorithmType = algorithmType;
-    }
-
-    public FileFormat(Long id, String name, FileType fileType, AlgorithmType algorithmType) {
-        this.id = id;
-        this.name = name;
+        this.code = code;
         this.fileType = fileType;
         this.algorithmType = algorithmType;
     }
@@ -99,14 +98,12 @@ public class FileFormat implements Serializable {
         this.name = name;
     }
 
-    @JsonIgnore
-    @XmlTransient
-    public FileType getFileType() {
-        return fileType;
+    public short getCode() {
+        return code;
     }
 
-    public void setFileType(FileType fileType) {
-        this.fileType = fileType;
+    public void setCode(short code) {
+        this.code = code;
     }
 
     @JsonIgnore
@@ -117,6 +114,16 @@ public class FileFormat implements Serializable {
 
     public void setAlgorithmType(AlgorithmType algorithmType) {
         this.algorithmType = algorithmType;
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    public FileType getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(FileType fileType) {
+        this.fileType = fileType;
     }
 
 }

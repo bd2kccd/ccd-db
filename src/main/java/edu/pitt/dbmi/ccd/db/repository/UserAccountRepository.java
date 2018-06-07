@@ -33,10 +33,10 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     public UserAccount findByUsername(String username);
 
-    public UserAccount findByActionKey(String actionKey);
+    public UserAccount findByActivationKey(String activationKey);
 
     public boolean existsByUsername(String username);
 
-    public boolean existsByActionKey(String actionKey);
+    public boolean existsByActivationKey(String activationKey);
 
 }

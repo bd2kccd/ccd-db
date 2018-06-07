@@ -18,11 +18,14 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.dto.file.FileItem;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.FileFormat;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.List;
+import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -36,20 +39,30 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     public File findByIdAndUserAccount(Long id, UserAccount userAccount);
 
+    public File findByFileNameAndUserAccount(String fileName, UserAccount userAccount);
+
     public List<File> findByUserAccount(UserAccount userAccount);
 
-    public List<File> findByUserAccountAndFileFormatIsNull(UserAccount userAccount);
+    public boolean existsByNameAndUserAccount(String name, UserAccount userAccount);
 
-    public List<File> findByUserAccountAndFileFormatNotNull(UserAccount userAccount);
+    public boolean existsByFileNameAndUserAccount(String fileName, UserAccount userAccount);
 
-    public List<File> findByFileFormatAndUserAccount(FileFormat fileFormat, UserAccount userAccount);
+    @Query("SELECT f.fileName FROM File f WHERE f.userAccount = ?1")
+    public Set<String> getFileNames(UserAccount userAccount);
 
-    public Long countByUserAccount(UserAccount userAccount);
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.dto.file.FileItem(f.id,f.name,f.fileSize,f.creationTime,f.fileFormat IS NOT NULL) "
+            + "FROM File f "
+            + "WHERE f.userAccount = ?1")
+    public List<FileItem> getAllFiles(UserAccount userAccount);
 
-    public Long countByUserAccountAndFileFormatIsNull(UserAccount userAccount);
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.dto.file.FileItem(f.id,f.name,f.fileSize,f.creationTime,f.fileFormat IS NOT NULL) "
+            + "FROM File f "
+            + "WHERE f.userAccount = ?1 AND f.fileFormat IS NULL")
+    public List<FileItem> getUncategorized(UserAccount userAccount);
 
-    public Long countByUserAccountAndFileFormat(UserAccount userAccount, FileFormat fileFormat);
-
-    public boolean existsByTitleAndUserAccount(String title, UserAccount userAccount);
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.dto.file.FileItem(f.id,f.name,f.fileSize,f.creationTime,f.fileFormat IS NOT NULL) "
+            + "FROM File f "
+            + "WHERE f.fileFormat = ?1 AND f.userAccount = ?2")
+    public List<FileItem> getByFileFormat(FileFormat fileFormat, UserAccount userAccount);
 
 }

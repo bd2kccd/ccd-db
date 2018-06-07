@@ -36,8 +36,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name"})})
+@Table(name = "AlgorithmType", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"code"})
+    , @UniqueConstraint(columnNames = {"name"})})
 @XmlRootElement
 public class AlgorithmType implements Serializable {
 
@@ -50,19 +51,19 @@ public class AlgorithmType implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 64)
+    @Column(name = "name", nullable = false, length = 32)
     private String name;
+
+    @Basic(optional = false)
+    @Column(name = "code", nullable = false)
+    private short code;
 
     public AlgorithmType() {
     }
 
-    public AlgorithmType(String name) {
+    public AlgorithmType(String name, short code) {
         this.name = name;
-    }
-
-    public AlgorithmType(Long id, String name) {
-        this.id = id;
-        this.name = name;
+        this.code = code;
     }
 
     public Long getId() {
@@ -79,6 +80,14 @@ public class AlgorithmType implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public short getCode() {
+        return code;
+    }
+
+    public void setCode(short code) {
+        this.code = code;
     }
 
 }

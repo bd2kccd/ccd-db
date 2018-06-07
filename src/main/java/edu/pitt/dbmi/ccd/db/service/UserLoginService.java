@@ -35,11 +35,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserLoginService {
 
-    private final UserLoginRepository userLoginRepository;
+    private final UserLoginRepository repository;
 
     @Autowired
-    public UserLoginService(UserLoginRepository userLoginRepository) {
-        this.userLoginRepository = userLoginRepository;
+    public UserLoginService(UserLoginRepository repository) {
+        this.repository = repository;
     }
 
     /**
@@ -49,17 +49,20 @@ public class UserLoginService {
      * @param ipAddress
      * @return user's last login
      */
-    public UserLogin logUserLogin(UserAccount userAccount, String ipAddress) {
-        UserLogin lastLogin = userLoginRepository
-                .getLastUserLogin(userAccount);
-        UserLogin currentLogin = userLoginRepository
-                .save(new UserLogin(new Date(), InetUtils.getInetNTOA(ipAddress), userAccount));
+    public UserLogin logUser(UserAccount userAccount, String ipAddress) {
+        UserLogin lastLogin = repository.getLastUserLogin(userAccount);
+
+        UserLogin currentLogin = new UserLogin();
+        currentLogin.setLoginDate(new Date());
+        currentLogin.setLoginLocation(InetUtils.getInetNTOA(ipAddress));
+        currentLogin.setUserAccount(userAccount);
+        currentLogin = repository.save(currentLogin);
 
         return (lastLogin == null) ? currentLogin : lastLogin;
     }
 
     public UserLoginRepository getRepository() {
-        return userLoginRepository;
+        return repository;
     }
 
 }

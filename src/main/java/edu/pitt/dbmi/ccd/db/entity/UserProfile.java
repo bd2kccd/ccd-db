@@ -28,7 +28,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -37,17 +36,18 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * Apr 11, 2018 11:30:42 AM
+ * May 19, 2018 11:59:13 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "JobQueue", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"jobInfoId"})})
+@Table(name = "UserProfile", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"userAccountId"})
+    , @UniqueConstraint(columnNames = {"email"})})
 @XmlRootElement
-public class JobQueue implements Serializable {
+public class UserProfile implements Serializable {
 
-    private static final long serialVersionUID = -1939112092470084708L;
+    private static final long serialVersionUID = -1158707526901621470L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,23 +55,24 @@ public class JobQueue implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "pid")
-    private Long pid;
+    @Column(name = "firstName", length = 128)
+    private String firstName;
 
-    @JoinColumn(name = "jobInfoId", referencedColumnName = "id", nullable = false)
-    @OneToOne(optional = false, fetch = FetchType.EAGER)
-    private JobInfo jobInfo;
+    @Column(name = "middleName", length = 128)
+    private String middleName;
+
+    @Column(name = "lastName", length = 128)
+    private String lastName;
+
+    @Basic(optional = false)
+    @Column(name = "email", nullable = false, length = 255)
+    private String email;
 
     @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     private UserAccount userAccount;
 
-    public JobQueue() {
-    }
-
-    public JobQueue(JobInfo jobInfo, UserAccount userAccount) {
-        this.jobInfo = jobInfo;
-        this.userAccount = userAccount;
+    public UserProfile() {
     }
 
     public Long getId() {
@@ -82,20 +83,36 @@ public class JobQueue implements Serializable {
         this.id = id;
     }
 
-    public Long getPid() {
-        return pid;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setPid(Long pid) {
-        this.pid = pid;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public JobInfo getJobInfo() {
-        return jobInfo;
+    public String getMiddleName() {
+        return middleName;
     }
 
-    public void setJobInfo(JobInfo jobInfo) {
-        this.jobInfo = jobInfo;
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @JsonIgnore

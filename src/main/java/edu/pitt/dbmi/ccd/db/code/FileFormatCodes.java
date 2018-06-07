@@ -16,22 +16,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.repository;
-
-import edu.pitt.dbmi.ccd.db.entity.UserAccount;
-import edu.pitt.dbmi.ccd.db.entity.UserInformation;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+package edu.pitt.dbmi.ccd.db.code;
 
 /**
  *
- * Jan 15, 2018 3:20:35 PM
+ * May 22, 2018 4:17:26 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-@Repository
-public interface UserInformationRepository extends JpaRepository<UserInformation, Long> {
+public class FileFormatCodes {
 
-    public UserInformation findByUserAccount(UserAccount userAccount);
+    public static final short TETRAD_TAB = 1;
+    public static final short TETRAD_VAR = 2;
+    public static final short TETRAD_KNWL = 3;
+
+    private FileFormatCodes() {
+    }
 
 }
