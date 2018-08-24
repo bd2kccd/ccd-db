@@ -24,7 +24,7 @@ package edu.pitt.dbmi.ccd.db.code;
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class DataDelimiterCodes {
+public final class DataDelimiterCodes {
 
     public static final short TAB = 1;
     public static final short SPACE = 2;

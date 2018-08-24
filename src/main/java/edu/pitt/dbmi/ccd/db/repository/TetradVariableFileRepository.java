@@ -18,10 +18,13 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.domain.file.TetradVarListItem;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.TetradVariableFile;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -38,5 +41,12 @@ public interface TetradVariableFileRepository extends JpaRepository<TetradVariab
     public void deleteByFile(File file);
 
     public void deleteByFileIn(List<File> files);
+
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.file.TetradVarListItem(tvf.id,tvf.file.name,tvf.file.creationTime,tvf.numOfVars)"
+            + " FROM TetradVariableFile tvf"
+            + " WHERE tvf.userAccount = ?1")
+    public List<TetradVarListItem> getTetradVarListItems(UserAccount userAccount);
+
+    public boolean existsByIdAndUserAccount(Long id, UserAccount userAccount);
 
 }

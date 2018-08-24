@@ -18,36 +18,31 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * May 10, 2017 2:32:30 PM
+ * Apr 11, 2018 1:57:16 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "TetradVariableFile", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"fileId"})})
+@Table(name = "JobStatus", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"code"})
+    , @UniqueConstraint(columnNames = {"name"})})
 @XmlRootElement
-public class TetradVariableFile implements Serializable {
+public class JobStatus implements Serializable {
 
-    private static final long serialVersionUID = 564704246069425855L;
+    private static final long serialVersionUID = -1946939547116623049L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,23 +50,20 @@ public class TetradVariableFile implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "numOfVars")
-    private Integer numOfVars;
+    @Basic(optional = false)
+    @Column(name = "name", nullable = false, length = 32)
+    private String name;
 
-    @JoinColumn(name = "fileId", referencedColumnName = "id", nullable = false)
-    @OneToOne(optional = false, fetch = FetchType.EAGER)
-    private File file;
+    @Basic(optional = false)
+    @Column(name = "code", nullable = false)
+    private short code;
 
-    @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private UserAccount userAccount;
-
-    public TetradVariableFile() {
+    public JobStatus() {
     }
 
-    public TetradVariableFile(File file, UserAccount userAccount) {
-        this.file = file;
-        this.userAccount = userAccount;
+    public JobStatus(String name, short code) {
+        this.name = name;
+        this.code = code;
     }
 
     public Long getId() {
@@ -82,32 +74,20 @@ public class TetradVariableFile implements Serializable {
         this.id = id;
     }
 
-    public Integer getNumOfVars() {
-        return numOfVars;
+    public String getName() {
+        return name;
     }
 
-    public void setNumOfVars(Integer numOfVars) {
-        this.numOfVars = numOfVars;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @JsonIgnore
-    @XmlTransient
-    public File getFile() {
-        return file;
+    public short getCode() {
+        return code;
     }
 
-    public void setFile(File file) {
-        this.file = file;
-    }
-
-    @JsonIgnore
-    @XmlTransient
-    public UserAccount getUserAccount() {
-        return userAccount;
-    }
-
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
+    public void setCode(short code) {
+        this.code = code;
     }
 
 }

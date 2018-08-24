@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class CcdDbApplication {
 
     /**
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {

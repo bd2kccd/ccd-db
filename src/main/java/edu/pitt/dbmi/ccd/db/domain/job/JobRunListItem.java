@@ -16,21 +16,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.code;
+package edu.pitt.dbmi.ccd.db.domain.job;
+
+import edu.pitt.dbmi.ccd.db.domain.ListItem;
+import java.util.Date;
 
 /**
  *
- * May 22, 2018 4:19:23 PM
+ * Jul 23, 2018 6:20:22 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public final class JobLocationCodes {
+public class JobRunListItem extends ListItem {
 
-    public static final short LOCAL = 1;
-    public static final short PSC = 2;
-    public static final short AWS = 3;
+    protected final Date creationTime;
 
-    private JobLocationCodes() {
+    protected final String status;
+
+    public JobRunListItem(Long id, String name, Date creationTime, String status) {
+        super(id, name);
+        this.creationTime = creationTime;
+        this.status = status;
+    }
+
+    public Date getCreationTime() {
+        return creationTime;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
 }

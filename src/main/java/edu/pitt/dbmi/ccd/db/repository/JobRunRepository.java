@@ -16,21 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.code;
+package edu.pitt.dbmi.ccd.db.repository;
+
+import edu.pitt.dbmi.ccd.db.domain.job.JobRunListItem;
+import edu.pitt.dbmi.ccd.db.entity.JobRun;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  *
- * May 22, 2018 4:19:23 PM
+ * Jul 23, 2018 4:00:01 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public final class JobLocationCodes {
+@Repository
+public interface JobRunRepository extends JpaRepository<JobRun, Long> {
 
-    public static final short LOCAL = 1;
-    public static final short PSC = 2;
-    public static final short AWS = 3;
-
-    private JobLocationCodes() {
-    }
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.job.JobRunListItem(jr.id, jr.jobDetail.name, jr.jobDetail.creationTime, jr.jobDetail.jobStatus.name) "
+            + "FROM JobRun jr "
+            + "WHERE jr.userAccount = ?1")
+    public List<JobRunListItem> getJobRunListItems(UserAccount userAccount);
 
 }

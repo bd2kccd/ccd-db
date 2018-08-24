@@ -24,7 +24,7 @@ package edu.pitt.dbmi.ccd.db.code;
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class UserRoleCodes {
+public final class UserRoleCodes {
 
     public static final short ADMIN = 1;
     public static final short REGULAR = 2;

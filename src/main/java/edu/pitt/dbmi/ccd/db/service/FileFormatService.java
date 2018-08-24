@@ -75,11 +75,6 @@ public class FileFormatService {
         return repository.findAll();
     }
 
-    @Cacheable("FileFormatsByAlgorithmType")
-    public List<FileFormat> findByAlgorithmType(AlgorithmType algorithmType) {
-        return repository.findByAlgorithmType(algorithmType);
-    }
-
     @Cacheable("FileFormatOpts")
     public Map<FileType, List<FileFormat>> getFileFormatOptions() {
         return repository.findAll().stream()

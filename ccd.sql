@@ -160,6 +160,71 @@ CREATE TABLE `FileType` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `JobDetail`
+--
+
+DROP TABLE IF EXISTS `JobDetail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobDetail` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `description` text,
+  `jobParameter` text NOT NULL,
+  `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `startTime` timestamp NULL DEFAULT NULL,
+  `endTime` timestamp NULL DEFAULT NULL,
+  `jobStatusId` bigint(20) NOT NULL,
+  `algorithmTypeId` bigint(20) NOT NULL,
+  `userAccountId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobStatusId` (`jobStatusId`),
+  KEY `algorithmTypeId` (`algorithmTypeId`),
+  KEY `userAccountId` (`userAccountId`),
+  CONSTRAINT `JobDetail_ibfk_1` FOREIGN KEY (`jobStatusId`) REFERENCES `JobStatus` (`id`),
+  CONSTRAINT `JobDetail_ibfk_2` FOREIGN KEY (`algorithmTypeId`) REFERENCES `AlgorithmType` (`id`),
+  CONSTRAINT `JobDetail_ibfk_3` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `JobRun`
+--
+
+DROP TABLE IF EXISTS `JobRun`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobRun` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `pid` bigint(20) DEFAULT NULL,
+  `jobDetailId` bigint(20) NOT NULL,
+  `userAccountId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobDetailId` (`jobDetailId`),
+  KEY `userAccountId` (`userAccountId`),
+  CONSTRAINT `JobRun_ibfk_2` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`),
+  CONSTRAINT `JobRun_ibfk_1` FOREIGN KEY (`jobDetailId`) REFERENCES `JobDetail` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `JobStatus`
+--
+
+DROP TABLE IF EXISTS `JobStatus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JobStatus` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `code` smallint(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `TetradDataFile`
 --
 
@@ -353,4 +418,4 @@ CREATE TABLE `VariableType` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-22 15:01:37
+-- Dump completed on 2018-08-20 14:48:25

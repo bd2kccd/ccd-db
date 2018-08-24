@@ -16,50 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.dto.file;
+package edu.pitt.dbmi.ccd.db.service;
 
-import java.util.Date;
+import edu.pitt.dbmi.ccd.db.repository.JobDetailRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
- * May 23, 2018 4:55:07 PM
+ * Jul 23, 2018 3:45:11 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class FileItem {
+@Service
+public class JobDetailService {
 
-    private final Long id;
-    private final String name;
-    private final long size;
-    private final Date creationTime;
-    private final boolean categorized;
+    private final JobDetailRepository repository;
 
-    public FileItem(Long id, String name, long size, Date creationTime, boolean categorized) {
-        this.id = id;
-        this.name = name;
-        this.size = size;
-        this.creationTime = creationTime;
-        this.categorized = categorized;
+    @Autowired
+    public JobDetailService(JobDetailRepository repository) {
+        this.repository = repository;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public Date getCreationTime() {
-        return creationTime;
-    }
-
-    public boolean isCategorized() {
-        return categorized;
+    public JobDetailRepository getRepository() {
+        return repository;
     }
 
 }

@@ -24,7 +24,7 @@ package edu.pitt.dbmi.ccd.db.code;
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class VariableTypeCodes {
+public final class VariableTypeCodes {
 
     public static final short CONTINUOUS = 1;
     public static final short DISCRETE = 2;

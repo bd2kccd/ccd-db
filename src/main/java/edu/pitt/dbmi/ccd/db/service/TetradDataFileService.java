@@ -22,8 +22,13 @@ import edu.pitt.dbmi.ccd.db.code.FileFormatCodes;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.FileFormat;
 import edu.pitt.dbmi.ccd.db.entity.TetradDataFile;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.TetradDataFileRepository;
 import edu.pitt.dbmi.ccd.db.repository.TetradVariableFileRepository;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,13 +46,34 @@ public class TetradDataFileService {
     private final TetradVariableFileRepository tetradVariableFileRepository;
     private final FileService fileService;
     private final FileFormatService fileFormatService;
+    private final VariableTypeService variableTypeService;
 
     @Autowired
-    public TetradDataFileService(TetradDataFileRepository repository, TetradVariableFileRepository tetradVariableFileRepository, FileService fileService, FileFormatService fileFormatService) {
+    public TetradDataFileService(TetradDataFileRepository repository, TetradVariableFileRepository tetradVariableFileRepository, FileService fileService, FileFormatService fileFormatService, VariableTypeService variableTypeService) {
         this.repository = repository;
         this.tetradVariableFileRepository = tetradVariableFileRepository;
         this.fileService = fileService;
         this.fileFormatService = fileFormatService;
+        this.variableTypeService = variableTypeService;
+    }
+
+    /**
+     * Get a Tetrad tabular files grouped by variable type ids.
+     *
+     * @param userAccount
+     * @return map where key is VariableType ID, value is a list of files
+     */
+    public Map<Long, List<File>> getFileGroupedByVariableTypeId(UserAccount userAccount) {
+        Map<Long, List<File>> map = new HashMap<>();
+
+        // initialize map
+        variableTypeService.findAll()
+                .forEach(e -> map.put(e.getId(), new LinkedList<>()));
+
+        repository.findByUserAccount(userAccount)
+                .forEach(e -> map.get(e.getVariableType().getId()).add(e.getFile()));
+
+        return map;
     }
 
     private TetradDataFile saveAsNew(TetradDataFile tetradDataFile) {

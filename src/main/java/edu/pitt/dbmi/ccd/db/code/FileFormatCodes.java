@@ -24,7 +24,7 @@ package edu.pitt.dbmi.ccd.db.code;
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class FileFormatCodes {
+public final class FileFormatCodes {
 
     public static final short TETRAD_TAB = 1;
     public static final short TETRAD_VAR = 2;

@@ -16,21 +16,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.code;
+package edu.pitt.dbmi.ccd.db.domain.file;
+
+import edu.pitt.dbmi.ccd.db.domain.ListItem;
+import java.util.Date;
 
 /**
  *
- * May 22, 2018 4:19:23 PM
+ * Jul 18, 2018 2:43:38 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public final class JobLocationCodes {
+public class TetradVarListItem extends ListItem {
 
-    public static final short LOCAL = 1;
-    public static final short PSC = 2;
-    public static final short AWS = 3;
+    protected final Date creationTime;
 
-    private JobLocationCodes() {
+    protected final Integer numOfVars;
+
+    public TetradVarListItem(Long id, String name, Date creationTime, Integer numOfVars) {
+        super(id, name);
+        this.creationTime = creationTime;
+        this.numOfVars = numOfVars;
+    }
+
+    @Override
+    public String toString() {
+        return "TetradVarListItem{" + "id=" + id + ", name=" + name + ", creationTime=" + creationTime + ", numOfVars=" + numOfVars + '}';
+    }
+
+    public Date getCreationTime() {
+        return creationTime;
+    }
+
+    public Integer getNumOfVars() {
+        return numOfVars;
     }
 
 }

@@ -24,7 +24,7 @@ package edu.pitt.dbmi.ccd.db.code;
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class JobStatusCodes {
+public final class JobStatusCodes {
 
     public static final short QUEUED = 1;
     public static final short STARTED = 2;

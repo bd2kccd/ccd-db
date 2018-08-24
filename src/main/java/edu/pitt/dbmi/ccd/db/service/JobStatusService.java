@@ -18,59 +18,53 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.code.VariableTypeCodes;
-import edu.pitt.dbmi.ccd.db.entity.VariableType;
-import edu.pitt.dbmi.ccd.db.repository.VariableTypeRepository;
+import edu.pitt.dbmi.ccd.db.code.JobStatusCodes;
+import edu.pitt.dbmi.ccd.db.entity.JobStatus;
+import edu.pitt.dbmi.ccd.db.repository.JobStatusRepository;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * Feb 9, 2018 6:31:22 PM
+ * Apr 11, 2018 2:12:04 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Service
-public class VariableTypeService {
+public class JobStatusService {
 
-    private final VariableTypeRepository repository;
+    private final JobStatusRepository repository;
 
     @Autowired
-    public VariableTypeService(VariableTypeRepository repository) {
+    public JobStatusService(JobStatusRepository repository) {
         this.repository = repository;
 
         // initialize database
         if (repository.findAll().isEmpty()) {
             repository.saveAll(Arrays.asList(
-                    new VariableType("Continuous", VariableTypeCodes.CONTINUOUS),
-                    new VariableType("Discrete", VariableTypeCodes.DISCRETE),
-                    new VariableType("Mixed", VariableTypeCodes.MIXED)
+                    new JobStatus("Canceled", JobStatusCodes.CANCELED),
+                    new JobStatus("Failed", JobStatusCodes.FAILED),
+                    new JobStatus("Finished", JobStatusCodes.FINISHED),
+                    new JobStatus("Queued", JobStatusCodes.QUEUED),
+                    new JobStatus("Started", JobStatusCodes.STARTED)
             ));
         }
     }
 
-    @Cacheable("VariableTypeByCode")
-    public VariableType findByCode(short code) {
+    @Cacheable("JobStatusByCode")
+    public JobStatus findByCode(short code) {
         return repository.findByCode(code);
     }
 
-    @Cacheable("VariableTypeById")
-    public VariableType findById(Long id) {
-        Optional<VariableType> opt = repository.findById(id);
-
-        return opt.isPresent() ? opt.get() : null;
-    }
-
-    @Cacheable("VariableTypeAll")
-    public List<VariableType> findAll() {
+    @Cacheable("JobStatusAll")
+    public List<JobStatus> findAll() {
         return repository.findAll();
     }
 
-    public VariableTypeRepository getRepository() {
+    public JobStatusRepository getRepository() {
         return repository;
     }
 

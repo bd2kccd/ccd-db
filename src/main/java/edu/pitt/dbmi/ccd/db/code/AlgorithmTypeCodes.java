@@ -24,7 +24,7 @@ package edu.pitt.dbmi.ccd.db.code;
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class AlgorithmTypeCodes {
+public final class AlgorithmTypeCodes {
 
     public static final short TETRAD = 1;
 

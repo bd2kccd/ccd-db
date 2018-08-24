@@ -24,7 +24,7 @@ package edu.pitt.dbmi.ccd.db.code;
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public class FileTypeCodes {
+public final class FileTypeCodes {
 
     public static final short DATA = 1;
     public static final short VARIABLE = 2;

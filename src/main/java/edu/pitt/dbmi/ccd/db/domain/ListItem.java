@@ -16,21 +16,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.code;
+package edu.pitt.dbmi.ccd.db.domain;
 
 /**
  *
- * May 22, 2018 4:19:23 PM
+ * Mar 12, 2018 6:31:54 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public final class JobLocationCodes {
+public class ListItem {
 
-    public static final short LOCAL = 1;
-    public static final short PSC = 2;
-    public static final short AWS = 3;
+    protected final Long id;
 
-    private JobLocationCodes() {
+    protected final String name;
+
+    public ListItem(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "ListItem{" + "id=" + id + ", name=" + name + '}';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

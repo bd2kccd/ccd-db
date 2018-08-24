@@ -18,10 +18,8 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,30 +28,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * Jun 29, 2017 5:19:10 PM
+ * Jul 23, 2018 3:26:45 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "FileGroup", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"name", "userAccountId"})})
+@Table(name = "JobDetail")
 @XmlRootElement
-public class FileGroup implements Serializable {
+public class JobDetail implements Serializable {
 
-    private static final long serialVersionUID = -2212881295372876665L;
+    private static final long serialVersionUID = 7039991807301545923L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,7 +55,7 @@ public class FileGroup implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(name = "name", nullable = false, length = 32)
     private String name;
 
     @Lob
@@ -70,32 +63,45 @@ public class FileGroup implements Serializable {
     private String description;
 
     @Basic(optional = false)
+    @Lob
+    @Column(name = "jobParameter", nullable = false, length = 65535)
+    private String jobParameter;
+
+    @Basic(optional = false)
     @Column(name = "creationTime", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationTime;
 
-    @JoinTable(name = "FileGroupFileRel", joinColumns = {
-        @JoinColumn(name = "fileGroupId", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "fileId", referencedColumnName = "id", nullable = false)})
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<File> files;
+    @Column(name = "startTime")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startTime;
 
-    @JoinColumn(name = "variableTypeId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private VariableType variableType;
+    @Column(name = "endTime")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endTime;
 
     @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private UserAccount userAccount;
 
-    public FileGroup() {
+    @JoinColumn(name = "jobStatusId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private JobStatus jobStatus;
+
+    @JoinColumn(name = "algorithmTypeId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    private AlgorithmType algorithmType;
+
+    public JobDetail() {
     }
 
-    public FileGroup(String name, Date creationTime, VariableType variableType, UserAccount userAccount) {
+    public JobDetail(String name, String jobParameter, Date creationTime, UserAccount userAccount, JobStatus jobStatus, AlgorithmType algorithmType) {
         this.name = name;
+        this.jobParameter = jobParameter;
         this.creationTime = creationTime;
-        this.variableType = variableType;
         this.userAccount = userAccount;
+        this.jobStatus = jobStatus;
+        this.algorithmType = algorithmType;
     }
 
     public Long getId() {
@@ -122,6 +128,14 @@ public class FileGroup implements Serializable {
         this.description = description;
     }
 
+    public String getJobParameter() {
+        return jobParameter;
+    }
+
+    public void setJobParameter(String jobParameter) {
+        this.jobParameter = jobParameter;
+    }
+
     public Date getCreationTime() {
         return creationTime;
     }
@@ -130,34 +144,44 @@ public class FileGroup implements Serializable {
         this.creationTime = creationTime;
     }
 
-    @JsonIgnore
-    @XmlTransient
-    public List<File> getFiles() {
-        return files;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setFiles(List<File> files) {
-        this.files = files;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
-    @JsonIgnore
-    @XmlTransient
-    public VariableType getVariableType() {
-        return variableType;
+    public Date getEndTime() {
+        return endTime;
     }
 
-    public void setVariableType(VariableType variableType) {
-        this.variableType = variableType;
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
-    @JsonIgnore
-    @XmlTransient
     public UserAccount getUserAccount() {
         return userAccount;
     }
 
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
+    }
+
+    public JobStatus getJobStatus() {
+        return jobStatus;
+    }
+
+    public void setJobStatus(JobStatus jobStatus) {
+        this.jobStatus = jobStatus;
+    }
+
+    public AlgorithmType getAlgorithmType() {
+        return algorithmType;
+    }
+
+    public void setAlgorithmType(AlgorithmType algorithmType) {
+        this.algorithmType = algorithmType;
     }
 
 }

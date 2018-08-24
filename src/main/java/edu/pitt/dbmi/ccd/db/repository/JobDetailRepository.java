@@ -16,21 +16,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.code;
+package edu.pitt.dbmi.ccd.db.repository;
+
+import edu.pitt.dbmi.ccd.db.entity.JobDetail;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
- * May 22, 2018 4:19:23 PM
+ * Jul 23, 2018 3:44:40 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public final class JobLocationCodes {
+@Repository
+public interface JobDetailRepository extends JpaRepository<JobDetail, Long> {
 
-    public static final short LOCAL = 1;
-    public static final short PSC = 2;
-    public static final short AWS = 3;
-
-    private JobLocationCodes() {
-    }
+    public JobDetail findByIdAndUserAccount(Long id, UserAccount userAccount);
 
 }

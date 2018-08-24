@@ -18,9 +18,15 @@
  */
 package edu.pitt.dbmi.ccd.db.repository;
 
+import edu.pitt.dbmi.ccd.db.domain.ListItem;
+import edu.pitt.dbmi.ccd.db.domain.file.TetradDataListItem;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.TetradDataFile;
+import edu.pitt.dbmi.ccd.db.entity.UserAccount;
+import edu.pitt.dbmi.ccd.db.entity.VariableType;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -34,6 +40,32 @@ public interface TetradDataFileRepository extends JpaRepository<TetradDataFile, 
 
     public TetradDataFile findByFile(File file);
 
+    public TetradDataFile findByIdAndUserAccount(Long id, UserAccount userAccount);
+
+    public List<TetradDataFile> findByUserAccount(UserAccount userAccount);
+
+    @Query("SELECT tdf"
+            + " FROM TetradDataFile tdf"
+            + " WHERE tdf.userAccount = ?1 AND tdf.variableType = ?2 AND tdf.file.id IN ?3")
+    public List<TetradDataFile> find(UserAccount userAccount, VariableType variableType, List<Long> ids);
+
+    @Query("SELECT tdf"
+            + " FROM TetradDataFile tdf"
+            + " WHERE tdf.userAccount = ?1 AND tdf.file IN ?2")
+    public List<TetradDataFile> findByUserAccountAndFiles(UserAccount userAccount, List<File> files);
+
     public void deleteByFile(File file);
+
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.ListItem(tdf.file.id,tdf.file.name)"
+            + " FROM TetradDataFile tdf"
+            + " WHERE tdf.userAccount = ?1 AND tdf.variableType = ?2")
+    public List<ListItem> getListItems(UserAccount userAccount, VariableType variableType);
+
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.file.TetradDataListItem(tdf.id,tdf.file.name,tdf.file.creationTime,tdf.numOfCases,tdf.numOfVars)"
+            + " FROM TetradDataFile tdf"
+            + " WHERE tdf.userAccount = ?1 AND tdf.variableType = ?2")
+    public List<TetradDataListItem> getTetradDataListItems(UserAccount userAccount, VariableType variableType);
+
+    public boolean existsByIdAndUserAccount(Long id, UserAccount userAccount);
 
 }

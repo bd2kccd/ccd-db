@@ -52,16 +52,12 @@ public class FileService {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileService.class);
 
     private final FileRepository repository;
-    private final FileFormatService fileFormatService;
-    private final AlgorithmTypeService algorithmTypeService;
     private final TetradDataFileRepository tetradDataFileRepository;
     private final TetradVariableFileRepository tetradVariableFileRepository;
 
     @Autowired
-    public FileService(FileRepository repository, FileFormatService fileFormatService, AlgorithmTypeService algorithmTypeService, TetradDataFileRepository tetradDataFileRepository, TetradVariableFileRepository tetradVariableFileRepository) {
+    public FileService(FileRepository repository, TetradDataFileRepository tetradDataFileRepository, TetradVariableFileRepository tetradVariableFileRepository) {
         this.repository = repository;
-        this.fileFormatService = fileFormatService;
-        this.algorithmTypeService = algorithmTypeService;
         this.tetradDataFileRepository = tetradDataFileRepository;
         this.tetradVariableFileRepository = tetradVariableFileRepository;
     }
@@ -87,32 +83,6 @@ public class FileService {
         }
 
         return file;
-    }
-
-    private void setFileAttributes(File entity, Path file, String relativePath, UserAccount userAccount) {
-        entity.setRelativePath(relativePath);
-        entity.setUserAccount(userAccount);
-
-        try {
-            BasicFileAttributes attrs = Files.readAttributes(file, BasicFileAttributes.class);
-
-            long fileSize = attrs.size();
-            Date creationTime = new Date(attrs.creationTime().toMillis());
-
-            entity.setCreationTime(creationTime);
-
-            entity.setFileSize(fileSize);
-        } catch (IOException exception) {
-            String msg = String.format("Failed to get attributes for file %s.", file.toString());
-            LOGGER.error(msg, exception);
-        }
-
-        try {
-            entity.setMd5CheckSum(FileUtils.computeMD5Hash(file));
-        } catch (IOException | NoSuchAlgorithmException exception) {
-            String msg = String.format("Failed to compute MD5 hash for file %s.", file.toString());
-            LOGGER.error(msg, exception);
-        }
     }
 
     public File persistLocalFile(Path file, String relativePath, UserAccount userAccount) {
@@ -147,6 +117,32 @@ public class FileService {
         });
 
         return repository.saveAll(entites);
+    }
+
+    private void setFileAttributes(File entity, Path file, String relativePath, UserAccount userAccount) {
+        entity.setRelativePath(relativePath);
+        entity.setUserAccount(userAccount);
+
+        try {
+            BasicFileAttributes attrs = Files.readAttributes(file, BasicFileAttributes.class);
+
+            long fileSize = attrs.size();
+            Date creationTime = new Date(attrs.creationTime().toMillis());
+
+            entity.setCreationTime(creationTime);
+
+            entity.setFileSize(fileSize);
+        } catch (IOException exception) {
+            String msg = String.format("Failed to get attributes for file %s.", file.toString());
+            LOGGER.error(msg, exception);
+        }
+
+        try {
+            entity.setMd5CheckSum(FileUtils.computeMD5Hash(file));
+        } catch (IOException | NoSuchAlgorithmException exception) {
+            String msg = String.format("Failed to compute MD5 hash for file %s.", file.toString());
+            LOGGER.error(msg, exception);
+        }
     }
 
     public FileRepository getRepository() {
