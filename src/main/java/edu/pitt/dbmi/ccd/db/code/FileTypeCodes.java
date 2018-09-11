@@ -29,6 +29,7 @@ public final class FileTypeCodes {
     public static final short DATA = 1;
     public static final short VARIABLE = 2;
     public static final short KNOWLEDGE = 3;
+    public static final short RESULT = 4;
 
     private FileTypeCodes() {
     }

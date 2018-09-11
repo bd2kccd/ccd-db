@@ -50,17 +50,17 @@ public interface FileRepository extends JpaRepository<File, Long> {
     @Query("SELECT f.fileName FROM File f WHERE f.userAccount = ?1")
     public Set<String> getFileNames(UserAccount userAccount);
 
-    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.file.FileListItem(f.id,f.name,f.fileSize,f.creationTime,f.fileFormat IS NOT NULL) "
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.file.FileListItem(f.id,f.name,f.fileSize,f.creationTime,TRUE,f.fileFormat.name) "
             + "FROM File f "
-            + "WHERE f.userAccount = ?1")
-    public List<FileListItem> getAllFiles(UserAccount userAccount);
+            + "WHERE f.userAccount = ?1 AND f.fileFormat IS NOT NULL")
+    public List<FileListItem> getCategorizedFiles(UserAccount userAccount);
 
-    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.file.FileListItem(f.id,f.name,f.fileSize,f.creationTime,f.fileFormat IS NOT NULL) "
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.file.FileListItem(f.id,f.name,f.fileSize,f.creationTime,FALSE,'Unknown') "
             + "FROM File f "
             + "WHERE f.userAccount = ?1 AND f.fileFormat IS NULL")
-    public List<FileListItem> getUncategorized(UserAccount userAccount);
+    public List<FileListItem> getUncategorizedFiles(UserAccount userAccount);
 
-    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.file.FileListItem(f.id,f.name,f.fileSize,f.creationTime,f.fileFormat IS NOT NULL) "
+    @Query("SELECT new edu.pitt.dbmi.ccd.db.domain.file.FileListItem(f.id,f.name,f.fileSize,f.creationTime,TRUE) "
             + "FROM File f "
             + "WHERE f.fileFormat = ?1 AND f.userAccount = ?2")
     public List<FileListItem> getByFileFormat(FileFormat fileFormat, UserAccount userAccount);

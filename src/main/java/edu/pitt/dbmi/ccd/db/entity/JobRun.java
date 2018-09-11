@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -28,8 +29,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -38,7 +42,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
 @Entity
-@Table(name = "JobRun")
+@Table(name = "JobRun", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"jobDetailId"})})
 @XmlRootElement
 public class JobRun implements Serializable {
 
@@ -54,7 +59,7 @@ public class JobRun implements Serializable {
     private Long pid;
 
     @JoinColumn(name = "jobDetailId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
     private JobDetail jobDetail;
 
     @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
@@ -93,6 +98,8 @@ public class JobRun implements Serializable {
         this.jobDetail = jobDetail;
     }
 
+    @JsonIgnore
+    @XmlTransient
     public UserAccount getUserAccount() {
         return userAccount;
     }

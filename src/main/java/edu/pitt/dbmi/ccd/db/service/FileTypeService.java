@@ -47,7 +47,8 @@ public class FileTypeService {
             repository.saveAll(Arrays.asList(
                     new FileType("Data", FileTypeCodes.DATA),
                     new FileType("Variable", FileTypeCodes.VARIABLE),
-                    new FileType("Knowledge", FileTypeCodes.KNOWLEDGE)
+                    new FileType("Knowledge", FileTypeCodes.KNOWLEDGE),
+                    new FileType("Result", FileTypeCodes.RESULT)
             ));
         }
     }

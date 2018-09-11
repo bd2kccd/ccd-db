@@ -32,12 +32,18 @@ public class FileListItem extends ListItem {
     protected final long size;
     protected final Date creationTime;
     protected final boolean categorized;
+    protected final String type;
 
-    public FileListItem(Long id, String name, long size, Date creationTime, boolean categorized) {
+    public FileListItem(Long id, String name, long size, Date creationTime, boolean categorized, String type) {
         super(id, name);
         this.size = size;
         this.creationTime = creationTime;
         this.categorized = categorized;
+        this.type = type;
+    }
+
+    public FileListItem(Long id, String name, long size, Date creationTime, boolean categorized) {
+        this(id, name, size, creationTime, categorized, null);
     }
 
     public long getSize() {
@@ -50,6 +56,10 @@ public class FileListItem extends ListItem {
 
     public boolean isCategorized() {
         return categorized;
+    }
+
+    public String getType() {
+        return type;
     }
 
 }

@@ -16,22 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.code;
+package edu.pitt.dbmi.ccd.db.service;
+
+import edu.pitt.dbmi.ccd.db.repository.TetradJobRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
- * May 22, 2018 4:17:26 PM
+ * Aug 27, 2018 2:58:37 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public final class FileFormatCodes {
+@Service
+public class TetradJobService {
 
-    public static final short TETRAD_TAB = 1;
-    public static final short TETRAD_VAR = 2;
-    public static final short TETRAD_KNWL = 3;
-    public static final short TETRAD_RESULT = 4;
+    private final TetradJobRepository repository;
 
-    private FileFormatCodes() {
+    @Autowired
+    public TetradJobService(TetradJobRepository repository) {
+        this.repository = repository;
+    }
+
+    public TetradJobRepository getRepository() {
+        return repository;
     }
 
 }

@@ -1,8 +1,8 @@
--- MySQL dump 10.14  Distrib 5.5.56-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.14  Distrib 5.5.60-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: ccd
 -- ------------------------------------------------------
--- Server version	5.5.56-MariaDB
+-- Server version	5.5.60-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -168,9 +168,8 @@ DROP TABLE IF EXISTS `JobDetail`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `JobDetail` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
+  `name` varchar(64) NOT NULL,
   `description` text,
-  `jobParameter` text NOT NULL,
   `creationTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `startTime` timestamp NULL DEFAULT NULL,
   `endTime` timestamp NULL DEFAULT NULL,
@@ -200,6 +199,7 @@ CREATE TABLE `JobRun` (
   `jobDetailId` bigint(20) NOT NULL,
   `userAccountId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `jobDetailId_2` (`jobDetailId`),
   KEY `jobDetailId` (`jobDetailId`),
   KEY `userAccountId` (`userAccountId`),
   CONSTRAINT `JobRun_ibfk_2` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`),
@@ -253,6 +253,38 @@ CREATE TABLE `TetradDataFile` (
   CONSTRAINT `TetradDataFile_ibfk_2` FOREIGN KEY (`dataDelimiterId`) REFERENCES `DataDelimiter` (`id`),
   CONSTRAINT `TetradDataFile_ibfk_3` FOREIGN KEY (`variableTypeId`) REFERENCES `VariableType` (`id`),
   CONSTRAINT `TetradDataFile_ibfk_4` FOREIGN KEY (`userAccountId`) REFERENCES `UserAccount` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `TetradJob`
+--
+
+DROP TABLE IF EXISTS `TetradJob`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TetradJob` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `tetradDataFileId` bigint(20) DEFAULT NULL,
+  `fileGroupId` bigint(20) DEFAULT NULL,
+  `tetradVariableFileId` bigint(20) DEFAULT NULL,
+  `knowledgeFileId` bigint(20) DEFAULT NULL,
+  `jvmParameter` varchar(255) DEFAULT NULL,
+  `algorithm` varchar(255) NOT NULL,
+  `algorithmParameter` text,
+  `jobDetailId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `jobDetailId_2` (`jobDetailId`),
+  KEY `dataFileId` (`tetradDataFileId`),
+  KEY `fileGroupId` (`fileGroupId`),
+  KEY `tetradVariableFileId` (`tetradVariableFileId`),
+  KEY `knowledgeFileId` (`knowledgeFileId`),
+  KEY `jobDetailId` (`jobDetailId`),
+  CONSTRAINT `TetradJob_ibfk_1` FOREIGN KEY (`tetradDataFileId`) REFERENCES `TetradDataFile` (`id`),
+  CONSTRAINT `TetradJob_ibfk_2` FOREIGN KEY (`fileGroupId`) REFERENCES `FileGroup` (`id`),
+  CONSTRAINT `TetradJob_ibfk_3` FOREIGN KEY (`tetradVariableFileId`) REFERENCES `TetradVariableFile` (`id`),
+  CONSTRAINT `TetradJob_ibfk_4` FOREIGN KEY (`knowledgeFileId`) REFERENCES `File` (`id`),
+  CONSTRAINT `TetradJob_ibfk_5` FOREIGN KEY (`jobDetailId`) REFERENCES `JobDetail` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -418,4 +450,4 @@ CREATE TABLE `VariableType` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-08-20 14:48:25
+-- Dump completed on 2018-08-30 14:16:19

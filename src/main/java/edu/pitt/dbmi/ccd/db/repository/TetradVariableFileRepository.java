@@ -38,6 +38,8 @@ public interface TetradVariableFileRepository extends JpaRepository<TetradVariab
 
     public TetradVariableFile findByFile(File file);
 
+    public TetradVariableFile findByIdAndUserAccount(Long id, UserAccount userAccount);
+
     public void deleteByFile(File file);
 
     public void deleteByFileIn(List<File> files);

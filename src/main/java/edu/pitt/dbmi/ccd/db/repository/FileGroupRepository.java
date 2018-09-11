@@ -59,4 +59,6 @@ public interface FileGroupRepository extends JpaRepository<FileGroup, Long> {
             + "WHERE fg.userAccount = ?1 AND fg.variableType = ?2")
     public List<FileGroupListItem> getFileGroupListItems(UserAccount userAccount, VariableType variableType);
 
+    public long countByFiles(List<File> files);
+
 }

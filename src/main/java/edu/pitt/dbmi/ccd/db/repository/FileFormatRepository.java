@@ -19,6 +19,8 @@
 package edu.pitt.dbmi.ccd.db.repository;
 
 import edu.pitt.dbmi.ccd.db.entity.FileFormat;
+import edu.pitt.dbmi.ccd.db.entity.FileType;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -32,5 +34,7 @@ import org.springframework.stereotype.Repository;
 public interface FileFormatRepository extends JpaRepository<FileFormat, Long> {
 
     public FileFormat findByCode(short code);
+
+    public List<FileFormat> findByFileTypeIsNot(FileType fileType);
 
 }

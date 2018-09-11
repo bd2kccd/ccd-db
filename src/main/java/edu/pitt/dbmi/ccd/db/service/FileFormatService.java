@@ -44,25 +44,36 @@ import org.springframework.stereotype.Service;
 public class FileFormatService {
 
     private final FileFormatRepository repository;
+    private final FileTypeService fileTypeService;
 
     @Autowired
-    public FileFormatService(FileFormatRepository repository, AlgorithmTypeService algorithmTypeService, FileTypeService fileTypeService) {
+    public FileFormatService(FileFormatRepository repository, FileTypeService fileTypeService, AlgorithmTypeService algorithmTypeService) {
         this.repository = repository;
+        this.fileTypeService = fileTypeService;
 
         AlgorithmType tetrad = algorithmTypeService.findByCode(AlgorithmTypeCodes.TETRAD);
 
         FileType tabData = fileTypeService.findByCode(FileTypeCodes.DATA);
         FileType var = fileTypeService.findByCode(FileTypeCodes.VARIABLE);
         FileType knowledge = fileTypeService.findByCode(FileTypeCodes.KNOWLEDGE);
+        FileType result = fileTypeService.findByCode(FileTypeCodes.RESULT);
 
         // initialize database
         if (repository.findAll().isEmpty()) {
             repository.saveAll(Arrays.asList(
                     new FileFormat("Tetrad Tabular Data", FileFormatCodes.TETRAD_TAB, tabData, tetrad),
                     new FileFormat("Tetrad Variable", FileFormatCodes.TETRAD_VAR, var, tetrad),
-                    new FileFormat("Tetrad Knowledge", FileFormatCodes.TETRAD_KNWL, knowledge, tetrad)
+                    new FileFormat("Tetrad Knowledge", FileFormatCodes.TETRAD_KNWL, knowledge, tetrad),
+                    new FileFormat("Tetrad Result", FileFormatCodes.TETRAD_RESULT, result, tetrad)
             ));
         }
+    }
+
+    @Cacheable("FileFormatForUpload")
+    public List<FileFormat> findAllForUpload() {
+        FileType fileType = fileTypeService.findByCode(FileTypeCodes.RESULT);
+
+        return repository.findByFileTypeIsNot(fileType);
     }
 
     @Cacheable("FileFormatByCode")
@@ -77,7 +88,7 @@ public class FileFormatService {
 
     @Cacheable("FileFormatOpts")
     public Map<FileType, List<FileFormat>> getFileFormatOptions() {
-        return repository.findAll().stream()
+        return findAllForUpload().stream()
                 .collect(Collectors.groupingBy(FileFormat::getFileType))
                 .entrySet().stream()
                 .sorted((e1, e2) -> e1.getKey().getName().compareTo(e2.getKey().getName()))

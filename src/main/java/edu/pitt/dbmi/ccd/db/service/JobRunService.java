@@ -18,15 +18,11 @@
  */
 package edu.pitt.dbmi.ccd.db.service;
 
-import edu.pitt.dbmi.ccd.db.code.AlgorithmTypeCodes;
-import edu.pitt.dbmi.ccd.db.code.JobStatusCodes;
-import edu.pitt.dbmi.ccd.db.entity.AlgorithmType;
 import edu.pitt.dbmi.ccd.db.entity.JobDetail;
 import edu.pitt.dbmi.ccd.db.entity.JobRun;
-import edu.pitt.dbmi.ccd.db.entity.JobStatus;
+import edu.pitt.dbmi.ccd.db.entity.TetradJob;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
 import edu.pitt.dbmi.ccd.db.repository.JobRunRepository;
-import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,26 +37,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class JobRunService {
 
     private final JobRunRepository repository;
-    private final AlgorithmTypeService algorithmTypeService;
-    private final JobStatusService jobStatusService;
     private final JobDetailService jobDetailService;
+    private final TetradJobService tetradJobService;
 
     @Autowired
-    public JobRunService(JobRunRepository repository, AlgorithmTypeService algorithmTypeService, JobStatusService jobStatusService, JobDetailService jobDetailService) {
+    public JobRunService(JobRunRepository repository, JobDetailService jobDetailService, TetradJobService tetradJobService) {
         this.repository = repository;
-        this.algorithmTypeService = algorithmTypeService;
-        this.jobStatusService = jobStatusService;
         this.jobDetailService = jobDetailService;
+        this.tetradJobService = tetradJobService;
     }
 
     @Transactional
-    public JobRun submitTetradJobRun(String name, String description, String cmdParams, UserAccount userAccount) {
-        AlgorithmType algorithmType = algorithmTypeService.findByCode(AlgorithmTypeCodes.TETRAD);
-        JobStatus jobStatus = jobStatusService.findByCode(JobStatusCodes.QUEUED);
-
-        JobDetail jobDetail = new JobDetail(name, cmdParams, new Date(), userAccount, jobStatus, algorithmType);
-        jobDetail.setDescription(description);
+    public JobRun submitTetradJobRun(JobDetail jobDetail, TetradJob tetradJob, UserAccount userAccount) {
         jobDetail = jobDetailService.getRepository().save(jobDetail);
+
+        tetradJob.setJobDetail(jobDetail);
+        tetradJobService.getRepository().save(tetradJob);
 
         return repository.save(new JobRun(jobDetail, userAccount));
     }

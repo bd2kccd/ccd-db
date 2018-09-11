@@ -16,22 +16,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package edu.pitt.dbmi.ccd.db.code;
+package edu.pitt.dbmi.ccd.db.repository;
+
+import edu.pitt.dbmi.ccd.db.entity.JobDetail;
+import edu.pitt.dbmi.ccd.db.entity.TetradJob;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
- * May 22, 2018 4:17:26 PM
+ * Aug 27, 2018 2:57:02 PM
  *
  * @author Kevin V. Bui (kvb2@pitt.edu)
  */
-public final class FileFormatCodes {
+@Repository
+public interface TetradJobRepository extends JpaRepository<TetradJob, Long> {
 
-    public static final short TETRAD_TAB = 1;
-    public static final short TETRAD_VAR = 2;
-    public static final short TETRAD_KNWL = 3;
-    public static final short TETRAD_RESULT = 4;
-
-    private FileFormatCodes() {
-    }
+    public TetradJob findByJobDetail(JobDetail jobDetail);
 
 }

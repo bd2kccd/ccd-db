@@ -18,6 +18,7 @@
  */
 package edu.pitt.dbmi.ccd.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -34,6 +35,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -55,17 +57,12 @@ public class JobDetail implements Serializable {
     private Long id;
 
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 32)
+    @Column(name = "name", nullable = false, length = 64)
     private String name;
 
     @Lob
     @Column(name = "description", length = 65535)
     private String description;
-
-    @Basic(optional = false)
-    @Lob
-    @Column(name = "jobParameter", nullable = false, length = 65535)
-    private String jobParameter;
 
     @Basic(optional = false)
     @Column(name = "creationTime", nullable = false)
@@ -80,10 +77,6 @@ public class JobDetail implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
-    @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private UserAccount userAccount;
-
     @JoinColumn(name = "jobStatusId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private JobStatus jobStatus;
@@ -92,16 +85,19 @@ public class JobDetail implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private AlgorithmType algorithmType;
 
+    @JoinColumn(name = "userAccountId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private UserAccount userAccount;
+
     public JobDetail() {
     }
 
-    public JobDetail(String name, String jobParameter, Date creationTime, UserAccount userAccount, JobStatus jobStatus, AlgorithmType algorithmType) {
+    public JobDetail(String name, Date creationTime, JobStatus jobStatus, AlgorithmType algorithmType, UserAccount userAccount) {
         this.name = name;
-        this.jobParameter = jobParameter;
         this.creationTime = creationTime;
-        this.userAccount = userAccount;
         this.jobStatus = jobStatus;
         this.algorithmType = algorithmType;
+        this.userAccount = userAccount;
     }
 
     public Long getId() {
@@ -128,14 +124,6 @@ public class JobDetail implements Serializable {
         this.description = description;
     }
 
-    public String getJobParameter() {
-        return jobParameter;
-    }
-
-    public void setJobParameter(String jobParameter) {
-        this.jobParameter = jobParameter;
-    }
-
     public Date getCreationTime() {
         return creationTime;
     }
@@ -160,14 +148,6 @@ public class JobDetail implements Serializable {
         this.endTime = endTime;
     }
 
-    public UserAccount getUserAccount() {
-        return userAccount;
-    }
-
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
-    }
-
     public JobStatus getJobStatus() {
         return jobStatus;
     }
@@ -182,6 +162,16 @@ public class JobDetail implements Serializable {
 
     public void setAlgorithmType(AlgorithmType algorithmType) {
         this.algorithmType = algorithmType;
+    }
+
+    @JsonIgnore
+    @XmlTransient
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 
 }

@@ -19,6 +19,7 @@
 package edu.pitt.dbmi.ccd.db.service;
 
 import edu.pitt.dbmi.ccd.db.code.FileFormatCodes;
+import edu.pitt.dbmi.ccd.db.domain.file.FileListItem;
 import edu.pitt.dbmi.ccd.db.entity.File;
 import edu.pitt.dbmi.ccd.db.entity.FileFormat;
 import edu.pitt.dbmi.ccd.db.entity.UserAccount;
@@ -60,6 +61,15 @@ public class FileService {
         this.repository = repository;
         this.tetradDataFileRepository = tetradDataFileRepository;
         this.tetradVariableFileRepository = tetradVariableFileRepository;
+    }
+
+    public List<FileListItem> getAllFiles(UserAccount userAccount) {
+        List<FileListItem> list = new LinkedList<>();
+
+        list.addAll(repository.getCategorizedFiles(userAccount));
+        list.addAll(repository.getUncategorizedFiles(userAccount));
+
+        return list;
     }
 
     @Transactional
